@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "469659378948",
+    "project_id": "super-app-374114",
+    "storage_bucket": "super-app-374114.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:469659378948:android:b944b639d10327cc3e9c51",
+        "android_client_info": {
+          "package_name": "com.done"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "469659378948-1v4cahm49rd634o9olm8pgjrs051l80q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPQeJlNjM5iOW4b6vyG5FA0TAFLb9uYdw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "469659378948-1v4cahm49rd634o9olm8pgjrs051l80q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:469659378948:android:448a82616ccc933e3e9c51",
+        "android_client_info": {
+          "package_name": "com.weltwiet.driver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "469659378948-1v4cahm49rd634o9olm8pgjrs051l80q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPQeJlNjM5iOW4b6vyG5FA0TAFLb9uYdw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "469659378948-1v4cahm49rd634o9olm8pgjrs051l80q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
