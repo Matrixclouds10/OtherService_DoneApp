@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-import '../../../../domain/logger.dart';
+import '../../../../core/utils/logger.dart';
 import '../../../../generated/locale_keys.g.dart';
-import '../../../model/base/error_response.dart';
+import '../../../../features/services/data/model/base/error_response.dart';
 import 'error_widget.dart';
 
 class ApiErrorHandler {

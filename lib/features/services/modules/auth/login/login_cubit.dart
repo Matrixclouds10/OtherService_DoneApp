@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/notification/device_token.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
-import 'package:weltweit/data/model/base/response_model.dart';
-import 'package:weltweit/data/model/response/user_model.dart';
-import 'package:weltweit/domain/logger.dart';
-import 'package:weltweit/domain/request_body/login_body.dart';
+import 'package:weltweit/features/services/data/model/base/response_model.dart';
+import 'package:weltweit/features/services/data/model/response/user_model.dart';
+import 'package:weltweit/core/utils/logger.dart';
+import 'package:weltweit/features/services/domain/request_body/login_body.dart';
 import 'package:weltweit/features/services/domain/usecase/auth/sign_in_usecase.dart';
 import 'package:weltweit/presentation/component/inputs/phone_country/countries.dart';
 

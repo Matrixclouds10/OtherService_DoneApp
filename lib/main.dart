@@ -3,12 +3,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:weltweit/bloc.dart';
-import 'package:weltweit/features/services/injection.dart'
-    as services_injection;
+import 'package:weltweit/features/services/injection.dart' as services_injection;
 
 import 'app.dart';
 import 'data/injection.dart' as data_injection;
-import 'domain/injection.dart' as domain_injection;
 import 'injection.dart' as injection;
 
 void main() async {
@@ -26,7 +24,6 @@ void main() async {
   await Firebase.initializeApp();
 
   await data_injection.init();
-  await domain_injection.init();
   await injection.init();
 
   await services_injection.init();

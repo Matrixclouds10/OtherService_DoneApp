@@ -1,11 +1,11 @@
-import 'package:weltweit/data/model/base/base_model.dart';
+import 'package:weltweit/features/services/data/model/base/base_model.dart';
+import 'package:weltweit/features/services/domain/request_body/login_body.dart';
 import 'package:weltweit/features/services/domain/usecase/auth/base_usecase/base_use_case_call.dart';
 import 'package:weltweit/features/services/domain/usecase/auth/base_usecase/base_usecase.dart';
 
-import '../../../../../data/model/base/response_model.dart';
-import '../../../../../data/model/response/user_model.dart';
-import '../../../../../domain/repository/auth_repo.dart';
-import '../../../../../domain/request_body/login_body.dart';
+import '../../../data/model/base/response_model.dart';
+import '../../../data/model/response/user_model.dart';
+import '../../repository/auth_repo.dart';
 
 class SignInUseCase implements BaseUseCase<UserModel> {
   final AuthRepository repository;

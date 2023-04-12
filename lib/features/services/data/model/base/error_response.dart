@@ -1,4 +1,4 @@
-import '../../../domain/logger.dart';
+import '../../../../../core/utils/logger.dart';
 
 /// errors : [{"code":"l_name","message":"The last name field is required."},{"code":"password","message":"The password field is required."}]
 /// errors : [{"message":"The last name field is required."},{"code":"password","message":"The password field is required."}]

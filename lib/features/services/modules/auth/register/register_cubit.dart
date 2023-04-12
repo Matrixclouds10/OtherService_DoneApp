@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weltweit/data/model/base/response_model.dart';
-import 'package:weltweit/domain/request_body/register_body.dart';
+import 'package:weltweit/features/services/data/model/base/response_model.dart';
+import 'package:weltweit/features/services/domain/request_body/register_body.dart';
 import 'package:weltweit/features/services/domain/usecase/auth/register_usecase.dart';
 
 part 'register_state.dart';

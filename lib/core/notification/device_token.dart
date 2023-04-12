@@ -1,6 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-import '../../../domain/logger.dart';
+import '../utils/logger.dart';
 
 Future<String?> getDeviceToken() async {
   try {

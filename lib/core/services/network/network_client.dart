@@ -6,7 +6,7 @@ import 'package:weltweit/data/datasource/remote/dio/dio_client.dart';
 import 'package:weltweit/data/datasource/remote/exception/api_error_handler.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/data/injection.dart';
-import 'package:weltweit/domain/logger.dart';
+import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/features/services/core/base/base_response.dart';
 
 class NetworkClient {

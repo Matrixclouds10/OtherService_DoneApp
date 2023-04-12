@@ -1,6 +1,7 @@
 import 'dart:io';
 
-import '../../presentation/component/inputs/phone_country/countries.dart';
+import 'package:weltweit/presentation/component/inputs/phone_country/countries.dart';
+
 
 const Country _countryEg = Country(name: "Egypt", flag: "🇪🇬", code: "EG", dialCode: "20", minLength: 10, maxLength: 10);
 

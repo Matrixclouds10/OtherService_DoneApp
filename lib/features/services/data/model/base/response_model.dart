@@ -1,4 +1,4 @@
-import '../../datasource/remote/exception/error_widget.dart';
+import '../../../../../data/datasource/remote/exception/error_widget.dart';
 
 class ResponseModel<T> {
   final bool _isSuccess;

@@ -1,8 +1,8 @@
 import 'package:weltweit/data/datasource/remote/exception/api_checker.dart';
-import 'package:weltweit/data/model/base/api_response.dart';
-import 'package:weltweit/data/model/base/base_model.dart';
-import 'package:weltweit/data/model/base/response_model.dart';
-import 'package:weltweit/domain/logger.dart';
+import 'package:weltweit/features/services/data/model/base/api_response.dart';
+import 'package:weltweit/features/services/data/model/base/base_model.dart';
+import 'package:weltweit/features/services/data/model/base/response_model.dart';
+import 'package:weltweit/core/utils/logger.dart';
 import 'package:flutter/foundation.dart';
 
 

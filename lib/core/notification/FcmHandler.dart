@@ -6,7 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-import '../../domain/logger.dart';
+import '../utils/logger.dart';
 import 'NotificationType.dart';
 import 'NotificationUtils.dart';
 import 'push_notification_model.dart';

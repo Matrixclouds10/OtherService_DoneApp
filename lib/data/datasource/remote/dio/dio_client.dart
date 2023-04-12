@@ -7,7 +7,7 @@ import 'package:logger/logger.dart';
 import '../../../../app.dart';
 import '../../../../core/services/local/cache_consumer.dart';
 import '../../../../core/services/local/storage_keys.dart';
-import '../../../../domain/logger.dart';
+import '../../../../core/utils/logger.dart';
 import '../../../app_urls/app_url.dart';
 import 'logging_interceptor.dart';
 

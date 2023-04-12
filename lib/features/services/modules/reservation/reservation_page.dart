@@ -9,7 +9,7 @@ import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/core/resources/values_manager.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/routing/routes.dart';
-import 'package:weltweit/domain/logger.dart';
+import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/features/services/core/base/base_states.dart';
 import 'package:weltweit/features/services/core/routing/routes.dart';
 import 'package:weltweit/features/services/core/widgets/custom_text.dart';

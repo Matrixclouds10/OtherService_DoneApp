@@ -9,17 +9,18 @@ import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/data/injection.dart';
-import 'package:weltweit/data/model/base/response_model.dart';
-import 'package:weltweit/data/model/response/user_model.dart';
-import 'package:weltweit/domain/request_body/check_otp_body.dart';
-import 'package:weltweit/domain/request_body/login_body.dart';
+import 'package:weltweit/features/services/data/model/base/response_model.dart';
+import 'package:weltweit/features/services/data/model/response/user_model.dart';
 import 'package:weltweit/features/services/core/routing/routes.dart';
 import 'package:weltweit/features/services/core/widgets/custom_text.dart';
+import 'package:weltweit/features/services/domain/request_body/check_otp_body.dart';
+import 'package:weltweit/features/services/domain/request_body/login_body.dart';
 import 'package:weltweit/features/services/widgets/app_back_button.dart';
 import 'package:weltweit/features/services/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
+import 'package:weltweit/presentation/component/inputs/phone_country/countries.dart';
 import 'package:weltweit/presentation/component/text/click_text.dart';
 
 import 'login_cubit.dart';
@@ -189,6 +190,7 @@ class _LoginScreenState extends State<LoginScreen> {
               onCountryChanged: _viewModel.onCountryCode,
               disableLengthCheck: true,
               textInputAction: TextInputAction.next,
+              countries: const ["SA"],
             ),
             const VerticalSpace(kScreenPaddingNormal),
             CustomTextFieldPassword(hint: tr(LocaleKeys.password), controller: _passwordController),

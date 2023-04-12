@@ -1,11 +1,11 @@
-import 'package:weltweit/data/model/base/base_model.dart';
-import 'package:weltweit/domain/request_body/check_otp_body.dart';
+import 'package:weltweit/features/services/data/model/base/base_model.dart';
+import 'package:weltweit/features/services/domain/request_body/check_otp_body.dart';
 
-import '../../../../../data/model/response/user_model.dart';
-import '../../../../../domain/repository/auth_repo.dart';
+import '../../../data/model/response/user_model.dart';
+import '../../repository/auth_repo.dart';
 import 'package:weltweit/features/services/domain/usecase/auth/base_usecase/base_use_case_call.dart';
 import 'package:weltweit/features/services/domain/usecase/auth/base_usecase/base_usecase.dart';
-import 'package:weltweit/data/model/base/response_model.dart';
+import 'package:weltweit/features/services/data/model/base/response_model.dart';
 
 class CheckOTPUseCase implements BaseUseCase<UserModel> {
   final AuthRepository repository;

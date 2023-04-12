@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-import '../../../domain/logger.dart';
+import '../logger.dart';
 
 const appDatePattern = 'd MMM yyyy';
 const appTimePattern = 'hh:mm a';

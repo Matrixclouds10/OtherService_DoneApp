@@ -1,11 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:weltweit/data/model/base/error_response.dart';
-import 'package:weltweit/domain/logger.dart';
+import 'package:weltweit/features/services/data/model/base/error_response.dart';
+import 'package:weltweit/core/utils/logger.dart';
 
 import '../../../../app.dart';
 import '../../../../generated/locale_keys.g.dart';
-import '../../../model/base/api_response.dart';
-import '../../../model/base/response_model.dart';
+import '../../../../features/services/data/model/base/api_response.dart';
+import '../../../../features/services/data/model/base/response_model.dart';
 import 'error_widget.dart';
 
 class ApiChecker {

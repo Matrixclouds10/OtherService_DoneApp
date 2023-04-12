@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/extensions/num_extensions.dart';
 import 'package:weltweit/core/resources/resources.dart';
+import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/features/services/core/base/base_states.dart';
 import 'package:weltweit/features/services/core/widgets/custom_text.dart';
 import 'package:weltweit/features/services/data/models/response/auth/user_model.dart';
@@ -155,7 +156,6 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                 _nameController.text = state.data?.name ?? "";
                 _emailController.text = state.data?.email ?? "";
                 _phoneController.text = state.data?.mobileNumber ?? "";
-                isMale = state.data?.getGender() == 'male';
                 nerworkImage = state.data?.image;
                 if (countries.where((element) => element.dialCode == state.data?.countryCode).isNotEmpty) {
                   country = countries.where((element) => element.dialCode == state.data?.countryCode).first;
@@ -257,6 +257,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
               defaultValue: _phoneController.text,
               textInputAction: TextInputAction.next,
               disableLengthCheck: true,
+              countries: const ["SA"],
               initialCountryCode: country?.code,
               onCountryChanged: (value) {
                 country = value;
@@ -275,6 +276,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                         dense: true,
                         groupValue: isMale,
                         onChanged: (value) {
+                          logger.d(value);
                           isMale = e;
                           setState(() {});
                         },

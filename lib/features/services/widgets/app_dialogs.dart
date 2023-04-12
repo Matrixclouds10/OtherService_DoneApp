@@ -10,7 +10,9 @@ import 'package:photo_view/photo_view.dart';
 import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/resources/values_manager.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
-import 'package:weltweit/domain/logger.dart';
+import 'package:weltweit/core/services/local/cache_consumer.dart';
+import 'package:weltweit/core/utils/logger.dart';
+import 'package:weltweit/data/injection.dart';
 import 'package:weltweit/features/services/core/routing/routes.dart';
 import 'package:weltweit/features/services/core/widgets/custom_text.dart';
 import 'package:weltweit/features/services/widgets/app_text_tile.dart';
@@ -218,6 +220,9 @@ class AppDialogs {
         ),
         IconsOutlineButton(
           onPressed: () {
+            AppPrefs prefs = getIt<AppPrefs>();
+            prefs.clear();
+            prefs.deleteSecuredData();
             NavigationService.goBack();
             NavigationService.pushNamedAndRemoveUntil(RoutesServices.servicesLoginScreen);
           },

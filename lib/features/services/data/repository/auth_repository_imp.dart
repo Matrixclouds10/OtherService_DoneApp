@@ -1,15 +1,15 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:weltweit/data/model/base/api_response.dart';
-import 'package:weltweit/domain/request_body/check_otp_body.dart';
-import 'package:weltweit/domain/request_body/login_body.dart';
+import 'package:weltweit/features/services/data/model/base/api_response.dart';
+import 'package:weltweit/features/services/domain/request_body/check_otp_body.dart';
+import 'package:weltweit/features/services/domain/request_body/login_body.dart';
+import 'package:weltweit/features/services/domain/request_body/register_body.dart';
 
 import '../../domain/repository/auth_repo.dart';
-import '../../domain/request_body/register_body.dart';
-import '../app_urls/app_url.dart';
-import '../datasource/remote/dio/dio_client.dart';
-import '../datasource/remote/exception/api_error_handler.dart';
+import '../../../../data/app_urls/app_url.dart';
+import '../../../../data/datasource/remote/dio/dio_client.dart';
+import '../../../../data/datasource/remote/exception/api_error_handler.dart';
 
 class AuthRepositoryImp implements AuthRepository {
   final DioClient _dioClient;

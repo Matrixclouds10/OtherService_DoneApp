@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weltweit/domain/logger.dart';
+import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/features/services/core/routing/route_generator.dart';
 
 import 'platform_page_route.dart';

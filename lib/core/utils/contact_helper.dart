@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../domain/logger.dart';
+import 'logger.dart';
 import 'alerts.dart';
 
 class ContactHelper {

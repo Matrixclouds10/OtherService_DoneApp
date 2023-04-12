@@ -1,3 +1,5 @@
+import 'package:weltweit/features/services/data/repository/auth_repository_imp.dart';
+import 'package:weltweit/features/services/domain/repository/auth_repo.dart';
 import 'package:weltweit/features/services/domain/usecase/auth/check_otp_usecase.dart';
 import 'package:weltweit/features/services/domain/usecase/auth/delete_account_usecase.dart';
 import 'package:weltweit/features/services/domain/usecase/auth/forget_password_usecase.dart';
@@ -83,4 +85,7 @@ Future<void> init() async {
   getIt.registerLazySingleton(() => OrdersUseCase(getIt()));
   getIt.registerLazySingleton(() => OrderUseCase(getIt()));
   getIt.registerLazySingleton(() => CreateOrderUseCase(getIt()));
+
+  /// Repository
+  getIt.registerLazySingleton<AuthRepository>(() => AuthRepositoryImp(dioClient: getIt()));
 }

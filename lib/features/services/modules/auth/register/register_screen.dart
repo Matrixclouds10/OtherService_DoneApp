@@ -8,11 +8,11 @@ import 'package:weltweit/core/extensions/num_extensions.dart';
 import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
-import 'package:weltweit/domain/logger.dart';
-import 'package:weltweit/domain/request_body/check_otp_body.dart';
-import 'package:weltweit/domain/request_body/register_body.dart';
+import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/features/services/core/routing/routes.dart';
 import 'package:weltweit/features/services/core/widgets/custom_text.dart';
+import 'package:weltweit/features/services/domain/request_body/check_otp_body.dart';
+import 'package:weltweit/features/services/domain/request_body/register_body.dart';
 import 'package:weltweit/features/services/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
@@ -202,6 +202,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               label: tr(LocaleKeys.yourPhoneNumber),
               controller: _phoneController,
               textInputAction: TextInputAction.next,
+              countries: const ["SA"],
               onCountryChanged: (countryVal) {
                 country = countryVal;
               },
