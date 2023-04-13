@@ -2,22 +2,21 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/data/datasource/remote/exception/api_error_handler.dart';
-import 'package:weltweit/features/services/core/base/base_usecase.dart';
-import '../../../data/model/base_response.dart';
+import 'package:weltweit/features/core/base/base_response.dart';
+import 'package:weltweit/features/core/base/base_usecase.dart';
 import '../../repository/address_repository.dart';
-import '../../request_body/address/address_create_body.dart';
 
 class AddressCreateUsecase
-    extends BaseUseCase<BaseResponse, AddressCreateBody> {
+    extends BaseUseCase<BaseResponse, AddressCreateParams> {
   final AddressRepository _addressRepository;
 
   AddressCreateUsecase(this._addressRepository);
 
   @override
   Future<Either<ErrorModel, BaseResponse>> call(
-      AddressCreateBody parameters) async {
+      AddressCreateParams parameters) async {
     Either<ErrorModel, Response> response = await _addressRepository
-        .addressCreateRepository(addressCreateBody: parameters);
+        .addressCreateRepository(params: parameters);
     return response.fold((l) {
       return Left(ApiErrorHandler.getMessage(l));
     }, (r) {
@@ -38,7 +37,11 @@ class AddressCreateUsecase
 
   @override
   Future<Either<ErrorModel, BaseResponse>> callTest(
-      AddressCreateBody body) async {
+      AddressCreateParams body) async {
     return Left(ApiErrorHandler.getMessage("Test error"));
   }
+}
+
+class AddressCreateParams {
+  toJson() {}
 }

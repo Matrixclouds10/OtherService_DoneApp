@@ -4,12 +4,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
-import 'package:weltweit/features/services/core/base/base_states.dart';
-import 'package:weltweit/features/services/core/routing/routes.dart';
-import 'package:weltweit/features/services/core/widgets/order_item_widget.dart';
+import 'package:weltweit/features/core/base/base_states.dart';
+import 'package:weltweit/features/core/routing/routes.dart';
+import 'package:weltweit/features/core/widgets/order_item_widget.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 
-import 'package:weltweit/features/services/core/widgets/custom_text.dart';
+import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/services/logic/orders/orders_cubit.dart';
 import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/presentation/component/component.dart';

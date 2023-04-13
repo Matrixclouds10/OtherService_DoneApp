@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/services/data/models/response/services/service.dart';
 import 'package:weltweit/features/services/domain/repository/app_repo.dart';
-import 'package:weltweit/features/services/core/base/base_usecase.dart';
+import 'package:weltweit/features/core/base/base_usecase.dart';
 
 class UpdateServicesUseCase
     extends BaseUseCase<List<ServiceModel>, UpdateServicesParams> {

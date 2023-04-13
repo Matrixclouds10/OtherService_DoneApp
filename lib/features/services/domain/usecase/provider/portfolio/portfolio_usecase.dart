@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/services/data/models/response/portfolio/portfolio_image.dart';
-import '../../../../core/base/base_usecase.dart';
+import '../../../../../core/base/base_usecase.dart';
 import '../../../repository/app_repo.dart';
 
 class PortfolioUseCase extends BaseUseCase<List<PortfolioModel>, int> {

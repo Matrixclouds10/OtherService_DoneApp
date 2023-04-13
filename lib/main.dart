@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:weltweit/bloc.dart';
-import 'package:weltweit/features/services/injection.dart' as services_injection;
+import 'package:weltweit/features/injection.dart' as services_injection;
 
 import 'app.dart';
 import 'data/injection.dart' as data_injection;

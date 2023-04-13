@@ -7,20 +7,19 @@ import 'package:weltweit/features/services/data/model/response/address/address_d
 import 'package:weltweit/features/services/data/model/response/address/address_item_model.dart';
 import 'package:weltweit/features/services/data/model/response/address/addresses_response.dart';
 import '../../repository/address_repository.dart';
-import '../../request_body/address/address_read_body.dart';
-import 'package:weltweit/features/services/core/base/base_usecase.dart';
+import 'package:weltweit/features/core/base/base_usecase.dart';
 
 class AddressReadUsecase
-    extends BaseUseCase<List<AddressItemModel>, AddressReadBody> {
+    extends BaseUseCase<List<AddressItemModel>, AddressReadParams> {
   final AddressRepository _addressRepository;
 
   AddressReadUsecase(this._addressRepository);
 
   @override
   Future<Either<ErrorModel, List<AddressItemModel>>> call(
-      AddressReadBody parameters) async {
+      AddressReadParams parameters) async {
     Either<ErrorModel, Response> response = await _addressRepository
-        .addressReadRepository(addressReadBody: parameters);
+        .addressReadRepository(params: parameters);
     return response.fold((l) {
       return Left(ApiErrorHandler.getMessage(l));
     }, (r) {
@@ -50,7 +49,10 @@ class AddressReadUsecase
 
   @override
   Future<Either<ErrorModel, List<AddressItemModel>>> callTest(
-      AddressReadBody body) async {
+      AddressReadParams body) async {
     return Left(ApiErrorHandler.getMessage("Test error"));
   }
+}
+class AddressReadParams {
+  toJson() {}
 }

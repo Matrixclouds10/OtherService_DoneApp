@@ -3,7 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:weltweit/features/services/data/repository/auth_repository_imp.dart';
+import 'package:weltweit/features/data/repository/auth_repository_imp.dart';
 
 import 'package:weltweit/features/services/domain/repository/auth_repo.dart';
 

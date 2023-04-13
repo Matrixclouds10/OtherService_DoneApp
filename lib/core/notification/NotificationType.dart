@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../app.dart';
+import 'package:weltweit/app.dart';
 import 'push_notification_model.dart';
 
 class NotificationHelper {

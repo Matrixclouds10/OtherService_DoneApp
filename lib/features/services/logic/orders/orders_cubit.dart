@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
-import 'package:weltweit/features/services/core/base/base_states.dart';
-import 'package:weltweit/features/services/core/base/base_usecase.dart';
+import 'package:weltweit/features/core/base/base_states.dart';
+import 'package:weltweit/features/core/base/base_usecase.dart';
 import 'package:weltweit/features/services/data/models/response/order/order.dart';
 import 'package:weltweit/features/services/domain/usecase/orders/orders_usecase.dart';
 

@@ -6,10 +6,10 @@ import 'package:dio/dio.dart';
 import 'package:weltweit/core/services/network/network_client.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/core/utils/logger.dart';
-import 'package:weltweit/features/services/core/base/base_response.dart';
-import 'package:weltweit/features/services/core/base/base_usecase.dart';
+import 'package:weltweit/features/core/base/base_response.dart';
+import 'package:weltweit/features/core/base/base_usecase.dart';
 import 'package:weltweit/features/services/data/app_urls/app_url.dart';
-import 'package:weltweit/features/services/data/models/response/auth/user_model.dart';
+import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/services/data/models/response/order/order.dart';
 import 'package:weltweit/features/services/data/models/response/portfolio/portfolio_image.dart';
 import 'package:weltweit/features/services/data/models/response/provider/providers_model.dart';
@@ -17,8 +17,8 @@ import 'package:weltweit/features/services/data/models/response/services/service
 import 'package:weltweit/features/services/data/models/response/services/services_response.dart';
 import 'package:weltweit/features/services/domain/repository/app_repo.dart';
 import 'package:weltweit/features/services/domain/usecase/create_order/create_order_usecase.dart';
-import 'package:weltweit/features/services/domain/usecase/profile/change_password_usecase.dart';
-import 'package:weltweit/features/services/domain/usecase/profile/update_profile_usecase.dart';
+import 'package:weltweit/features/domain/usecase/profile/change_password_usecase.dart';
+import 'package:weltweit/features/domain/usecase/profile/update_profile_usecase.dart';
 import 'package:weltweit/features/services/domain/usecase/provider/providers_usecase.dart';
 import 'package:weltweit/features/services/domain/usecase/services/update_services_usecase.dart';
 

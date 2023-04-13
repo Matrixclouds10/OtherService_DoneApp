@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:weltweit/features/services/core/routing/routes.dart';
-import 'package:weltweit/features/services/core/widgets/custom_text.dart';
-import 'package:weltweit/features/services/core/widgets/offer_item_widget.dart';
+import 'package:weltweit/features/core/routing/routes.dart';
+import 'package:weltweit/features/core/widgets/custom_text.dart';
+import 'package:weltweit/features/core/widgets/offer_item_widget.dart';
 import 'package:weltweit/generated/assets.dart';
 
 class HomeOffers extends StatelessWidget {

@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:logger/logger.dart';
 
-import '../../../../app.dart';
+import 'package:weltweit/app.dart';
 import '../../../../core/services/local/cache_consumer.dart';
 import '../../../../core/services/local/storage_keys.dart';
 import '../../../../core/utils/logger.dart';

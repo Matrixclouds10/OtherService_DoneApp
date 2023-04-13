@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weltweit/core/utils/logger.dart';
-import 'package:weltweit/features/services/core/routing/route_generator.dart';
+import 'package:weltweit/features/core/routing/route_generator.dart';
 
 import 'platform_page_route.dart';
 import 'undefined_route_screen.dart';

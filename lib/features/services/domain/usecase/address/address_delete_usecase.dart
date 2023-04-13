@@ -2,22 +2,21 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/data/datasource/remote/exception/api_error_handler.dart';
-import '../../../data/model/base_response.dart';
+import 'package:weltweit/features/core/base/base_response.dart';
 import '../../repository/address_repository.dart';
-import '../../request_body/address/address_delete_body.dart';
-import 'package:weltweit/features/services/core/base/base_usecase.dart';
+import 'package:weltweit/features/core/base/base_usecase.dart';
 
 class AddressDeleteUsecase
-    extends BaseUseCase<BaseResponse, AddressDeleteBody> {
+    extends BaseUseCase<BaseResponse, AddressDeleteParams> {
   final AddressRepository _addressRepository;
 
   AddressDeleteUsecase(this._addressRepository);
 
   @override
   Future<Either<ErrorModel, BaseResponse>> call(
-      AddressDeleteBody parameters) async {
+      AddressDeleteParams parameters) async {
     Either<ErrorModel, Response> response = await _addressRepository
-        .addressDeleteRepository(addressDeleteBody: parameters);
+        .addressDeleteRepository(params: parameters);
     return response.fold((l) {
       return Left(ApiErrorHandler.getMessage(l));
     }, (r) {
@@ -38,7 +37,10 @@ class AddressDeleteUsecase
 
   @override
   Future<Either<ErrorModel, BaseResponse>> callTest(
-      AddressDeleteBody body) async {
+      AddressDeleteParams body) async {
     return Left(ApiErrorHandler.getMessage("Test error"));
   }
+}
+class AddressDeleteParams {
+  toJson() {}
 }

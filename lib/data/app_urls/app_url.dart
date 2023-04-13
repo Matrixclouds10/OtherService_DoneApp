@@ -6,6 +6,7 @@ class AppURL {
   ///Auth
   static const String kLoginURI = "auth/login";
   static const String kRegisterURI = "auth/register";
+  static const String kRegisterProviderURI = "auth/register";
   static const String kLogoutURI = "auth/logout";
 
   static const String kForgetPasswordURI = "auth/otp";

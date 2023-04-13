@@ -3,7 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 
 import '../../../../core/utils/logger.dart';
 import '../../../../generated/locale_keys.g.dart';
-import '../../../../features/services/data/model/base/error_response.dart';
+import '../../../../features/data/models/base/error_response.dart';
 import 'error_widget.dart';
 
 class ApiErrorHandler {

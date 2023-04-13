@@ -4,9 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/data/injection.dart';
 import 'package:weltweit/features/services/data/model/response/address/address_item_model.dart';
-import 'package:weltweit/features/services/domain/request_body/address/address_read_body.dart';
 import 'package:weltweit/features/services/domain/usecase/address/address_read_usecase.dart';
-import 'package:weltweit/features/services/core/base/base_usecase.dart';
 
 part 'address_state.dart';
 
@@ -17,7 +15,7 @@ class AddressCubit extends Cubit<AddressState> {
     emit(const AddressStateLoading());
     AddressReadUsecase addressReadUsecase = getIt();
     Either<ErrorModel, List<AddressItemModel>> result =
-        await addressReadUsecase(AddressReadBody());
+        await addressReadUsecase(AddressReadParams());
     result.fold((l) {
       emit(AddressStateError(l));
     }, (r) {

@@ -2,7 +2,7 @@ import 'package:weltweit/features/services/domain/request_body/check_otp_body.da
 import 'package:weltweit/features/services/domain/request_body/login_body.dart';
 import 'package:weltweit/features/services/domain/request_body/register_body.dart';
 
-import '../../data/model/base/api_response.dart';
+import '../../../data/models/base/api_response.dart';
 
 mixin AuthRepository {
   Future<ApiResponse> login({required LoginBody loginBody});

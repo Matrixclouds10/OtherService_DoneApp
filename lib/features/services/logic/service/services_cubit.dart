@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/core/utils/logger.dart';
-import 'package:weltweit/features/services/core/base/base_states.dart';
+import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/services/data/models/response/services/service.dart';
 import 'package:weltweit/features/services/domain/usecase/services/all_services_usecase.dart';
 import 'package:weltweit/features/services/domain/usecase/services/update_services_usecase.dart';

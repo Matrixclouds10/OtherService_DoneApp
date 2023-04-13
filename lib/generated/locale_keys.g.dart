@@ -1,6 +1,10 @@
 // DO NOT EDIT. This is code generated via package:easy_localization/generate.dart
 
 abstract class LocaleKeys {
+  
+  static const serviceProvider = 'serviceProvider';
+  static const newClient = 'newClient';
+  static const joinAs = 'joinAs';
   static const addedToFavorite = 'addedToFavorite';
   static const confirmLogout = 'confirmLogout';
   static const male = 'male';
@@ -189,4 +193,9 @@ abstract class LocaleKeys {
   static const toContactUs = 'toContactUs';
   static const yourAccountInReview = 'yourAccountInReview';
   static const goToMyFiles = 'goToMyFiles';
+   static const allowLocationStatusToBeShownForNearbyUsers= 'السماح للموقع ليتم عرضه للمستخدمين القريبين';
+  static const selectAction = 'اختر العملية';
+  static const other = 'other';
+  static const letsStart = 'letsStart';
+  static const loginAsVisitor = 'loginAsVisitor';
 }

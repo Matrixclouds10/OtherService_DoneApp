@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/resources/decoration.dart';
-import 'package:weltweit/features/services/core/widgets/custom_text.dart';
+import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/features/services/data/model/response/address/address_item_model.dart';
 import 'package:weltweit/features/services/modules/my_addresses/logic/address_cubit.dart';

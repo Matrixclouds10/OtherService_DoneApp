@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weltweit/features/services/bloc.dart';
+import 'package:weltweit/features/bloc.dart';
 
 class GenerateMultiBloc extends StatelessWidget {
   final Widget child;

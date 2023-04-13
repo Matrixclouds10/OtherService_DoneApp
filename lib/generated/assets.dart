@@ -33,6 +33,17 @@ class Assets {
   static const String svgMoreNotificationIcon = 'assets/images/svg/more_notification_icon.svg';
   static const String svgMoreOrderIcon = 'assets/images/svg/more_order_icon.svg';
 
+  static const String imagesBaloon = "assets/images/baloon.png";
+  static const String imagesCustomerService = "assets/images/customer-service.png";
+  static const String imagesCustomerSupport = "assets/images/customer-support.png";
+  static const String imagesFile = "assets/images/file.png";
+  static const String imagesInfo = "assets/images/info.png";
+  static const String imagesInternet = "assets/images/internet.png";
+  static const String imagesLogOut = "assets/images/log-out.png";
+  static const String imagesLogoJpg = "assets/images/logo_jpg.jpg";
+  static const String imagesPending = "assets/images/pending.png";
+
+
   static const String fontsMontserratArabicBlack = 'assets/fonts/montserratArabicBlack.otf';
   static const String fontsMontserratArabicBold = 'assets/fonts/montserratArabicBold.otf';
   static const String fontsMontserratArabicExtraBold = 'assets/fonts/montserratArabicExtraBold.otf';
@@ -46,4 +57,5 @@ class Assets {
   static const String fontsMontserratLight = 'assets/fonts/montserratLight.ttf';
   static const String fontsMontserratMedium = 'assets/fonts/montserratMedium.ttf';
   static const String fontsMontserratRegular = 'assets/fonts/montserratRegular.ttf';
+
 }

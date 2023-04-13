@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
-import 'package:weltweit/features/services/core/widgets/custom_text.dart';
-import 'package:weltweit/features/services/core/widgets/service_provider_item.dart';
+import 'package:weltweit/features/core/widgets/custom_text.dart';
+import 'package:weltweit/features/core/widgets/service_provider_item.dart';
 import 'package:weltweit/features/services/data/models/response/order/order.dart';
 import 'package:weltweit/features/services/data/models/response/provider/providers_model.dart';
 import 'package:weltweit/presentation/component/component.dart';

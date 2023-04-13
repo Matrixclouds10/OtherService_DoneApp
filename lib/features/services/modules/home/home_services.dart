@@ -1,10 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weltweit/features/services/core/base/base_states.dart';
-import 'package:weltweit/features/services/core/routing/routes.dart';
-import 'package:weltweit/features/services/core/widgets/custom_text.dart';
-import 'package:weltweit/features/services/core/widgets/service_item_widget.dart';
+import 'package:weltweit/features/core/base/base_states.dart';
+import 'package:weltweit/features/core/routing/routes.dart';
+import 'package:weltweit/features/core/widgets/custom_text.dart';
+import 'package:weltweit/features/core/widgets/service_item_widget.dart';
 import 'package:weltweit/features/services/logic/service/services_cubit.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/custom_loading_spinner.dart';

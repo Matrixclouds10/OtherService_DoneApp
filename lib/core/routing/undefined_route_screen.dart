@@ -1,6 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:weltweit/features/services/core/widgets/custom_text.dart';
+import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 
 class UndefinedRouteScreen extends StatelessWidget {

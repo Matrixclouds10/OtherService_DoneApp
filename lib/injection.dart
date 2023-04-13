@@ -1,8 +1,7 @@
 import 'package:weltweit/data/injection.dart';
-import 'package:weltweit/features/services/modules/auth/otp/otp_cubit.dart';
-import 'package:weltweit/features/services/modules/auth/register/register_cubit.dart';
-
-import 'features/services/modules/auth/login/login_cubit.dart';
+import 'package:weltweit/features/screens/auth/login/login_cubit.dart';
+import 'package:weltweit/features/screens/auth/otp/otp_cubit.dart';
+import 'package:weltweit/features/screens/auth/register/register_cubit.dart';
 
 Future<void> init() async {
   // Bloc

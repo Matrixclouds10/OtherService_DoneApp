@@ -1,7 +1,7 @@
 import 'package:country_code_picker/country_localizations.dart';
 import 'package:easy_localization/easy_localization.dart' as el;
 import 'package:flutter/material.dart';
-import 'package:weltweit/features/services/core/routing/routes.dart';
+import 'package:weltweit/features/core/routing/routes.dart';
 
 import 'core/resources/theme/theme.dart';
 import 'core/routing/navigation_services.dart';

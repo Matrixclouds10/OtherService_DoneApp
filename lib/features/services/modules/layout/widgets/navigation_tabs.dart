@@ -4,7 +4,7 @@ import 'package:weltweit/core/tabs/tab.dart';
 import 'package:weltweit/features/services/modules/favorite/favorite_page.dart';
 import 'package:weltweit/features/services/modules/home/home_page.dart';
 
-import 'package:weltweit/features/services/modules/profile/profile_page.dart';
+import 'package:weltweit/features/screens/profile/profile_page.dart';
 import 'package:weltweit/features/services/modules/wallet/wallet_page.dart';
 import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';

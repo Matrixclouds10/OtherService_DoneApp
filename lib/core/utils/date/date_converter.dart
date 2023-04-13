@@ -1,6 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 
-import '../../../app.dart';
+import 'package:weltweit/app.dart';
 
 class DateConverter {
   static String formatDate(DateTime dateTime) {
