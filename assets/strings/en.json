@@ -2,7 +2,9 @@
   "en": "English",
   "ar": "العربية",
   "error": "Error",
-
+  "serviceProvider": "serviceProvider",
+  "newClient": "newClient",
+  "joinAs": "joinAs",
   "cantGetNewOrders": "لا تستطيع تلقي طلبات جديدة",
   "makeSureToSelectServicesYouProvide": "تأكد من تحديد الخدمات المقدمة بواسطتك",
   "makeSureToUploadAllFiles": "تأكد من رفع جميع الملفات المطلوبة",

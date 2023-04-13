@@ -1,5 +1,8 @@
 {
   "en": "English",
+  "serviceProvider": "مقدم خدمة",
+  "newClient": "عميل جديد",
+  "joinAs": "انضم كـ",
   "ar": "العربية",
   "error": "حدث خطأ",
   "appLanguage": "لغة",
