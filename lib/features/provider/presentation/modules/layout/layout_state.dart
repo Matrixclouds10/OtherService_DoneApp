@@ -1,13 +1,13 @@
 part of 'layout_cubit.dart';
 
-abstract class LayoutState extends Equatable {
-  const LayoutState();
+abstract class LayoutProviderState extends Equatable {
+  const LayoutProviderState();
 
   @override
   List<Object> get props => [];
 }
 
-class LayoutInitial extends LayoutState {
+class LayoutInitial extends LayoutProviderState {
   final int currentIndex;
   LayoutInitial({required this.currentIndex});
 

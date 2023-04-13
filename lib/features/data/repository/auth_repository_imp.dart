@@ -6,7 +6,7 @@ import 'package:weltweit/features/services/domain/request_body/check_otp_body.da
 import 'package:weltweit/features/services/domain/request_body/login_body.dart';
 import 'package:weltweit/features/services/domain/request_body/register_body.dart';
 
-import '../../services/domain/repository/auth_repo.dart';
+import '../../domain/repositoy/auth_repo.dart';
 import '../../../data/app_urls/app_url.dart';
 import '../../../data/datasource/remote/dio/dio_client.dart';
 import '../../../data/datasource/remote/exception/api_error_handler.dart';
@@ -18,10 +18,11 @@ class AuthRepositoryImp implements AuthRepository {
     required DioClient dioClient,
   }) : _dioClient = dioClient;
   @override
-  Future<ApiResponse> login({required LoginBody loginBody}) async {
+  Future<ApiResponse> login({required LoginBody loginBody,required bool typeIsProvider}) async {
     try {
+      String url = typeIsProvider ? AppURL.kLoginProviderURI : AppURL.kLoginURI;
       Response response = await _dioClient.post(
-        AppURL.kLoginURI,
+       url,
         queryParameters: loginBody.toJson(),
       );
       return ApiResponse.withSuccess(response);
@@ -34,7 +35,7 @@ class AuthRepositoryImp implements AuthRepository {
   Future<ApiResponse> register({required RegisterBody registerBody}) async {
     try {
       String url = registerBody.typeIsProvider ? AppURL.kRegisterProviderURI : AppURL.kRegisterURI;
-      Response response = await _dioClient.post(AppURL.kRegisterURI, queryParameters: registerBody.toJson(), filePath: registerBody.image?.path);
+      Response response = await _dioClient.post(url, queryParameters: registerBody.toJson(), filePath: registerBody.image?.path);
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -66,9 +67,10 @@ class AuthRepositoryImp implements AuthRepository {
 
   @override
   Future<ApiResponse> otpCode({required CheckOTPBody checkOTPBody}) async {
+    String url = checkOTPBody.typeIsProvider ? AppURL.kCheckOTPProviderURI : AppURL.kCheckOTPURI;
     try {
       Response response = await _dioClient.post(
-        AppURL.kCheckOTPURI,
+        url,
         queryParameters: checkOTPBody.toJson(),
       );
       return ApiResponse.withSuccess(response);

@@ -7,6 +7,7 @@ import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/data/injection.dart';
 import 'package:weltweit/features/core/routing/routes.dart';
+import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/presentation/component/component.dart';
 
@@ -35,10 +36,15 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
       AppPrefs prefs = getIt<AppPrefs>();
       bool isOnBoarding = prefs.get(PrefKeys.isFirstTime, defaultValue: true);
       String? token = prefs.get(PrefKeys.token, defaultValue: null);
+      bool typeIsProvider = prefs.get(PrefKeys.isTypeProvider, defaultValue: false);
       if (isOnBoarding) {
         NavigationService.pushNamedAndRemoveUntil(RoutesServices.servicesOnBoardingScreen);
       } else if (token != null) {
-        NavigationService.pushNamedAndRemoveUntil(RoutesServices.servicesLayoutScreen);
+        if (typeIsProvider) {
+          NavigationService.pushNamedAndRemoveUntil(RoutesProvider.providerLayoutScreen);
+        } else {
+          NavigationService.pushNamedAndRemoveUntil(RoutesServices.servicesLayoutScreen);
+        }
       } else {
         NavigationService.pushNamedAndRemoveUntil(RoutesServices.servicesWelcomeScreen);
       }

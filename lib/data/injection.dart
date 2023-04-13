@@ -5,7 +5,7 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weltweit/features/data/repository/auth_repository_imp.dart';
 
-import 'package:weltweit/features/services/domain/repository/auth_repo.dart';
+import 'package:weltweit/features/domain/repositoy/auth_repo.dart';
 
 import '../core/services/local/cache_consumer.dart';
 import '../core/services/network/api_consumer.dart';
@@ -17,7 +17,7 @@ import 'datasource/remote/dio/logging_interceptor.dart';
 final getIt = GetIt.instance;
 Future<void> init() async {
   /// Core
-  getIt.registerLazySingleton(() => DioClient(AppURL.kBaseURL, getIt(), loggingInterceptor: getIt(), cacheConsumer: getIt()));
+  getIt.registerLazySingleton(() => DioClient("", getIt(), loggingInterceptor: getIt(), cacheConsumer: getIt()));
 
 
   /// External

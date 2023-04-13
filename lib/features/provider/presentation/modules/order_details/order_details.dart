@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/features/provider/presentation/modules/order_details/video_player.dart';
@@ -26,7 +27,7 @@ class OrderDetails extends StatelessWidget {
             style: ButtonStyle(
               padding: MaterialStateProperty.all(EdgeInsets.zero),
             ),
-            icon: Icon(Icons.comment),
+            icon: Icon(FontAwesomeIcons.comment),
             onPressed: () {},
           ),
 
@@ -35,7 +36,7 @@ class OrderDetails extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 8),
             iconSize: 22,
             constraints: BoxConstraints(),
-            icon: Icon(Icons.menu),
+            icon: Icon(FontAwesomeIcons.ellipsisVertical),
             onPressed: () {},
           ),
         ],
@@ -72,7 +73,7 @@ class OrderDetails extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Icon(Icons.calendar_month, size: 16),
+                      Icon(FontAwesomeIcons.calendar, size: 16),
                       SizedBox(width: 4),
                       CustomText("07/01/2020 - 3 م : 5 م", pv: 0).footer(),
                       Spacer(),

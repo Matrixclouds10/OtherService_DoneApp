@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:weltweit/core/tabs/tab.dart';
 import 'package:weltweit/features/provider/presentation/modules/more/more_page.dart';
-import 'package:weltweit/features/screens/profile/profile_page.dart';
+import 'package:weltweit/features/provider/presentation/modules/profile/profile_page.dart';
 
 import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
@@ -23,32 +24,32 @@ List<NavigationTab> kTabs = <NavigationTab>[
   NavigationTab(
     name: LocaleKeys.home,
     image: Assets.imagesSvgMoreNotificationIcon,
-    unSelectIcon: Icons.house,
-    selectIcon: Icons.house,
+    unSelectIcon: FontAwesomeIcons.house,
+    selectIcon: FontAwesomeIcons.house,
     initialRoute: HomePage(),
     index: NavigationTabs.home,
   ),
   NavigationTab(
     name: LocaleKeys.wallet,
     image: '',
-    unSelectIcon: Icons.wallet,
-    selectIcon: Icons.wallet,
+    unSelectIcon: FontAwesomeIcons.wallet,
+    selectIcon: FontAwesomeIcons.wallet,
     initialRoute: WalletPage(),
     index: NavigationTabs.wallet,
   ),
   NavigationTab(
     name: LocaleKeys.profile,
     image: '',
-    selectIcon: Icons.person,
-    unSelectIcon: Icons.person,
+    selectIcon: FontAwesomeIcons.userAlt,
+    unSelectIcon: FontAwesomeIcons.userAlt,
     initialRoute: ProfilePage(),
     index: NavigationTabs.profile,
   ),
   NavigationTab(
     name: LocaleKeys.more,
     image: '',
-    selectIcon: Icons.list,
-    unSelectIcon: Icons.list,
+    selectIcon: FontAwesomeIcons.listUl,
+    unSelectIcon: FontAwesomeIcons.listUl,
     initialRoute: MorePage(),
     index: NavigationTabs.more,
   ),

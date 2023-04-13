@@ -8,7 +8,9 @@ import 'package:weltweit/core/resources/values_manager.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
+import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/data/injection.dart';
+import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/features/data/models/base/response_model.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/core/routing/routes.dart';
@@ -25,21 +27,27 @@ import 'package:weltweit/presentation/component/text/click_text.dart';
 import 'login_cubit.dart';
 
 class LoginScreen extends StatefulWidget {
-
-  const LoginScreen({ Key? key}) : super(key: key);
+  final bool typeIsProvider;
+  const LoginScreen({required this.typeIsProvider, Key? key}) : super(key: key);
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   late LoginCubit _viewModel;
 
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
+  bool typeIsProvider = false;
+  late TabController _tabController;
   @override
   void initState() {
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      typeIsProvider = _tabController.index == 0;
+      logger.d('typeIsProvider $typeIsProvider');
+    });
     if (kDebugMode) {
       _phoneController.text = '1006896871';
       _passwordController.text = '123456';
@@ -55,7 +63,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
         String phone = _phoneController.text;
         String password = _passwordController.text;
-        var response = await BlocProvider.of<LoginCubit>(context, listen: false).login(phone, password);
+        var response = await BlocProvider.of<LoginCubit>(context, listen: false).login(
+          phone,
+          password,
+          typeIsProvider,
+        );
 
         if (response.isSuccess) {
           UserModel userEntity = response.data;
@@ -63,13 +75,19 @@ class _LoginScreenState extends State<LoginScreen> {
           if (token.isNotEmpty) {
             AppPrefs prefs = getIt();
             prefs.save(PrefKeys.token, token);
+            prefs.save(PrefKeys.isTypeProvider, typeIsProvider);
           }
-          Navigator.pushNamedAndRemoveUntil(context, RoutesServices.servicesLayoutScreen, (route) => false);
+          if (typeIsProvider) {
+            Navigator.pushNamedAndRemoveUntil(context, RoutesProvider.providerLayoutScreen, (route) => false);
+          } else {
+            Navigator.pushNamedAndRemoveUntil(context, RoutesServices.servicesLayoutScreen, (route) => false);
+          }
         } else if (response.error?.code == 301) {
           NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
             'phone': _phoneController.text,
             'code': _viewModel.body.code,
             'checkOTPType': CheckOTPType.register,
+            'typeIsProvider': typeIsProvider,
           });
         } else {
           if (response is ResponseModel) {
@@ -84,6 +102,12 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       }
     }
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -128,6 +152,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: const TextStyle().titleStyle(fontSize: 18).boldStyle().customColor(primaryColor),
                                 textAlign: TextAlign.center,
                               ),
+                              //Tabs
+                              TabBar(
+                                controller: _tabController,
+                                
+                                tabs: const [
+                                  Tab(child: CustomText("مزود خدمة")),
+                                  Tab(child: CustomText("مستخدم")),
+                                ],
+                              ),
+
                               VerticalSpace(kScreenPaddingLarge.h),
                               _buildForm(body),
                               VerticalSpace(kScreenPaddingNormal.h),
@@ -154,7 +188,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   text: tr(LocaleKeys.questionCreateAccount),
                                   subText: tr(LocaleKeys.signUp),
                                   textColor: Colors.grey,
-                                  onTap: () => NavigationService.push(RoutesServices.servicesRegisterScreen),
+                                  onTap: () => NavigationService.push(RoutesServices.servicesUserTypeScreen),
                                 ),
                               ),
                               VerticalSpace(kScreenPaddingNormal.h),

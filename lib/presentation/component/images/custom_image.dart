@@ -46,7 +46,7 @@ class CustomImage extends StatelessWidget {
         borderRadius:
             borderRadius ?? BorderRadius.all(Radius.circular(radius.r)),
         child: Container(
-          decoration: const BoxDecoration().listStyle().customRadius(
+          decoration: const BoxDecoration().customRadius(
               borderRadius:
                   borderRadius ?? BorderRadius.all(Radius.circular(radius.r))),
           child: (imageUrl ?? '').isEmpty

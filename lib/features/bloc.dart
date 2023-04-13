@@ -23,7 +23,15 @@ final List<dynamic> kServicesProviders = [
   BlocProvider<LayoutCubit>(create: (BuildContext context) => LayoutCubit()),
 
   //Profile
-  BlocProvider<ProfileCubit>(create: (BuildContext context) => ProfileCubit(getIt(),getIt(),getIt(), getIt(), getIt(), getIt(), getIt())),
+  BlocProvider<ProfileCubit>(
+      create: (BuildContext context) => ProfileCubit(
+            getIt(),
+            getIt(),
+            getIt(),
+            getIt(),
+            getIt(),
+            getIt(),
+          )),
 
   //Services
   BlocProvider<ServicesCubit>(create: (BuildContext context) => ServicesCubit(getIt(), getIt())),

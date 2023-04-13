@@ -10,15 +10,15 @@ import 'package:weltweit/features/provider/domain/usecase/services/update_servic
 
 part 'services_state.dart';
 
-class ServicesCubit extends Cubit<ServicesState> {
+class ServicesProviderCubit extends Cubit<ServicesProviderState> {
   // final MyServicesUseCase myServicesUseCase;
   final AllServicesUseCase allServicesUseCase;
   final UpdateServicesUseCase updateServicesUseCase;
-  ServicesCubit(
+  ServicesProviderCubit(
     // this.myServicesUseCase,
     this.allServicesUseCase,
     this.updateServicesUseCase,
-  ) : super(const ServicesState());
+  ) : super(const ServicesProviderState());
 
   Future<void> getAllServices() async {
     initStates();

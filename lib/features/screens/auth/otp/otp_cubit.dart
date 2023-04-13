@@ -62,15 +62,23 @@ class OtpCubit extends Cubit<OtpState> {
   }
 
   //send phone to get code
-  Future<ResponseModel> otpCode({required String phone, required String code, required String otp, required CheckOTPType type}) async {
+  Future<ResponseModel> otpCode({required String phone, required String code, required String otp, required CheckOTPType type, required bool typeIsProvider}) async {
     _isLoading = true;
     emit(OtpState());
-    ResponseModel responseModel = await _otpUseCase.call(body: CheckOTPBody(phone: phone, code: code, type: type, otp: otp));
+    ResponseModel responseModel = await _otpUseCase.call(
+        body: CheckOTPBody(
+      phone: phone,
+      code: code,
+      type: type,
+      otp: otp,
+      typeIsProvider: typeIsProvider,
+    ));
     if (type == CheckOTPType.register && responseModel.isSuccess && responseModel.data != null) {
       UserModel userEntity = responseModel.data;
       String token = userEntity.token ?? '';
       AppPrefs prefs = getIt();
       prefs.save(PrefKeys.token, token);
+      prefs.save(PrefKeys.isTypeProvider, typeIsProvider);
     }
     _isLoading = false;
     emit(OtpState());

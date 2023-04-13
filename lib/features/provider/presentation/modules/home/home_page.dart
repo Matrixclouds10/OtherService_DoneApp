@@ -1,10 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/widgets/order_item_widget.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
-import 'package:weltweit/features/logic/profile/profile_cubit.dart';
+import 'package:weltweit/features/provider/logic/profile/profile_cubit.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/presentation/component/component.dart';
@@ -12,7 +13,7 @@ import 'package:weltweit/features/provider/presentation/modules/orders/orders_pa
 import 'package:weltweit/features/widgets/app_text_tile.dart';
 
 import 'package:weltweit/core/resources/resources.dart';
-import 'package:weltweit/features/core/routing/routes.dart';
+import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 
 class HomePage extends StatefulWidget {
@@ -34,7 +35,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    user = context.watch<ProfileCubit>().state.data!;
+    user = context.watch<ProfileProviderCubit>().state.data!;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(children: [
@@ -47,7 +48,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             children: [
               Row(
                 children: [
-                  Icon(Icons.my_location),
+                  Icon(FontAwesomeIcons.locationDot),
                   SizedBox(width: 4),
                   Container(
                     decoration: BoxDecoration().radius(radius: 4),
@@ -58,9 +59,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               CustomText("طلباتي").header(),
               IconButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, RoutesServices.servicesNotifications);
+                    Navigator.pushNamed(context, RoutesProvider.providerNotifications);
                   },
-                  icon: Icon(Icons.notifications)),
+                  icon: Icon(FontAwesomeIcons.bell)),
             ],
           ),
         ),
@@ -107,14 +108,14 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                           Row(
                             children: [
                               Spacer(),
-                              BlocBuilder<ProfileCubit, ProfileState>(
+                              BlocBuilder<ProfileProviderCubit, ProfileProviderState>(
                                 buildWhen: (previous, current) => previous.availabilityState != current.availabilityState,
                                 builder: (context, state) {
                                   return CustomButton(
                                     onTap: () {
-                                      context.read<ProfileCubit>().updateAvailability();
+                                      context.read<ProfileProviderCubit>().updateAvailability();
                                       if (user.isAvailable()) {
-                                        context.read<ProfileCubit>().updateLocation(context);
+                                        context.read<ProfileProviderCubit>().updateLocation(context);
                                       }
                                     },
                                     title: user.isAvailable() ? LocaleKeys.available.tr() : LocaleKeys.unavailable.tr(),

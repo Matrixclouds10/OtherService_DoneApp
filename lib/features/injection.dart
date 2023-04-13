@@ -2,7 +2,7 @@ import 'package:weltweit/features/data/repository/auth_repository_imp.dart';
 import 'package:weltweit/features/domain/usecase/auth/update_fcm_token_usecase.dart';
 import 'package:weltweit/features/domain/usecase/profile/update_profile_availablity_usecase.dart';
 import 'package:weltweit/features/domain/usecase/profile/update_profile_location_usecase%20copy.dart';
-import 'package:weltweit/features/services/domain/repository/auth_repo.dart';
+import 'package:weltweit/features/domain/repositoy/auth_repo.dart';
 import 'package:weltweit/features/domain/usecase/auth/check_otp_usecase.dart';
 import 'package:weltweit/features/domain/usecase/auth/delete_account_usecase.dart';
 import 'package:weltweit/features/domain/usecase/auth/forget_password_usecase.dart';
@@ -71,7 +71,6 @@ Future<void> init() async {
   getIt.registerLazySingleton(() => ProfileUseCase(repository: getIt()));
   getIt.registerLazySingleton(() => ChangePasswordUseCase(repository: getIt()));
   getIt.registerLazySingleton(() => DeleteProfileUseCase(repository: getIt()));
-  getIt.registerLazySingleton(() => UpdateProfileAvailabilityUseCase(repository: getIt()));
   getIt.registerLazySingleton(() => UpdateProfileLocationUseCase(repository: getIt()));
 
 
@@ -94,4 +93,6 @@ Future<void> init() async {
 
   /// Repository
   getIt.registerLazySingleton<AuthRepository>(() => AuthRepositoryImp(dioClient: getIt()));
+
+  
 }

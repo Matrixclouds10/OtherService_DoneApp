@@ -2,10 +2,10 @@ import 'package:weltweit/features/services/domain/request_body/check_otp_body.da
 import 'package:weltweit/features/services/domain/request_body/login_body.dart';
 import 'package:weltweit/features/services/domain/request_body/register_body.dart';
 
-import '../../../data/models/base/api_response.dart';
+import '../../data/models/base/api_response.dart';
 
 mixin AuthRepository {
-  Future<ApiResponse> login({required LoginBody loginBody});
+  Future<ApiResponse> login({required LoginBody loginBody,required bool typeIsProvider});
 
   Future<ApiResponse> otpCode({required CheckOTPBody checkOTPBody});
   Future<ApiResponse> updateFCMToken({required String fcmToken, required String deviceType});

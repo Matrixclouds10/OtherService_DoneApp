@@ -1,35 +1,38 @@
 class AppURL {
-  static const String kAPIKey = "";
-  static const String kBaseURL = "http://superapp.weltweithg.com/api/";
-  // static const String kBaseURL = "https://super-app.dev01.matrix-clouds.com/api/";
+  static const kAPIKey = "";
+  static const kBaseURL = "http://superapp.weltweithg.com/api";
 
   ///Auth
-  static const String kLoginURI = "auth/login";
-  static const String kRegisterURI = "auth/register";
-  static const String kRegisterProviderURI = "auth/register";
-  static const String kLogoutURI = "auth/logout";
-
-  static const String kForgetPasswordURI = "auth/otp";
-  static const String kCheckOTPURI = "auth/check-otp";
-  static const String kResetPasswordURI = "";
-  static const String kDeleteAccountURI = "";
-  static const String kUpdateFCMTokenURI = "fcm_token";
+  static const String kLoginURI = "$kBaseURL/auth/login";
+  static const String kRegisterURI = "$kBaseURL/auth/register";
+  static const String kLogoutURI = "$kBaseURL/auth/logout";
+  static const String kForgetPasswordURI = "$kBaseURL/auth/otp";
+  static const String kCheckOTPURI = "$kBaseURL/auth/check-otp";
+  static const String kResetPasswordURI = "$kBaseURL/";
+  static const String kDeleteAccountURI = "$kBaseURL/";
+  static const String kUpdateFCMTokenURI = "$kBaseURL/fcm_token";
 
   ///more
-  static const String kGetProfileURL = "profile";
-  static const String kUpdateProfileURL = "";
+  static const String kGetProfileURL = "$kBaseURL/profile";
+  static const String kUpdateProfileURL = "$kBaseURL/";
 
   ///setting
-  static const String kGetCitiesURL = "";
-  static const String kGetCategoriesURL = "";
-  static const String kContactUsRequestURL = "";
-  static const String kGetFAGsURL = "";
+  static const String kGetCitiesURL = "$kBaseURL/";
+  static const String kGetCategoriesURL = "$kBaseURL/";
+  static const String kContactUsRequestURL = "$kBaseURL/";
+  static const String kGetFAGsURL = "$kBaseURL/";
 
   ///notifications
-  static const String kGetNotificationsURI = '';
+  static const String kGetNotificationsURI = '$kBaseURL/';
 
   ///offer
-  static const String kGetOffersURI = '';
-  static const String kGetOfferDetailsURI = '';
+  static const String kGetOffersURI = '$kBaseURL/';
+  static const String kGetOfferDetailsURI = '$kBaseURL/';
+
+
+
+  static const String kLoginProviderURI = "$kBaseURL/service-provider/login";
+  static const String kRegisterProviderURI = "$kBaseURL/service-provider/register";
+  static const String kCheckOTPProviderURI = "$kBaseURL/service-provider/check-otp";
 
 }

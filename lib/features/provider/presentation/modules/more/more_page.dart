@@ -9,7 +9,7 @@ import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/features/provider/logic/service/services_cubit.dart';
 import 'package:weltweit/features/provider/presentation/modules/layout/layout_cubit.dart';
 
-import 'package:weltweit/features/core/routing/routes.dart';
+import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/presentation/component/component.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import '../home/home_page.dart';
@@ -42,19 +42,19 @@ class MorePage extends StatelessWidget {
                         text: 'ملفاتي',
                         trailingText: "",
                         onTap: () {
-                          Navigator.pushNamed(context, RoutesServices.documents);
+                          Navigator.pushNamed(context, RoutesProvider.providerDocuments);
                         }),
                     Divider(height: 2, color: Colors.grey[300]),
-                    BlocBuilder<ServicesCubit, ServicesState>(
+                    BlocBuilder<ServicesProviderCubit, ServicesProviderState>(
                       buildWhen: (previous, current) => previous.services != current.services,
-                      bloc: BlocProvider.of<ServicesCubit>(context)..getSavedServices(),
+                      bloc: BlocProvider.of<ServicesProviderCubit>(context)..getSavedServices(),
                       builder: (context, state) {
                         return singleCustomListTile(
                             image: Assets.imagesCustomerSupport,
                             text: LocaleKeys.providedServices.tr(),
                             trailingText: "${state.services.length} ${LocaleKeys.services.tr()}",
                             onTap: () {
-                              Navigator.pushNamed(context, RoutesServices.servicesServices);
+                              Navigator.pushNamed(context, RoutesProvider.providerServices);
                             });
                       },
                     ),
@@ -64,7 +64,7 @@ class MorePage extends StatelessWidget {
                         text: 'سجل الطلبات',
                         trailingText: "٣ طلبات",
                         onTap: () {
-                          Navigator.pushNamed(context, RoutesServices.servicesOrders);
+                          Navigator.pushNamed(context, RoutesProvider.providerOrders);
                         }),
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
@@ -79,7 +79,7 @@ class MorePage extends StatelessWidget {
                         text: 'من نحن',
                         trailingText: "تعرف علينا",
                         onTap: () {
-                          Navigator.pushNamed(context, RoutesServices.servicesAboutUs);
+                          Navigator.pushNamed(context, RoutesProvider.providerAboutUs);
                         }),
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
@@ -87,7 +87,7 @@ class MorePage extends StatelessWidget {
                         text: 'تواصل معنا',
                         trailingText: "نحن في خدمتك دائما",
                         onTap: () {
-                          Navigator.pushNamed(context, RoutesServices.servicesContactUs);
+                          Navigator.pushNamed(context, RoutesProvider.providerContactUs);
                         }),
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
@@ -95,7 +95,7 @@ class MorePage extends StatelessWidget {
                         text: 'اشترك الان',
                         trailingText: "غير مفعل",
                         onTap: () {
-                          Navigator.pushNamed(context, RoutesServices.subscribe);
+                          Navigator.pushNamed(context, RoutesProvider.providerSubscribe);
                         }),
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
@@ -108,7 +108,7 @@ class MorePage extends StatelessWidget {
                           message: LocaleKeys.logOutMessage.tr(),
                         );
                         if (status) {
-                          if (context.mounted) context.read<LayoutCubit>().setCurrentIndex(0);
+                          if (context.mounted) context.read<LayoutProviderCubit>().setCurrentIndex(0);
                           NavigationService.logout();
                         }
                       },

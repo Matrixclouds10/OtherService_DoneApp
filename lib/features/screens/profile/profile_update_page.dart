@@ -34,7 +34,14 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
   final TextEditingController _confirmPasswordController = TextEditingController();
   File? image;
   String? nerworkImage;
-  Country? country;
+  Country? country = Country(
+  name: "Saudi Arabia",
+  flag: "🇸🇦",
+  code: "SA",
+  dialCode: "966",
+  minLength: 9,
+  maxLength: 9,
+);
   bool isMale = true;
 
   final _formKey = GlobalKey<FormState>();
@@ -62,7 +69,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
           mobileNumber: phone,
           email: email,
           image: image,
-          countryCode: country?.code,
+          countryCode: country?.dialCode,
           countryIso: country?.name,
           genderIsMale: isMale,
         );
@@ -160,7 +167,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                 if (countries.where((element) => element.dialCode == state.data?.countryCode).isNotEmpty) {
                   country = countries.where((element) => element.dialCode == state.data?.countryCode).first;
                 } else {
-                  country = countries.firstWhere((element) => element.name == "Egypt");
+                  country = countries.firstWhere((element) => element.name == "Saudi Arabia");
                 }
 
                 return _buildBody(context, state.data);
@@ -258,7 +265,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
               textInputAction: TextInputAction.next,
               disableLengthCheck: true,
               countries: const ["SA"],
-              initialCountryCode: country?.code,
+              initialCountryCode: country?.dialCode,
               onCountryChanged: (value) {
                 country = value;
               },

@@ -5,15 +5,21 @@ import 'package:weltweit/features/domain/usecase/auth/base_usecase/base_usecase.
 
 import '../../../data/models/base/response_model.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
-import '../../../services/domain/repository/auth_repo.dart';
+import '../../repositoy/auth_repo.dart';
 
 class SignInUseCase implements BaseUseCase<UserModel> {
   final AuthRepository repository;
 
   SignInUseCase({required this.repository});
 
-  Future<ResponseModel> call({required LoginBody loginBody}) async {
-    return BaseUseCaseCall.onGetData<UserModel>(await repository.login(loginBody: loginBody), onConvert, tag: 'SignInUseCase');
+  Future<ResponseModel> call({required LoginBody loginBody,required  bool typeIsProvider}) async {
+    return BaseUseCaseCall.onGetData<UserModel>(
+        await repository.login(
+          loginBody: loginBody,
+          typeIsProvider: typeIsProvider,
+        ),
+        onConvert,
+        tag: 'SignInUseCase');
   }
 
   @override

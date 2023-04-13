@@ -5,7 +5,7 @@ import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
-import 'package:weltweit/features/logic/profile/profile_cubit.dart';
+import 'package:weltweit/features/provider/logic/profile/profile_cubit.dart';
 import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/presentation/component/component.dart';
 import 'package:weltweit/features/provider/presentation/modules/home/home_page_pending.dart';
@@ -28,15 +28,15 @@ class _LayoutPageState extends State<LayoutPage> {
     //call after build
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       String? fcmToken = await getDeviceToken();
-      if (fcmToken != null) {
-        if (context.mounted) BlocProvider.of<ProfileCubit>(context).updateFcm(fcmToken);
-      }
+      // if (fcmToken != null) {
+      //   if (context.mounted) BlocProvider.of<ProfileProviderCubit>(context).updateFcm(fcmToken);
+      // }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ProfileCubit, ProfileState>(
+    return BlocConsumer<ProfileProviderCubit, ProfileProviderState>(
       listener: (context, state) {
         if (state.state == BaseState.error) {
           if (state.error?.code == 401) {
@@ -57,7 +57,7 @@ class _LayoutPageState extends State<LayoutPage> {
                 body: ErrorLayout(
               errorModel: state.error,
               onRetry: () {
-                BlocProvider.of<ProfileCubit>(context).getProfile();
+                BlocProvider.of<ProfileProviderCubit>(context).getProfile();
               },
             ));
         }
@@ -72,12 +72,12 @@ class LayoutWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    UserModel? user = context.read<ProfileCubit>().state.data;
-    return BlocBuilder<LayoutCubit, LayoutState>(
+    UserModel? user = context.read<ProfileProviderCubit>().state.data;
+    return BlocBuilder<LayoutProviderCubit, LayoutProviderState>(
       builder: (context, state) {
         if (state is LayoutInitial) {
           int currentIndex = state.currentIndex;
-          final LayoutCubit viewModel = BlocProvider.of<LayoutCubit>(context);
+          final LayoutProviderCubit viewModel = BlocProvider.of<LayoutProviderCubit>(context);
           return Scaffold(
             extendBody: true,
             extendBodyBehindAppBar: true,
@@ -106,7 +106,7 @@ class LayoutWidget extends StatelessWidget {
   }
 
   Widget getPage({required BuildContext context, required int currentIndex}) {
-    UserModel? user = context.read<ProfileCubit>().state.data;
+    UserModel? user = context.read<ProfileProviderCubit>().state.data;
     if (currentIndex == 0) {
       if (user == null || user.approved == null || user.approved == 0) {
         return HomePageInActive();

@@ -28,7 +28,7 @@ class _ServicesPageState extends State<ServicesPage> {
     super.initState();
     //call before build
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      BlocProvider.of<ServicesCubit>(context).getAllServices();
+      BlocProvider.of<ServicesProviderCubit>(context).getAllServices();
     });
   }
 
@@ -41,7 +41,7 @@ class _ServicesPageState extends State<ServicesPage> {
         isCenterTitle: true,
       ),
       backgroundColor: AppColorLight().kScaffoldBackgroundColor,
-      body: BlocConsumer<ServicesCubit, ServicesState>(
+      body: BlocConsumer<ServicesProviderCubit, ServicesProviderState>(
         buildWhen: (previous, current) => previous.services != current.services,
         listenWhen: (previous, current) => previous.updateState != current.updateState,
         listener: (context, state) {
@@ -58,47 +58,38 @@ class _ServicesPageState extends State<ServicesPage> {
             case BaseState.loaded:
               {
                 if (state.services.isEmpty) return Center(child: CustomText("لا يوجد خدمات").header());
-                return Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: state.services.length,
-                        itemBuilder: (context, index) {
-                          return singleService(state.services[index]);
-                        },
-                      ),
-                    ),
-                    BlocBuilder<ServicesCubit, ServicesState>(
-                      builder: (context, state) {
-                        return CustomButton(
-                          onTap: () {
-                            logger.i('updateSelectedServices: ${state.services.where((element) => element.myService == true).toList()}}');
-                            logger.e('updateSelectedServices: ${state.services.where((element) => element.myService == false).toList()}}');
+                return SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      for (final service in state.services) singleService(service),
+                      CustomButton(
+                        onTap: () {
+                          logger.i('updateSelectedServices: ${state.services.where((element) => element.myService == true).toList()}}');
+                          logger.e('updateSelectedServices: ${state.services.where((element) => element.myService == false).toList()}}');
 
-                            if (state.services.where((element) => element.myService == true).isEmpty) {
-                              AppSnackbar.show(
-                                context: context,
-                                type: SnackbarType.warning,
-                                title: LocaleKeys.notification,
-                                message: LocaleKeys.selectAtLeastOneService.tr(),
-                              );
-                              return;
-                            }
-                            BlocProvider.of<ServicesCubit>(context).updateServices(state.services.where((element) => element.myService == true).toList());
-                          },
-                          loading: state.updateState == BaseState.loading,
-                          title: LocaleKeys.confirm.tr(),
-                        );
-                      },
-                    ),
-                  ],
+                          if (state.services.where((element) => element.myService == true).isEmpty) {
+                            AppSnackbar.show(
+                              context: context,
+                              type: SnackbarType.warning,
+                              title: LocaleKeys.notification,
+                              message: LocaleKeys.selectAtLeastOneService.tr(),
+                            );
+                            return;
+                          }
+                          BlocProvider.of<ServicesProviderCubit>(context).updateServices(state.services.where((element) => element.myService == true).toList());
+                        },
+                        loading: state.updateState == BaseState.loading,
+                        title: LocaleKeys.confirm.tr(),
+                      ),
+                    ],
+                  ),
                 );
               }
             case BaseState.error:
               return ErrorLayout(
                 errorModel: state.error,
                 onRetry: () {
-                  BlocProvider.of<ServicesCubit>(context).getAllServices();
+                  BlocProvider.of<ServicesProviderCubit>(context).getAllServices();
                 },
               );
           }
@@ -113,14 +104,20 @@ class _ServicesPageState extends State<ServicesPage> {
       return CheckboxListTile(
         value: service.myService ?? false,
         onChanged: (val) {
-          BlocProvider.of<ServicesCubit>(context).updateSelectedServices(service, !service.myService!);
+          BlocProvider.of<ServicesProviderCubit>(context).updateSelectedServices(service, !service.myService!);
         },
         title: Row(
           children: [
+            if(false)
             CachedNetworkImage(
               imageUrl: service.image ?? '',
               width: 40,
               height: 40,
+              memCacheHeight: 40,
+              memCacheWidth: 40,
+              maxWidthDiskCache: 40,
+              maxHeightDiskCache: 40,
+
               imageBuilder: (context, imageProvider) => Container(
                 width: 40.0,
                 height: 40.0,

@@ -8,7 +8,7 @@ import 'package:weltweit/features/provider/domain/repository/app_repo.dart';
 import 'package:weltweit/features/provider/domain/usecase/document/document_add_usecase.dart';
 
 class DocumentUpdateUseCase extends BaseUseCase<BaseResponse, DocumentParams> {
-  final AppRepository repository;
+  final AppRepositoryProvider repository;
 
   DocumentUpdateUseCase({required this.repository});
 

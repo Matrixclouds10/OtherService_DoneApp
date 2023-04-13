@@ -1,12 +1,12 @@
 part of 'services_cubit.dart';
 
-class ServicesState extends Equatable {
+class ServicesProviderState extends Equatable {
   final BaseState state;
   final BaseState updateState;
   final List<ServiceModel> services;
   final List<ServiceModel> myServices;
   final ErrorModel? error;
-  const ServicesState({
+  const ServicesProviderState({
     this.state = BaseState.initial,
     this.services = const [],
     this.myServices = const [],
@@ -14,14 +14,14 @@ class ServicesState extends Equatable {
     this.updateState = BaseState.initial,
   });
 
-  ServicesState copyWith({
+  ServicesProviderState copyWith({
     BaseState? state,
     List<ServiceModel>? myServices,
     List<ServiceModel>? services,
     ErrorModel? error,
     BaseState? updateState,
   }) {
-    return ServicesState(
+    return ServicesProviderState(
       state: state ?? this.state,
       services: services ?? this.services,
       myServices: myServices ?? this.myServices,

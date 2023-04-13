@@ -29,8 +29,6 @@ class ProfileCubit extends Cubit<ProfileState> {
   final UpdateFCMTokenUseCase updateFCMTokenUseCase;
   final ChangePasswordUseCase changePasswordUseCase;
   final UpdateProfileLocationUseCase updateProfileLocationUseCase;
-  final UpdateProfileAvailabilityUseCase updateProfileAvailabilityUseCase;
-
 
   ProfileCubit(
     this.profileUseCase,
@@ -39,7 +37,6 @@ class ProfileCubit extends Cubit<ProfileState> {
     this.updateFCMTokenUseCase,
     this.changePasswordUseCase,
     this.updateProfileLocationUseCase,
-    this.updateProfileAvailabilityUseCase,
   ) : super(const ProfileState());
   Future<void> getProfile() async {
     resetState();
@@ -57,8 +54,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(state.copyWith(updateState: BaseState.loading));
     final result = await updateProfileUseCase(params);
     result.fold(
-      (error) =>
-          emit(state.copyWith(updateState: BaseState.error, error: error)),
+      (error) => emit(state.copyWith(updateState: BaseState.error, error: error)),
       (data) => emit(state.copyWith(updateState: BaseState.loaded, data: data)),
     );
   }
@@ -70,8 +66,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(state.copyWith(updateState: BaseState.loading));
     final result = await deleteProfileUseCase(state.data!.id!);
     result.fold(
-      (error) =>
-          emit(state.copyWith(updateState: BaseState.error, error: error)),
+      (error) => emit(state.copyWith(updateState: BaseState.error, error: error)),
       (data) => emit(state.copyWith(updateState: BaseState.loaded)),
     );
   }
@@ -88,10 +83,8 @@ class ProfileCubit extends Cubit<ProfileState> {
     final result = await changePasswordUseCase(updateProfileParams);
     print('-----> $result');
     result.fold(
-      (error) => emit(
-          state.copyWith(updatePasswordState: BaseState.error, error: error)),
-      (data) => emit(
-          state.copyWith(updatePasswordState: BaseState.loaded, error: null)),
+      (error) => emit(state.copyWith(updatePasswordState: BaseState.error, error: error)),
+      (data) => emit(state.copyWith(updatePasswordState: BaseState.loaded, error: null)),
     );
   }
 
@@ -105,7 +98,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   void deleteAccount() {}
 
-   void updateLocation(BuildContext context) async {
+  void updateLocation(BuildContext context) async {
     bool permissionStatus = await PermissionHelper.checkLocationPermissionStatus();
     if (!permissionStatus) {
       bool dialogStatus = await AppDialogs().question(context, message: LocaleKeys.allowLocationStatusToBeShownForNearbyUsers.tr());
@@ -124,14 +117,6 @@ class ProfileCubit extends Cubit<ProfileState> {
       log('Location Error', e.toString());
     }
   }
-  void updateAvailability() async {
-    if (state.availabilityState == BaseState.loading) return;
-    emit(state.copyWith(availabilityState: BaseState.loading));
-    final result = await updateProfileAvailabilityUseCase(NoParameters());
-    result.fold(
-      (error) => emit(state.copyWith(availabilityState: BaseState.error, error: error)),
-      (data) => emit(state.copyWith(availabilityState: BaseState.loaded, data: data)),
-    );
-  }
 
+  
 }

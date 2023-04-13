@@ -7,8 +7,6 @@ import 'package:weltweit/core/services/network/network_client.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
-import 'package:weltweit/features/domain/usecase/profile/change_password_usecase.dart';
-import 'package:weltweit/features/domain/usecase/profile/update_profile_usecase.dart';
 import 'package:weltweit/features/provider/data/app_urls/app_url.dart';
 import 'package:weltweit/features/provider/data/models/response/documents/document.dart';
 import 'package:weltweit/features/provider/data/models/response/portfolio/portfolio_image.dart';
@@ -16,11 +14,14 @@ import 'package:weltweit/features/provider/data/models/response/services/service
 import 'package:weltweit/features/provider/domain/repository/app_repo.dart';
 import 'package:weltweit/features/provider/domain/usecase/document/document_add_usecase.dart';
 import 'package:weltweit/features/provider/domain/usecase/portfolio/portfolio_update_usecase.dart';
+import 'package:weltweit/features/provider/domain/usecase/profile/change_password_usecase.dart';
+import 'package:weltweit/features/provider/domain/usecase/profile/update_profile_usecase.dart';
 import 'package:weltweit/features/provider/domain/usecase/services/update_services_usecase.dart';
 
-class AppRepositoryImp implements AppRepository {
+
+class AppRepositoryImpProvider implements AppRepositoryProvider {
   final NetworkClient networkClient;
-  AppRepositoryImp({required this.networkClient});
+  AppRepositoryImpProvider({required this.networkClient});
 
   @override
   Future<Either<ErrorModel, UserModel>> getProfile() async {
@@ -44,30 +45,6 @@ class AppRepositoryImp implements AppRepository {
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = {};
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
-    return result.fold((l) => Left(l), (r) {
-      try {
-        UserModel userModel = UserModel.fromJson(r.data);
-        return Right(userModel);
-      } catch (e) {
-        return Left(ErrorModel(errorMessage: e.toString()));
-      }
-    });
-  }
-
-  @override
-  Future<Either<ErrorModel, UserModel>> updateProfile({required UpdateProfileParams params}) async {
-    String url = AppURL.updateProfile;
-    NetworkCallType type = NetworkCallType.post;
-    Map<String, dynamic> data = params.toJson();
-
-    File? file = params.image;
-    FormData? formData;
-    if (file != null) {
-      formData = FormData.fromMap({
-        'image': await MultipartFile.fromFile(file.path, filename: file.path.split('/').last),
-      });
-    }
-    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, formData: formData, data: data, type: type);
     return result.fold((l) => Left(l), (r) {
       try {
         UserModel userModel = UserModel.fromJson(r.data);
@@ -262,4 +239,30 @@ class AppRepositoryImp implements AppRepository {
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, formData: formData, data: data, type: type);
     return result.fold((l) => Left(l), (r) => Right(r));
   }
+
+
+  @override
+  Future<Either<ErrorModel, UserModel>> updateProfile({required UpdateProfileParams params}) async {
+    String url = AppURL.updateProfile;
+    NetworkCallType type = NetworkCallType.post;
+    Map<String, dynamic> data = params.toJson();
+
+    File? file = params.image;
+    FormData? formData;
+    if (file != null) {
+      formData = FormData.fromMap({
+        'image': await MultipartFile.fromFile(file.path, filename: file.path.split('/').last),
+      });
+    }
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, formData: formData, data: data, type: type);
+    return result.fold((l) => Left(l), (r) {
+      try {
+        UserModel userModel = UserModel.fromJson(r.data);
+        return Right(userModel);
+      } catch (e) {
+        return Left(ErrorModel(errorMessage: e.toString()));
+      }
+    });
+  }
+
 }

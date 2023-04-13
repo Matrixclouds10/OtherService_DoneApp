@@ -54,7 +54,9 @@ class WelcomeScreen extends StatelessWidget {
                         title: LocaleKeys.alreadyHaveAccount.tr(),
                         textColor: Colors.white,
                         color: AppColorLight().kAccentColor,
-                        onTap: () => NavigationService.push(RoutesServices.servicesLoginScreen),
+                        onTap: () => NavigationService.push(RoutesServices.servicesLoginScreen, arguments: {
+                          "typeIsProvider": true,
+                        }),
                       ),
                     ),
                     VerticalSpace(kScreenPaddingNormal.h),

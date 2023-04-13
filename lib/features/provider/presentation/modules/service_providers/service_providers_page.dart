@@ -6,7 +6,7 @@ import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/features/core/widgets/service_provider_item.dart';
 import 'package:weltweit/features/services/data/models/response/provider/providers_model.dart';
 import 'package:weltweit/generated/assets.dart';
-import 'package:weltweit/features/core/routing/routes.dart';
+import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/presentation/component/component.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 
@@ -36,7 +36,7 @@ class ServiceProvidersPage extends StatelessWidget {
                 for (var i = 0; i < 6; i++)
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, RoutesServices.servicesProvider, arguments: {
+                      Navigator.pushNamed(context, RoutesProvider.providerProvider, arguments: {
                         "provderName": 'مسعد معوض',
                       });
                     },

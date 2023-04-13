@@ -4,10 +4,10 @@ import 'package:weltweit/core/routing/platform_page_route.dart';
 import 'package:weltweit/core/routing/undefined_route_screen.dart';
 import 'package:weltweit/features/core/routing/routes.dart';
 import 'package:weltweit/features/screens/about/about_page.dart';
-import 'package:weltweit/features/screens/auth/client_type/user_type.dart';
 import 'package:weltweit/features/screens/auth/login/login_screen.dart';
 import 'package:weltweit/features/screens/auth/otp/otp_screen.dart';
 import 'package:weltweit/features/screens/auth/register/register_screen.dart';
+import 'package:weltweit/features/screens/auth/user_type/user_type.dart';
 import 'package:weltweit/features/screens/contact/contact_page.dart';
 import 'package:weltweit/features/services/modules/layout/layout_page.dart';
 import 'package:weltweit/features/services/modules/my_addresses/my_addresses_page.dart';
@@ -87,10 +87,14 @@ class RouteServicesGenerator {
         return platformPageRoute(Theme(data: servicesTheme, child: OnBoardingScreen()));
 
       case RoutesServices.servicesLoginScreen:
-        return platformPageRoute(Theme(data: servicesTheme, child: LoginScreen()));
+        return platformPageRoute(Theme(
+            data: servicesTheme,
+            child: LoginScreen(
+              typeIsProvider: arguments?['typeIsProvider'],
+            )));
 
       default:
-        return platformPageRoute(Theme(data: servicesTheme, child: const UndefinedRouteScreen()));
+        return platformPageRoute(Theme(data: servicesTheme, child: UndefinedRouteScreen(settings.name)));
     }
   }
 }

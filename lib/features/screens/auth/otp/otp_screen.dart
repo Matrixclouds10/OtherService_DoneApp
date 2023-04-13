@@ -48,7 +48,13 @@ class _OTPScreenState extends State<OTPScreen> {
   void _onSubmit(context) async {
     String otp = _codeController.text;
     if (otp.length == 4) {
-      var response = await BlocProvider.of<OtpCubit>(context, listen: false).otpCode(phone: widget._phone, otp: otp, code: widget._code, type: widget._checkOTPType);
+      var response = await BlocProvider.of<OtpCubit>(context, listen: false).otpCode(
+        phone: widget._phone,
+        otp: otp,
+        code: widget._code,
+        type: widget._checkOTPType,
+        typeIsProvider: widget._typeIsProvider,
+      );
 
       if (response.isSuccess) {
         if (widget._checkOTPType == CheckOTPType.register) {

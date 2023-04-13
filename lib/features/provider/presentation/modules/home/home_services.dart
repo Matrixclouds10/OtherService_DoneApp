@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weltweit/features/core/routing/routes.dart';
+import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/core/widgets/service_item_widget.dart';
 import 'package:weltweit/features/services/data/models/response/services/service.dart';
@@ -17,7 +17,7 @@ class HomeServices extends StatelessWidget {
             Spacer(),
             GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, RoutesServices.servicesServices);
+                  Navigator.pushNamed(context, RoutesProvider.providerServices);
                 },
                 child: CustomText("عرض الكل" " (20) ", color: Colors.grey).footer()),
           ],

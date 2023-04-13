@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:weltweit/features/core/routing/routes.dart';
+import 'package:weltweit/features/core/routing/routes_provider.dart';
+import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/core/widgets/offer_item_widget.dart';
 
@@ -17,7 +18,7 @@ class HomeOffers extends StatelessWidget {
             Spacer(),
             GestureDetector(
               onTap: () {
-                Navigator.pushNamed(context, RoutesServices.servicesOffers);
+                Navigator.pushNamed(context, RoutesProvider.providerOffers);
               },
               child:
                   CustomText("عرض الكل" " (20) ", color: Colors.grey).footer(),

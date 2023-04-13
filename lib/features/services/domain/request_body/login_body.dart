@@ -6,7 +6,7 @@ class LoginBody {
 
   LoginBody({
     required String phone,
-    String code = '967',
+    String code = '966',
     required String password,
     required String deviceToken,
   })  : _phone = phone,
@@ -39,6 +39,6 @@ class LoginBody {
   }
 
   updateCode(String? code) {
-    _code = code ?? '967';
+    _code = code ?? '966';
   }
 }

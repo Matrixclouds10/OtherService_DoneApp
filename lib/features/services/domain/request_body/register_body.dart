@@ -2,7 +2,14 @@ import 'dart:io';
 
 import 'package:weltweit/presentation/component/inputs/phone_country/countries.dart';
 
-const Country _countryEg = Country(name: "Egypt", flag: "🇪🇬", code: "EG", dialCode: "20", minLength: 10, maxLength: 10);
+const Country _countryEg = Country(
+  name: "Saudi Arabia",
+  flag: "🇸🇦",
+  code: "SA",
+  dialCode: "966",
+  minLength: 9,
+  maxLength: 9,
+);
 
 class RegisterBody {
   final String name;

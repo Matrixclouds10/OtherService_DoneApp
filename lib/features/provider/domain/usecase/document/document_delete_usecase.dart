@@ -5,7 +5,7 @@ import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/provider/domain/repository/app_repo.dart';
 
 class DocumentDeleteUseCase extends BaseUseCase<BaseResponse, int> {
-  final AppRepository repository;
+  final AppRepositoryProvider repository;
 
   DocumentDeleteUseCase({required this.repository});
 

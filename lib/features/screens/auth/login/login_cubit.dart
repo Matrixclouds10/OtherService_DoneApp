@@ -30,7 +30,11 @@ class LoginCubit extends Cubit<LoginlState> {
   }
 
   ///calling APIs Functions
-  Future<ResponseModel> login(String phone, String password) async {
+  Future<ResponseModel> login(
+    String phone,
+    String password,
+    bool typeIsProvider,
+  ) async {
     emit(LoginViewLoading());
     String? fcmToken;
     try {
@@ -42,7 +46,7 @@ class LoginCubit extends Cubit<LoginlState> {
     emit(LoginViewLoading());
 
     _assignLoginBody(phone, password, fcmToken ?? '');
-    ResponseModel responseModel = await _signInUseCase.call(loginBody: body);
+    ResponseModel responseModel = await _signInUseCase.call(loginBody: body,typeIsProvider: typeIsProvider);
     if (responseModel.isSuccess) {
       UserModel userEntity = responseModel.data;
 

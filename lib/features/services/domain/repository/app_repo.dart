@@ -18,13 +18,11 @@ abstract class AppRepository {
   //* Auth
   Future<Either<ErrorModel, UserModel>> getProfile();
   Future<Either<ErrorModel, bool>> deleteProfile({required int id});
-  Future<Either<ErrorModel, UserModel>> updateAvailability();
   Future<Either<ErrorModel, UserModel>> updateProfile({required UpdateProfileParams params});
   Future<Either<ErrorModel, BaseResponse>> changePassword({required ChangePasswordParams params});
 
   //* Settings
   Future<Either<ErrorModel, BaseResponse>> updateFcm({required String fcmToken});
-  Future<Either<ErrorModel, BaseResponse>> updateLocation({required String lat, required String lng});
 
   //* Services
   Future<Either<ErrorModel, ServicesResponse>> getAllServices({required int page});

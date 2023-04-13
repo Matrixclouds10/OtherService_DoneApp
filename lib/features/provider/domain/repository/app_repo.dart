@@ -9,13 +9,16 @@ import 'package:weltweit/features/provider/data/models/response/portfolio/portfo
 import 'package:weltweit/features/provider/data/models/response/services/service.dart';
 import 'package:weltweit/features/provider/domain/usecase/document/document_add_usecase.dart';
 import 'package:weltweit/features/provider/domain/usecase/portfolio/portfolio_update_usecase.dart';
+import 'package:weltweit/features/provider/domain/usecase/profile/change_password_usecase.dart';
+import 'package:weltweit/features/provider/domain/usecase/profile/update_profile_usecase.dart';
 import 'package:weltweit/features/provider/domain/usecase/services/update_services_usecase.dart';
 
-abstract class AppRepository {
-  //* Auth
+abstract class AppRepositoryProvider {
   Future<Either<ErrorModel, UserModel>> getProfile();
   Future<Either<ErrorModel, bool>> deleteProfile({required int id});
   Future<Either<ErrorModel, UserModel>> updateAvailability();
+  Future<Either<ErrorModel, UserModel>> updateProfile({required UpdateProfileParams params});
+  Future<Either<ErrorModel, BaseResponse>> changePassword({required ChangePasswordParams params});
 
   //* Settings
   Future<Either<ErrorModel, BaseResponse>> updateFcm({required String fcmToken});

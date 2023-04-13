@@ -6,7 +6,7 @@ import 'package:weltweit/presentation/component/component.dart';
 import 'package:weltweit/features/widgets/app_text_tile.dart';
 
 import 'package:weltweit/core/resources/resources.dart';
-import 'package:weltweit/features/core/routing/routes.dart';
+import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 
 class HomePageInActive extends StatelessWidget {
@@ -41,7 +41,7 @@ class HomePageInActive extends StatelessWidget {
           SizedBox(height: 32),
           CustomButton(
             onTap: () {
-              Navigator.of(context).pushNamed(RoutesServices.documents);
+              Navigator.of(context).pushNamed(RoutesProvider.providerDocuments);
             },
             expanded: false,
             isOutlined: true,

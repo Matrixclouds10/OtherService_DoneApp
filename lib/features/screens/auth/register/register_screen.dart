@@ -38,7 +38,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool joinAsIndividual = true;
   bool isConfirmTerms = true;
   File? image;
-  Country? country;
+  Country? country = Country(
+    name: "Saudi Arabia",
+    flag: "🇸🇦",
+    code: "SA",
+    dialCode: "966",
+    minLength: 9,
+    maxLength: 9,
+  );
 
   final _formKey = GlobalKey<FormState>();
 
@@ -88,7 +95,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             'phone': _phoneController.text,
             'code': country?.code,
             'checkOTPType': CheckOTPType.register,
-            'typeIsProvider' : widget.typeIsProvider,
+            'typeIsProvider': widget.typeIsProvider,
           });
         } else {
           AppSnackbar.show(

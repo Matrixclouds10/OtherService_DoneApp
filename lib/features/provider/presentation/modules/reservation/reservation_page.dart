@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:weltweit/core/resources/resources.dart';
-import 'package:weltweit/features/core/routing/routes.dart';
+import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/presentation/component/component.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/presentation/component/inputs/base_form.dart';
@@ -370,7 +370,7 @@ class _ReservationPageState extends State<ReservationPage> {
                 title: "تأكيد الطلب",
                 color: Colors.black,
                 onTap: () async {
-                  Navigator.pushNamed(context, RoutesServices.servicesOrders);
+                  Navigator.pushNamed(context, RoutesProvider.providerOrders);
                 },
               ),
             ],

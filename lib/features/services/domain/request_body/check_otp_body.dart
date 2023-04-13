@@ -5,8 +5,10 @@ class CheckOTPBody {
   final String _code;
   final String _otp;
   final CheckOTPType _type;
+  final bool typeIsProvider;
 
   const CheckOTPBody({
+    required this.typeIsProvider,
     required String phone,
     required String code,
     required String otp,

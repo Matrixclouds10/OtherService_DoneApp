@@ -25,25 +25,4 @@ class RoutesServices {
   static const String servicesReservationPage = "/servicesReservationPage";
   static const String servicesProfileEdit = "/servicesProfileEdit";
 
-
-
-
-
-  static const String servicesHomeScreen = "/servicesLayoutScreen";
-  // static const String servicesLayoutScreen = "/servicesLayoutScreen";
-  // static const String servicesOffers = "/servicesOffers";
-  // static const String servicesServices = "/servicesServices";
-  // static const String servicesProviders = "/servicesProviders";
-  // static const String servicesProvider = "/servicesProvider";
-  // static const String servicesNotifications = "/servicesNotifications";
-  // static const String servicesContactUs = "/servicesContactUs";
-  // static const String servicesAboutUs = "/servicesAboutUs";
-  // static const String servicesMyAddresses = "/servicesMyAddresses";
-  // static const String servicesOrders = "/servicesOrders";
-  // static const String servicesOrderDetails = "/servicesOrderDetails";
-  // static const String servicesSearch = "/servicesSearch";
-  // static const String servicesReservationPage = "/servicesReservationPage";
-  static const String subscribe = "/subscribe";
-  static const String documents = "/documents";
-  static const String profileUpdateScreen = "/profileUpdateScreen";
 }
