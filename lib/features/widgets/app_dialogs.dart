@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_dialogs/material_dialogs.dart';
 import 'package:material_dialogs/shared/types.dart';
@@ -15,6 +16,7 @@ import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/data/injection.dart';
 import 'package:weltweit/features/core/routing/routes.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
+import 'package:weltweit/features/services/modules/layout/layout_cubit.dart';
 import 'package:weltweit/features/widgets/app_text_tile.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 
@@ -151,7 +153,7 @@ class AppDialogs {
     return selected;
   }
 
-  selectWidget({required BuildContext context, required List<Widget> list,required String message}) async {
+  selectWidget({required BuildContext context, required List<Widget> list, required String message}) async {
     Widget? selected;
     await Dialogs.materialDialog(
         msg: message,
@@ -220,6 +222,7 @@ class AppDialogs {
         ),
         IconsOutlineButton(
           onPressed: () {
+            if (context.mounted) context.read<LayoutCubit>().setCurrentIndex(0);
             AppPrefs prefs = getIt<AppPrefs>();
             prefs.clear();
             prefs.deleteSecuredData();
@@ -250,7 +253,6 @@ class AppDialogs {
           );
         });
   }
-
 
   Future<bool> question(
     BuildContext context, {
@@ -288,5 +290,4 @@ class AppDialogs {
     );
     return result ?? false;
   }
-
 }

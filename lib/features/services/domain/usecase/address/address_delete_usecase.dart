@@ -42,5 +42,12 @@ class AddressDeleteUsecase
   }
 }
 class AddressDeleteParams {
-  toJson() {}
+  final String id;
+
+  AddressDeleteParams({required this.id});
+  toJson() {
+    return {
+      "id": id,
+    };
+  }
 }

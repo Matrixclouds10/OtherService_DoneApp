@@ -53,8 +53,8 @@ class _OrdersPageState extends State<OrdersPage>
                     },
                     unselectedLabelColor: Colors.grey,
                     tabs: [
-                      singleTab(0, 'المكتملة'),
-                      singleTab(1, "الملغاة"),
+                      singleTab(0, 'الجديدة'),
+                      singleTab(1, "الحالية"),
                     ],
                   ),
                 ),
@@ -86,9 +86,9 @@ class _OrdersPageState extends State<OrdersPage>
   tabBody() {
     switch (_tabController.index) {
       case 0:
-        return completedOrders();
+        return newOrders();
       case 1:
-        return cancelledOrders();
+        return currentOrders();
       default:
         return Container();
     }
@@ -130,7 +130,7 @@ class _OrdersPageState extends State<OrdersPage>
     );
   }
 
-  cancelledOrders() {
+  newOrders() {
     return Column(
       children: [
         for (var i = 0; i < 4; i++)
@@ -140,7 +140,7 @@ class _OrdersPageState extends State<OrdersPage>
             profession: getRandomTags()[0],
             date: "",
             time: "",
-            orderStatus: "cancelled",
+            orderStatus: "pending",
             price: "",
             tags: getRandomTags(),
           )

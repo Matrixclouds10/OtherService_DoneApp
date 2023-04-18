@@ -6,6 +6,9 @@ import 'package:weltweit/core/resources/theme/theme.dart';
 
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/logic/profile/profile_cubit.dart';
+import 'package:weltweit/features/services/logic/orders/orders_cubit.dart';
+import 'package:weltweit/features/services/modules/layout/layout_cubit.dart';
+import 'package:weltweit/features/services/modules/my_addresses/logic/address_cubit.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/presentation/component/component.dart';
 import 'package:weltweit/presentation/dialog/base/simple_dialogs.dart';
@@ -26,8 +29,7 @@ class ProfilePage extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.edit_note, color: Colors.black),
               onPressed: () {
-                Navigator.of(context)
-                    .pushNamed(RoutesServices.servicesProfileEdit);
+                Navigator.of(context).pushNamed(RoutesServices.servicesProfileEdit);
               },
             ),
             IconButton(
@@ -52,8 +54,7 @@ class ProfilePage extends StatelessWidget {
                       return Container();
                     }
                     return Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 14, vertical: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -70,13 +71,9 @@ class ProfilePage extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const SizedBox(height: 4),
-                                textWithIcon(
-                                    icon: Icons.person,
-                                    text: state.data!.name ?? ''),
+                                textWithIcon(icon: Icons.person, text: state.data!.name ?? ''),
                                 const SizedBox(height: 4),
-                                textWithIcon(
-                                    icon: Icons.phone,
-                                    text: state.data!.mobileNumber ?? ''),
+                                textWithIcon(icon: Icons.phone, text: state.data!.mobileNumber ?? ''),
                               ],
                             ),
                           ),
@@ -88,48 +85,43 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 12),
-              const CustomText("معلوماتي",
-                      color: Colors.black,
-                      align: TextAlign.start,
-                      bold: true,
-                      pv: 0,
-                      ph: 12)
-                  .header(),
+              const CustomText("معلوماتي", color: Colors.black, align: TextAlign.start, bold: true, pv: 0, ph: 12).header(),
               Container(
                 color: Colors.white,
                 child: Column(
                   children: [
-                    singleCustomListTile(
-                        icon: Icons.arrow_forward_ios,
-                        text: 'عناويني',
-                        trailingText: "(5 عناوين)",
-                        onTap: () {
-                          Navigator.pushNamed(
-                              context, RoutesServices.servicesMyAddresses);
-                        }),
+                    BlocBuilder<AddressCubit, AddressState>(
+                      builder: (context, state) {
+                        return singleCustomListTile(
+                            icon: Icons.arrow_forward_ios,
+                            text: 'عناويني',
+                            trailingText: state.addresses.isNotEmpty ? "(${state.addresses.length} عنوان)" : "",
+                            onTap: () {
+                              Navigator.pushNamed(context, RoutesServices.servicesMyAddresses);
+                            });
+                      },
+                    ),
                     Divider(height: 2, color: Colors.grey[300]),
-                    singleCustomListTile(
-                        icon: Icons.arrow_forward_ios,
-                        text: 'طلباتي',
-                        trailingText: "(3 طلبات)",
-                        onTap: () {
-                          Navigator.pushNamed(
-                              context, RoutesServices.servicesOrders);
-                        }),
+                    BlocBuilder<OrdersCubit, OrdersState>(
+                      builder: (context, state) {
+                        return singleCustomListTile(
+                            icon: Icons.arrow_forward_ios,
+                            text: 'طلباتي',
+                            trailingText: state.data.isNotEmpty ? "(${state.data.length} طلب)" : "",
+                            onTap: () {
+                              Navigator.pushNamed(context, RoutesServices.servicesOrders);
+                            });
+                      },
+                    ),
                     Divider(height: 2, color: Colors.grey[300]),
-                    singleCustomListTile(
-                        icon: Icons.arrow_forward_ios,
-                        text: 'اللغة',
-                        trailingText: "العربية",
-                        onTap: () {}),
+                    singleCustomListTile(icon: Icons.arrow_forward_ios, text: 'اللغة', trailingText: "العربية", onTap: () {}),
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
                         icon: Icons.arrow_forward_ios,
                         text: 'من نحن',
                         trailingText: "",
                         onTap: () {
-                          Navigator.pushNamed(
-                              context, RoutesServices.servicesAboutUs);
+                          Navigator.pushNamed(context, RoutesServices.servicesAboutUs);
                         }),
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
@@ -137,8 +129,7 @@ class ProfilePage extends StatelessWidget {
                         text: 'تواصل معنا',
                         trailingText: "",
                         onTap: () {
-                          Navigator.pushNamed(
-                              context, RoutesServices.servicesContactUs);
+                          Navigator.pushNamed(context, RoutesServices.servicesContactUs);
                         }),
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
@@ -169,14 +160,8 @@ class ProfilePage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           child: Row(
             children: [
-              Expanded(
-                  child: CustomText(text,
-                      color: text.contains("خروج") ? Colors.red : Colors.black,
-                      align: TextAlign.start,
-                      pv: 0)),
-              if (trailingText != null)
-                CustomText(trailingText,
-                    color: Colors.grey, align: TextAlign.start, pv: 0),
+              Expanded(child: CustomText(text, color: text.contains("خروج") ? Colors.red : Colors.black, align: TextAlign.start, pv: 0)),
+              if (trailingText != null) CustomText(trailingText, color: Colors.grey, align: TextAlign.start, pv: 0),
               const SizedBox(width: 12),
               Icon(icon, size: 16, color: Colors.grey),
             ],

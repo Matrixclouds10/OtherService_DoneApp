@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/resources/decoration.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/features/core/routing/routes.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/services/data/models/response/provider/providers_model.dart';
+import 'package:weltweit/features/services/logic/favorite/favorite_cubit.dart';
 import 'package:weltweit/presentation/component/component.dart';
 
 class ServiceProviderItemWidget extends StatelessWidget {
@@ -75,7 +77,10 @@ class ServiceProviderItemWidget extends StatelessWidget {
                                   providersModel.isFavorite ? Icons.favorite : Icons.favorite_border,
                                   color: providersModel.isFavorite ? Colors.red : Colors.grey,
                                 ),
-                                onPressed: () {},
+                                onPressed: () async {
+                                  await context.read<FavoriteCubit>().addFavorite(providersModel.id!);
+                                  if (context.mounted) context.read<FavoriteCubit>().getFavorite();
+                                },
                               ),
                           ],
                         )
@@ -97,12 +102,13 @@ class ServiceProviderItemWidget extends StatelessWidget {
                       ),
                     // CustomText('no profession', color: Colors.grey, align: TextAlign.start, pv: 0),
                     // if (description != null)
-                    CustomText('description', maxLines: 2, color: Colors.grey, align: TextAlign.start, pv: 4).footer(),
+                    // CustomText('description', maxLines: 2, color: Colors.grey, align: TextAlign.start, pv: 4).footer(),
+                    SizedBox(height: 4),
                     // if (address != null)
-                    textWithIcon(
-                      icon: Icons.location_on,
-                      text: 'no address',
-                    ),
+                    // textWithIcon(
+                    //   icon: Icons.location_on,
+                    //   text: 'no address',
+                    // ),
                     Row(
                       children: [
                         if (providersModel.distance != null)

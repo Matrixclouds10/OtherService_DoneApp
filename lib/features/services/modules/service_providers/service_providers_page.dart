@@ -50,12 +50,7 @@ class _ServiceProvidersPageState extends State<ServiceProvidersPage> {
               {
                 if (state.providers.isEmpty) return Center(child: CustomText("لا يوجد خدمات").header());
 
-                return SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Column(
-                    children: [
-                      ListAnimator(
-                        physics: const NeverScrollableScrollPhysics(),
+                return   ListAnimator(
                         scrollDirection: Axis.vertical,
                         children: [
                           const SizedBox(height: 12),
@@ -78,10 +73,7 @@ class _ServiceProvidersPageState extends State<ServiceProvidersPage> {
                             ),
                           const SizedBox(height: 30),
                         ],
-                      )
-                    ],
-                  ),
-                );
+                      );
               }
             case BaseState.error:
               return ErrorLayout(

@@ -61,7 +61,7 @@ class AppURL {
   static const String addFavorite = "$kBaseURL/fav_providers/new_fav_provider";
 
   //Order
-  static const String createOrder = "$kBaseURL/services/appointment/store";
-  static const String getOrders = "$kBaseURL/services/appointment/get/pending";
-  static const String getOrder = "$kBaseURL/services/appointment/get-single";
+  static const String createOrder = "$kBaseURL/appointment/store";
+  static const String getOrders = "$kBaseURL/appointment/get/pending";
+  static const String getOrder = "$kBaseURL/appointment/get-single";
 }

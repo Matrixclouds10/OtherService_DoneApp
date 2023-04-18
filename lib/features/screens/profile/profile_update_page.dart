@@ -35,14 +35,14 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
   File? image;
   String? nerworkImage;
   Country? country = Country(
-  name: "Saudi Arabia",
-  flag: "🇸🇦",
-  code: "SA",
-  dialCode: "966",
-  minLength: 9,
-  maxLength: 9,
-);
-  bool isMale = true;
+    name: "Saudi Arabia",
+    flag: "🇸🇦",
+    code: "SA",
+    dialCode: "966",
+    minLength: 9,
+    maxLength: 9,
+  );
+  bool? isMale;
 
   final _formKey = GlobalKey<FormState>();
   final _formKeyPassword = GlobalKey<FormState>();
@@ -71,7 +71,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
           image: image,
           countryCode: country?.dialCode,
           countryIso: country?.name,
-          genderIsMale: isMale,
+          genderIsMale: isMale ?? true,
         );
         await BlocProvider.of<ProfileCubit>(context, listen: false).updateProfile(updateProfileParams);
       }
@@ -124,7 +124,6 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
         padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
         child: BlocConsumer<ProfileCubit, ProfileState>(
           listener: (context, state) {
-            print('------> state: $state');
             if (state.updateState == BaseState.loaded) {
               AppSnackbar.show(
                 context: context,
@@ -160,6 +159,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
               case BaseState.loading:
                 return const Center(child: CircularProgressIndicator());
               case BaseState.loaded:
+                isMale ??= state.data?.gender == 'male';
                 _nameController.text = state.data?.name ?? "";
                 _emailController.text = state.data?.email ?? "";
                 _phoneController.text = state.data?.mobileNumber ?? "";

@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:logger/logger.dart';
 
 import 'package:weltweit/app.dart';
+import 'package:weltweit/data/injection.dart';
 import '../../../../core/services/local/cache_consumer.dart';
 import '../../../../core/services/local/storage_keys.dart';
 import '../../../../core/utils/logger.dart';
@@ -21,7 +22,7 @@ class DioClient {
 
   _getToken() async {
     if (token == null) {
-      token = await cacheConsumer.getSecuredData(PrefKeys.token);
+      token = await cacheConsumer.get(PrefKeys.token);
       if (null != token) {
         dio?.options.headers.addAll({'Authorization': 'Bearer $token'});
       }
@@ -35,7 +36,6 @@ class DioClient {
     required this.cacheConsumer,
   }) {
     dio = dioC ?? Dio();
-    _getToken();
     dio!
       ..options.baseUrl = baseUrl
       ..options.connectTimeout = 30000
@@ -48,6 +48,7 @@ class DioClient {
         'Content-Language': appContext?.locale.languageCode ?? 'ar',
         // 'Authorization': 'Bearer $token',
       };
+    _getToken();
     dio!.interceptors.add(loggingInterceptor);
   }
 
@@ -58,7 +59,7 @@ class DioClient {
     CancelToken? cancelToken,
     ProgressCallback? onReceiveProgress,
   }) async {
-    // queryParameters?.addAll({'token':token});
+    options ??= await initOptions();
     try {
       var response = await dio!.get(
         uri,
@@ -96,8 +97,9 @@ class DioClient {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
+    options ??= await initOptions();
     try {
-      if (data != null)
+      if (data != null && data.files.isNotEmpty)
         data.files.forEach((element) {
           Logger().d(element.value);
         });
@@ -142,6 +144,7 @@ class DioClient {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
+    options ??= await initOptions();
     try {
       var response = await dio!.put(
         uri,
@@ -168,6 +171,7 @@ class DioClient {
     Options? options,
     CancelToken? cancelToken,
   }) async {
+    options ??= await initOptions();
     try {
       var response = await dio!.delete(
         uri,
@@ -184,6 +188,24 @@ class DioClient {
       rethrow;
     }
   }
+
+  Future<Options> initOptions() async {
+    Options options = Options(
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Accept-Language': 'ar',
+        'User-Agents': 'android',
+      },
+    );
+    AppPrefs prefs = getIt();
+    String? token = await prefs.getSecuredData(PrefKeys.token);
+    token ??= await prefs.get(PrefKeys.token);
+    if (token != null) {
+      options.headers?.addAll({'Authorization': 'Bearer $token'});
+    }
+    return options;
+  }
 }
 
 Future<FormData?> _buildFileData({
@@ -198,8 +220,7 @@ Future<FormData?> _buildFileData({
   if (filePath != null) {
     String fName = filePath.split('/').last;
     Map<String, dynamic> body = {
-      fileName ?? "image":
-          await MultipartFile.fromFile(filePath, filename: fName),
+      fileName ?? "image": await MultipartFile.fromFile(filePath, filename: fName),
     };
     data = FormData.fromMap(body);
     log('dio', 'files $body');
@@ -207,8 +228,7 @@ Future<FormData?> _buildFileData({
     for (String path in filePathList) {
       String fileName = path.split('/').last;
       data = FormData.fromMap({
-        filePathListName ?? "images[]":
-            await MultipartFile.fromFile(path, filename: fileName),
+        filePathListName ?? "images[]": await MultipartFile.fromFile(path, filename: fileName),
       });
     }
   } else if (filesPath != null) {
@@ -217,20 +237,14 @@ Future<FormData?> _buildFileData({
       if (file.path != null) {
         log('dio', 'file - name: ${file.name} - path: ${file.path}  ');
         String fileName = file.path!.split('/').last;
-        body.addAll({
-          file.name:
-              await MultipartFile.fromFile(file.path!, filename: fileName)
-        });
+        body.addAll({file.name: await MultipartFile.fromFile(file.path!, filename: fileName)});
       } else {
         for (var i = 0; i <= (file.paths?.length ?? 0) - 1; i++) {
           String path = file.paths![i];
           // for(String path in file.paths??[]){
           log('dio', 'files name: ${file.name}[$i] - path: $path  ');
           String fileName = path.split('/').last;
-          body.addAll({
-            '${file.name}[$i]':
-                await MultipartFile.fromFile(path, filename: fileName)
-          });
+          body.addAll({'${file.name}[$i]': await MultipartFile.fromFile(path, filename: fileName)});
         }
       }
     }

@@ -282,27 +282,28 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
             ),
             const VerticalSpace(kScreenPaddingNormal),
             CustomTextFieldEmail(label: tr(LocaleKeys.email), controller: _emailController, textInputAction: TextInputAction.next),
-            const VerticalSpace(kScreenPaddingNormal),
-            Row(
-              children: [
-                ...[true, false].map(
-                  (e) {
-                    return Expanded(
-                      child: RadioListTile(
-                        value: e,
-                        dense: true,
-                        groupValue: isMale,
-                        onChanged: (value) {
-                          isMale = e;
-                          setState(() {});
-                        },
-                        title: CustomText(e ? tr(LocaleKeys.male) : tr(LocaleKeys.female)),
-                      ),
-                    );
-                  },
-                ).toList(),
-              ],
-            ),
+            // const VerticalSpace(kScreenPaddingNormal),
+            // Row(
+            //   children: [
+            //     ...[true, false].map(
+            //       (e) {
+            //         return Expanded(
+            //           child: RadioListTile(
+            //             value: e,
+            //             dense: true,
+            //             groupValue: isMale,
+            //             onChanged: (value) {
+            //               isMale = e;
+            //               setState(() {});
+            //             },
+            //             title: CustomText(e ? tr(LocaleKeys.male) : tr(LocaleKeys.female)),
+            //           ),
+            //         );
+            //       },
+            //     ).toList(),
+            //   ],
+            // ),
+           
             SizedBox(height: 8)
           ],
         ));

@@ -58,31 +58,38 @@ class _ServicesPageState extends State<ServicesPage> {
             case BaseState.loaded:
               {
                 if (state.services.isEmpty) return Center(child: CustomText("لا يوجد خدمات").header());
-                return SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      for (final service in state.services) singleService(service),
-                      CustomButton(
-                        onTap: () {
-                          logger.i('updateSelectedServices: ${state.services.where((element) => element.myService == true).toList()}}');
-                          logger.e('updateSelectedServices: ${state.services.where((element) => element.myService == false).toList()}}');
-
-                          if (state.services.where((element) => element.myService == true).isEmpty) {
-                            AppSnackbar.show(
-                              context: context,
-                              type: SnackbarType.warning,
-                              title: LocaleKeys.notification,
-                              message: LocaleKeys.selectAtLeastOneService.tr(),
-                            );
-                            return;
-                          }
-                          BlocProvider.of<ServicesProviderCubit>(context).updateServices(state.services.where((element) => element.myService == true).toList());
-                        },
-                        loading: state.updateState == BaseState.loading,
-                        title: LocaleKeys.confirm.tr(),
+                return Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: EdgeInsets.only(bottom: 30),
+                        child: Column(
+                          children: [
+                            for (final service in state.services) singleService(service),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                    CustomButton(
+                      onTap: () {
+                        logger.i('updateSelectedServices: ${state.services.where((element) => element.myService == true).toList()}}');
+                        logger.e('updateSelectedServices: ${state.services.where((element) => element.myService == false).toList()}}');
+
+                        if (state.services.where((element) => element.myService == true).isEmpty) {
+                          AppSnackbar.show(
+                            context: context,
+                            type: SnackbarType.warning,
+                            title: LocaleKeys.notification,
+                            message: LocaleKeys.selectAtLeastOneService.tr(),
+                          );
+                          return;
+                        }
+                        BlocProvider.of<ServicesProviderCubit>(context).updateServices(state.services.where((element) => element.myService == true).toList());
+                      },
+                      loading: state.updateState == BaseState.loading,
+                      title: LocaleKeys.confirm.tr(),
+                    ),
+                  ],
                 );
               }
             case BaseState.error:
@@ -108,30 +115,29 @@ class _ServicesPageState extends State<ServicesPage> {
         },
         title: Row(
           children: [
-            if(false)
-            CachedNetworkImage(
-              imageUrl: service.image ?? '',
-              width: 40,
-              height: 40,
-              memCacheHeight: 40,
-              memCacheWidth: 40,
-              maxWidthDiskCache: 40,
-              maxHeightDiskCache: 40,
-
-              imageBuilder: (context, imageProvider) => Container(
-                width: 40.0,
-                height: 40.0,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+            if (false)
+              CachedNetworkImage(
+                imageUrl: service.image ?? '',
+                width: 40,
+                height: 40,
+                memCacheHeight: 40,
+                memCacheWidth: 40,
+                maxWidthDiskCache: 40,
+                maxHeightDiskCache: 40,
+                imageBuilder: (context, imageProvider) => Container(
+                  width: 40.0,
+                  height: 40.0,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+                  ),
+                ),
+                placeholder: (context, url) => SizedBox(
+                  width: 40.0,
+                  height: 40.0,
+                  child: Image.asset(Assets.imagesLogo),
                 ),
               ),
-              placeholder: (context, url) => SizedBox(
-                width: 40.0,
-                height: 40.0,
-                child: Image.asset(Assets.imagesLogo),
-              ),
-            ),
             // CustomImage(
             //   imageUrl: service.image ?? '',
             //   width: 40,

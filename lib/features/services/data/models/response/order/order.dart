@@ -18,9 +18,9 @@ class OrderModel {
     final DateTime date;
     final String file;
     final String status;
-    final Client client;
-    final ProvidersModel provider;
-    final ServiceModel service;
+    final Client? client;
+    final ProvidersModel? provider;
+    final ServiceModel? service;
 
     factory OrderModel.fromJson(Map<String, dynamic> json) => OrderModel(
         id: json["id"],
@@ -41,7 +41,6 @@ class Client {
         required this.name,
         required this.email,
         required this.mobileNumber,
-        required this.token,
         required this.otpVerified,
         required this.countryCode,
         required this.gender,
@@ -52,7 +51,6 @@ class Client {
     final String name;
     final String email;
     final String mobileNumber;
-    final int token;
     final int otpVerified;
     final String countryCode;
     final String gender;
@@ -63,7 +61,6 @@ class Client {
         name: json["name"],
         email: json["email"],
         mobileNumber: json["mobile_number"],
-        token: json["token"],
         otpVerified: json["otp_verified"],
         countryCode: json["country_code"],
         gender: json["gender"],
@@ -75,7 +72,6 @@ class Client {
         "name": name,
         "email": email,
         "mobile_number": mobileNumber,
-        "token": token,
         "otp_verified": otpVerified,
         "country_code": countryCode,
         "gender": gender,

@@ -82,4 +82,25 @@ class AppBottomSheets {
           },
         ));
   }
+
+  void customBottomSheet({required BuildContext context, required Widget child}) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      isScrollControlled: true,
+      builder: (context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.8,
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+          ),
+          child: child,
+        );
+      },
+    );
+  }
 }

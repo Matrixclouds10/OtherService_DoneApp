@@ -2,11 +2,23 @@
 
 abstract class LocaleKeys {
   
+  static const confirmOrder = "confirmOrder";
+  static const confirmLogout = "confirmLogout";
+  static const address = "address";
+  static const video = "video";
+  static const add = "add";
+  static const addNewAddressDescription = "addNewAddressDescription";
+  static const addNewAddress = "addNewAddress";
+  static const noAddresses = "noAddresses";
+  static const current = "current";
+  static const theCompleted = 'theCompleted';
+  static const theCancelled = "theCancelled";
+  static const myOrders = "myOrders";
+
   static const serviceProvider = 'serviceProvider';
   static const newClient = 'newClient';
   static const joinAs = 'joinAs';
   static const addedToFavorite = 'addedToFavorite';
-  static const confirmLogout = 'confirmLogout';
   static const male = 'male';
   static const female = 'female';
   static const en = 'en';
@@ -181,7 +193,6 @@ abstract class LocaleKeys {
   static const goodMorningDesc = 'goodMorningDesc';
   static const goodMorning = 'goodMorning';
   static const newWord = 'newWord';
-  static const current = 'current';
   static const confirmDelete = 'confirmDelete';
   static const logOutNote = 'logOutNote';
   static const passport = 'passport';
@@ -198,4 +209,5 @@ abstract class LocaleKeys {
   static const other = 'other';
   static const letsStart = 'letsStart';
   static const loginAsVisitor = 'loginAsVisitor';
+
 }

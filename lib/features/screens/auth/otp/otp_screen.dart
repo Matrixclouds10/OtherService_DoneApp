@@ -8,6 +8,7 @@ import 'package:weltweit/core/extensions/num_extensions.dart';
 import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/resources/values_manager.dart';
 import 'package:weltweit/features/core/routing/routes.dart';
+import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/services/domain/request_body/check_otp_body.dart';
 import 'package:weltweit/generated/assets.dart';
@@ -57,8 +58,10 @@ class _OTPScreenState extends State<OTPScreen> {
       );
 
       if (response.isSuccess) {
-        if (widget._checkOTPType == CheckOTPType.register) {
+        if (widget._checkOTPType == CheckOTPType.register && !widget._typeIsProvider) {
           Navigator.pushNamedAndRemoveUntil(context, RoutesServices.servicesLayoutScreen, (route) => false);
+        }else if (widget._checkOTPType == CheckOTPType.register && widget._typeIsProvider) {
+          Navigator.pushNamedAndRemoveUntil(context, RoutesProvider.providerLayoutScreen, (route) => false);
         } else {
           // NavigationService.push(Routes.resetPasswordScreen, arguments: {'phone': widget._phone});
         }

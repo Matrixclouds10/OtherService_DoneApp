@@ -37,6 +37,7 @@ class _LayoutPageState extends State<LayoutPage> {
       listener: (context, state) {
         if (state.state == BaseState.error) {
           if (state.error?.code == 401) {
+            if (context.mounted) context.read<LayoutCubit>().setCurrentIndex(0);
             NavigationService.logout();
           }
         }

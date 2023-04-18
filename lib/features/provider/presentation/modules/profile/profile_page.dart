@@ -87,8 +87,11 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                       decoration: BoxDecoration(color: Colors.white),
                       child: ServiceProviderItemWidget(
                         providersModel: ProvidersModel(
-                          name: 'مسعد معوض',
-                          distance: "6.2 كم",
+                          name: state.data?.name,
+                          image: state.data?.image,
+                          mobileNumber: state.data?.mobileNumber,
+                          email: state.data?.email,
+                          isOnline: state.data?.isOnline?.toLowerCase() == "yes",
                         ),
                         canMakeAppointment: null,
                         moreInfoButton: true,

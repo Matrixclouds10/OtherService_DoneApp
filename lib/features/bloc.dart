@@ -14,6 +14,7 @@ import 'package:weltweit/features/services/logic/provider/provider_services/prov
 import 'package:weltweit/features/services/logic/provider/providers_cubit.dart';
 import 'package:weltweit/features/services/logic/service/services_cubit.dart';
 import 'package:weltweit/features/services/modules/layout/layout_cubit.dart';
+import 'package:weltweit/features/services/modules/my_addresses/logic/address_cubit.dart';
 
 final List<dynamic> kServicesProviders = [
   BlocProvider(create: (_) => getIt<LoginCubit>()),
@@ -32,6 +33,9 @@ final List<dynamic> kServicesProviders = [
             getIt(),
             getIt(),
           )),
+
+  //Address
+  BlocProvider<AddressCubit>(create: (BuildContext context) => AddressCubit(getIt(), getIt(), getIt(), getIt())),
 
   //Services
   BlocProvider<ServicesCubit>(create: (BuildContext context) => ServicesCubit(getIt(), getIt())),

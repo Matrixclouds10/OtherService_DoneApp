@@ -42,7 +42,7 @@ class AddressRepositoryImp implements AddressRepository {
   @override
   Future<Either<ErrorModel, Response>> addressCreateRepository({required AddressCreateParams params}) async {
     try {
-      Response response = await _dioClient.post(AppURL.addressCreateUrl, parameters: params.toJson());
+      Response response = await _dioClient.post(AppURL.addressCreateUrl, queryParameters: params.toJson());
       return Right(response);
     } catch (e) {
       return Left(ApiErrorHandler.getMessage(e));

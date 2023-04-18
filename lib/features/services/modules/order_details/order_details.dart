@@ -44,10 +44,10 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                   decoration: const BoxDecoration(color: Colors.white),
                   child: ServiceProviderItemWidget(
                     providersModel: ProvidersModel(
-                      image: widget.orderModel.provider.image,
-                      name: widget.orderModel.provider.name,
-                      distance: widget.orderModel.provider.distance,
-                      rateAvg: widget.orderModel.provider.rateAvg,
+                      image: widget.orderModel.provider?.image,
+                      name: widget.orderModel.provider?.name,
+                      distance: widget.orderModel.provider?.distance,
+                      rateAvg: widget.orderModel.provider?.rateAvg,
                     ),
                     showFavoriteButton: false,
                   ),

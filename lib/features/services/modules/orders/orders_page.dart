@@ -11,7 +11,9 @@ import 'package:weltweit/core/resources/theme/theme.dart';
 
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/services/logic/orders/orders_cubit.dart';
+import 'package:weltweit/features/widgets/empty_widget.dart';
 import 'package:weltweit/generated/assets.dart';
+import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
 
 class OrdersPage extends StatefulWidget {
@@ -35,7 +37,7 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
     return Scaffold(
       appBar: CustomAppBar(
         color: Colors.white,
-        titleWidget: const CustomText("طلباتي").header(),
+        titleWidget: CustomText(LocaleKeys.myOrders.tr()).header(),
         isCenterTitle: true,
       ),
       backgroundColor: servicesTheme.scaffoldBackgroundColor,
@@ -57,9 +59,9 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
                     },
                     unselectedLabelColor: Colors.grey,
                     tabs: [
-                      singleTab(0, "الحالية"),
-                      singleTab(1, 'المكتملة'),
-                      singleTab(2, "الملغاة"),
+                      singleTab(0, LocaleKeys.current.tr()),
+                      singleTab(1, LocaleKeys.theCompleted.tr()),
+                      singleTab(2, LocaleKeys.theCancelled.tr()),
                     ],
                   ),
                 ),
@@ -110,18 +112,21 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
         if (state.state == BaseState.loading) {
           return const Center(child: CircularProgressIndicator());
         }
+        if (state.state == BaseState.loaded && state.data.isEmpty) {
+          return EmptyView(message: "لا يوجد طلبات");
+        }
         return Column(
           children: [
             for (var i = 0; i < state.data.length; i++)
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   NavigationService.push(RoutesServices.servicesOrderDetails, arguments: {
                     "orderModel": state.data[i],
                   });
                 },
                 child: OrderItemWidget(
-                  avatar: state.data[i].provider.image ?? '',
-                  name: state.data[i].provider.name ?? '',
+                  avatar: state.data[i].provider?.image ?? '',
+                  name: state.data[i].provider?.name ?? '',
                   profession: '',
                   date: DateFormat('yyyy-MM-dd').format(state.data[i].date),
                   time: DateFormat('HH:mm').format(state.data[i].date),

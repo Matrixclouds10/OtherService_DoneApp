@@ -16,6 +16,7 @@ import 'package:weltweit/features/services/data/models/response/services/service
 import 'package:weltweit/features/services/domain/usecase/create_order/create_order_usecase.dart';
 import 'package:weltweit/features/services/logic/create_order/create_order_cubit.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
+import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
 import 'package:weltweit/presentation/component/inputs/base_form.dart';
 import 'package:video_player/video_player.dart';
@@ -97,6 +98,7 @@ class _ReservationPageState extends State<ReservationPage> {
                               height: 150,
                               color: Colors.red,
                               child: Container(
+                                padding: EdgeInsets.symmetric(vertical: 12),
                                 decoration: const BoxDecoration(
                                   color: Colors.white,
                                   border: Border(
@@ -104,129 +106,30 @@ class _ReservationPageState extends State<ReservationPage> {
                                   ),
                                 ),
                                 height: 25,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                child: Column(
                                   children: [
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: GestureDetector(
-                                        onTap: () async {
-                                          Navigator.pop(context);
-                                          PickedFile? pickedFile = await (ImagePicker().getImage(source: ImageSource.camera, imageQuality: 25));
-
-                                          if (pickedFile != null) {
-                                            List<File> files = images ;
-                                            File file = File(pickedFile.path);
-                                            if (files.length >= 5) {
-                                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('لا يمكن إضافة أكثر من 5 صور')));
-                                              return;
-                                            } else {
-                                              files.add(file);
-                                            }
-                                            images = files;
-                                          }
-                                          setState(() {});
-                                        },
-                                        child: Container(
-                                          width: double.infinity,
-                                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(4),
-                                            border: Border.all(color: Colors.grey),
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              Icon(Icons.camera_alt, color: Colors.grey[500]),
-                                              const SizedBox(width: 8),
-                                              Expanded(child: CustomText("Camera", color: Colors.grey[500]!)),
-                                            ],
-                                          ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        ElevatedButton.icon(
+                                          onPressed: _actionCamera,
+                                          icon: Icon(Icons.camera_alt),
+                                          label: CustomText(LocaleKeys.camera.tr()),
                                         ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: GestureDetector(
-                                        onTap: () async {
-                                          Navigator.pop(context);
-                                          List<PickedFile>? pickedFile = await (ImagePicker().getMultiImage(imageQuality: 35));
-
-                                          if (pickedFile != null && pickedFile.isNotEmpty) {
-                                            List<File> files = images ;
-                                            for (var element in pickedFile) {
-                                              File file = File(element.path);
-                                              if (files.length >= 5) {
-                                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('لا يمكن إضافة أكثر من 5 صور')));
-                                                continue;
-                                              } else {
-                                                files.add(file);
-                                              }
-                                            }
-                                            //remove dublicates
-                                            files = files.toSet().toList();
-
-                                            images = files;
-                                            setState(() {});
-                                          }
-                                        },
-                                        child: Container(
-                                          width: double.infinity,
-                                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(4),
-                                            border: Border.all(color: Colors.grey),
-                                          ),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Icon(Icons.image, color: Colors.grey[500]),
-                                              const SizedBox(width: 8),
-                                              Expanded(child: CustomText("Gallery", color: Colors.grey[500]!)),
-                                            ],
-                                          ),
+                                        ElevatedButton.icon(
+                                          onPressed: _actionGallery,
+                                          icon: Icon(Icons.image, color: Colors.blue.shade400),
+                                          style: ElevatedButton.styleFrom(backgroundColor: Colors.blue.shade100),
+                                          label: CustomText(LocaleKeys.gallery.tr()),
                                         ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: GestureDetector(
-                                        onTap: () async {
-                                          Navigator.pop(context);
-                                          PickedFile? pickedFile = await (ImagePicker().getVideo(source: ImageSource.gallery));
-
-                                          if (pickedFile != null) {
-                                            video = File(pickedFile.path);
-                                            // videoPlayerController = VideoPlayerController.file(video!);
-                                            // try {
-                                            //   videoPlayerController!.initialize();
-                                            // } catch (e) {
-                                            //   logger.e(e);
-                                            // }
-                                            // setState(() {});
-                                          }
-                                        },
-                                        child: Container(
-                                          width: double.infinity,
-                                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(4),
-                                            border: Border.all(color: Colors.grey),
-                                          ),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Icon(Icons.image, color: Colors.grey[500]),
-                                              const SizedBox(width: 8),
-                                              Expanded(child: CustomText("Video", color: Colors.grey[500]!)),
-                                            ],
-                                          ),
+                                        ElevatedButton.icon(
+                                          onPressed: _actionVideo,
+                                          icon: Icon(Icons.video_camera_back_rounded, color: Colors.green.shade400),
+                                          style: ElevatedButton.styleFrom(backgroundColor: Colors.green.shade100),
+                                          label: CustomText(LocaleKeys.video.tr()),
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                    const SizedBox(width: 12),
                                   ],
                                 ),
                               ),
@@ -367,7 +270,7 @@ class _ReservationPageState extends State<ReservationPage> {
                   ),
                   const SizedBox(height: 24),
                   CustomButton(
-                    title: "تأكيد الطلب",
+                    title: LocaleKeys.confirmOrder.tr(),
                     loading: state.state == BaseState.loading,
                     color: Colors.black,
                     onTap: () => state.state != BaseState.loading ? _submit(context) : null,
@@ -445,8 +348,8 @@ class _ReservationPageState extends State<ReservationPage> {
   }
 
   _buildVideo() {
-    if (video == null) return Text("No video");
-    if (videoPlayerController == null) return Text("No video");
+    if (video == null) return Container();
+    if (videoPlayerController == null) return Container();
     return Stack(
       children: [
         GestureDetector(
@@ -543,5 +446,62 @@ class _ReservationPageState extends State<ReservationPage> {
           serviceId: selectedService!.id!,
           providerId: widget.providersModel.id!,
         ));
+  }
+
+  void _actionCamera() async {
+    Navigator.pop(context);
+    PickedFile? pickedFile = await (ImagePicker().getImage(source: ImageSource.camera, imageQuality: 25));
+
+    if (pickedFile != null) {
+      List<File> files = images;
+      File file = File(pickedFile.path);
+      if (files.length >= 5) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('لا يمكن إضافة أكثر من 5 صور')));
+        return;
+      } else {
+        files.add(file);
+      }
+      images = files;
+    }
+    setState(() {});
+  }
+
+  void _actionGallery() async {
+    Navigator.pop(context);
+    List<PickedFile>? pickedFile = await (ImagePicker().getMultiImage(imageQuality: 35));
+
+    if (pickedFile != null && pickedFile.isNotEmpty) {
+      List<File> files = images;
+      for (var element in pickedFile) {
+        File file = File(element.path);
+        if (files.length >= 5) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('لا يمكن إضافة أكثر من 5 صور')));
+          continue;
+        } else {
+          files.add(file);
+        }
+      }
+      //remove dublicates
+      files = files.toSet().toList();
+
+      images = files;
+      setState(() {});
+    }
+  }
+
+  void _actionVideo() async {
+    Navigator.pop(context);
+    PickedFile? pickedFile = await (ImagePicker().getVideo(source: ImageSource.gallery));
+
+    if (pickedFile != null) {
+      video = File(pickedFile.path);
+      // videoPlayerController = VideoPlayerController.file(video!);
+      // try {
+      //   videoPlayerController!.initialize();
+      // } catch (e) {
+      //   logger.e(e);
+      // }
+      // setState(() {});
+    }
   }
 }
