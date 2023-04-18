@@ -75,7 +75,7 @@ class _FavoritePageState extends State<FavoritePage> with SingleTickerProviderSt
         width: double.infinity,
         margin: EdgeInsets.symmetric(vertical: 4),
         decoration: BoxDecoration(
-          color: isSelected ? Color(0xffE67E23) : Colors.white,
+          color: isSelected ? Colors.black : Colors.white,
           borderRadius: BorderRadius.circular(4),
         ),
         child: CustomText(title, color: isSelected ? Colors.white : Colors.black),

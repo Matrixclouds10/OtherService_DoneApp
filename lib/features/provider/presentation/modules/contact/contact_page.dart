@@ -42,7 +42,7 @@ class ContactPage extends StatelessWidget {
                   CustomButton(
                     onTap: () {},
                     title: "ارسال",
-                    color: Colors.orangeAccent,
+                    color: Colors.black,
                   ),
                   SizedBox(height: 8),
                   Stack(

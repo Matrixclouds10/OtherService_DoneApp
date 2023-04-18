@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             unselectedLabelColor: Colors.grey,
             tabs: [
               singleTab(0, LocaleKeys.newWord.tr()),
-              singleTab(1, LocaleKeys.current.tr()),
+              singleTab(1, LocaleKeys.theCompleted.tr()),
             ],
           ),
         ),
@@ -169,15 +169,17 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   children: [
                     for (var i = 0; i < 4; i++)
-                      OrderItemWidget(
+                   OrderItemWidget(
                         avatar: Assets.imagesAvatar,
                         name: "مسعد معوض",
                         profession: "",
                         date: getRandomDate(),
                         time: getRadomTime(),
                         orderStatus: i % 2 == 0 ? "accepted" : "accepted",
-                        price: i % 2 == 0 ? "300 ج" : "250 ج",
+                        price: "",
                         tags: getRandomTags(),
+                        distanceInKm: "6 كم",
+                        address: "الرياض ، ميدان سننية، ٨٦ شارع  ",
                       ),
                     SizedBox(height: 80),
                   ],
@@ -197,7 +199,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         width: double.infinity,
         margin: EdgeInsets.symmetric(vertical: 4),
         decoration: BoxDecoration(
-          color: isSelected ? Color(0xffE67E23) : Colors.white,
+          color: isSelected ? Colors.black : Colors.white,
           borderRadius: BorderRadius.circular(4),
         ),
         child: CustomText(title, color: isSelected ? Colors.white : Colors.black),

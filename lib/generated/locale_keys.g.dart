@@ -2,6 +2,8 @@
 
 abstract class LocaleKeys {
   
+  static const myWorks = "myWorks";
+  static const resume = "resume";
   static const confirmOrder = "confirmOrder";
   static const confirmLogout = "confirmLogout";
   static const address = "address";

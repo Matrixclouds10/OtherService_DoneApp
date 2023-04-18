@@ -7,9 +7,9 @@ const kAppBarColor = Color(0xffFDF2E9);
 
 const errorColor = Color(0xffc52828);
 
-const primaryColor = Color(0xffE67E23);
-const primaryColorDark = Color(0xffE67E23);
-const primaryColorLight = Color(0xffE67E23);
+const primaryColor = Colors.black;
+const primaryColorDark = Colors.black;
+const primaryColorLight = Colors.black;
 
 const textPrimary = Colors.black;
 const textPrimaryDark = Colors.white;
@@ -32,9 +32,9 @@ const grayScaleDarkColor = Color(0xFFA7A7A7);
 
 class AppColorLight {
 // primary color
-  final Color kPrimaryColor = Color(0xffE67E23);
-  final Color kPrimaryColorDark = Color(0xffE67E23);
-  final Color kPrimaryColorLight = Color(0xffE67E23);
+  final Color kPrimaryColor = Colors.black;
+  final Color kPrimaryColorDark = Colors.black;
+  final Color kPrimaryColorLight = Colors.black;
   final Color kAccentColor = Color(0xff57A4C3);
   final Color kSliderColor = Color(0xff212121);
   final Color kBottomNavigationBarColor = Colors.white;
@@ -53,8 +53,8 @@ class AppColorLight {
   final Color kTextPrimary = Color(0xff43474E);
   final Color kTextPrimaryDark = Color(0xff43474E);
   final Color kTextSecondaryDark = Color(0xff43474E);
-  final Color kColorButton = Color(0xffE67E23);
-  final Color kColorButtonDark = Color(0xffE67E23);
+  final Color kColorButton = Colors.black;
+  final Color kColorButtonDark = Colors.black;
 }
 
 class AppColorDark {

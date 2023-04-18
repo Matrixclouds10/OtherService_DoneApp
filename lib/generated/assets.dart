@@ -40,7 +40,6 @@ class Assets {
   static const String imagesInfo = "assets/images/info.png";
   static const String imagesInternet = "assets/images/internet.png";
   static const String imagesLogOut = "assets/images/log-out.png";
-  static const String imagesLogoJpg = "assets/images/logo_jpg.jpg";
   static const String imagesPending = "assets/images/pending.png";
 
 

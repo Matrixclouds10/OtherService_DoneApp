@@ -25,7 +25,7 @@ class BottomNavigationBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       selectedFontSize: 12.sp,
-      selectedItemColor: Colors.orange,
+      selectedItemColor: Colors.black,
       iconSize: 18,
       // type: BottomNavigationBarType.shifting,
       type: BottomNavigationBarType.fixed,
@@ -56,7 +56,7 @@ class BottomNavigationBarWidget extends StatelessWidget {
         child: Icon(
             _currentIndex == tab.index ? tab.selectIcon : tab.unSelectIcon,
             color: _currentIndex == tab.index
-                ? Colors.orange
+                ? Colors.black
                 : Theme.of(context).hintColor),
         // child: SvgPicture.asset(tab.image,
         //     height: 28.r, width: 28.r, color: Colors.orange),

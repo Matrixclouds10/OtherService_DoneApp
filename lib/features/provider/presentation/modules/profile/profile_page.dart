@@ -38,7 +38,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     context.read<ServicesProviderCubit>().getAllServices();
   }
 
@@ -94,7 +94,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                           isOnline: state.data?.isOnline?.toLowerCase() == "yes",
                         ),
                         canMakeAppointment: null,
-                        moreInfoButton: true,
+                        moreInfoButton: false,
                         showFavoriteButton: false,
                       ),
                     );
@@ -106,14 +106,22 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                     controller: _tabController,
                     indicatorColor: Colors.transparent,
                     labelColor: Colors.black,
+                    padding: EdgeInsets.zero,
+                    labelPadding: EdgeInsets.zero,
                     onTap: (index) {
                       setState(() {});
                     },
                     unselectedLabelColor: Colors.grey,
+                    indicatorSize: TabBarIndicatorSize.label,
+                    indicator: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
                     tabs: [
                       singleTab(0, LocaleKeys.myServices.tr()),
-                      singleTab(1, LocaleKeys.gallery.tr()),
+                      singleTab(1, LocaleKeys.myWorks.tr()),
                       singleTab(2, LocaleKeys.rates.tr()),
+                      singleTab(3, LocaleKeys.resume.tr()),
                     ],
                   ),
                 ),
@@ -133,7 +141,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
         width: double.infinity,
         margin: EdgeInsets.symmetric(vertical: 4),
         decoration: BoxDecoration(
-          color: isSelected ? Color(0xffE67E23) : Colors.white,
+          color: isSelected ? Colors.black : Colors.white,
           borderRadius: BorderRadius.circular(4),
         ),
         child: CustomText(title, color: isSelected ? Colors.white : Colors.black).footer(),
@@ -149,6 +157,20 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
         return gallery();
       case 2:
         return reviews();
+      case 3:
+        return Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(color: Colors.white).shadow(),
+              margin: EdgeInsets.all(8),
+              padding: EdgeInsets.all(8),
+              child: CustomText(
+                " هذا النص عبارة عن نص توضيحي لوصف نبذة سريعة عن المسئولين عن التطبيق. هذا النص عبارة عن نص توضيحي لوصف نبذة سريعة عن  المسئولين عن التطبيق. هذا النص عبارة عن نص توضيحي لوصف نبذة سريعة عن المسئولين عن التطبيق. هذا النص عبارة عن نص توضيحي لوصف نبذة سريعة عن المسئولين عن التطبيق. هذا النص عبارة عن نص توضيحي لوصف نبذة سريعة عن المسئولين عن التطبيق. هذاالنص عبارة....",
+                align: TextAlign.start,
+              ),
+            ),
+          ],
+        );
       default:
         return Container();
     }

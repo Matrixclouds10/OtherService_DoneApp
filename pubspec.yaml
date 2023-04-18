@@ -100,7 +100,7 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: false
-  image_path: "assets/services/images/logo.jpg"
+  image_path: "assets/images/logo.jpg"
 # flutter pub run flutter_launcher_icons:main
 
 flutter:

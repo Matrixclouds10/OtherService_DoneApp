@@ -37,14 +37,15 @@ class MorePage extends StatelessWidget {
                 color: Colors.white,
                 child: Column(
                   children: [
-                    singleCustomListTile(
-                        image: "assets/images/file.png",
-                        text: 'ملفاتي',
-                        trailingText: "",
-                        onTap: () {
-                          Navigator.pushNamed(context, RoutesProvider.providerDocuments);
-                        }),
-                    Divider(height: 2, color: Colors.grey[300]),
+                    // singleCustomListTile(
+                    //     image: "assets/images/file.png",
+                    //     text: 'ملفاتي',
+                    //     trailingText: "",
+                    //     onTap: () {
+                    //       Navigator.pushNamed(context, RoutesProvider.providerDocuments);
+                    //     }),
+                    // Divider(height: 2, color: Colors.grey[300]),
+                   
                     BlocBuilder<ServicesProviderCubit, ServicesProviderState>(
                       buildWhen: (previous, current) => previous.services != current.services,
                       bloc: BlocProvider.of<ServicesProviderCubit>(context)..getSavedServices(),
@@ -59,6 +60,7 @@ class MorePage extends StatelessWidget {
                       },
                     ),
                     Divider(height: 2, color: Colors.grey[300]),
+                 
                     singleCustomListTile(
                         image: "assets/images/file.png",
                         text: 'سجل الطلبات',
@@ -90,14 +92,15 @@ class MorePage extends StatelessWidget {
                           Navigator.pushNamed(context, RoutesProvider.providerContactUs);
                         }),
                     Divider(height: 2, color: Colors.grey[300]),
-                    singleCustomListTile(
-                        image: "assets/images/user.png",
-                        text: 'اشترك الان',
-                        trailingText: "غير مفعل",
-                        onTap: () {
-                          Navigator.pushNamed(context, RoutesProvider.providerSubscribe);
-                        }),
-                    Divider(height: 2, color: Colors.grey[300]),
+                    // singleCustomListTile(
+                    //     image: "assets/images/user.png",
+                    //     text: 'اشترك الان',
+                    //     trailingText: "غير مفعل",
+                    //     onTap: () {
+                    //       Navigator.pushNamed(context, RoutesProvider.providerSubscribe);
+                    //     }),
+                    // Divider(height: 2, color: Colors.grey[300]),
+                   
                     singleCustomListTile(
                       image: Assets.imagesLogOut,
                       text: LocaleKeys.logOut.tr(),
@@ -136,7 +139,7 @@ class MorePage extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           child: Row(
             children: [
-              Image.asset(image, width: 48, height: 48),
+              Image.asset(image, width: 48, height: 48, color: Colors.black),
               SizedBox(width: 12),
               Expanded(
                 child: Column(

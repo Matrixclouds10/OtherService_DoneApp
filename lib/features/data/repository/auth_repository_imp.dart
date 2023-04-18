@@ -18,11 +18,11 @@ class AuthRepositoryImp implements AuthRepository {
     required DioClient dioClient,
   }) : _dioClient = dioClient;
   @override
-  Future<ApiResponse> login({required LoginBody loginBody,required bool typeIsProvider}) async {
+  Future<ApiResponse> login({required LoginBody loginBody, required bool typeIsProvider}) async {
     try {
       String url = typeIsProvider ? AppURL.kLoginProviderURI : AppURL.kLoginURI;
       Response response = await _dioClient.post(
-       url,
+        url,
         queryParameters: loginBody.toJson(),
       );
       return ApiResponse.withSuccess(response);
@@ -35,7 +35,18 @@ class AuthRepositoryImp implements AuthRepository {
   Future<ApiResponse> register({required RegisterBody registerBody}) async {
     try {
       String url = registerBody.typeIsProvider ? AppURL.kRegisterProviderURI : AppURL.kRegisterURI;
-      Response response = await _dioClient.post(url, queryParameters: registerBody.toJson(), filePath: registerBody.image?.path);
+      FormData formData = FormData.fromMap({
+        'name': registerBody.name,
+        'email': registerBody.email,
+        'phone': registerBody.mobile,
+        'password': registerBody.password,
+      });
+      Response response = await _dioClient.post(
+        url,
+        data: formData,
+        // filePath: registerBody.image?.path,
+        // ignorePath: true,
+      );
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));

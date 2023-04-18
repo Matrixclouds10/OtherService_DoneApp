@@ -13,7 +13,7 @@ class WalletPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xffE67E23),
+        backgroundColor: Colors.black,
         appBar: CustomAppBar(
           isBackButtonExist: false,
           isCenterTitle: true,
@@ -27,7 +27,7 @@ class WalletPage extends StatelessWidget {
               image: AssetImage(Assets.imagesBk2),
               fit: BoxFit.cover,
               colorFilter: ColorFilter.mode(
-                  Colors.orange.withOpacity(0.8), BlendMode.darken),
+                  Colors.black.withOpacity(0.8), BlendMode.darken),
             ),
           ),
           child: Column(

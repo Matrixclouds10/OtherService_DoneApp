@@ -81,7 +81,7 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
         width: double.infinity,
         margin: const EdgeInsets.symmetric(vertical: 4),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xffE67E23) : Colors.white,
+          color: isSelected ? Colors.black : Colors.white,
           borderRadius: BorderRadius.circular(4),
         ),
         child: CustomText(title, color: isSelected ? Colors.white : Colors.black),

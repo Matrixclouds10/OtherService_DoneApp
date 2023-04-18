@@ -66,7 +66,7 @@ class MyAddressesPage extends StatelessWidget {
                                 ),
                                 value: i == 0,
                                 fillColor:
-                                    MaterialStateProperty.all(Colors.orange),
+                                    MaterialStateProperty.all(Colors.black),
                                 onChanged: (value) {},
                               ),
                               CustomText("تعيين كعنوان افتراضي"),
