@@ -1,6 +1,6 @@
 class AppURL {
   static const kAPIKey = "";
-  static const kBaseURL = "http://superapp.weltweithg.com/api";
+  static const kBaseURL = "http://don.dev01.matrix-clouds.com/api";
 
   ///Auth
   static const String kLoginURI = "$kBaseURL/auth/login";
