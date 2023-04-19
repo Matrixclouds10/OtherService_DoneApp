@@ -40,10 +40,14 @@ class AuthRepositoryImp implements AuthRepository {
         'email': registerBody.email,
         'phone': registerBody.mobile,
         'password': registerBody.password,
+        'mobile_number': registerBody.mobile,
+        'country_code': registerBody.country.dialCode,
+        'country_iso': registerBody.country.code,
+        'is_individual': registerBody.isIndividual,
       });
       Response response = await _dioClient.post(
         url,
-        data: formData,
+        queryParameters: registerBody.toJson(),
         // filePath: registerBody.image?.path,
         // ignorePath: true,
       );
