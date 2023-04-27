@@ -67,15 +67,15 @@ class _MyAddressesPageState extends State<MyAddressesPage> {
                         const SizedBox(height: 12),
                         CustomButton(
                           title: LocaleKeys.add.tr(),
-                          onTap: () {
+                          onTap: () async {
+                            Navigator.pop(context);
                             AddressCreateParams params = AddressCreateParams(
                               name: nameController.text,
                               address: addController.text,
                               lat: '0',
                               lng: '0',
                             );
-                            context.read<AddressCubit>().createAddress(params);
-                            Navigator.pop(context);
+                            await context.read<AddressCubit>().createAddress(params);
                             context.read<AddressCubit>().getAddresses();
                           },
                         ),
@@ -111,7 +111,7 @@ class _MyAddressesPageState extends State<MyAddressesPage> {
             return ListView.builder(
               itemCount: state.addresses.length,
               itemBuilder: (context, index) {
-                return addressItemWidget(address: state.addresses[index]);
+                return addressItemWidget(index,address: state.addresses[index]);
               },
             );
           }
@@ -177,7 +177,7 @@ class _MyAddressesPageState extends State<MyAddressesPage> {
     );
   }
 
-  Widget addressItemWidget({required AddressItemModel address}) {
+  Widget addressItemWidget(int index, {required AddressItemModel address}) {
     return Card(
       margin: EdgeInsets.symmetric(vertical: 6, horizontal: 8),
       color: Colors.white,
@@ -185,41 +185,54 @@ class _MyAddressesPageState extends State<MyAddressesPage> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomText(address.name ?? '', ph: 12, pv: 0).start(),
-                  if (address.address != null && address.address!.length > 1)
-                    CustomText(address.address ?? '', ph: 12, pv: 0).start().footer(),
-                  if (address.regionName != null && address.regionName!.length > 1)
-                    CustomText(address.regionName ?? '', ph: 8).start().footer(),
-                ],
-              )),
-              // IconButton(
-              //   icon: Icon(
-              //     Icons.edit,
-              //     color: servicesTheme.colorScheme.secondary,
-              //   ),
-              //   onPressed: () {},
-              // ),
-              IconButton(
-                icon: Icon(
-                  Icons.delete,
-                  color: servicesTheme.colorScheme.error,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                    child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomText(address.name ?? '', ph: 12, pv: 0).start(),
+                    if (address.address != null && address.address!.length > 1) CustomText(address.address ?? '', ph: 12, pv: 0).start().footer(),
+                    if (address.regionName != null && address.regionName!.length > 1) CustomText(address.regionName ?? '', ph: 8).start().footer(),
+                    if (index == 0) CustomText("عنوان افتراضي", ph: 8, color: Colors.green).start().footer(),
+                    if (index > 0) 
+                    TextButton(
+                      onPressed: () async {
+                      },
+                      child: Row(
+                        children: [
+                          Icon(Icons.check_circle),
+                          CustomText("تعيين كعنوان افتراضي", ph: 8, color: Colors.black).start().footer(),
+                        ],
+                      ),
+                    ),
+                  ],
+                )),
+                // IconButton(
+                //   icon: Icon(
+                //     Icons.edit,
+                //     color: servicesTheme.colorScheme.secondary,
+                //   ),
+                //   onPressed: () {},
+                // ),
+                IconButton(
+                  icon: Icon(
+                    Icons.delete,
+                    color: servicesTheme.colorScheme.error,
+                  ),
+                  onPressed: () async {
+                    await context.read<AddressCubit>().deleteAddress(AddressDeleteParams(id: address.id.toString()));
+                    await context.read<AddressCubit>().getAddresses();
+                  },
                 ),
-                onPressed: () async {
-                  await context.read<AddressCubit>().deleteAddress(AddressDeleteParams(id: address.id.toString()));
-                  await context.read<AddressCubit>().getAddresses();
-                },
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
     return ListTile(

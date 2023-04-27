@@ -62,9 +62,9 @@ class ServiceProviderItemWidget extends StatelessWidget {
                                 },
                                 child: Container(
                                   margin: const EdgeInsets.only(bottom: 6),
-                                  decoration: BoxDecoration(color: servicesTheme.colorScheme.secondary).radius(radius: 4),
+                                  decoration: BoxDecoration(color: servicesTheme.primaryColorLight.withOpacity(0.4)).radius(radius: 4),
                                   child: const CustomText(
-                                    "حجز موعد",
+                                    "طلب الخدمة",
                                     color: Colors.white,
                                     pv: 6,
                                   ),
@@ -104,18 +104,14 @@ class ServiceProviderItemWidget extends StatelessWidget {
                     // if (description != null)
                     // CustomText('description', maxLines: 2, color: Colors.grey, align: TextAlign.start, pv: 4).footer(),
                     SizedBox(height: 4),
-                    // if (address != null)
-                    // textWithIcon(
-                    //   icon: Icons.location_on,
-                    //   text: 'no address',
-                    // ),
+
                     Row(
                       children: [
-                        if (providersModel.distance != null)
-                          textWithIcon(
-                            icon: Icons.route,
-                            text: '${providersModel.distance!}',
-                          ),
+                        textWithIcon(
+                          icon: Icons.location_on,
+                          text: providersModel.distance == null ? 'غير محدد' : '${providersModel.distance.toStringAsFixed(2)} km',
+                        ),
+                        SizedBox(width: 12),
                         if (providersModel.isOnline)
                           Container(
                             decoration: const BoxDecoration(color: Color(0xff00A35E)).radius(radius: 4),
@@ -129,6 +125,12 @@ class ServiceProviderItemWidget extends StatelessWidget {
                           ),
                       ],
                     ),
+                    SizedBox(height: 4),
+                    if (providersModel.mobileNumber != null)
+                      textWithIcon(
+                        icon: Icons.call,
+                        text: providersModel.mobileNumber!,
+                      ),
                   ],
                 ),
               ),

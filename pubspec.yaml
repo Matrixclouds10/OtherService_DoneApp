@@ -89,6 +89,7 @@ dependencies:
   flutter_launcher_icons: ^0.12.0
   flutter_animate: ^4.1.1+1
   font_awesome_flutter: ^10.4.0 
+  toggle_switch: ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -103,6 +104,11 @@ flutter_icons:
   image_path: "assets/images/logo.jpg"
 # flutter pub run flutter_launcher_icons:main
 
+flutter_assets:
+  assets_path: assets/
+  output_path: lib/generated/
+  filename: assets.dart
+  field_prefix:
 flutter:
   uses-material-design: true
   assets:

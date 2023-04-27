@@ -20,7 +20,7 @@ class NoDataScreen extends StatelessWidget {
     super.key,
     String? title,
     String? desc,
-    String image = Assets.gifEmptyList,
+    String image = Assets.imagesGifEmptyList,
     String? imageSvg,
   })  : _title = title,
         _desc = desc,

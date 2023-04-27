@@ -60,4 +60,7 @@ class AddressCubit extends Cubit<AddressState> {
       (r) => emit(state.copyWith(deleteState: BaseState.loaded)),
     );
   }
+
+  setDefaultAddress(AddressDeleteParams params) async{
+  }
 }

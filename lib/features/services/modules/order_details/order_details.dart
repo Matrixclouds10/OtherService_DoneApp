@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
+import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/core/widgets/service_provider_item.dart';
 import 'package:weltweit/features/services/data/models/response/order/order.dart';
 import 'package:weltweit/features/services/data/models/response/provider/providers_model.dart';
+import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/presentation/component/component.dart';
+import 'package:weltweit/presentation/component/inputs/base_form.dart';
 
 class OrderDetails extends StatefulWidget {
   final OrderModel orderModel;
@@ -72,7 +76,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                             const SizedBox(width: 10),
                           ],
                         ),
-                        textWithDot(text: "تم إنشاء الطلب بنجاح وبإنتظار موافقة مزود الخدمة.", color: Colors.black ),
+                        textWithDot(text: "تم إنشاء الطلب بنجاح وبإنتظار موافقة مزود الخدمة.", color: Colors.black),
                         textWithDot(text: "وافق مزود الخدمة علي طلبك وبإنتظار ردك بالموافقة علي السعر الأساسي.", color: servicesTheme.colorScheme.secondary),
                         const SizedBox(height: 10),
                         Padding(
@@ -81,7 +85,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                             onTap: () {},
                             title: "موافقة",
                             fontSize: 18,
-                            color: Colors.black ,
+                            color: Colors.black,
                             textColor: Colors.white,
                           ),
                         ),
@@ -89,7 +93,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                       ],
                     ),
                   ),
-                if (widget.orderModel.status.contains("completed")) ...[
+                if (true || widget.orderModel.status.contains("completed")) ...[
                   Container(
                     decoration: const BoxDecoration(color: Colors.white),
                     child: Column(
@@ -103,13 +107,13 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                             // CustomText("300 ج", color: Color.fromARGB(255, 230, 35, 35), bold: true).headerExtra(),
                             Chip(
                               label: const CustomText("مكتمل", color: Colors.white).header(),
-                              backgroundColor: Colors.black ,
+                              backgroundColor: Colors.black,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                             ),
                             const SizedBox(width: 10),
                           ],
                         ),
-                        textWithDot(text: "تم إنشاء الطلب بنجاح وبإنتظار موافقة مزود الخدمة.", color: Colors.black ),
+                        textWithDot(text: "تم إنشاء الطلب بنجاح وبإنتظار موافقة مزود الخدمة.", color: Colors.black),
                         textWithDot(text: "وافق مزود الخدمة علي طلبك وبإنتظار ردك بالموافقة علي السعر الأساسي.", color: servicesTheme.colorScheme.secondary),
                         textWithDot(text: "تم التأكيد بواسطتك والطلب قيد التنفيذ.", color: Colors.black),
                         textWithDot(text: "تم الإنتهاء من الطلب وبإنتظار ردك بالموافقة علي السعر النهائي.", color: Colors.black),
@@ -134,7 +138,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                           ],
                         ),
                         const Divider(height: 2),
-                        ...["المبلغ الأساسي", "إضافات مادية ١", "إضافات مادية 2"].map((e) {
+                        ...["المبلغ الأساسي"].map((e) {
                           return Row(
                             children: [
                               Expanded(
@@ -155,8 +159,109 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12),
                           child: CustomButton(
-                            onTap: () {},
-                            title: "الدفع",
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  int selectedRate = 0;
+                                  return Dialog(
+                                    backgroundColor: AppColorLight().kScaffoldBackgroundColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: StatefulBuilder(builder: (context, setState) {
+                                      return Container(
+                                        padding: EdgeInsets.all(8),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            CustomText("هل انت راضى عن الخدمة؟", pv: 4).header(),
+                                            SizedBox(height: 12),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                Column(children: [
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      selectedRate = 1;
+                                                      setState(() {});
+                                                    },
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(4),
+                                                      child: Image.asset(
+                                                        Assets.imagesRateAngry,
+                                                        width: 60,
+                                                        height: 60,
+                                                        color: selectedRate == 1 ? Colors.transparent :Colors.grey,
+                                                        colorBlendMode: BlendMode.hue,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  CustomText("غير راضى"),
+                                                ]),
+                                                Column(children: [
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      selectedRate = 2;
+                                                      setState(() {});
+                                                    },
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(4),
+                                                      child: Image.asset(
+                                                        Assets.imagesRateSad,
+                                                        width: 60,
+                                                        height: 60,
+                                                        color: selectedRate == 2 ? Colors.transparent : Colors.grey,
+                                                        colorBlendMode: BlendMode.hue,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  CustomText("راضى"),
+                                                ]),
+                                                Column(children: [
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      selectedRate = 3;
+                                                      setState(() {});
+                                                    },
+                                                    child: ClipRRect(
+                                                      borderRadius: BorderRadius.circular(4),
+                                                      child: Image.asset(
+                                                        Assets.imagesRateHappy,
+                                                        width: 60,
+                                                        height: 60,
+                                                        color: selectedRate == 3 ? Colors.transparent :Colors.grey,
+                                                        colorBlendMode: BlendMode.hue,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  CustomText("راضى جدا"),
+                                                ]),
+                                              ],
+                                            ),
+                                            SizedBox(height: 12),
+                                            CustomTextField(
+                                              lines: 3,
+                                              hint: "اكتب تعليقك هنا",
+                                            ),
+                                            SizedBox(height: 8),
+                                            CustomButton(
+                                              onTap: () {
+                                                NavigationService.goBack();
+                                              },
+                                              title: 'إرسال',
+                                              textColor: Colors.white,
+                                            ),
+                                            SizedBox(height: 12),
+                                          ],
+                                        ),
+                                      );
+                                    }),
+                                  );
+                                },
+                              );
+                            },
+                            title: "التقييم",
                             fontSize: 18,
                             color: Colors.black,
                             textColor: Colors.white,
@@ -168,7 +273,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                   ),
                   const SizedBox(height: 30),
                 ],
-                if (widget.orderModel.status.contains("pending")) ...[
+                if (true && widget.orderModel.status.contains("pending")) ...[
                   Container(
                     decoration: const BoxDecoration(color: Colors.white),
                     child: Column(
@@ -182,13 +287,13 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                             // CustomText("300 ج", color: Color.fromARGB(255, 230, 35, 35), bold: true).headerExtra(),
                             Chip(
                               label: const CustomText("Pending", color: Colors.white).header(),
-                              backgroundColor: Colors.black ,
+                              backgroundColor: Colors.black,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                             ),
                             const SizedBox(width: 10),
                           ],
                         ),
-                        textWithDot(text: "تم إنشاء الطلب بنجاح وبإنتظار موافقة مزود الخدمة.", color: Colors.black ),
+                        textWithDot(text: "تم إنشاء الطلب بنجاح وبإنتظار موافقة مزود الخدمة.", color: Colors.black),
                         const SizedBox(height: 16),
                       ],
                     ),

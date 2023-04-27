@@ -26,31 +26,22 @@ class WalletPage extends StatelessWidget {
             image: DecorationImage(
               image: AssetImage(Assets.imagesBk2),
               fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(0.8), BlendMode.darken),
+              colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.8), BlendMode.darken),
             ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(height: 24),
-              CustomText("980.00",
-                  color: Colors.white,
-                  align: TextAlign.start,
-                  pv: 0,
-                  ph: 12,
-                  size: 28),
-              CustomText("إجمالي المبلغ",
-                  color: Colors.white, align: TextAlign.start, pv: 0, ph: 12),
+              CustomText("980.00", color: Colors.white, align: TextAlign.start, pv: 0, ph: 12, size: 28),
+              CustomText("إجمالي المبلغ", color: Colors.white, align: TextAlign.start, pv: 0, ph: 12),
               SizedBox(height: 24),
               Expanded(
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: AppColorLight().kScaffoldBackgroundColor,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(24),
-                        topRight: Radius.circular(24)),
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,31 +49,23 @@ class WalletPage extends StatelessWidget {
                       SizedBox(height: 30),
                       Row(
                         children: [
-                          CustomText("المبلغ المطلوب تسليمة",
-                                  color: Colors.black,
-                                  align: TextAlign.start,
-                                  pv: 0,
-                                  ph: 12)
-                              .header(),
+                          CustomText("مستحقات الادارة (500.00ج)", color: Colors.black, align: TextAlign.start, pv: 0, ph: 12).header(),
                           Spacer(),
-                          CustomText("120.00 ج",
-                                  color: AppColorLight().kAccentColor,
-                                  ph: 12,
-                                  bold: true)
-                              .header(),
+                          CustomText("سداد ", ph: 0, bold: true).header(),
+                          SizedBox(width: 8),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.black,
+                            size: 16,
+                          ),
+                          SizedBox(width: 16),
                         ],
                       ),
                       Divider(height: 24),
-                      CustomText("عمليات الدفع السابقة",
-                              color: Colors.black,
-                              align: TextAlign.start,
-                              pv: 0,
-                              ph: 12)
-                          .header(),
+                      CustomText("عمليات الدفع السابقة", color: Colors.black, align: TextAlign.start, pv: 0, ph: 12).header(),
                       for (var i = 0; i < 4; i++)
                         Container(
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
+                            margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(4),
@@ -98,33 +81,22 @@ class WalletPage extends StatelessWidget {
                                     child: Image.asset(
                                       Assets.imagesAvatar,
                                       fit: BoxFit.fill,
-                                      width:
-                                          MediaQuery.of(context).size.width / 7,
-                                      height:
-                                          MediaQuery.of(context).size.width / 7,
+                                      width: MediaQuery.of(context).size.width / 7,
+                                      height: MediaQuery.of(context).size.width / 7,
                                     ),
                                   ),
                                 ),
                                 SizedBox(width: 8),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       CustomText("مسعد معوض", pv: 2),
-                                      CustomText("#33215",
-                                              align: TextAlign.start,
-                                              color: Colors.grey[500]!,
-                                              pv: 0)
-                                          .footer(),
+                                      CustomText("#33215", align: TextAlign.start, color: Colors.grey[500]!, pv: 0).footer(),
                                     ],
                                   ),
                                 ),
-                                CustomText("120.00 ج",
-                                        align: TextAlign.start,
-                                        color: Colors.grey[500]!,
-                                        pv: 0)
-                                    .footer(),
+                                CustomText("120.00 ج", align: TextAlign.start, color: Colors.grey[500]!, pv: 0).footer(),
                                 SizedBox(width: 8),
                               ],
                             )),

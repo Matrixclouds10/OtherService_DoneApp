@@ -1,10 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:weltweit/features/services/data/models/response/order/order.dart';
+import 'package:weltweit/presentation/component/images/custom_image.dart';
 
 import '../../core/routing/routes.dart';
 import 'custom_text.dart';
 
 class OrderItemWidget extends StatelessWidget {
+  final OrderModel? orderModel;
   final String avatar;
   final String name;
   final String profession;
@@ -17,6 +21,7 @@ class OrderItemWidget extends StatelessWidget {
   final List<String> tags;
 
   const OrderItemWidget({
+    required this.orderModel,
     required this.avatar,
     required this.name,
     required this.profession,
@@ -32,13 +37,13 @@ class OrderItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        if (orderStatus != "cancelled") {
-          Navigator.pushNamed(context, RoutesServices.servicesOrderDetails, arguments: {
-            "orderStatus": orderStatus,
-          });
-        }
-      },
+      onTap: orderModel == null
+          ? null
+          : () {
+              Navigator.pushNamed(context, RoutesServices.servicesOrderDetails, arguments: {
+                "orderModel": orderModel,
+              });
+            },
       child: Container(
           padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -56,8 +61,8 @@ class OrderItemWidget extends StatelessWidget {
                     margin: EdgeInsets.only(top: 8),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(250),
-                      child: Image.asset(
-                        avatar,
+                      child: CustomImage(
+                        imageUrl: avatar,
                         fit: BoxFit.fill,
                         width: MediaQuery.of(context).size.width / 6.4,
                         height: MediaQuery.of(context).size.width / 6.4,

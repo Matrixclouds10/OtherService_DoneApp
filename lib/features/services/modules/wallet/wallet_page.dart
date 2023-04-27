@@ -16,7 +16,7 @@ class WalletPage extends StatelessWidget {
           isBackButtonExist: false,
           isCenterTitle: true,
           color: Colors.white,
-          titleWidget: CustomText("محفظتي").header(),
+          titleWidget: CustomText("مصروفاتي").header(),
           actions: const [],
         ),
         body: Container(
@@ -32,7 +32,7 @@ class WalletPage extends StatelessWidget {
             children: [
               SizedBox(height: 24),
               CustomText("980.00", color: Colors.white, align: TextAlign.start, pv: 0, ph: 12, size: 28),
-              CustomText("إجمالي المبلغ", color: Colors.white, align: TextAlign.start, pv: 0, ph: 12),
+              CustomText("إجمالي المصروفات", color: Colors.white, align: TextAlign.start, pv: 0, ph: 12),
               SizedBox(height: 24),
               Expanded(
                 child: Container(
@@ -45,16 +45,6 @@ class WalletPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: 30),
-                      Row(
-                        children: [
-                          CustomText("مستحقات الإدارة (500.00 ج)", color: Colors.black, align: TextAlign.start, pv: 0, ph: 12).header(),
-                          Spacer(),
-                          CustomText("سداد", color: AppColorLight().kAccentColor, ph: 6, bold: true).header(),
-                          Icon(Icons.arrow_forward_ios, color: AppColorLight().kAccentColor, size: 16),
-                          SizedBox(width: 12),
-                        ],
-                      ),
-                      Divider(height: 24),
                       CustomText("عمليات الدفع السابقة", color: Colors.black, align: TextAlign.start, pv: 0, ph: 12).header(),
                       for (var i = 0; i < 4; i++)
                         Container(

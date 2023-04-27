@@ -24,7 +24,7 @@ class AboutPage extends StatelessWidget {
           children: [
             //Log
             Image.asset(
-              "assets/images/placeholder.jpg",
+              "assets/images/logo.png",
               width: double.infinity,
               fit: BoxFit.cover,
               height: 120,

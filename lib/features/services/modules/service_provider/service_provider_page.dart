@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weltweit/core/resources/decoration.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/data/injection.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
@@ -31,7 +32,7 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> with SingleTi
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     isFavorite = widget.provider.isFavorite ?? false;
   }
 
@@ -118,6 +119,7 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> with SingleTi
                     providersModel: widget.provider,
                     canMakeAppointment: true,
                     showFavoriteButton: false,
+                    
                   ),
                 ),
                 Container(
@@ -129,11 +131,14 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> with SingleTi
                     onTap: (index) {
                       setState(() {});
                     },
+                    padding: EdgeInsets.zero,
+                    labelPadding: EdgeInsets.zero,
                     unselectedLabelColor: Colors.grey,
                     tabs: [
                       singleTab(0, LocaleKeys.myServices.tr()),
-                      singleTab(1, LocaleKeys.gallery.tr()),
+                      singleTab(1, "اعمالى"),
                       singleTab(2, LocaleKeys.rates.tr()),
+                      singleTab(3, LocaleKeys.resume.tr()),
                     ],
                   ),
                 ),
@@ -148,15 +153,18 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> with SingleTi
 
   singleTab(int index, String title) {
     bool isSelected = _tabController.index == index;
-    return Tab(
-      child: Container(
-        width: double.infinity,
-        margin: const EdgeInsets.symmetric(vertical: 4),
-        decoration: BoxDecoration(
-          color: isSelected ? Colors.black : Colors.white,
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: CustomText(title, color: isSelected ? Colors.white : Colors.black),
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.symmetric(vertical: 4),
+      decoration: BoxDecoration(
+        color: isSelected ? Colors.black : Colors.white,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: CustomText(
+        title,
+        color: isSelected ? Colors.white : Colors.black,
+        ph: 0,
+        size: 14,
       ),
     );
   }
@@ -169,6 +177,20 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> with SingleTi
         return gallery();
       case 2:
         return reviews();
+      case 3:
+        return Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(color: Colors.white).shadow(),
+              margin: EdgeInsets.all(8),
+              padding: EdgeInsets.all(8),
+              child: CustomText(
+                " هذا النص عبارة عن نص توضيحي لوصف نبذة سريعة عن المسئولين عن التطبيق. هذا النص عبارة عن نص توضيحي لوصف نبذة سريعة عن  المسئولين عن التطبيق. هذا النص عبارة عن نص توضيحي لوصف نبذة سريعة عن المسئولين عن التطبيق. هذا النص عبارة عن نص توضيحي لوصف نبذة سريعة عن المسئولين عن التطبيق. هذا النص عبارة عن نص توضيحي لوصف نبذة سريعة عن المسئولين عن التطبيق. هذاالنص عبارة....",
+                align: TextAlign.start,
+              ),
+            ),
+          ],
+        );
       default:
         return Container();
     }

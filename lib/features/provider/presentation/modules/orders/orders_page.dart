@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/core/resources/color.dart';
+import 'package:weltweit/core/routing/navigation_services.dart';
+import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/features/core/widgets/order_item_widget.dart';
 import 'package:weltweit/generated/assets.dart';
 
@@ -16,8 +18,7 @@ class OrdersPage extends StatefulWidget {
   State<OrdersPage> createState() => _OrdersPageState();
 }
 
-class _OrdersPageState extends State<OrdersPage>
-    with SingleTickerProviderStateMixin {
+class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   @override
   void initState() {
@@ -77,8 +78,7 @@ class _OrdersPageState extends State<OrdersPage>
           color: isSelected ? Colors.black : Colors.white,
           borderRadius: BorderRadius.circular(4),
         ),
-        child:
-            CustomText(title, color: isSelected ? Colors.white : Colors.black),
+        child: CustomText(title, color: isSelected ? Colors.white : Colors.black),
       ),
     );
   }
@@ -98,15 +98,21 @@ class _OrdersPageState extends State<OrdersPage>
     return Column(
       children: [
         for (var i = 0; i < 4; i++)
-          OrderItemWidget(
-            avatar: Assets.imagesAvatar,
-            name: "مسعد معوض",
-            profession: getRandomTags()[0],
-            date: getRandomDate(),
-            time: getRadomTime(),
-            orderStatus: i % 2 == 0 ? "accepted" : "pending",
-            price: i % 2 == 0 ? "300 ج" : "",
-            tags: getRandomTags(),
+          GestureDetector(
+            onTap: () {
+              NavigationService.push(RoutesProvider.providerOrderDetails, arguments: {'orderStatus': 'accepted'});
+            },
+            child: OrderItemWidget(
+              orderModel: null,
+              avatar: Assets.imagesAvatar,
+              name: "مسعد معوض",
+              profession: getRandomTags()[0],
+              date: getRandomDate(),
+              time: getRadomTime(),
+              orderStatus: i % 2 == 0 ? "accepted" : "pending",
+              price: i % 2 == 0 ? "300 ج" : "",
+              tags: getRandomTags(),
+            ),
           )
       ],
     );
@@ -116,15 +122,21 @@ class _OrdersPageState extends State<OrdersPage>
     return Column(
       children: [
         for (var i = 0; i < 4; i++)
-          OrderItemWidget(
-            avatar: Assets.imagesAvatar,
-            name: "مسعد معوض",
-            profession: getRandomTags()[0],
-            date: getRandomDate(),
-            time: getRadomTime(),
-            orderStatus: "completed",
-            price: "${100 * (i + 1)} ج",
-            tags: getRandomTags(),
+          GestureDetector(
+            onTap: () {
+              NavigationService.push(RoutesProvider.providerOrderDetails, arguments: {'orderStatus': 'completed'});
+            },
+            child: OrderItemWidget(
+              avatar: Assets.imagesAvatar,
+              orderModel: null,
+              name: "مسعد معوض",
+              profession: getRandomTags()[0],
+              date: getRandomDate(),
+              time: getRadomTime(),
+              orderStatus: "completed",
+              price: "${100 * (i + 1)} ج",
+              tags: getRandomTags(),
+            ),
           )
       ],
     );
@@ -134,15 +146,21 @@ class _OrdersPageState extends State<OrdersPage>
     return Column(
       children: [
         for (var i = 0; i < 4; i++)
-          OrderItemWidget(
-            avatar: Assets.imagesAvatar,
-            name: "مسعد معوض",
-            profession: getRandomTags()[0],
-            date: "",
-            time: "",
-            orderStatus: "pending",
-            price: "",
-            tags: getRandomTags(),
+          GestureDetector(
+            onTap: () {
+              NavigationService.push(RoutesProvider.providerOrderDetails, arguments: {'orderStatus': 'pending'});
+            },
+            child: OrderItemWidget(
+              orderModel: null,
+              avatar: Assets.imagesAvatar,
+              name: "مسعد معوض",
+              profession: getRandomTags()[0],
+              date: "",
+              time: "",
+              orderStatus: "pending",
+              price: "",
+              tags: getRandomTags(),
+            ),
           )
       ],
     );
@@ -151,24 +169,15 @@ class _OrdersPageState extends State<OrdersPage>
   Widget ratesAsStars(double d) {
     return Row(
       children: [
-        for (var i = 0; i < d; i++)
-          Icon(Icons.star, size: 12, color: Colors.yellow),
-        for (var i = 0; i < 5 - d; i++)
-          Icon(Icons.star, size: 12, color: Colors.grey),
+        for (var i = 0; i < d; i++) Icon(Icons.star, size: 12, color: Colors.yellow),
+        for (var i = 0; i < 5 - d; i++) Icon(Icons.star, size: 12, color: Colors.grey),
       ],
     );
   }
 }
 
 getRandomTags() {
-  List<String> tags = [
-    "صيانة السباكة",
-    "صيانة الكهرباء",
-    "صيانة النظافة",
-    "صيانة الكمبيوتر",
-    "صيانة السيارات",
-    "صيانة الأجهزة الكهربائية"
-  ];
+  List<String> tags = ["صيانة السباكة", "صيانة الكهرباء", "صيانة النظافة", "صيانة الكمبيوتر", "صيانة السيارات", "صيانة الأجهزة الكهربائية"];
   List<String> randomTags = [];
 
   randomTags.add(tags[Random().nextInt(tags.length)]);
@@ -178,25 +187,11 @@ getRandomTags() {
 }
 
 getRandomDate() {
-  List<String> dates = [
-    "07/01/2023",
-    "07/02/2023",
-    "07/03/2023",
-    "07/04/2023",
-    "07/05/2023",
-    "07/06/2023"
-  ];
+  List<String> dates = ["07/01/2023", "07/02/2023", "07/03/2023", "07/04/2023", "07/05/2023", "07/06/2023"];
   return dates[Random().nextInt(dates.length)];
 }
 
 getRadomTime() {
-  List<String> times = [
-    "3 م : 5 م",
-    "5 م : 7 م",
-    "7 م : 9 م",
-    "9 م : 11 م",
-    "11 م : 1 ص",
-    "1 ص : 3 ص"
-  ];
+  List<String> times = ["3 م : 5 م", "5 م : 7 م", "7 م : 9 م", "9 م : 11 م", "11 م : 1 ص", "1 ص : 3 ص"];
   return times[Random().nextInt(times.length)];
 }

@@ -2,7 +2,6 @@ import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:flutter/material.dart';
 
 import 'component.dart';
-import 'custom_loading_spinner.dart';
 
 class ScreenStateLayout extends StatelessWidget {
   final bool _isEmpty;

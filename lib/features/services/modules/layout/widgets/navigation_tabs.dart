@@ -22,7 +22,7 @@ class NavigationTabs {
 List<NavigationTab> kTabs = <NavigationTab>[
   const NavigationTab(
     name: LocaleKeys.home,
-    image: Assets.svgMoreNotificationIcon,
+    image: Assets.imagesSvgMoreNotificationIcon,
     unSelectIcon: CupertinoIcons.house_fill,
     selectIcon: CupertinoIcons.house,
     initialRoute: HomePage(),

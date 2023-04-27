@@ -2,14 +2,17 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:weltweit/core/resources/decoration.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/routing/routes.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/core/widgets/service_provider_item.dart';
+import 'package:weltweit/features/services/data/models/response/provider/providers_model.dart';
 import 'package:weltweit/features/services/domain/usecase/provider/providers_usecase.dart';
 import 'package:weltweit/features/services/logic/provider/providers_cubit.dart';
+import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/presentation/component/component.dart';
 
 class SearchPage extends StatefulWidget {
@@ -27,6 +30,7 @@ class _SearchPageState extends State<SearchPage> {
       backgroundColor: servicesTheme.scaffoldBackgroundColor,
       body: Column(
         children: [
+          //Seach Bar
           Container(
             color: Colors.white,
             child: Column(
@@ -62,6 +66,8 @@ class _SearchPageState extends State<SearchPage> {
               ],
             ),
           ),
+
+          //Providers
           Expanded(
             child: BlocBuilder<ProvidersCubit, ProvidersState>(
               builder: (context, state) {
@@ -74,12 +80,14 @@ class _SearchPageState extends State<SearchPage> {
                     errorModel: state.error,
                   ));
                 }
-                return SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Column(
-                    children: [
-                      ListAnimator(
-                        physics: const NeverScrollableScrollPhysics(),
+                if (state.providers.isEmpty) {
+                  return Center(child: CustomText("ابحث عن مزودي الخدمة", color: Colors.black));
+                }
+                return Column(
+                  children: [
+                
+                    Expanded(
+                      child: ListAnimator(
                         scrollDirection: Axis.vertical,
                         children: [
                           for (var i = 0; i < state.providers.length; i++)
@@ -91,19 +99,85 @@ class _SearchPageState extends State<SearchPage> {
                               },
                               child: Container(
                                 decoration: const BoxDecoration(color: Colors.white).radius(radius: 12),
+                                margin: EdgeInsets.symmetric(horizontal: 12),
                                 child: ServiceProviderItemWidget(
                                   providersModel: state.providers[i],
                                   canMakeAppointment: null,
-                                  moreInfoButton: true,
+                                  moreInfoButton: false,
                                   showFavoriteButton: false,
                                 ),
                               ),
                             ),
-                          const SizedBox(height: 30),
+                          const SizedBox(height: 8),
                         ],
-                      )
-                    ],
-                  ),
+                      ),
+                    ),
+                    // Expanded(
+                    //   child: Container(
+                    //     margin: EdgeInsets.symmetric(horizontal: 8),
+                    //     width: double.infinity,
+                    //     child: FutureBuilder<BitmapDescriptor>(
+                    //       future: getMarkerAsLocation(),
+                    //       builder: (context, snapshot) {
+                    //         if (snapshot.hasData) {
+                    //           return GoogleMap(
+                    //             mapType: MapType.normal,
+                    //             initialCameraPosition: CameraPosition(
+                    //               target: LatLng(26.8206, 30.8025),
+                    //               zoom: 14.0,
+                    //             ),
+                    //             markers: {
+                    //               Marker(
+                    //                 onTap: () {
+                    //                   showBottomSheet(state.providers.first);
+                    //                 },
+                    //                 markerId: MarkerId('1_'),
+                    //                 position: LatLng(26.8209, 30.8010),
+                    //                 icon: snapshot.data!,
+                    //               ),
+                    //               Marker(
+                    //                 onTap: () {
+                    //                   showBottomSheet(state.providers.first);
+                    //                 },
+                    //                 markerId: MarkerId('2_'),
+                    //                 position: LatLng(26.8210, 30.8030),
+                    //                 icon: snapshot.data!,
+                    //               ),
+                    //               Marker(
+                    //                 onTap: () {
+                    //                   showBottomSheet(state.providers.first);
+                    //                 },
+                    //                 markerId: MarkerId('3_'),
+                    //                 position: LatLng(26.825, 30.809),
+                    //                 icon: snapshot.data!,
+                    //               ),
+                    //               Marker(
+                    //                 onTap: () {
+                    //                   showBottomSheet(state.providers.first);
+                    //                 },
+                    //                 markerId: MarkerId('4_'),
+                    //                 position: LatLng(26.829, 30.809),
+                    //                 icon: snapshot.data!,
+                    //               ),
+                    //             },
+                    //             // state.driversLocation
+                    //             //     .map((e) => Marker(
+                    //             //           markerId: MarkerId('${Random().nextInt(100000)}'),
+                    //             //           position: LatLng(e.latitude, e.longitude),
+                    //             //           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+                    //             //         ))
+                    //             //     .toSet(),
+                    //           );
+                    //         }
+                    //         return Center(
+                    //           child: CircularProgressIndicator(),
+                    //         );
+                    //       },
+                    //     ),
+                    //   ),
+                    // ),
+                
+                  ],
                 );
               },
             ),
@@ -171,5 +245,34 @@ class _SearchPageState extends State<SearchPage> {
   getRandomText() {
     List<String> texts = ["هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة", "يوجد عرض جديد للعملاء الجدد", "تنبيه التطبيق يحتاج للتحديث", "تنبيه تم تغيير سعر الخدمة"];
     return texts[Random().nextInt(texts.length)];
+  }
+
+  showBottomSheet(ProvidersModel providersModel) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 24),
+            child: ServiceProviderItemWidget(
+              providersModel: providersModel,
+              canMakeAppointment: null,
+              moreInfoButton: true,
+              showFavoriteButton: false,
+            ),
+          ),
+        ],
+      ),
+      enableDrag: false,
+    );
+  }
+
+  Future<BitmapDescriptor> getMarkerAsLocation() async {
+    BitmapDescriptor markerImage = await BitmapDescriptor.fromAssetImage(
+      ImageConfiguration(size: Size(48, 48)),
+      Assets.imagesAvatar,
+    );
+    return markerImage;
   }
 }

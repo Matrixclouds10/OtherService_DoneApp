@@ -10,6 +10,7 @@ class AddressItemModel {
   String? lat;
   String? lng;
   String? addressType;
+  bool isDefault;
 
   AddressItemModel({
     this.id,
@@ -23,10 +24,10 @@ class AddressItemModel {
     this.lat,
     this.lng,
     this.addressType,
+   required this.isDefault,
   });
 
-  factory AddressItemModel.fromJson(Map<String, dynamic> json) =>
-      AddressItemModel(
+  factory AddressItemModel.fromJson(Map<String, dynamic> json) => AddressItemModel(
         id: json['id'] as int?,
         clientId: json['client_id'] as int?,
         name: json['name'] as String?,
@@ -38,6 +39,7 @@ class AddressItemModel {
         lat: json['lat'] as String?,
         lng: json['lng'] as String?,
         addressType: json['address_type'] as String?,
+        isDefault: json['default'] == null ? false : json['default'] == 1,
       );
 
   Map<String, dynamic> toJson() => {

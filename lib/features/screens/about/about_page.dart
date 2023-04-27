@@ -23,9 +23,8 @@ class AboutPage extends StatelessWidget {
           children: [
             //Log
             Image.asset(
-              Assets.imagesPlaceholder,
+              Assets.imagesLogo,
               width: double.infinity,
-              fit: BoxFit.cover,
               height: 120,
             ),
             const SizedBox(height: 12),

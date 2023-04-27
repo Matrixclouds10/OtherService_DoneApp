@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/core/resources/color.dart';
@@ -60,6 +61,18 @@ class _ServicesPageState extends State<ServicesPage> {
                 if (state.services.isEmpty) return Center(child: CustomText("لا يوجد خدمات").header());
                 return Column(
                   children: [
+                    Container(
+                      child: ToggleSwitch(
+                        initialLabelIndex: 0,
+                        totalSwitches: 2,
+                        minWidth: MediaQuery.of(context).size.width / 2,
+                        activeFgColor: Colors.white,
+                        inactiveFgColor: Colors.white,
+                        cornerRadius: 4,
+                        labels: ['فنية', 'مهنية'],
+                        onToggle: (index) {},
+                      ),
+                    ),
                     Expanded(
                       child: SingleChildScrollView(
                         padding: EdgeInsets.only(bottom: 30),

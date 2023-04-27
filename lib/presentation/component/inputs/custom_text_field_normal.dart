@@ -86,7 +86,7 @@ class CustomTextFieldNormal extends StatelessWidget {
       icon: icon,
       prefixIcon: iconData,
       // prefixWidget:iconSVG==null?null: SizedBox(height: 20.r,width: 20.r,child: Center(child:SVGIcon(iconSVG!,color: Colors.black,)  )),
-
+      
       isHorizontal: isHorizontal,
       defaultValue: defaultValue,
       hint: hint,

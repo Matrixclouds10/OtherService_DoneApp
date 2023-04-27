@@ -125,6 +125,7 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
                   });
                 },
                 child: OrderItemWidget(
+                  orderModel: state.data[i],
                   avatar: state.data[i].provider?.image ?? '',
                   name: state.data[i].provider?.name ?? '',
                   profession: '',
@@ -146,6 +147,7 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
       children: [
         for (var i = 0; i < 4; i++)
           OrderItemWidget(
+            orderModel: null,
             avatar: Assets.imagesAvatar,
             name: "مسعد معوض",
             profession: getRandomTags()[0],
@@ -164,6 +166,7 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
       children: [
         for (var i = 0; i < 4; i++)
           OrderItemWidget(
+            orderModel: null,
             avatar: Assets.imagesAvatar,
             name: "مسعد معوض",
             profession: getRandomTags()[0],

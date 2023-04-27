@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/routing/routes.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
@@ -29,6 +30,20 @@ class HomeServices extends StatelessWidget {
                   Row(
                     children: [
                       CustomText(LocaleKeys.services.tr(), color: Colors.black54).footer(),
+                       Container(
+              height: 30,
+              child: ToggleSwitch(
+                initialLabelIndex: 0,
+                totalSwitches: 2,
+                activeFgColor: Colors.white,
+                inactiveFgColor: Colors.white,
+                cornerRadius: 4,
+                labels: ['فنية', 'مهنية'],
+                onToggle: (index) {
+                  print('switched to: $index');
+                },
+              ),
+            ),
                       Spacer(),
                       GestureDetector(
                           onTap: () {
@@ -37,6 +52,7 @@ class HomeServices extends StatelessWidget {
                           child: CustomText(LocaleKeys.showAll.tr(), color: Colors.grey).footerExtra()),
                     ],
                   ),
+                SizedBox(height: 4),
                   GridView.count(
                     crossAxisCount: 4,
                     shrinkWrap: true,

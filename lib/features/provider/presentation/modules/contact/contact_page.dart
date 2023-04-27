@@ -22,12 +22,51 @@ class ContactPage extends StatelessWidget {
           physics: NeverScrollableScrollPhysics(),
           children: [
             //Log
-            Image.asset(
-              "assets/images/placeholder.jpg",
-              width: double.infinity,
-              fit: BoxFit.cover,
-              height: 120,
+            Image.asset(Assets.imagesLogo, width: double.infinity,  height: 120),
+            CustomText("نوع الشكوي", align: TextAlign.start, pv: 0),
+            //Row for two radio buttons
+            Row(
+              children: [
+                //Radio button for user
+                Flexible(
+                  flex: 1,
+                  child: RadioListTile(
+                    value: '1',
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                    visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+                    title: CustomText('شكوى', align: TextAlign.start),
+                    groupValue: '1',
+                    onChanged: (value) {},
+                  ),
+                ),
+                Flexible(
+                  flex: 1,
+                  child: RadioListTile(
+                    value: '2',
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                    visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+                    title: CustomText('اقتراح', align: TextAlign.start),
+                    groupValue: '1',
+                    onChanged: (value) {},
+                  ),
+                ),
+                Flexible(
+                  flex: 1,
+                  child: RadioListTile(
+                    value: '3',
+                    dense: true,
+                    contentPadding: EdgeInsets.zero,
+                    visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+                    title: CustomText('اخرى', align: TextAlign.start),
+                    groupValue: '1',
+                    onChanged: (value) {},
+                  ),
+                ),
+              ],
             ),
+
             SizedBox(height: 12),
             Container(
               margin: EdgeInsets.symmetric(horizontal: 24),
@@ -64,10 +103,8 @@ class ContactPage extends StatelessWidget {
                     children: [
                       Image.asset(Assets.imagesIcCall, width: 70, height: 70),
                       Image.asset(Assets.imagesIcWhats, width: 70, height: 70),
-                      Image.asset(Assets.imagesIcFacebook,
-                          width: 70, height: 70),
-                      Image.asset(Assets.imagesIcTwitter,
-                          width: 70, height: 70),
+                      Image.asset(Assets.imagesIcFacebook, width: 70, height: 70),
+                      Image.asset(Assets.imagesIcTwitter, width: 70, height: 70),
                     ],
                   )
                 ],

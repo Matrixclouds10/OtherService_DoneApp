@@ -37,7 +37,7 @@ class _ReservationPageState extends State<ReservationPage> {
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
   ServiceModel? selectedService;
-
+  String description = "";
   @override
   void initState() {
     super.initState();
@@ -139,9 +139,10 @@ class _ReservationPageState extends State<ReservationPage> {
                       },
                     ),
                   ),
-
+                if(false)
                   const CustomText("متي تحتاج هذه الخدمة؟").header(),
                   //Two radio buttons
+                if(false)
                   Row(
                     children: [
                       Expanded(
@@ -174,7 +175,9 @@ class _ReservationPageState extends State<ReservationPage> {
                       ),
                     ],
                   ),
+                if(false)
                   const SizedBox(height: 12),
+                if(false)
                   if (reservationTimeNow == false)
                     Row(
                       children: [
@@ -228,6 +231,7 @@ class _ReservationPageState extends State<ReservationPage> {
                       ],
                     ),
                   const SizedBox(height: 12),
+                if(false)
                   GestureDetector(
                     onTap: () {
                       showModalBottomSheet(
@@ -267,6 +271,16 @@ class _ReservationPageState extends State<ReservationPage> {
                       prefixIconColor: Colors.grey,
                       background: Colors.white,
                     ),
+                  ),
+                  const SizedBox(height: 8),
+                  CustomTextFieldArea(
+                    hint: "وصف الخدمة",
+                    noBorder: true,
+                    radius: 0,
+                    onChange: (value) {
+                      description = value;
+                    },
+                    background: Colors.white,
                   ),
                   const SizedBox(height: 24),
                   CustomButton(
@@ -424,9 +438,11 @@ class _ReservationPageState extends State<ReservationPage> {
   }
 
   _submit(BuildContext context) async {
+
     String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
     String time = "${TimeOfDay.now().hour}:${TimeOfDay.now().minute}:00";
-
+    selectedDate = DateTime.now();
+    selectedTime = TimeOfDay.now();
     if (!reservationTimeNow && selectedDate == null && selectedTime == null) {
       AppSnackbar.show(context: context, message: "اختر التاريخ والوقت");
       return;
@@ -435,8 +451,14 @@ class _ReservationPageState extends State<ReservationPage> {
       date = DateFormat('yyyy-MM-dd').format(selectedDate!);
       time = "${selectedTime!.hour}:${selectedTime!.minute}:00";
     }
+
+    selectedService = widget.providersModel.services?.first;
     if (selectedService == null) {
       AppSnackbar.show(context: context, message: "اختر الخدمة");
+      return;
+    }
+    if (description.length < 4) {
+      AppSnackbar.show(context: context, message: "اكتب وصف الخدمة");
       return;
     }
 

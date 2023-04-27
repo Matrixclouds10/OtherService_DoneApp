@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:weltweit/core/resources/color.dart';
+import 'package:weltweit/core/resources/decoration.dart';
 import 'package:weltweit/features/core/widgets/service_provider_item.dart';
 import 'package:weltweit/features/services/data/models/response/provider/providers_model.dart';
 import 'package:weltweit/generated/assets.dart';
@@ -22,7 +23,7 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> with SingleTi
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -101,8 +102,9 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> with SingleTi
                     unselectedLabelColor: Colors.grey,
                     tabs: [
                       singleTab(0, "خدماتي"),
-                      singleTab(1, 'معرض الصور'),
+                      singleTab(1, 'اعمالى'),
                       singleTab(2, "التقييمات"),
+                      singleTab(3, "السيرة الذاتية"),
                     ],
                   ),
                 ),
@@ -138,6 +140,7 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> with SingleTi
         return gallery();
       case 2:
         return reviews();
+        
       default:
         return Container();
     }

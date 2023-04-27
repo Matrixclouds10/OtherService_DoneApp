@@ -169,7 +169,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   children: [
                     for (var i = 0; i < 4; i++)
-                   OrderItemWidget(
+                      OrderItemWidget(
+                        orderModel: null,
                         avatar: Assets.imagesAvatar,
                         name: "مسعد معوض",
                         profession: "",
