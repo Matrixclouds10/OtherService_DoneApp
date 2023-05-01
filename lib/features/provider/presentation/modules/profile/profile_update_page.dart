@@ -275,7 +275,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
               defaultValue: _phoneController.text,
               disableLengthCheck: true,
               initialCountryCode: country?.dialCode,
-              countries: ["SA"],
+              countries: ["SA","EG"],
               onCountryChanged: (value) {
                 country = value;
               },

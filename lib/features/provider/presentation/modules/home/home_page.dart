@@ -2,10 +2,14 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/widgets/order_item_widget.dart';
+import 'package:weltweit/features/core/widgets/order_item_widget_client_info.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/provider/logic/profile/profile_cubit.dart';
+import 'package:weltweit/features/services/logic/orders/orders_cubit.dart';
+import 'package:weltweit/features/widgets/empty_widget.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/presentation/component/component.dart';
@@ -31,6 +35,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    context.read<OrdersCubit>().getPendingOrders(typeIsProvider: true);
+    context.read<OrdersCubit>().getCompletedOrders(typeIsProvider: true);
   }
 
   @override
@@ -133,33 +139,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                       ),
                     ),
                     SizedBox(height: 12),
-                    Image.asset(Assets.imagesBaloon, height: 200, width: 200),
-                    SizedBox(height: 12),
-                    CustomText(LocaleKeys.cantGetNewOrders.tr(), color: AppColorLight().kAccentColor).header(),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Column(
-                        children: [
-                          ...[
-                            LocaleKeys.makeSureToSelectServicesYouProvide.tr(),
-                            LocaleKeys.makeSureToUploadAllFiles.tr(),
-                            LocaleKeys.makeSureToBeOnline.tr(),
-                          ]
-                              .map((e) => AppTextTile(
-                                    title: CustomText(
-                                      e,
-                                      size: 16,
-                                      pv: 0,
-                                      align: TextAlign.start,
-                                    ),
-                                    isTitleExpanded: true,
-                                    leading: Icon(Icons.circle, size: 12),
-                                  ))
-                              .toList(),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 20),
+                    Expanded(child: currentOrders()),
                   ],
                 ),
               ),
@@ -168,17 +148,17 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 child: ListView(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   children: [
-                    for (var i = 0; i < 4; i++)
-                      OrderItemWidget(
-                        avatar: Assets.imagesAvatar,
-                        name: "مسعد معوض",
-                        profession: "",
-                        date: getRandomDate(),
-                        time: getRadomTime(),
-                        orderStatus: i % 2 == 0 ? "accepted" : "accepted",
-                        price: i % 2 == 0 ? "300 ج" : "250 ج",
-                        tags: getRandomTags(),
-                      ),
+                    // for (var i = 0; i < 4; i++)
+                    //   OrderItemWidget(
+                    //     avatar: Assets.imagesAvatar,
+                    //     name: "مسعد معوض",
+                    //     profession: "",
+                    //     date: getRandomDate(),
+                    //     time: getRadomTime(),
+                    //     orderStatus: i % 2 == 0 ? "accepted" : "accepted",
+                    //     price: i % 2 == 0 ? "300 ج" : "250 ج",
+                    //     tags: getRandomTags(),
+                    //   ),
                     SizedBox(height: 80),
                   ],
                 ),
@@ -202,6 +182,97 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         ),
         child: CustomText(title, color: isSelected ? Colors.white : Colors.black),
       ),
+    );
+  }
+
+  Widget currentOrders() {
+    return BlocBuilder<OrdersCubit, OrdersState>(
+      builder: (context, state) {
+        if (state.pendingState == BaseState.error) {
+          return ErrorView(message: state.error?.errorMessage ?? "حدث خطأ ما");
+        }
+        if (state.pendingState == BaseState.loading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (state.pendingState == BaseState.loaded && state.pendingData.isEmpty) {
+          return Column(
+            children: [
+              Image.asset(Assets.imagesBaloon, height: 200, width: 200),
+              SizedBox(height: 12),
+              CustomText(LocaleKeys.cantGetNewOrders.tr(), color: AppColorLight().kAccentColor).header(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Column(
+                  children: [
+                    ...[
+                      LocaleKeys.makeSureToSelectServicesYouProvide.tr(),
+                      LocaleKeys.makeSureToUploadAllFiles.tr(),
+                      LocaleKeys.makeSureToBeOnline.tr(),
+                    ]
+                        .map((e) => AppTextTile(
+                              title: CustomText(
+                                e,
+                                size: 16,
+                                pv: 0,
+                                align: TextAlign.start,
+                              ),
+                              isTitleExpanded: true,
+                              leading: Icon(Icons.circle, size: 12),
+                            ))
+                        .toList(),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
+            ],
+          );
+        }
+        return Column(
+          children: [
+            for (var i = 0; i < state.pendingData.length; i++)
+              GestureDetector(
+                onTap: () {},
+                child: OrderItemWidgetClient(
+                  orderModel: state.pendingData[i],
+                  // name: state.pendingData[i].provider?.name ?? '',
+                  // profession: '',
+                  // date: DateFormat('yyyy-MM-dd').format(state.pendingData[i].date),
+                  // time: DateFormat('HH:mm').format(state.pendingData[i].date),
+                  // orderStatus: state.pendingData[i].status,
+                  // price: '',
+                  // tags: const [],
+                ),
+              )
+          ],
+        );
+      },
+    );
+  }
+
+  completedOrders() {
+    return BlocBuilder<OrdersCubit, OrdersState>(
+      builder: (context, state) {
+        if (state.completedState == BaseState.error) {
+          return ErrorView(message: state.error?.errorMessage ?? "حدث خطأ ما");
+        }
+        if (state.completedState == BaseState.loading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (state.completedState == BaseState.loaded && state.completedData.isEmpty) {
+          return EmptyView(message: "لا يوجد طلبات");
+        }
+        return Column(
+          children: [
+            for (var i = 0; i < state.completedData.length; i++)
+              GestureDetector(
+                onTap: () {},
+                child: OrderItemWidget(
+                  orderModel: state.completedData[i],
+                ),
+              )
+          ],
+        );
+      },
     );
   }
 }

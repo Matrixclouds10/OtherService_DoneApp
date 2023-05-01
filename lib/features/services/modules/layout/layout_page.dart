@@ -37,7 +37,7 @@ class _LayoutPageState extends State<LayoutPage> {
       listener: (context, state) {
         if (state.state == BaseState.error) {
           if (state.error?.code == 401) {
-            if (context.mounted) context.read<LayoutCubit>().setCurrentIndex(0);
+            if (context.mounted) context.read<LayoutCubit>().setCurrentIndex(context: context, i: 0);
             NavigationService.logout();
           }
         }
@@ -88,10 +88,15 @@ class LayoutView extends StatelessWidget {
             ),
             floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
             body: WillPopScope(
-              child: kTabs[currentIndex].initialRoute,
+              child: IndexedStack(
+                index: currentIndex,
+                children: [
+                  ...kTabs.map((e) => e.initialRoute),
+                ],
+              ),
               onWillPop: () async {
                 if (currentIndex != 0) {
-                  viewModel.setCurrentIndex(0);
+                  viewModel.setCurrentIndex(i: 0, context: context);
                   return false;
                 } else {
                   // _nestedNavigator.currentState!.maybePop();
@@ -100,7 +105,9 @@ class LayoutView extends StatelessWidget {
               },
             ),
             bottomNavigationBar: BottomNavigationBar(
-              onTap: viewModel.setCurrentIndex,
+              onTap: (value) {
+                viewModel.setCurrentIndex(i: value, context: context);
+              },
               currentIndex: currentIndex,
               type: BottomNavigationBarType.fixed,
               selectedIconTheme: const IconThemeData(),
@@ -110,9 +117,7 @@ class LayoutView extends StatelessWidget {
                 ...kTabs.map(
                   (e) {
                     if (e.index == 2) return BottomNavigationBarItem(icon: Container(), label: '');
-                    if (e.index == 1) {
-                      BlocProvider.of<FavoriteCubit>(context).getFavorite();
-                    }
+
                     return BottomNavigationBarItem(
                       icon: Icon(
                         currentIndex == e.index ? e.selectIcon : e.unSelectIcon,

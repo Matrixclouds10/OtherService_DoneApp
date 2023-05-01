@@ -13,6 +13,7 @@ class AppURL {
   static const String addressCreateUrl = "$kBaseURL/address/store";
   static const String addressUpdateUrl = "$kBaseURL/address/update";
   static const String addressReadUrl = "$kBaseURL/address";
+  static const String addressSetDefaultUrl = "$kBaseURL/address/set-default";
   static const String addressDeleteUrl = "$kBaseURL/address/delete";
 
 
@@ -62,6 +63,23 @@ class AppURL {
 
   //Order
   static const String createOrder = "$kBaseURL/appointment/store";
-  static const String getOrders = "$kBaseURL/appointment/get/pending";
+  static const String getPendingOrders = "$kBaseURL/appointment/get/pending";
+  static const String getCompletedOrders = "$kBaseURL/appointment/get/completed";
+  static const String getCancelledOrders = "$kBaseURL/appointment/get/cancelled";
+
+  static const String providerGetPendingOrders = "$kBaseURL/service-provider/appointment/get/pending";
+  static const String providerGetCompletedOrders = "$kBaseURL/service-provider/appointment/get/completed";
+  static const String providerGetCancelledOrders = "$kBaseURL/service-provider/appointment/get/cancelled";
+  static const String cancelOrder = "$kBaseURL/appointment/cancel";
   static const String getOrder = "$kBaseURL/appointment/get-single";
+
+  //Chat
+  static const String getChatMessages = "$kBaseURL/appointment/chat";
+  static const String sendMessage = "$kBaseURL/appointment/chat/send-message";
+
+  //Basic
+  static const String about = "$kBaseURL/about-us";
+  static const String terms = "$kBaseURL/terms";
+  static const String privacy = "$kBaseURL/privacy";
+  static const String contactUs = "$kBaseURL/contanct-us";
 }

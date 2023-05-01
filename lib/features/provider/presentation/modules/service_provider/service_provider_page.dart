@@ -40,17 +40,17 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> with SingleTi
         titleWidget: CustomText(widget.provderName).header(),
         isCenterTitle: true,
         actions: [
-          //chat
-          IconButton(
-            padding: EdgeInsets.symmetric(horizontal: 4),
-            iconSize: 22,
-            constraints: BoxConstraints(),
-            style: ButtonStyle(
-              padding: MaterialStateProperty.all(EdgeInsets.zero),
-            ),
-            icon: Icon(Icons.message),
-            onPressed: () {},
-          ),
+          // //chat
+          // IconButton(
+          //   padding: EdgeInsets.symmetric(horizontal: 4),
+          //   iconSize: 22,
+          //   constraints: BoxConstraints(),
+          //   style: ButtonStyle(
+          //     padding: MaterialStateProperty.all(EdgeInsets.zero),
+          //   ),
+          //   icon: Icon(Icons.message),
+          //   onPressed: () {},
+          // ),
           //rate
           IconButton(
             padding: EdgeInsets.symmetric(horizontal: 4),

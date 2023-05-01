@@ -253,7 +253,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               label: tr(LocaleKeys.yourPhoneNumber),
               controller: _phoneController,
               textInputAction: TextInputAction.next,
-              countries: const ["SA"],
+              countries: ["SA","EG"],
               onCountryChanged: (countryVal) {
                 country = countryVal;
               },

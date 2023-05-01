@@ -222,7 +222,7 @@ class AppDialogs {
         ),
         IconsOutlineButton(
           onPressed: () {
-            if (context.mounted) context.read<LayoutCubit>().setCurrentIndex(0);
+            if (context.mounted) context.read<LayoutCubit>().setCurrentIndex(context: context, i: 0);
             AppPrefs prefs = getIt<AppPrefs>();
             prefs.clear();
             prefs.deleteSecuredData();

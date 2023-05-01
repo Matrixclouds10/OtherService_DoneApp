@@ -6,7 +6,7 @@ class LoginBody {
 
   LoginBody({
     required String phone,
-    String code = '966',
+    required String code ,
     required String password,
     required String deviceToken,
   })  : _phone = phone,

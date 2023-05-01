@@ -2,7 +2,10 @@
 
 abstract class LocaleKeys {
   
+  static const editAddress = "editAddress";
+  static const orderDetails = "orderDetails";
   static const confirmOrder = "confirmOrder";
+  static const searchByProviderName = "searchByProviderName";
   static const confirmLogout = "confirmLogout";
   static const address = "address";
   static const video = "video";

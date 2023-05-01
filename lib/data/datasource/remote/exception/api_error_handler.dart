@@ -47,6 +47,8 @@ class ApiErrorHandler {
                       errorMessage: 'Unauthorized');
                 case 404:
                 case 500:
+                case 501:
+                case 502:
                 case 503:
                   return ErrorModel(
                       code: error.response?.statusCode ?? 0,

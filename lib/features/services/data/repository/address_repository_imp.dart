@@ -52,7 +52,17 @@ class AddressRepositoryImp implements AddressRepository {
   @override
   Future<Either<ErrorModel, Response>> addressUpdateRepository({required AddressUpdateParams params}) async {
     try {
-      Response response = await _dioClient.post(AppURL.addressUpdateUrl, parameters: params.toJson());
+      print(params.toJson());
+      Response response = await _dioClient.post(AppURL.addressUpdateUrl, queryParameters: params.toJson());
+      return Right(response);
+    } catch (e) {
+      return Left(ApiErrorHandler.getMessage(e));
+    }
+  }
+  @override
+  Future<Either<ErrorModel, Response>> addressSetAsDefaultRepository(int id) async {
+    try {
+      Response response = await _dioClient.post('${AppURL.addressSetDefaultUrl}/$id');
       return Right(response);
     } catch (e) {
       return Left(ApiErrorHandler.getMessage(e));

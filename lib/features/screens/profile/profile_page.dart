@@ -107,7 +107,7 @@ class ProfilePage extends StatelessWidget {
                         return singleCustomListTile(
                             icon: Icons.arrow_forward_ios,
                             text: 'طلباتي',
-                            trailingText: state.data.isNotEmpty ? "(${state.data.length} طلب)" : "",
+                            trailingText: state.pendingData.isNotEmpty ? "(${state.pendingData.length} طلب)" : "",
                             onTap: () {
                               Navigator.pushNamed(context, RoutesServices.servicesOrders);
                             });

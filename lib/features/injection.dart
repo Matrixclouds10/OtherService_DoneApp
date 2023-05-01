@@ -1,3 +1,5 @@
+import 'package:weltweit/features/services/domain/usecase/address/address_update_usecase%20copy.dart';
+import 'package:weltweit/features/services/domain/usecase/order_cancel/order_cancel_usecase.dart';
 import 'package:weltweit/features/data/repository/auth_repository_imp.dart';
 import 'package:weltweit/features/domain/usecase/auth/update_fcm_token_usecase.dart';
 import 'package:weltweit/features/domain/usecase/profile/update_profile_availablity_usecase.dart';
@@ -38,7 +40,11 @@ import 'package:weltweit/features/services/domain/usecase/services/all_services_
 import 'package:weltweit/features/services/domain/usecase/services/update_services_usecase.dart';
 import 'package:weltweit/features/services/domain/usecase/settings/update_fcm_usecase.dart';
 
-
+import 'package:weltweit/features/domain/usecase/about/about_usecase.dart';
+import 'package:weltweit/features/domain/usecase/chat_messages/chat_messages_usecase.dart';
+import 'package:weltweit/features/domain/usecase/chat_send_message/chat_send_message_usecase.dart';
+import 'package:weltweit/features/domain/usecase/contact_us/contact_us_usecase.dart';
+import 'package:weltweit/features/domain/usecase/policy/policy_usecase.dart';
 
 Future<void> init() async {
   getIt.registerLazySingleton(() => NetworkClient());
@@ -63,6 +69,7 @@ Future<void> init() async {
   //* Address
   getIt.registerLazySingleton(() => AddressReadUsecase(getIt()));
   getIt.registerLazySingleton(() => AddressCreateUsecase(getIt()));
+  getIt.registerLazySingleton(() => AddressSetAsDefaultUsecase(getIt()));
   getIt.registerLazySingleton(() => AddressUpdateUsecase(getIt()));
   getIt.registerLazySingleton(() => AddressDeleteUsecase(getIt()));
 
@@ -72,7 +79,6 @@ Future<void> init() async {
   getIt.registerLazySingleton(() => ChangePasswordUseCase(repository: getIt()));
   getIt.registerLazySingleton(() => DeleteProfileUseCase(repository: getIt()));
   getIt.registerLazySingleton(() => UpdateProfileLocationUseCase(repository: getIt()));
-
 
   //Services
   getIt.registerLazySingleton(() => AllServicesUseCase(repository: getIt()));
@@ -94,5 +100,10 @@ Future<void> init() async {
   /// Repository
   getIt.registerLazySingleton<AuthRepository>(() => AuthRepositoryImp(dioClient: getIt()));
 
-  
+  getIt.registerLazySingleton(() => OrderCancelUseCase(getIt()));
+  getIt.registerLazySingleton(() => ChatMessagesUseCase(getIt()));
+  getIt.registerLazySingleton(() => ChatSendMessageUseCase(getIt()));
+  getIt.registerLazySingleton(() => AboutUseCase(getIt()));
+  getIt.registerLazySingleton(() => PolicyUseCase(getIt()));
+  getIt.registerLazySingleton(() => ContactUsUseCase(getIt()));
 }

@@ -35,7 +35,14 @@ final List<dynamic> kServicesProviders = [
           )),
 
   //Address
-  BlocProvider<AddressCubit>(create: (BuildContext context) => AddressCubit(getIt(), getIt(), getIt(), getIt())),
+  BlocProvider<AddressCubit>(
+      create: (BuildContext context) => AddressCubit(
+            getIt(),
+            getIt(),
+            getIt(),
+            getIt(),
+            getIt(),
+          )),
 
   //Services
   BlocProvider<ServicesCubit>(create: (BuildContext context) => ServicesCubit(getIt(), getIt())),
@@ -44,6 +51,6 @@ final List<dynamic> kServicesProviders = [
   BlocProvider<ProviderServicesCubit>(create: (BuildContext context) => ProviderServicesCubit(getIt())),
   BlocProvider<FavoriteCubit>(create: (BuildContext context) => FavoriteCubit(getIt(), getIt())),
   BlocProvider<OrdersCubit>(create: (BuildContext context) => OrdersCubit(getIt())),
-  BlocProvider<OrderCubit>(create: (BuildContext context) => OrderCubit(getIt())),
+  BlocProvider<OrderCubit>(create: (BuildContext context) => OrderCubit(getIt(), getIt())),
   BlocProvider<CreateOrderCubit>(create: (BuildContext context) => CreateOrderCubit(getIt())),
 ];

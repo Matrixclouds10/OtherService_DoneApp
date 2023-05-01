@@ -1,5 +1,8 @@
 {
   "en": "English",
+  "editAddress": "تعديل العنوان",
+  "searchByProviderName": "بحث بإسم مقدم الخدمة",
+  "orderDetails": "تفاصيل الطلب",
   "confirmOrder":  "تأكيد الطلب",
   "confirmLogout":  "هل تريد تسجيل الخروج؟",
   "address":  "العنوان",

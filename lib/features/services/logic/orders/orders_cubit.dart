@@ -14,23 +14,60 @@ class OrdersCubit extends Cubit<OrdersState> {
     this.ordersUseCase,
   ) : super(const OrdersState());
 
-  Future<void> getOrders() async {
-    initStates();
-    emit(state.copyWith(state: BaseState.loading));
-    final result = await ordersUseCase(NoParameters());
+  Future<void> getPendingOrders({required bool typeIsProvider}) async {
+    emit(state.copyWith(pendingState: BaseState.loading));
+    final result = await ordersUseCase(OrdersParams(
+      OrdersStatus.pending,
+      typeIsProvider,
+    ));
 
     result.fold(
-      (error) => emit(state.copyWith(state: BaseState.error, error: error)),
+      (error) => emit(state.copyWith(pendingState: BaseState.error, error: error)),
       (data) {
-        emit(state.copyWith(state: BaseState.loaded, data: data));
+        emit(state.copyWith(pendingState: BaseState.loaded, pendingData: data));
       },
     );
   }
 
-  void initStates() {
+  Future<void> getCancelledOrders({required bool typeIsProvider}) async {
+    emit(state.copyWith(cancelledState: BaseState.loading));
+    final result = await ordersUseCase(OrdersParams(
+      OrdersStatus.cancelled,
+      typeIsProvider,
+    ));
+
+    result.fold(
+      (error) => emit(state.copyWith(cancelledState: BaseState.error, error: error)),
+      (data) {
+        emit(state.copyWith(cancelledState: BaseState.loaded, cancelledData: data));
+      },
+    );
+  }
+
+  Future<void> getCompletedOrders({required bool typeIsProvider}) async {
+    emit(state.copyWith(completedState: BaseState.loading));
+    final result = await ordersUseCase(OrdersParams(
+      OrdersStatus.completed,
+      typeIsProvider,
+    ));
+
+    result.fold(
+      (error) => emit(state.copyWith(completedState: BaseState.error, error: error)),
+      (data) {
+        emit(state.copyWith(completedState: BaseState.loaded, completedData: data));
+      },
+    );
+  }
+
+  void reset() {
     emit(state.copyWith(
-      state: BaseState.initial,
+      pendingState: BaseState.initial,
+      cancelledState: BaseState.initial,
+      completedState: BaseState.initial,
       error: null,
+      cancelledData: null,
+      completedData: null,
+      pendingData: null,
     ));
   }
 }

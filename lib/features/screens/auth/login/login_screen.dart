@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
 
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool typeIsProvider = false;
+  bool typeIsProvider = true;
   late TabController _tabController;
   @override
   void initState() {
@@ -224,7 +224,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
               onCountryChanged: _viewModel.onCountryCode,
               disableLengthCheck: true,
               textInputAction: TextInputAction.next,
-              countries: const ["SA"],
+              countries: ["SA","EG"],
             ),
             const VerticalSpace(kScreenPaddingNormal),
             CustomTextFieldPassword(hint: tr(LocaleKeys.password), controller: _passwordController),

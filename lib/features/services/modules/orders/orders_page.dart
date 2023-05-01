@@ -28,6 +28,7 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
   @override
   void initState() {
     super.initState();
+    context.read<OrdersCubit>().reset();
     _tabController = TabController(length: 3, vsync: this);
   }
 
@@ -92,10 +93,19 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
   tabBody() {
     switch (_tabController.index) {
       case 0:
+        if (context.read<OrdersCubit>().state.pendingData.isEmpty) {
+          context.read<OrdersCubit>().getPendingOrders(typeIsProvider: false);
+        }
         return currentOrders();
       case 1:
+        if (context.read<OrdersCubit>().state.completedData.isEmpty) {
+          context.read<OrdersCubit>().getCompletedOrders(typeIsProvider: false);
+        }
         return completedOrders();
       case 2:
+        if (context.read<OrdersCubit>().state.cancelledData.isEmpty) {
+          context.read<OrdersCubit>().getCancelledOrders(typeIsProvider: false);
+        }
         return cancelledOrders();
       default:
         return Container();
@@ -103,36 +113,35 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
   }
 
   currentOrders() {
-    context.read<OrdersCubit>().getOrders();
     return BlocBuilder<OrdersCubit, OrdersState>(
       builder: (context, state) {
-        if (state.state == BaseState.error) {
+        if (state.pendingState == BaseState.error) {
           return ErrorView(message: state.error?.errorMessage ?? "حدث خطأ ما");
         }
-        if (state.state == BaseState.loading) {
+        if (state.pendingState == BaseState.loading) {
           return const Center(child: CircularProgressIndicator());
         }
-        if (state.state == BaseState.loaded && state.data.isEmpty) {
+        if (state.pendingState == BaseState.loaded && state.pendingData.isEmpty) {
           return EmptyView(message: "لا يوجد طلبات");
         }
         return Column(
           children: [
-            for (var i = 0; i < state.data.length; i++)
+            for (var i = 0; i < state.pendingData.length; i++)
               GestureDetector(
                 onTap: () {
                   NavigationService.push(RoutesServices.servicesOrderDetails, arguments: {
-                    "orderModel": state.data[i],
+                    "orderModel": state.pendingData[i],
                   });
                 },
                 child: OrderItemWidget(
-                  avatar: state.data[i].provider?.image ?? '',
-                  name: state.data[i].provider?.name ?? '',
-                  profession: '',
-                  date: DateFormat('yyyy-MM-dd').format(state.data[i].date),
-                  time: DateFormat('HH:mm').format(state.data[i].date),
-                  orderStatus: state.data[i].status,
-                  price: '',
-                  tags: const [],
+                  orderModel: state.pendingData[i],
+                  // name: state.pendingData[i].provider?.name ?? '',
+                  // profession: '',
+                  // date: DateFormat('yyyy-MM-dd').format(state.pendingData[i].date),
+                  // time: DateFormat('HH:mm').format(state.pendingData[i].date),
+                  // orderStatus: state.pendingData[i].status,
+                  // price: '',
+                  // tags: const [],
                 ),
               )
           ],
@@ -142,40 +151,102 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
   }
 
   completedOrders() {
-    return Column(
-      children: [
-        for (var i = 0; i < 4; i++)
-          OrderItemWidget(
-            avatar: Assets.imagesAvatar,
-            name: "مسعد معوض",
-            profession: getRandomTags()[0],
-            date: getRandomDate(),
-            time: getRadomTime(),
-            orderStatus: "completed",
-            price: "${100 * (i + 1)} ج",
-            tags: getRandomTags(),
-          )
-      ],
+    return BlocBuilder<OrdersCubit, OrdersState>(
+      builder: (context, state) {
+        if (state.completedState == BaseState.error) {
+          return ErrorView(message: state.error?.errorMessage ?? "حدث خطأ ما");
+        }
+        if (state.completedState == BaseState.loading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (state.completedState == BaseState.loaded && state.completedData.isEmpty) {
+          return EmptyView(message: "لا يوجد طلبات");
+        }
+        return Column(
+          children: [
+            for (var i = 0; i < state.completedData.length; i++)
+              GestureDetector(
+                onTap: () {
+                  NavigationService.push(RoutesServices.servicesOrderDetails, arguments: {
+                    "orderModel": state.completedData[i],
+                  });
+                },
+                child: OrderItemWidget(
+                  orderModel: state.completedData[i],
+                ),
+              )
+          ],
+        );
+      },
     );
   }
 
   cancelledOrders() {
-    return Column(
-      children: [
-        for (var i = 0; i < 4; i++)
-          OrderItemWidget(
-            avatar: Assets.imagesAvatar,
-            name: "مسعد معوض",
-            profession: getRandomTags()[0],
-            date: "",
-            time: "",
-            orderStatus: "cancelled",
-            price: "",
-            tags: getRandomTags(),
-          )
-      ],
+    return BlocBuilder<OrdersCubit, OrdersState>(
+      builder: (context, state) {
+        if (state.cancelledState == BaseState.error) {
+          return ErrorView(message: state.error?.errorMessage ?? "حدث خطأ ما");
+        }
+        if (state.cancelledState == BaseState.loading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (state.cancelledState == BaseState.loaded && state.cancelledData.isEmpty) {
+          return EmptyView(message: "لا يوجد طلبات");
+        }
+        return Column(
+          children: [
+            for (var i = 0; i < state.cancelledData.length; i++)
+              GestureDetector(
+                onTap: () {
+                  NavigationService.push(RoutesServices.servicesOrderDetails, arguments: {
+                    "orderModel": state.cancelledData[i],
+                  });
+                },
+                child: OrderItemWidget(
+                  orderModel: state.cancelledData[i],
+                ),
+              )
+          ],
+        );
+      },
     );
   }
+
+  // completedOrders() {
+  //   return Column(
+  //     children: [
+  //       for (var i = 0; i < 4; i++)
+  //         OrderItemWidget(
+  //           avatar: Assets.imagesAvatar,
+  //           name: "مسعد معوض",
+  //           profession: getRandomTags()[0],
+  //           date: getRandomDate(),
+  //           time: getRadomTime(),
+  //           orderStatus: "completed",
+  //           price: "${100 * (i + 1)} ج",
+  //           tags: getRandomTags(),
+  //         )
+  //     ],
+  //   );
+  // }
+
+  // cancelledOrders() {
+  //   return Column(
+  //     children: [
+  //       for (var i = 0; i < 4; i++)
+  //         OrderItemWidget(
+  //           avatar: Assets.imagesAvatar,
+  //           name: "مسعد معوض",
+  //           profession: getRandomTags()[0],
+  //           date: "",
+  //           time: "",
+  //           orderStatus: "cancelled",
+  //           price: "",
+  //           tags: getRandomTags(),
+  //         )
+  //     ],
+  //   );
+  // }
 
   Widget ratesAsStars(double d) {
     return Row(

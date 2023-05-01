@@ -1,27 +1,51 @@
 part of 'orders_cubit.dart';
 
 class OrdersState extends Equatable {
-  final BaseState state;
-  final List<OrderModel> data;
+  final BaseState pendingState;
+  final BaseState completedState;
+  final BaseState cancelledState;
+  final List<OrderModel> pendingData;
+  final List<OrderModel> cancelledData;
+  final List<OrderModel> completedData;
   final ErrorModel? error;
   const OrdersState({
-    this.state = BaseState.initial,
-    this.data = const [],
+    this.completedState = BaseState.initial,
+    this.cancelledState = BaseState.initial,
+    this.pendingState = BaseState.initial,
+    this.pendingData = const [],
+    this.cancelledData = const [],
+    this.completedData = const [],
     this.error,
   });
 
   OrdersState copyWith({
-    BaseState? state,
-    List<OrderModel>? data,
+    BaseState? pendingState,
+    BaseState? cancelledState,
+    BaseState? completedState,
+    List<OrderModel>? pendingData,
+    List<OrderModel>? cancelledData,
+    List<OrderModel>? completedData,
     ErrorModel? error,
   }) {
     return OrdersState(
-      state: state ?? this.state,
-      data: data ?? this.data,
+      pendingState: pendingState ?? this.pendingState,
+      cancelledState: cancelledState ?? this.cancelledState,
+      completedState: completedState ?? this.completedState,
+      pendingData: pendingData ?? this.pendingData,
+      cancelledData: cancelledData ?? this.cancelledData,
+      completedData: completedData ?? this.completedData,
       error: error ?? this.error,
     );
   }
 
   @override
-  List<Object?> get props => [state, data, error];
+  List<Object?> get props => [
+        pendingState,
+        pendingData,
+        cancelledData,
+        completedData,
+        error,
+        completedState,
+        cancelledState,
+      ];
 }

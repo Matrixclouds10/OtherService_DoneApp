@@ -8,6 +8,7 @@ import 'package:weltweit/features/services/data/model/response/address/address_i
 import 'package:weltweit/features/services/domain/usecase/address/address_create_usecase.dart';
 import 'package:weltweit/features/services/domain/usecase/address/address_delete_usecase.dart';
 import 'package:weltweit/features/services/domain/usecase/address/address_read_usecase.dart';
+import 'package:weltweit/features/services/domain/usecase/address/address_update_usecase%20copy.dart';
 import 'package:weltweit/features/services/domain/usecase/address/address_update_usecase.dart';
 
 part 'address_state.dart';
@@ -17,12 +18,14 @@ class AddressCubit extends Cubit<AddressState> {
   final AddressReadUsecase addressReadUsecase;
   final AddressUpdateUsecase addressUpdateUsecase;
   final AddressDeleteUsecase addressDeleteUsecase;
+  final AddressSetAsDefaultUsecase addressSetAsDefaultUsecase;
 
   AddressCubit(
     this.addressCreateUsecase,
     this.addressReadUsecase,
     this.addressUpdateUsecase,
     this.addressDeleteUsecase,
+    this.addressSetAsDefaultUsecase,
   ) : super(AddressState());
 
   Future<void> getAddresses() async {
@@ -59,5 +62,12 @@ class AddressCubit extends Cubit<AddressState> {
       (l) => emit(state.copyWith(errorModel: l, deleteState: BaseState.error)),
       (r) => emit(state.copyWith(deleteState: BaseState.loaded)),
     );
+  }
+
+  Future<void> setAsDefault(int id) async {
+    emit(state.copyWith(baseState: BaseState.loading));
+
+    Either<ErrorModel, BaseResponse> result = await addressSetAsDefaultUsecase(id);
+    emit(state.copyWith(baseState: BaseState.loaded));
   }
 }

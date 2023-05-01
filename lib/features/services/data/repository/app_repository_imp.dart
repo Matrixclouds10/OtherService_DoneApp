@@ -7,18 +7,23 @@ import 'package:weltweit/core/services/network/network_client.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
-import 'package:weltweit/features/core/base/base_usecase.dart';
 import 'package:weltweit/features/services/data/app_urls/app_url.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
+import 'package:weltweit/features/services/data/models/response/chat/chat_model.dart';
 import 'package:weltweit/features/services/data/models/response/order/order.dart';
 import 'package:weltweit/features/services/data/models/response/portfolio/portfolio_image.dart';
 import 'package:weltweit/features/services/data/models/response/provider/providers_model.dart';
 import 'package:weltweit/features/services/data/models/response/services/service.dart';
 import 'package:weltweit/features/services/data/models/response/services/services_response.dart';
+import 'package:weltweit/features/domain/usecase/chat_messages/chat_messages_usecase.dart';
+import 'package:weltweit/features/domain/usecase/contact_us/contact_us_usecase.dart';
+import 'package:weltweit/features/domain/usecase/chat_send_message/chat_send_message_usecase.dart';
+import 'package:weltweit/features/services/domain/usecase/order_cancel/order_cancel_usecase.dart';
 import 'package:weltweit/features/services/domain/repository/app_repo.dart';
 import 'package:weltweit/features/services/domain/usecase/create_order/create_order_usecase.dart';
 import 'package:weltweit/features/domain/usecase/profile/change_password_usecase.dart';
 import 'package:weltweit/features/domain/usecase/profile/update_profile_usecase.dart';
+import 'package:weltweit/features/services/domain/usecase/orders/orders_usecase.dart';
 import 'package:weltweit/features/services/domain/usecase/provider/providers_usecase.dart';
 import 'package:weltweit/features/services/domain/usecase/services/update_services_usecase.dart';
 
@@ -315,8 +320,11 @@ class AppRepositoryImp implements AppRepository {
   }
 
   @override
-  Future<Either<ErrorModel, List<OrderModel>>> getOrders({required NoParameters params}) async {
-    String url = AppURL.getOrders;
+  Future<Either<ErrorModel, List<OrderModel>>> getOrders({required OrdersParams params}) async {
+    String url = params.typeIsProvider ? AppURL.providerGetPendingOrders : AppURL.getPendingOrders;
+    if (params.ordersStatus == OrdersStatus.cancelled) url = params.typeIsProvider ? AppURL.providerGetCancelledOrders : AppURL.getCancelledOrders;
+    if (params.ordersStatus == OrdersStatus.completed) url = params.typeIsProvider ? AppURL.providerGetCompletedOrders : AppURL.getCompletedOrders;
+
     NetworkCallType type = NetworkCallType.get;
     Map<String, dynamic> data = {};
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
@@ -328,5 +336,66 @@ class AppRepositoryImp implements AppRepository {
         return Left(ErrorModel(errorMessage: e.toString()));
       }
     });
+  }
+
+  @override
+  Future<Either<ErrorModel, BaseResponse>> cancelOrder({required OrderCancelParams params}) async {
+    String url = AppURL.cancelOrder;
+    NetworkCallType type = NetworkCallType.post;
+    Map<String, dynamic> data = params.toJson();
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+
+    return result.fold((l) => Left(l), (r) => Right(r));
+  }
+
+  @override
+  Future<Either<ErrorModel, BaseResponse>> getAbout() async {
+    String url = AppURL.about;
+    NetworkCallType type = NetworkCallType.get;
+    Map<String, dynamic> data = {};
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+
+    return result.fold((l) => Left(l), (r) => Right(r));
+  }
+
+  @override
+  Future<Either<ErrorModel, List<ChatModel>>> getChatMessages({required ChatMessagesParams params}) async {
+    String url = AppURL.getChatMessages;
+    NetworkCallType type = NetworkCallType.post;
+    Map<String, dynamic> data = params.toJson();
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+
+    //TODO: fix this
+    return result.fold((l) => Left(l), (r) => Right([]));
+  }
+
+  @override
+  Future<Either<ErrorModel, BaseResponse>> getPolicy() async {
+    String url = AppURL.privacy;
+    NetworkCallType type = NetworkCallType.get;
+    Map<String, dynamic> data = {};
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+
+    return result.fold((l) => Left(l), (r) => Right(r));
+  }
+
+  @override
+  Future<Either<ErrorModel, BaseResponse>> sendChatMessage({required ChatSendMessageParams params}) async {
+    String url = AppURL.sendMessage;
+    NetworkCallType type = NetworkCallType.post;
+    Map<String, dynamic> data = params.toJson();
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+
+    return result.fold((l) => Left(l), (r) => Right(r));
+  }
+
+  @override
+  Future<Either<ErrorModel, BaseResponse>> sendContactUs({required ContactUsParams params}) async {
+    String url = AppURL.contactUs;
+    NetworkCallType type = NetworkCallType.post;
+    Map<String, dynamic> data = params.toJson();
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+
+    return result.fold((l) => Left(l), (r) => Right(r));
   }
 }

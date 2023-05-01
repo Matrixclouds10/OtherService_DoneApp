@@ -97,17 +97,17 @@ class _OrdersPageState extends State<OrdersPage>
   currentOrders() {
     return Column(
       children: [
-        for (var i = 0; i < 4; i++)
-          OrderItemWidget(
-            avatar: Assets.imagesAvatar,
-            name: "مسعد معوض",
-            profession: getRandomTags()[0],
-            date: getRandomDate(),
-            time: getRadomTime(),
-            orderStatus: i % 2 == 0 ? "accepted" : "pending",
-            price: i % 2 == 0 ? "300 ج" : "",
-            tags: getRandomTags(),
-          )
+        // for (var i = 0; i < 4; i++)
+        //   OrderItemWidget(
+        //     avatar: Assets.imagesAvatar,
+        //     name: "مسعد معوض",
+        //     profession: getRandomTags()[0],
+        //     date: getRandomDate(),
+        //     time: getRadomTime(),
+        //     orderStatus: i % 2 == 0 ? "accepted" : "pending",
+        //     price: i % 2 == 0 ? "300 ج" : "",
+        //     tags: getRandomTags(),
+        //   )
       ],
     );
   }
@@ -115,17 +115,17 @@ class _OrdersPageState extends State<OrdersPage>
   completedOrders() {
     return Column(
       children: [
-        for (var i = 0; i < 4; i++)
-          OrderItemWidget(
-            avatar: Assets.imagesAvatar,
-            name: "مسعد معوض",
-            profession: getRandomTags()[0],
-            date: getRandomDate(),
-            time: getRadomTime(),
-            orderStatus: "completed",
-            price: "${100 * (i + 1)} ج",
-            tags: getRandomTags(),
-          )
+        // for (var i = 0; i < 4; i++)
+        //   OrderItemWidget(
+        //     avatar: Assets.imagesAvatar,
+        //     name: "مسعد معوض",
+        //     profession: getRandomTags()[0],
+        //     date: getRandomDate(),
+        //     time: getRadomTime(),
+        //     orderStatus: "completed",
+        //     price: "${100 * (i + 1)} ج",
+        //     tags: getRandomTags(),
+        //   )
       ],
     );
   }
@@ -133,17 +133,17 @@ class _OrdersPageState extends State<OrdersPage>
   newOrders() {
     return Column(
       children: [
-        for (var i = 0; i < 4; i++)
-          OrderItemWidget(
-            avatar: Assets.imagesAvatar,
-            name: "مسعد معوض",
-            profession: getRandomTags()[0],
-            date: "",
-            time: "",
-            orderStatus: "pending",
-            price: "",
-            tags: getRandomTags(),
-          )
+        // for (var i = 0; i < 4; i++)
+        //   OrderItemWidget(
+        //     avatar: Assets.imagesAvatar,
+        //     name: "مسعد معوض",
+        //     profession: getRandomTags()[0],
+        //     date: "",
+        //     time: "",
+        //     orderStatus: "pending",
+        //     price: "",
+        //     tags: getRandomTags(),
+        //   )
       ],
     );
   }

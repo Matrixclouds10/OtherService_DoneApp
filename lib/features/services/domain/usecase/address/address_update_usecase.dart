@@ -42,5 +42,20 @@ class AddressUpdateUsecase
   }
 }
 class AddressUpdateParams {
-  toJson() {}
+  final int id;
+  final String name;
+  final String address;
+  final String? lat;
+  final String? lng;
+
+  AddressUpdateParams({required this.id, required this.name, required this.address, this.lat, this.lng});
+  toJson() {
+    return {
+      "id": id,
+      "name": name,
+      "address": address,
+      "lat": "0.0",
+      "lng": "0.0",
+    };
+  }
 }

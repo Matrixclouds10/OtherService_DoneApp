@@ -10,7 +10,9 @@ import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/core/widgets/service_provider_item.dart';
 import 'package:weltweit/features/services/data/models/response/provider/providers_model.dart';
 import 'package:weltweit/features/services/logic/favorite/favorite_cubit.dart';
+import 'package:weltweit/features/services/logic/provider/provider/provider_cubit.dart';
 import 'package:weltweit/features/services/logic/provider/provider_portfolio/provider_portfolio_cubit.dart';
+import 'package:weltweit/features/services/logic/provider/provider_services/provider_services_cubit.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/assets.dart';
@@ -25,124 +27,179 @@ class ServiceProviderPage extends StatefulWidget {
   State<ServiceProviderPage> createState() => _ServiceProviderPageState();
 }
 
-class _ServiceProviderPageState extends State<ServiceProviderPage> with SingleTickerProviderStateMixin {
+class _ServiceProviderPageState extends State<ServiceProviderPage> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ProviderCubit>().getProvider(widget.provider.id!);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    //get argument
+    return BlocBuilder<ProviderCubit, ProviderState>(
+      builder: (context, state) {
+        Widget body = Container();
+        switch (state.state) {
+          case BaseState.initial:
+          case BaseState.loading:
+            body = CustomLoadingSpinner();
+            break;
+          case BaseState.loaded:
+            return ServiceProviderView(provider: state.data!);
+          case BaseState.error:
+            body = ErrorLayout(
+              errorModel: state.error,
+              onRetry: () {
+                // context.read<ProviderCubit>().getProvider(widget.provider.id!);
+              },
+            );
+            break;
+        }
+        return Scaffold(
+          appBar: CustomAppBar(
+            color: Colors.white,
+            titleWidget: CustomText(widget.provider.name ?? '').header(),
+            isCenterTitle: true,
+          ),
+          body: body,
+        );
+      },
+    );
+  }
+}
+
+class ServiceProviderView extends StatefulWidget {
+  final ProvidersModel provider;
+  const ServiceProviderView({required this.provider, super.key});
+
+  @override
+  State<ServiceProviderView> createState() => _ServiceProviderViewState();
+}
+
+class _ServiceProviderViewState extends State<ServiceProviderView> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool isFavorite = false;
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    isFavorite = widget.provider.isFavorite ?? false;
+    isFavorite = widget.provider.isFavorite;
   }
 
   @override
   Widget build(BuildContext context) {
     //get argument
-    return Scaffold(
-      appBar: CustomAppBar(
-        color: Colors.white,
-        titleWidget: CustomText(widget.provider.name ?? '').header(),
-        isCenterTitle: true,
-        actions: [
-          //chat
-          IconButton(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            iconSize: 22,
-            constraints: const BoxConstraints(),
-            visualDensity: VisualDensity.compact,
-            style: ButtonStyle(
-              padding: MaterialStateProperty.all(EdgeInsets.zero),
-            ),
-            icon: const Icon(Icons.chat_bubble_outline_rounded),
-            onPressed: () {},
-          ),
-          //rate
-          BlocConsumer<FavoriteCubit, FavoriteState>(
-            buildWhen: (previous, current) => previous.addState != current.addState,
-            listener: (context, state) {
-              if (state.addState == BaseState.error) {
-                AppSnackbar.show(context: context, message: LocaleKeys.somethingWentWrong.tr());
-              }
+    return BlocBuilder<ProviderCubit, ProviderState>(
+      builder: (context, state) {
+        return Scaffold(
+          appBar: CustomAppBar(
+            color: Colors.white,
+            titleWidget: CustomText(widget.provider.name ?? '').header(),
+            isCenterTitle: true,
+            actions: [
+              // //chat
+              // IconButton(
+              //   padding: const EdgeInsets.symmetric(horizontal: 4),
+              //   iconSize: 22,
+              //   constraints: const BoxConstraints(),
+              //   visualDensity: VisualDensity.compact,
+              //   style: ButtonStyle(
+              //     padding: MaterialStateProperty.all(EdgeInsets.zero),
+              //   ),
+              //   icon: const Icon(Icons.chat_bubble_outline_rounded),
+              //   onPressed: () {},
+              // ),
 
-              // if (state.addState == BaseState.loaded) {
-              //   AppSnackbar.show(context: context, message: LocaleKeys.addedToFavorite.tr());
-              // }
-            },
-            builder: (context, state) {
-              if (state.addState == BaseState.loading) {
-                return Container(padding: EdgeInsets.symmetric(horizontal: 8), child: CustomLoadingSpinner());
-              }
-              return IconButton(
+              //rate
+              BlocConsumer<FavoriteCubit, FavoriteState>(
+                buildWhen: (previous, current) => previous.addState != current.addState,
+                listener: (context, state) {
+                  if (state.addState == BaseState.error) {
+                    AppSnackbar.show(context: context, message: LocaleKeys.somethingWentWrong.tr());
+                  }
+
+                  // if (state.addState == BaseState.loaded) {
+                  //   AppSnackbar.show(context: context, message: LocaleKeys.addedToFavorite.tr());
+                  // }
+                },
+                builder: (context, state) {
+                  if (state.addState == BaseState.loading) {
+                    return Container(padding: EdgeInsets.symmetric(horizontal: 8), child: CustomLoadingSpinner());
+                  }
+                  return IconButton(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    iconSize: 22,
+                    visualDensity: VisualDensity.compact,
+                    constraints: const BoxConstraints(),
+                    icon: Icon(
+                      isFavorite ? Icons.star : Icons.star_outline_rounded,
+                      color: isFavorite ? Colors.yellow[700] : Colors.black,
+                    ),
+                    onPressed: () async {
+                      if (widget.provider.id != null) {
+                        await context.read<FavoriteCubit>().addFavorite(widget.provider.id!);
+                        isFavorite = !isFavorite;
+                      }
+                    },
+                  );
+                },
+              ),
+
+              //more
+              IconButton(
                 padding: const EdgeInsets.symmetric(horizontal: 4),
                 iconSize: 22,
                 visualDensity: VisualDensity.compact,
                 constraints: const BoxConstraints(),
-                icon: Icon(
-                  isFavorite ? Icons.star : Icons.star_outline_rounded,
-                  color: isFavorite ? Colors.yellow[700] : Colors.black,
-                ),
-                onPressed: () async {
-                  if (widget.provider.id != null) {
-                    await context.read<FavoriteCubit>().addFavorite(widget.provider.id!);
-                    isFavorite = !isFavorite;
-                  }
-                },
-              );
-            },
+                icon: const Icon(Icons.more_vert),
+                onPressed: () {},
+              ),
+            ],
           ),
-
-          //more
-          IconButton(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            iconSize: 22,
-            visualDensity: VisualDensity.compact,
-            constraints: const BoxConstraints(),
-            icon: const Icon(Icons.more_vert),
-            onPressed: () {},
-          ),
-        ],
-      ),
-      backgroundColor: servicesTheme.scaffoldBackgroundColor,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            ListAnimator(
-              physics: const NeverScrollableScrollPhysics(),
-              scrollDirection: Axis.vertical,
+          backgroundColor: servicesTheme.scaffoldBackgroundColor,
+          body: SingleChildScrollView(
+            child: Column(
               children: [
-                const SizedBox(height: 0),
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: const BoxDecoration(color: Colors.white),
-                  child: ServiceProviderItemWidget(
-                    providersModel: widget.provider,
-                    canMakeAppointment: true,
-                    showFavoriteButton: false,
-                  ),
-                ),
-                Container(
-                  color: Colors.white,
-                  child: TabBar(
-                    controller: _tabController,
-                    indicatorColor: Colors.transparent,
-                    labelColor: Colors.black,
-                    onTap: (index) {
-                      setState(() {});
-                    },
-                    unselectedLabelColor: Colors.grey,
-                    tabs: [
-                      singleTab(0, LocaleKeys.myServices.tr()),
-                      singleTab(1, LocaleKeys.gallery.tr()),
-                      singleTab(2, LocaleKeys.rates.tr()),
-                    ],
-                  ),
-                ),
-                tabBody(),
+                ListAnimator(
+                  physics: const NeverScrollableScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  children: [
+                    const SizedBox(height: 0),
+                    Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: const BoxDecoration(color: Colors.white),
+                      child: ServiceProviderItemWidget(
+                        providersModel: widget.provider,
+                        canMakeAppointment: true,
+                        showFavoriteButton: false,
+                      ),
+                    ),
+                    Container(
+                      color: Colors.white,
+                      child: TabBar(
+                        controller: _tabController,
+                        indicatorColor: Colors.transparent,
+                        labelColor: Colors.black,
+                        onTap: (index) {
+                          setState(() {});
+                        },
+                        unselectedLabelColor: Colors.grey,
+                        tabs: [
+                          singleTab(0, LocaleKeys.myServices.tr()),
+                          singleTab(1, LocaleKeys.gallery.tr()),
+                          singleTab(2, LocaleKeys.rates.tr()),
+                        ],
+                      ),
+                    ),
+                    tabBody(),
+                  ],
+                )
               ],
-            )
-          ],
-        ),
-      ),
+            ),
+          ),
+        );
+      },
     );
   }
 

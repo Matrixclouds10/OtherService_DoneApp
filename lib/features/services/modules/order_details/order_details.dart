@@ -1,9 +1,19 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
+import 'package:weltweit/core/routing/navigation_services.dart';
+import 'package:weltweit/core/routing/routes.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
+import 'package:weltweit/features/core/widgets/order_item_widget.dart';
 import 'package:weltweit/features/core/widgets/service_provider_item.dart';
 import 'package:weltweit/features/services/data/models/response/order/order.dart';
 import 'package:weltweit/features/services/data/models/response/provider/providers_model.dart';
+import 'package:weltweit/features/services/logic/order/order_cubit.dart';
+import 'package:weltweit/features/widgets/app_dialogs.dart';
+import 'package:weltweit/features/widgets/app_snackbar.dart';
+import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
 
 class OrderDetails extends StatefulWidget {
@@ -14,11 +24,9 @@ class OrderDetails extends StatefulWidget {
 }
 
 class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -27,8 +35,25 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
     return Scaffold(
       appBar: CustomAppBar(
         color: Colors.white,
-        titleWidget: const CustomText("تفاصيل الطلب").header(),
+        titleWidget: CustomText(LocaleKeys.orderDetails.tr()).header(),
         isCenterTitle: true,
+        actions: [
+          //chat
+          IconButton(
+            padding: EdgeInsets.symmetric(horizontal: 4),
+            iconSize: 22,
+            constraints: BoxConstraints(),
+            style: ButtonStyle(
+              padding: MaterialStateProperty.all(EdgeInsets.zero),
+            ),
+            icon: Icon(FontAwesomeIcons.message),
+            onPressed: () {
+              NavigationService.push(Routes.ChatScreen,arguments: {
+                'orderModel': widget.orderModel,
+              });
+            },
+          ),
+        ],
       ),
       backgroundColor: servicesTheme.scaffoldBackgroundColor,
       body: SingleChildScrollView(
@@ -42,17 +67,11 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                 Container(
                   padding: const EdgeInsets.all(4),
                   decoration: const BoxDecoration(color: Colors.white),
-                  child: ServiceProviderItemWidget(
-                    providersModel: ProvidersModel(
-                      image: widget.orderModel.provider?.image,
-                      name: widget.orderModel.provider?.name,
-                      distance: widget.orderModel.provider?.distance,
-                      rateAvg: widget.orderModel.provider?.rateAvg,
-                    ),
-                    showFavoriteButton: false,
+                  child: OrderItemWidget(
+                    orderModel: widget.orderModel,
                   ),
                 ),
-                if (widget.orderModel.status.contains("accepted"))
+                if (widget.orderModel.status.toLowerCase().contains("accepted"))
                   Container(
                     decoration: const BoxDecoration(color: Colors.white),
                     child: Column(
@@ -63,7 +82,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                             const SizedBox(width: 10),
                             const CustomText("حالة الطلب", bold: true).headerExtra(),
                             const Spacer(),
-                            const CustomText("300 ج", color: Color(0xffE67E23), bold: true).headerExtra(),
+                            // const CustomText("300 ج", color: Color(0xffE67E23), bold: true).headerExtra(),
                             // Chip(
                             //   label: CustomText("مكتمل", color: Colors.white).header(),
                             //   backgroundColor: Color(0xffE67E23),
@@ -168,7 +187,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                   ),
                   const SizedBox(height: 30),
                 ],
-                if (widget.orderModel.status.contains("pending")) ...[
+                if (widget.orderModel.status.toLowerCase().contains("pending")) ...[
                   Container(
                     decoration: const BoxDecoration(color: Colors.white),
                     child: Column(
@@ -180,15 +199,70 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                             const CustomText("حالة الطلب", bold: true).headerExtra(),
                             const Spacer(),
                             // CustomText("300 ج", color: Color.fromARGB(255, 230, 35, 35), bold: true).headerExtra(),
-                            Chip(
-                              label: const CustomText("Pending", color: Colors.white).header(),
-                              backgroundColor: const Color(0xffE67E23),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                            ),
+                            // Chip(
+                            //   label: const CustomText("Pending", color: Colors.white).header(),
+                            //   backgroundColor: const Color(0xffE67E23),
+                            //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            // ),
                             const SizedBox(width: 10),
                           ],
                         ),
                         textWithDot(text: "تم إنشاء الطلب بنجاح وبإنتظار موافقة مزود الخدمة.", color: const Color(0xffE67E23)),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () async {
+                            String cancelReason = "";
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const CustomText("إلغاء الطلب"),
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      CustomTextFieldArea(
+                                        onChange: (value) => cancelReason = value,
+                                        hint: "سبب الإلغاء",
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Row(
+                                        children: [
+                                          TextButton(
+                                              onPressed: () async {
+                                                if(cancelReason.isEmpty){
+                                                  AppSnackbar.show(context: context, message: "السبب مطوب");
+                                                  return;
+                                                }
+                                                Navigator.pop(context);
+                                                if (context.mounted) {
+                                                  bool result = await context.read<OrderCubit>().cancelOrder(id: widget.orderModel.id, reason: cancelReason);
+                                                  if (result) {
+                                                    if (context.mounted) Navigator.pop(context);
+                                                  }
+                                                }
+                                              },
+                                              child: const CustomText("إلغاء الطلب", color: Colors.red).headerExtra()),
+                                          const Spacer(),
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: const CustomText("إلغاء", color: Colors.black).headerExtra()),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          child: const CustomText("إلغاء الطلب", color: Colors.white).headerExtra(),
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.red,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          ),
+                        ),
                         const SizedBox(height: 16),
                       ],
                     ),

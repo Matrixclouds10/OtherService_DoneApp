@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logging/logging.dart';
 import 'package:weltweit/core/resources/decoration.dart';
 import 'package:weltweit/data/injection.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
@@ -9,6 +10,7 @@ import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/features/services/data/model/response/address/address_item_model.dart';
 import 'package:weltweit/features/services/domain/usecase/address/address_create_usecase.dart';
 import 'package:weltweit/features/services/domain/usecase/address/address_delete_usecase.dart';
+import 'package:weltweit/features/services/domain/usecase/address/address_update_usecase.dart';
 import 'package:weltweit/features/services/modules/my_addresses/logic/address_cubit.dart';
 import 'package:weltweit/features/widgets/app_bottomsheet.dart';
 import 'package:weltweit/features/widgets/empty_widget.dart';
@@ -52,8 +54,8 @@ class _MyAddressesPageState extends State<MyAddressesPage> {
                     child: Column(
                       children: [
                         CustomText(LocaleKeys.addNewAddress.tr()).header(),
-                        const SizedBox(height: 12),
-                        CustomText(LocaleKeys.addNewAddressDescription.tr()),
+                        // const SizedBox(height: 12),
+                        // CustomText(LocaleKeys.addNewAddressDescription.tr()),
                         const SizedBox(height: 12),
                         CustomTextFieldNormal(
                           hint: LocaleKeys.name.tr(),
@@ -67,14 +69,14 @@ class _MyAddressesPageState extends State<MyAddressesPage> {
                         const SizedBox(height: 12),
                         CustomButton(
                           title: LocaleKeys.add.tr(),
-                          onTap: () {
+                          onTap: () async {
                             AddressCreateParams params = AddressCreateParams(
                               name: nameController.text,
                               address: addController.text,
                               lat: '0',
                               lng: '0',
                             );
-                            context.read<AddressCubit>().createAddress(params);
+                            await context.read<AddressCubit>().createAddress(params);
                             Navigator.pop(context);
                             context.read<AddressCubit>().getAddresses();
                           },
@@ -191,22 +193,65 @@ class _MyAddressesPageState extends State<MyAddressesPage> {
             children: [
               Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomText(address.name ?? '', ph: 12, pv: 0).start(),
-                  if (address.address != null && address.address!.length > 1)
-                    CustomText(address.address ?? '', ph: 12, pv: 0).start().footer(),
-                  if (address.regionName != null && address.regionName!.length > 1)
-                    CustomText(address.regionName ?? '', ph: 8).start().footer(),
+                  if (address.address != null && address.address!.length > 1) CustomText(address.address ?? '', ph: 12, pv: 0).start().footer(),
+                  if (address.regionName != null && address.regionName!.length > 1) CustomText(address.regionName ?? '', ph: 8).start().footer(),
                 ],
               )),
-              // IconButton(
-              //   icon: Icon(
-              //     Icons.edit,
-              //     color: servicesTheme.colorScheme.secondary,
-              //   ),
-              //   onPressed: () {},
-              // ),
+              IconButton(
+                icon: Icon(
+                  Icons.edit,
+                  color: servicesTheme.colorScheme.secondary,
+                ),
+                onPressed: () {
+                  TextEditingController nameController = TextEditingController();
+                  TextEditingController addController = TextEditingController();
+                  nameController.text = address.name ?? '';
+                  addController.text = address.address ?? '';
+
+                  AppBottomSheets().customBottomSheet(
+                    context: context,
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            CustomText(LocaleKeys.editAddress.tr()).header(),
+                            const SizedBox(height: 12),
+                            CustomTextFieldNormal(
+                              hint: LocaleKeys.name.tr(),
+                              controller: nameController,
+                            ),
+                            const SizedBox(height: 12),
+                            CustomTextFieldArea(
+                              hint: LocaleKeys.address.tr(),
+                              controller: addController,
+                            ),
+                            const SizedBox(height: 12),
+                            CustomButton(
+                              title: LocaleKeys.add.tr(),
+                              onTap: () async {
+                                AddressUpdateParams params = AddressUpdateParams(
+                                  id: address.id!,
+                                  name: nameController.text,
+                                  address: addController.text,
+                                  lat: '0',
+                                  lng: '0',
+                                );
+                                Navigator.pop(context);
+                                await context.read<AddressCubit>().updateAddress(params);
+                                if (context.mounted) context.read<AddressCubit>().getAddresses();
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
               IconButton(
                 icon: Icon(
                   Icons.delete,
@@ -217,6 +262,22 @@ class _MyAddressesPageState extends State<MyAddressesPage> {
                   await context.read<AddressCubit>().getAddresses();
                 },
               ),
+            ],
+          ),
+          Row(
+            children: [
+              Checkbox(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                value: address.isDefault == 1,
+                fillColor: MaterialStateProperty.all(Colors.orange),
+                onChanged: (value) async {
+                  await context.read<AddressCubit>().setAsDefault(address.id!);
+                  await context.read<AddressCubit>().getAddresses();
+                },
+              ),
+              CustomText("تعيين كعنوان افتراضي"),
             ],
           ),
         ],

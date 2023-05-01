@@ -4,18 +4,26 @@ import 'package:weltweit/features/services/data/models/response/order/order.dart
 import '../../../../core/base/base_usecase.dart';
 import '../../repository/app_repo.dart';
 
-class OrdersUseCase extends BaseUseCase<List<OrderModel>, NoParameters> {
+class OrdersUseCase extends BaseUseCase<List<OrderModel>, OrdersParams> {
   final AppRepository repository;
 
   OrdersUseCase(this.repository);
 
   @override
-  Future<Either<ErrorModel, List<OrderModel>>> call(NoParameters parameters) async {
+  Future<Either<ErrorModel, List<OrderModel>>> call(OrdersParams parameters) async {
     return await repository.getOrders(params: parameters);
   }
 
   @override
-  Future<Either<ErrorModel, List<OrderModel>>> callTest(NoParameters parameters) {
+  Future<Either<ErrorModel, List<OrderModel>>> callTest(OrdersParams parameters) {
     throw UnimplementedError();
   }
 }
+
+class OrdersParams {
+  final OrdersStatus ordersStatus;
+  final bool typeIsProvider;
+  OrdersParams(this.ordersStatus,this.typeIsProvider);
+}
+
+enum OrdersStatus { pending, cancelled, completed }

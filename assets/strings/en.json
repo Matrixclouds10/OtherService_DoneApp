@@ -1,6 +1,9 @@
 {
   "en": "English",
+  "editAddress": "editAddress",
+  "searchByProviderName": "Search by provider name",
   "ar": "العربية",
+  "orderDetails": "orderDetails",
   "error": "Error",
   "serviceProvider": "serviceProvider",
   "newClient": "newClient",
