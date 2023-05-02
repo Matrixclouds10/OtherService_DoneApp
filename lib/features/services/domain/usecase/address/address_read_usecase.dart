@@ -3,9 +3,9 @@ import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/data/datasource/remote/exception/api_error_handler.dart';
-import 'package:weltweit/features/services/data/model/response/address/address_data.dart';
-import 'package:weltweit/features/services/data/model/response/address/address_item_model.dart';
-import 'package:weltweit/features/services/data/model/response/address/addresses_response.dart';
+import 'package:weltweit/features/services/data/models/response/address/address_data.dart';
+import 'package:weltweit/features/services/data/models/response/address/address_item_model.dart';
+import 'package:weltweit/features/services/data/models/response/address/addresses_response.dart';
 import '../../repository/address_repository.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
 

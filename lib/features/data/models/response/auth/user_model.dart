@@ -10,6 +10,7 @@ class UserModel {
   String? countryCode;
   String? image;
   String gender;
+  String? desc;
   int? isCompany;
 
   UserModel({
@@ -24,6 +25,7 @@ class UserModel {
     this.otpVerified,
     this.countryCode,
     this.image,
+    this.desc,
     this.isCompany,
   });
 
@@ -53,6 +55,7 @@ class UserModel {
         countryCode: json['country_code'] as String?,
         image: json['image'] as String?,
         gender: json['gender'] ?? "male",
+        desc: json['description'] ?? "",
         isCompany: json['is_company'] as int?,
       );
 

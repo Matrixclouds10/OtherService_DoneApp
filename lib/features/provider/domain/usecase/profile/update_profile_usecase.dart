@@ -30,6 +30,8 @@ class UpdateProfileParams {
   String? mobileNumber;
   String? countryCode;
   String? countryIso;
+  String? description;
+  int? countryId;
   bool genderIsMale;
 
   UpdateProfileParams({
@@ -39,11 +41,15 @@ class UpdateProfileParams {
     this.mobileNumber,
     this.countryCode,
     this.countryIso,
+    required this.description,
+    required this.countryId,
     this.genderIsMale = true,
   });
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    if (countryId != null) data['country_id'] = countryId;
+    if (description != null) data['description'] = description;
     if (name != null) data['name'] = name;
     if (email != null) data['email'] = email;
     if (mobileNumber != null) data['mobile'] = mobileNumber;

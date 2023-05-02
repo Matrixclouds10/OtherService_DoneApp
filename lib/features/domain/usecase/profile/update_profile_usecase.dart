@@ -25,6 +25,7 @@ class UpdateProfileUseCase
 
 class UpdateProfileParams {
   String? name;
+  int? countryId;
   String? email;
   File? image;
   String? mobileNumber;
@@ -38,6 +39,7 @@ class UpdateProfileParams {
     this.image,
     this.mobileNumber,
     this.countryCode,
+    required this.countryId,
     this.countryIso,
     this.genderIsMale = true,
   });
@@ -45,6 +47,7 @@ class UpdateProfileParams {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     if (name != null) data['name'] = name;
+    if (countryId != null) data['country_id'] = countryId;
     if (email != null) data['email'] = email;
     if (mobileNumber != null) data['mobile'] = mobileNumber;
     if (countryCode != null) data['country_code'] = countryCode;

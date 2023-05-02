@@ -49,8 +49,8 @@ abstract class AppRepository {
   Future<Either<ErrorModel, OrderModel>> createOrder({required CreateOrderParams params});
   Future<Either<ErrorModel, BaseResponse>> cancelOrder({required OrderCancelParams params});
 
-  Future<Either<ErrorModel, BaseResponse>> getAbout();
-  Future<Either<ErrorModel, BaseResponse>> getPolicy();
+  Future<Either<ErrorModel, String>> getAbout();
+  Future<Either<ErrorModel, String>> getPolicy();
   Future<Either<ErrorModel, BaseResponse>> sendContactUs({required ContactUsParams params});
   Future<Either<ErrorModel, BaseResponse>> sendChatMessage({required ChatSendMessageParams params});
   Future<Either<ErrorModel, List<ChatModel>>> getChatMessages({required ChatMessagesParams params});

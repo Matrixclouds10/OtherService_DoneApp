@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
-import 'package:weltweit/features/services/data/model/response/address/address_item_model.dart';
+import 'package:weltweit/features/services/data/models/response/address/address_item_model.dart';
 import 'package:weltweit/features/services/domain/usecase/address/address_create_usecase.dart';
 import 'package:weltweit/features/services/domain/usecase/address/address_delete_usecase.dart';
 import 'package:weltweit/features/services/domain/usecase/address/address_read_usecase.dart';

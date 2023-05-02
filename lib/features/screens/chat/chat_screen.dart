@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weltweit/core/services/local/cache_consumer.dart';
+import 'package:weltweit/core/services/local/storage_keys.dart';
+import 'package:weltweit/data/injection.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
+import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/logic/chat/chat_cubit.dart';
+import 'package:weltweit/features/services/data/models/response/chat/chat_model.dart';
 import 'package:weltweit/features/services/data/models/response/order/order.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
+import 'package:weltweit/features/widgets/app_text_tile.dart';
 import 'package:weltweit/presentation/component/component.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -16,7 +22,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
-  final List<Message> _messages = [];
+  List<ChatModel> _messages = [];
 
   @override
   void initState() {
@@ -34,6 +40,7 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: BlocBuilder<ChatCubit, ChatState>(
         builder: (context, state) {
+          if (_messages.isEmpty) _messages = state.data;
           switch (state.state) {
             case BaseState.initial:
             case BaseState.loading:
@@ -51,16 +58,16 @@ class _ChatScreenState extends State<ChatScreen> {
                         itemBuilder: (context, index) {
                           final message = _messages[index];
                           return Align(
-                            alignment: message.isMe ? Alignment.centerRight : Alignment.centerLeft,
+                            alignment: message.clientId != widget.orderModel.provider?.id  ? Alignment.centerRight : Alignment.centerLeft,
                             child: Container(
                               margin: const EdgeInsets.all(8.0),
                               padding: const EdgeInsets.all(8.0),
                               decoration: BoxDecoration(
-                                color: message.isMe ? Colors.blue : Colors.grey,
+                                color: message.clientId != widget.orderModel.provider?.id ? Colors.blue : Colors.grey,
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                               child: Text(
-                                message.text,
+                                message.message,
                                 style: TextStyle(color: Colors.white),
                               ),
                             ),
@@ -95,10 +102,10 @@ class _ChatScreenState extends State<ChatScreen> {
                           },
                           icon: Icon(Icons.send),
                         ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.camera_alt),
-                        ),
+                        // IconButton(
+                        //   onPressed: () {},
+                        //   icon: Icon(Icons.camera_alt),
+                        // ),
                         SizedBox(width: 8.0),
                       ],
                     ),
@@ -116,11 +123,12 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _addMessage(Message message) async {
+    AppPrefs prefs = getIt<AppPrefs>();
     try {
       _messageController.clear();
       await context.read<ChatCubit>().sendMessage(widget.orderModel.id, message.text);
       setState(() {
-        _messages.add(message);
+        _messages.add(ChatModel(id: 0, serviceOrderId: 0, clientId: 0, message: message.text, createdAt: DateTime.now(), updatedAt: DateTime.now(),),);
       });
     } catch (e) {
       AppSnackbar.show(context: context, message: e.toString(), type: SnackbarType.error);

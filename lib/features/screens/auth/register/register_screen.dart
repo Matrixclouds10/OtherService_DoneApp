@@ -9,7 +9,7 @@ import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/utils/logger.dart';
-import 'package:weltweit/features/core/routing/routes.dart';
+import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/services/domain/request_body/check_otp_body.dart';
 import 'package:weltweit/features/services/domain/request_body/register_body.dart';
@@ -39,12 +39,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool isConfirmTerms = true;
   File? image;
   Country? country = Country(
-    name: "Saudi Arabia",
-    flag: "🇸🇦",
-    code: "SA",
-    dialCode: "966",
-    minLength: 9,
-    maxLength: 9,
+    name: "Egypt",
+    flag: "🇪🇬",
+    code: "EG",
+    dialCode: "20",
+    minLength: 10,
+    maxLength: 10,
   );
 
   final _formKey = GlobalKey<FormState>();
@@ -87,6 +87,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           isConfirmTerms: isConfirmTerms,
           typeIsProvider: widget.typeIsProvider,
           isIndividual: joinAsIndividual,
+          countryId: 1,
         );
 
         var response = await BlocProvider.of<RegisterCubit>(context, listen: false).register(registerBody);
@@ -253,7 +254,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               label: tr(LocaleKeys.yourPhoneNumber),
               controller: _phoneController,
               textInputAction: TextInputAction.next,
-              countries: ["SA","EG"],
+              countries: ["EG"],
               onCountryChanged: (countryVal) {
                 country = countryVal;
               },

@@ -35,12 +35,12 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
   File? image;
   String? nerworkImage;
   Country? country = Country(
-    name: "Saudi Arabia",
-    flag: "🇸🇦",
-    code: "SA",
-    dialCode: "966",
-    minLength: 9,
-    maxLength: 9,
+    name: "Egypt",
+    flag: "🇪🇬",
+    code: "EG",
+    dialCode: "20",
+    minLength: 10,
+    maxLength: 10,
   );
   bool? isMale;
 
@@ -72,6 +72,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
           countryCode: country?.dialCode,
           countryIso: country?.name,
           genderIsMale: isMale ?? true,
+          countryId: 1,
         );
         await BlocProvider.of<ProfileCubit>(context, listen: false).updateProfile(updateProfileParams);
       }
@@ -264,7 +265,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
               defaultValue: _phoneController.text,
               textInputAction: TextInputAction.next,
               disableLengthCheck: true,
-              countries: ["SA","EG"],
+              countries: ["EG"],
               initialCountryCode: country?.dialCode,
               onCountryChanged: (value) {
                 country = value;

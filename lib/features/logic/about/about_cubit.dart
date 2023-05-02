@@ -13,15 +13,15 @@ class AboutCubit extends Cubit<AboutState> {
     this.aboutUseCase,
   ) : super(const AboutState());
 
-  Future<void> getAbout(NoParameters params) async {
-    initStates();
+  Future<void> getAbout() async {
+    if (state.data.isNotEmpty) return;
     emit(state.copyWith(state: BaseState.loading));
-    final result = await aboutUseCase(params);
+    final result = await aboutUseCase(NoParameters());
 
     result.fold(
       (error) => emit(state.copyWith(state: BaseState.error, error: error)),
       (data) {
-        emit(state.copyWith(state: BaseState.loaded,  data : ''));
+        emit(state.copyWith(state: BaseState.loaded, data: data));
       },
     );
   }

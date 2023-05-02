@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
+import 'package:weltweit/core/routing/routes.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/generated/assets.dart';
@@ -79,7 +80,15 @@ class MorePage extends StatelessWidget {
                         text: 'من نحن',
                         trailingText: "تعرف علينا",
                         onTap: () {
-                          Navigator.pushNamed(context, RoutesProvider.providerAboutUs);
+                          Navigator.pushNamed(context, Routes.about);
+                        }),
+                    Divider(height: 2, color: Colors.grey[300]),
+                    singleCustomListTile(
+                        image: "assets/images/info.png",
+                        text: 'الاستخدام والخصوصية',
+                        trailingText: "سياسة الاستخدام والخصوصية",
+                        onTap: () {
+                          Navigator.pushNamed(context, Routes.policy);
                         }),
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
@@ -87,7 +96,7 @@ class MorePage extends StatelessWidget {
                         text: 'تواصل معنا',
                         trailingText: "نحن في خدمتك دائما",
                         onTap: () {
-                          Navigator.pushNamed(context, RoutesProvider.providerContactUs);
+                          Navigator.pushNamed(context, Routes.contactUs);
                         }),
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(

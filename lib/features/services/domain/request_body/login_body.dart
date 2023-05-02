@@ -39,6 +39,6 @@ class LoginBody {
   }
 
   updateCode(String? code) {
-    _code = code ?? '966';
+    _code = code ?? '20';//TODO country code
   }
 }

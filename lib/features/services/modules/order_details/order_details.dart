@@ -48,7 +48,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
             ),
             icon: Icon(FontAwesomeIcons.message),
             onPressed: () {
-              NavigationService.push(Routes.ChatScreen,arguments: {
+              NavigationService.push(Routes.chatScreen, arguments: {
                 'orderModel': widget.orderModel,
               });
             },
@@ -99,6 +99,45 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                           child: CustomButton(
                             onTap: () {},
                             title: "موافقة",
+                            fontSize: 18,
+                            color: const Color(0xffE67E23),
+                            textColor: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                    ),
+                  ),
+              if (widget.orderModel.status.toLowerCase().contains("cancel"))
+                  Container(
+                    decoration: const BoxDecoration(color: Colors.white),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            const SizedBox(width: 10),
+                            const CustomText("حالة الطلب", bold: true).headerExtra(),
+                            const Spacer(),
+                            // const CustomText("300 ج", color: Color(0xffE67E23), bold: true).headerExtra(),
+                            // Chip(
+                            //   label: CustomText("مكتمل", color: Colors.white).header(),
+                            //   backgroundColor: Color(0xffE67E23),
+                            //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            // ),
+                            const SizedBox(width: 10),
+                          ],
+                        ),
+                        textWithDot(text: "تم إنشاء الطلب بنجاح وبإنتظار موافقة مزود الخدمة.", color: const Color(0xffE67E23)),
+                        textWithDot(text: "تم إلغاء الطلب من قبل طالب الخدمة.", color: Colors.red),
+                        const SizedBox(height: 10),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: CustomButton(
+                            onTap: () {
+                              NavigationService.goBack();
+                            },
+                            title: "عودة",
                             fontSize: 18,
                             color: const Color(0xffE67E23),
                             textColor: Colors.white,
@@ -229,15 +268,17 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                         children: [
                                           TextButton(
                                               onPressed: () async {
-                                                if(cancelReason.isEmpty){
+                                                if (cancelReason.isEmpty) {
                                                   AppSnackbar.show(context: context, message: "السبب مطوب");
                                                   return;
                                                 }
-                                                Navigator.pop(context);
                                                 if (context.mounted) {
                                                   bool result = await context.read<OrderCubit>().cancelOrder(id: widget.orderModel.id, reason: cancelReason);
                                                   if (result) {
                                                     if (context.mounted) Navigator.pop(context);
+                                                    if (context.mounted) Navigator.pop(context);
+                                                    if (context.mounted) AppSnackbar.show(context: context, message: "تم إلغاء الطلب بنجاح");
+
                                                   }
                                                 }
                                               },

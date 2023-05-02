@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/core/routing/platform_page_route.dart';
 import 'package:weltweit/core/routing/undefined_route_screen.dart';
-import 'package:weltweit/features/core/routing/routes.dart';
+import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/screens/about/about_page.dart';
 import 'package:weltweit/features/screens/auth/login/login_screen.dart';
 import 'package:weltweit/features/screens/auth/otp/otp_screen.dart';
@@ -41,12 +41,8 @@ class RouteServicesGenerator {
         return platformPageRoute(Theme(data: servicesTheme, child: const MyAddressesPage()));
       case RoutesServices.servicesOrders:
         return platformPageRoute(Theme(data: servicesTheme, child: const OrdersPage()));
-      case RoutesServices.servicesAboutUs:
-        return platformPageRoute(Theme(data: servicesTheme, child: const AboutPage()));
       case RoutesServices.servicesReservationPage:
         return platformPageRoute(Theme(data: servicesTheme, child: ReservationPage(providersModel: arguments!['providersModel'])));
-      case RoutesServices.servicesContactUs:
-        return platformPageRoute(Theme(data: servicesTheme, child: const ContactPage()));
       case RoutesServices.servicesSearch:
         return platformPageRoute(Theme(data: servicesTheme, child: const SearchPage()));
       case RoutesServices.servicesOrderDetails:

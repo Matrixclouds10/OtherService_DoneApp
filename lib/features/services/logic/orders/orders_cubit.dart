@@ -65,9 +65,9 @@ class OrdersCubit extends Cubit<OrdersState> {
       cancelledState: BaseState.initial,
       completedState: BaseState.initial,
       error: null,
-      cancelledData: null,
-      completedData: null,
-      pendingData: null,
+      cancelledData: [],
+      completedData: [],
+      pendingData: [],
     ));
   }
 }

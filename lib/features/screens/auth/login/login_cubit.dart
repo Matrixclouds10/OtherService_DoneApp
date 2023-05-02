@@ -19,7 +19,7 @@ class LoginCubit extends Cubit<LoginlState> {
         super(LoginViewInitial());
 
   ///variables
-  final LoginBody _body = LoginBody(phone: "", password: "", deviceToken: '',code: '966');
+  final LoginBody _body = LoginBody(phone: "", password: "", deviceToken: '',code: '20');//TODO country code
 
   ///getters
   LoginBody get body => _body;

@@ -44,6 +44,7 @@ class AuthRepositoryImp implements AuthRepository {
         'country_code': registerBody.country.dialCode,
         'country_iso': registerBody.country.code,
         'is_individual': registerBody.isIndividual,
+        'country_id': 1, //TODO fix
       });
       Response response = await _dioClient.post(
         url,

@@ -13,15 +13,15 @@ class PolicyCubit extends Cubit<PolicyState> {
     this.policyUseCase,
   ) : super(const PolicyState());
 
-  Future<void> getPolicy(NoParameters params) async {
+  Future<void> getPolicy() async {
     initStates();
     emit(state.copyWith(state: BaseState.loading));
-    final result = await policyUseCase(params);
+    final result = await policyUseCase(NoParameters());
 
     result.fold(
       (error) => emit(state.copyWith(state: BaseState.error, error: error)),
       (data) {
-        emit(state.copyWith(state: BaseState.loaded,  data : ''));
+        emit(state.copyWith(state: BaseState.loaded,  data : data ));
       },
     );
   }

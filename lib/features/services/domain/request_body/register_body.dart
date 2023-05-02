@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:weltweit/presentation/component/inputs/phone_country/countries.dart';
 
-const Country _countryEg = Country(
-  name: "Saudi Arabia",
-  flag: "🇸🇦",
-  code: "SA",
-  dialCode: "966",
-  minLength: 9,
-  maxLength: 9,
+ const Country _countryEg = Country(
+    name: "Egypt",
+    flag: "🇪🇬",
+    code: "EG",
+    dialCode: "20",
+    minLength: 10,
+    maxLength: 10,
 );
 
 class RegisterBody {
@@ -18,6 +18,7 @@ class RegisterBody {
   final String password;
   final String confirmPassword;
   final Country country;
+  final int countryId;
   final bool isConfirmTerms;
   final File? image;
   final bool? isIndividual;
@@ -34,6 +35,7 @@ class RegisterBody {
     this.isConfirmTerms = false,
     this.isIndividual = true,
     required this.typeIsProvider,
+    required this.countryId,
   });
 
   copyWith({
@@ -58,6 +60,7 @@ class RegisterBody {
       isConfirmTerms: isConfirmTerms ?? this.isConfirmTerms,
       isIndividual: isIndividual ?? this.isIndividual,
       image: image ?? this.image,
+      countryId: 1, //TODO fix this
       typeIsProvider: typeIsProvider ?? this.typeIsProvider,
     );
   }
@@ -70,6 +73,7 @@ class RegisterBody {
     data['password'] = password;
     data['country_code'] = country.dialCode;
     data['country_iso'] = country.code;
+    data['country_id'] = countryId;
     if (isIndividual != null) data['is_company'] = isIndividual! ? 0 : 1;
 
     return data;

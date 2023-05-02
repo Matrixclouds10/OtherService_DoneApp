@@ -9,6 +9,7 @@ import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
 import 'package:weltweit/features/services/data/app_urls/app_url.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
+import 'package:weltweit/features/services/data/models/response/about/about_response.dart';
 import 'package:weltweit/features/services/data/models/response/chat/chat_model.dart';
 import 'package:weltweit/features/services/data/models/response/order/order.dart';
 import 'package:weltweit/features/services/data/models/response/portfolio/portfolio_image.dart';
@@ -349,13 +350,19 @@ class AppRepositoryImp implements AppRepository {
   }
 
   @override
-  Future<Either<ErrorModel, BaseResponse>> getAbout() async {
+  Future<Either<ErrorModel, String>> getAbout() async {
     String url = AppURL.about;
     NetworkCallType type = NetworkCallType.get;
     Map<String, dynamic> data = {};
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
-
-    return result.fold((l) => Left(l), (r) => Right(r));
+    return result.fold((l) => Left(l), (r) {
+      try {
+        String data = '${r.data['about_us']}';
+        return Right(data);
+      } catch (e) {
+        return Left(ErrorModel(errorMessage: e.toString()));
+      }
+    });
   }
 
   @override
@@ -365,18 +372,24 @@ class AppRepositoryImp implements AppRepository {
     Map<String, dynamic> data = params.toJson();
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
 
-    //TODO: fix this
-    return result.fold((l) => Left(l), (r) => Right([]));
+    return result.fold((l) => Left(l), (r) => Right(r.data.map<ChatModel>((e) => ChatModel.fromJson(e)).toList()));
   }
 
   @override
-  Future<Either<ErrorModel, BaseResponse>> getPolicy() async {
+  Future<Either<ErrorModel, String>> getPolicy() async {
     String url = AppURL.privacy;
     NetworkCallType type = NetworkCallType.get;
     Map<String, dynamic> data = {};
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
 
-    return result.fold((l) => Left(l), (r) => Right(r));
+    return result.fold((l) => Left(l), (r) {
+      try {
+        String data = '${r.data['privacy']}';
+        return Right(data);
+      } catch (e) {
+        return Left(ErrorModel(errorMessage: e.toString()));
+      }
+    });
   }
 
   @override

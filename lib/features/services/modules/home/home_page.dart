@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
-import 'package:weltweit/features/core/routing/routes.dart';
+import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/services/modules/home/home_offers.dart';
 import 'package:weltweit/features/services/modules/home/home_services.dart';
 import 'package:weltweit/generated/assets.dart';

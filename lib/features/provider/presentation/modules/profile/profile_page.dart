@@ -88,6 +88,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                       child: ServiceProviderItemWidget(
                         providersModel: ProvidersModel(
                           name: state.data?.name,
+                          description: state.data?.desc,
                           image: state.data?.image,
                           mobileNumber: state.data?.mobileNumber,
                           email: state.data?.email,

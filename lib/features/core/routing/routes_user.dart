@@ -1,7 +1,6 @@
 class RoutesServices {
 
 
-
   static const String servicesSplashScreen = "/servicesSplashScreen";
   static const String servicesOtpScreen = "/servicesOtpScreen";
   static const String servicesRegisterScreen = "/servicesRegisterScreen";
@@ -16,8 +15,6 @@ class RoutesServices {
   static const String servicesProviders = "/servicesProviders";
   static const String servicesProvider = "/servicesProvider";
   static const String servicesNotifications = "/servicesNotifications";
-  static const String servicesContactUs = "/servicesContactUs";
-  static const String servicesAboutUs = "/servicesAboutUs";
   static const String servicesMyAddresses = "/servicesMyAddresses";
   static const String servicesOrders = "/servicesOrders";
   static const String servicesOrderDetails = "/servicesOrderDetails";

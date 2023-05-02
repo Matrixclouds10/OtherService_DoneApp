@@ -7,8 +7,6 @@ class RoutesProvider {
   static const String providerProviders = "/provider/servicesProviders";
   static const String providerProvider = "/provider/servicesProvider";
   static const String providerNotifications = "/provider/servicesNotifications";
-  static const String providerContactUs = "/provider/servicesContactUs";
-  static const String providerAboutUs = "/provider/servicesAboutUs";
   static const String providerMyAddresses = "/provider/servicesMyAddresses";
   static const String providerOrders = "/provider/servicesOrders";
   static const String providerOrderDetails = "/provider/servicesOrderDetails";

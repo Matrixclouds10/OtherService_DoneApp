@@ -40,12 +40,9 @@ class RouteProviderGenerator {
         return platformPageRoute(const MyAddressesPage());
       case RoutesProvider.providerOrders:
         return platformPageRoute(const OrdersPage());
-      case RoutesProvider.providerAboutUs:
-        return platformPageRoute(const AboutPage());
+      
       case RoutesProvider.providerReservationPage:
         return platformPageRoute(const ReservationPage());
-      case RoutesProvider.providerContactUs:
-        return platformPageRoute(const ContactPage());
       case RoutesProvider.providerSearch:
         return platformPageRoute(const SearchPage());
       case RoutesProvider.providerDocuments:

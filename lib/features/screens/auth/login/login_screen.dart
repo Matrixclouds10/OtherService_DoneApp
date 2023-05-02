@@ -13,7 +13,7 @@ import 'package:weltweit/data/injection.dart';
 import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/features/data/models/base/response_model.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
-import 'package:weltweit/features/core/routing/routes.dart';
+import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/services/domain/request_body/check_otp_body.dart';
 import 'package:weltweit/features/services/domain/request_body/login_body.dart';
@@ -224,7 +224,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
               onCountryChanged: _viewModel.onCountryCode,
               disableLengthCheck: true,
               textInputAction: TextInputAction.next,
-              countries: ["SA","EG"],
+              countries: ["EG"],
             ),
             const VerticalSpace(kScreenPaddingNormal),
             CustomTextFieldPassword(hint: tr(LocaleKeys.password), controller: _passwordController),

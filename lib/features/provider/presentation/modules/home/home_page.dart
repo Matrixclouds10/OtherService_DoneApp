@@ -35,6 +35,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+   
     context.read<OrdersCubit>().getPendingOrders(typeIsProvider: true);
     context.read<OrdersCubit>().getCompletedOrders(typeIsProvider: true);
   }
@@ -76,6 +77,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           color: Colors.white,
           child: TabBar(
             controller: _tabController,
+
             indicatorColor: Colors.transparent,
             labelColor: Colors.black,
             onTap: (index) {
@@ -91,6 +93,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         Expanded(
           child: TabBarView(
             controller: _tabController,
+          physics: NeverScrollableScrollPhysics(),
             children: [
               Container(
                 color: AppColorLight().kScaffoldBackgroundColor,
@@ -148,7 +151,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 child: ListView(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   children: [
-                    // for (var i = 0; i < 4; i++)
+                   newOrders(),
                     //   OrderItemWidget(
                     //     avatar: Assets.imagesAvatar,
                     //     name: "مسعد معوض",
@@ -229,50 +232,91 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         }
         return Column(
           children: [
-            for (var i = 0; i < state.pendingData.length; i++)
-              GestureDetector(
-                onTap: () {},
-                child: OrderItemWidgetClient(
-                  orderModel: state.pendingData[i],
-                  // name: state.pendingData[i].provider?.name ?? '',
-                  // profession: '',
-                  // date: DateFormat('yyyy-MM-dd').format(state.pendingData[i].date),
-                  // time: DateFormat('HH:mm').format(state.pendingData[i].date),
-                  // orderStatus: state.pendingData[i].status,
-                  // price: '',
-                  // tags: const [],
+              ...state.pendingData
+                .where((element) => element.status.toLowerCase() == 'accepted')
+                .map((e) => GestureDetector(
+                      onTap: () {},
+                      child: OrderItemWidgetClient(
+                        orderModel: e,
+                        // name: state.pendingData[i].provider?.name ?? '',
+                        // profession: '',
+                        // date: DateFormat('yyyy-MM-dd').format(state.pendingData[i].date),
+                        // time: DateFormat('HH:mm').format(state.pendingData[i].date),
+                        // orderStatus: state.pendingData[i].status,
+                        // price: '',
+                        // tags: const [],
+                      ),
+                    ))
+                .toList(),
+          ],
+        );
+      },
+    );
+  }
+ Widget newOrders() {
+    return BlocBuilder<OrdersCubit, OrdersState>(
+      builder: (context, state) {
+        if (state.pendingState == BaseState.error) {
+          return ErrorView(message: state.error?.errorMessage ?? "حدث خطأ ما");
+        }
+        if (state.pendingState == BaseState.loading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (state.pendingState == BaseState.loaded && state.pendingData.isEmpty) {
+          return Column(
+            children: [
+              Image.asset(Assets.imagesBaloon, height: 200, width: 200),
+              SizedBox(height: 12),
+              CustomText(LocaleKeys.cantGetNewOrders.tr(), color: AppColorLight().kAccentColor).header(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Column(
+                  children: [
+                    ...[
+                      LocaleKeys.makeSureToSelectServicesYouProvide.tr(),
+                      LocaleKeys.makeSureToUploadAllFiles.tr(),
+                      LocaleKeys.makeSureToBeOnline.tr(),
+                    ]
+                        .map((e) => AppTextTile(
+                              title: CustomText(
+                                e,
+                                size: 16,
+                                pv: 0,
+                                align: TextAlign.start,
+                              ),
+                              isTitleExpanded: true,
+                              leading: Icon(Icons.circle, size: 12),
+                            ))
+                        .toList(),
+                  ],
                 ),
-              )
+              ),
+              SizedBox(height: 20),
+            ],
+          );
+        }
+        return Column(
+          children: [
+          ...state.pendingData
+                .where((element) => element.status.toLowerCase() == 'pending')
+                .map((e) => GestureDetector(
+                      onTap: () {},
+                      child: OrderItemWidgetClient(
+                        orderModel: e,
+                        // name: state.pendingData[i].provider?.name ?? '',
+                        // profession: '',
+                        // date: DateFormat('yyyy-MM-dd').format(state.pendingData[i].date),
+                        // time: DateFormat('HH:mm').format(state.pendingData[i].date),
+                        // orderStatus: state.pendingData[i].status,
+                        // price: '',
+                        // tags: const [],
+                      ),
+                    ))
+                .toList(),
           ],
         );
       },
     );
   }
 
-  completedOrders() {
-    return BlocBuilder<OrdersCubit, OrdersState>(
-      builder: (context, state) {
-        if (state.completedState == BaseState.error) {
-          return ErrorView(message: state.error?.errorMessage ?? "حدث خطأ ما");
-        }
-        if (state.completedState == BaseState.loading) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (state.completedState == BaseState.loaded && state.completedData.isEmpty) {
-          return EmptyView(message: "لا يوجد طلبات");
-        }
-        return Column(
-          children: [
-            for (var i = 0; i < state.completedData.length; i++)
-              GestureDetector(
-                onTap: () {},
-                child: OrderItemWidget(
-                  orderModel: state.completedData[i],
-                ),
-              )
-          ],
-        );
-      },
-    );
-  }
 }

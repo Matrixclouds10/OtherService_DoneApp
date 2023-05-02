@@ -3,6 +3,7 @@ import 'package:weltweit/features/services/data/models/response/services/service
 class ProvidersModel {
   int? id;
   String? name;
+  String? description;
   String? email;
   String? mobileNumber;
   String? countryCode;
@@ -22,6 +23,7 @@ class ProvidersModel {
     this.id,
     this.name,
     this.email,
+    this.description,
     this.mobileNumber,
     this.countryCode,
     this.otpVerified,
@@ -42,6 +44,7 @@ class ProvidersModel {
       id: json['id'] as int?,
       name: json['name'] as String?,
       email: json['email'] as String?,
+      description: json['description'] as String?,
       mobileNumber: json['mobile_number'] as String?,
       countryCode: json['country_code'] as String?,
       otpVerified: json['otp_verified'] as int?,

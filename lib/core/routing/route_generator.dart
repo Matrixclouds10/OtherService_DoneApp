@@ -4,7 +4,10 @@ import 'package:weltweit/core/routing/routes.dart';
 import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/features/core/routing/route_generator.dart';
 import 'package:weltweit/features/core/routing/route_generator_provider.dart';
+import 'package:weltweit/features/screens/about/about_page.dart';
 import 'package:weltweit/features/screens/chat/chat_screen.dart';
+import 'package:weltweit/features/screens/contact/contact_page.dart';
+import 'package:weltweit/features/screens/policy/policy_page.dart';
 import 'package:weltweit/features/screens/splash/splash_screen.dart';
 import 'package:weltweit/features/services/data/models/response/order/order.dart';
 
@@ -25,14 +28,16 @@ class RouteGenerator {
       return RouteServicesGenerator.generateServicesBaseRoute(settings);
     } else if (settings.name == '/') {
       return platformPageRoute(Theme(data: servicesTheme, child: SplashScreen()));
-    } else if (settings.name == Routes.ChatScreen) {
+    } else if (settings.name == Routes.chatScreen) {
       Map? arguments = settings.arguments as Map<String, dynamic>?;
       OrderModel orderModel = arguments!['orderModel'] as OrderModel;
-      return platformPageRoute(Theme(
-          data: servicesTheme,
-          child: ChatScreen(
-            orderModel: orderModel,
-          )));
+      return platformPageRoute(Theme(data: servicesTheme, child: ChatScreen(orderModel: orderModel)));
+    } else if (settings.name == Routes.about) {
+      return platformPageRoute(const AboutPage());
+    } else if (settings.name == Routes.policy) {
+      return platformPageRoute( PolicyPage());
+    } else if (settings.name == Routes.contactUs) {
+      return platformPageRoute(const ContactPage());
     } else {
       return platformPageRoute(UndefinedRouteScreen(settings.name));
     }

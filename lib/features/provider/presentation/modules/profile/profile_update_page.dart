@@ -29,6 +29,7 @@ class ProfileUpdatePage extends StatefulWidget {
 
 class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _descController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
 
@@ -37,12 +38,12 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
   File? image;
   String? nerworkImage;
   Country? country = Country(
-    name: "Saudi Arabia",
-    flag: "🇸🇦",
-    code: "SA",
-    dialCode: "966",
-    minLength: 9,
-    maxLength: 9,
+    name: "Egypt",
+    flag: "🇪🇬",
+    code: "EG",
+    dialCode: "20",
+    minLength: 10,
+    maxLength: 10,
   );
   bool isMale = true;
 
@@ -55,6 +56,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
         _formKey.currentState!.save();
 
         String name = _nameController.text;
+        String desc = _descController.text;
         String phone = _phoneController.text;
         String email = _emailController.text;
 
@@ -74,6 +76,8 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
           countryCode: country?.dialCode,
           countryIso: country?.name,
           genderIsMale: isMale,
+          countryId: 1, //TODO fix
+          description: desc
         );
         await BlocProvider.of<ProfileProviderCubit>(context, listen: false).updateProfile(updateProfileParams);
       }
@@ -171,6 +175,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                 return const Center(child: CircularProgressIndicator());
               case BaseState.loaded:
                 _nameController.text = state.data?.name ?? "";
+                _descController.text = state.data?.desc ?? "";
                 _emailController.text = state.data?.email ?? "";
                 _phoneController.text = state.data?.mobileNumber ?? "";
                 nerworkImage = state.data?.image;
@@ -275,7 +280,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
               defaultValue: _phoneController.text,
               disableLengthCheck: true,
               initialCountryCode: country?.dialCode,
-              countries: ["SA","EG"],
+              countries: ["EG"],
               onCountryChanged: (value) {
                 country = value;
               },
@@ -303,7 +308,14 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
             //     ).toList(),
             //   ],
             // ),
-           
+            const VerticalSpace(kScreenPaddingNormal),
+             CustomTextFieldArea(
+              controller: _descController,
+              hint: LocaleKeys.descrption.tr(),
+              textInputAction: TextInputAction.next,
+              autofocus: false,
+              label: LocaleKeys.descrption.tr(),
+            ),
             SizedBox(height: 8)
           ],
         ));

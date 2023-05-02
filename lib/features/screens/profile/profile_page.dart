@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
-import 'package:weltweit/features/core/routing/routes.dart';
+import 'package:weltweit/core/routing/routes.dart';
+import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 
 import 'package:weltweit/features/core/widgets/custom_text.dart';
@@ -121,7 +122,16 @@ class ProfilePage extends StatelessWidget {
                         text: 'من نحن',
                         trailingText: "",
                         onTap: () {
-                          Navigator.pushNamed(context, RoutesServices.servicesAboutUs);
+                          Navigator.pushNamed(context, Routes.about);
+                        }),
+
+                    Divider(height: 2, color: Colors.grey[300]),
+                    singleCustomListTile(
+                        icon: Icons.arrow_forward_ios,
+                        text: 'الاستخدام والخصوصية',
+                        trailingText: "",
+                        onTap: () {
+                          Navigator.pushNamed(context, Routes.policy);
                         }),
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
@@ -129,7 +139,7 @@ class ProfilePage extends StatelessWidget {
                         text: 'تواصل معنا',
                         trailingText: "",
                         onTap: () {
-                          Navigator.pushNamed(context, RoutesServices.servicesContactUs);
+                          Navigator.pushNamed(context, Routes.contactUs);
                         }),
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(

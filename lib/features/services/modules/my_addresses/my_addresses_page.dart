@@ -7,7 +7,7 @@ import 'package:weltweit/data/injection.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
-import 'package:weltweit/features/services/data/model/response/address/address_item_model.dart';
+import 'package:weltweit/features/services/data/models/response/address/address_item_model.dart';
 import 'package:weltweit/features/services/domain/usecase/address/address_create_usecase.dart';
 import 'package:weltweit/features/services/domain/usecase/address/address_delete_usecase.dart';
 import 'package:weltweit/features/services/domain/usecase/address/address_update_usecase.dart';
