@@ -41,7 +41,6 @@ abstract class AppRepository {
 
   //*Favorites
   Future<Either<ErrorModel, BaseResponse>> addToFavorites({required int id});
-  Future<Either<ErrorModel, BaseResponse>> removeFromFavorites({required int id});
   Future<Either<ErrorModel, List<ProvidersModel>>> getFavorites();
 
   Future<Either<ErrorModel, List<OrderModel>>> getOrders({required OrdersParams params});

@@ -267,17 +267,7 @@ class AppRepositoryImp implements AppRepository {
     });
   }
 
-  @override
-  Future<Either<ErrorModel, BaseResponse>> removeFromFavorites({required int id}) async {
-    String url = AppURL.addFavorite;
-    NetworkCallType type = NetworkCallType.post;
-    Map<String, dynamic> data = {
-      "provider_id": id,
-    };
-    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
 
-    return result.fold((l) => Left(l), (r) => Right(r));
-  }
 
   @override
   Future<Either<ErrorModel, OrderModel>> createOrder({required CreateOrderParams params}) async {
