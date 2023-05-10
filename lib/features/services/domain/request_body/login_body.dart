@@ -1,44 +1,46 @@
-class LoginBody {
-  String _phone;
-  String _code;
-  String _password;
-  String _deviceToken;
+// import 'package:weltweit/features/data/models/response/country/country_model.dart';
 
-  LoginBody({
-    required String phone,
-    required String code ,
-    required String password,
-    required String deviceToken,
-  })  : _phone = phone,
-        _code = code,
-        _password = password,
-        _deviceToken = deviceToken;
+// class LoginBody {
+//   String _phone;
+//   CountryModel _countryModel;
+//   String _password;
+//   String _deviceToken;
 
-  String get deviceToken => _deviceToken;
-  String get password => _password;
-  String get code => _code;
-  String get phone => _phone;
+//   LoginBody({
+//     required String phone,
+//     required CountryModel countryModel,
+//     required String password,
+//     required String deviceToken,
+//   })  : _phone = phone,
+//         _countryModel = countryModel,
+//         _password = password,
+//         _deviceToken = deviceToken;
 
-  Map<String, dynamic> toJson() {
-    return {
-      "mobile_number": _phone,
-      "password": _password,
-      "country_code": _code,
-      "fcm_token": _deviceToken,
-    };
-  }
+//   String get deviceToken => _deviceToken;
+//   String get password => _password;
+//   CountryModel get countryModel => _countryModel;
+//   String get phone => _phone;
 
-  setData({
-    required String phone,
-    required String password,
-    required String deviceToken,
-  }) {
-    _phone = phone;
-    _password = password;
-    _deviceToken = deviceToken;
-  }
+//   Map<String, dynamic> toJson() {
+//     return {
+//       "mobile_number": _phone,
+//       "password": _password,
+//       "country_countryModel": _countryModel,
+//       "fcm_token": _deviceToken,
+//     };
+//   }
 
-  updateCode(String? code) {
-    _code = code ?? '20';//TODO country code
-  }
-}
+//   setData({
+//     required String phone,
+//     required String password,
+//     required String deviceToken,
+//   }) {
+//     _phone = phone;
+//     _password = password;
+//     _deviceToken = deviceToken;
+//   }
+
+//   updateCountry(CountryModel countryModel) {
+//     _countryModel = countryModel;
+//   }
+// }

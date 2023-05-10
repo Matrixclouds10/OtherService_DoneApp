@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:weltweit/features/data/models/base/api_response.dart';
+import 'package:weltweit/features/domain/usecase/auth/sign_in_usecase.dart';
 import 'package:weltweit/features/services/domain/request_body/check_otp_body.dart';
-import 'package:weltweit/features/services/domain/request_body/login_body.dart';
 import 'package:weltweit/features/services/domain/request_body/register_body.dart';
 
 import '../../domain/repositoy/auth_repo.dart';
@@ -18,7 +18,7 @@ class AuthRepositoryImp implements AuthRepository {
     required DioClient dioClient,
   }) : _dioClient = dioClient;
   @override
-  Future<ApiResponse> login({required LoginBody loginBody, required bool typeIsProvider}) async {
+  Future<ApiResponse> login({required LoginParams loginBody, required bool typeIsProvider}) async {
     try {
       String url = typeIsProvider ? AppURL.kLoginProviderURI : AppURL.kLoginURI;
       Response response = await _dioClient.post(
@@ -41,10 +41,10 @@ class AuthRepositoryImp implements AuthRepository {
         'phone': registerBody.mobile,
         'password': registerBody.password,
         'mobile_number': registerBody.mobile,
-        'country_code': registerBody.country.dialCode,
-        'country_iso': registerBody.country.code,
+        'country_code': registerBody.country.code ?? '20',
+        'country_iso': registerBody.country.code ?? 'EG',
         'is_individual': registerBody.isIndividual,
-        'country_id': 1, //TODO fix
+        'country_id':registerBody.country.id,
       });
       Response response = await _dioClient.post(
         url,

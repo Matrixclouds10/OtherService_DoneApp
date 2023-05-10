@@ -10,18 +10,22 @@ import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/data/injection.dart';
+import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/features/data/models/base/response_model.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
+import 'package:weltweit/features/data/models/response/country/country_model.dart';
+import 'package:weltweit/features/domain/usecase/auth/sign_in_usecase.dart';
+import 'package:weltweit/features/logic/country/country_cubit.dart';
 import 'package:weltweit/features/services/domain/request_body/check_otp_body.dart';
-import 'package:weltweit/features/services/domain/request_body/login_body.dart';
 import 'package:weltweit/features/widgets/app_back_button.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
+import 'package:weltweit/presentation/component/inputs/phone_country/custom_text_filed_phone_country.dart';
 import 'package:weltweit/presentation/component/text/click_text.dart';
 
 import 'login_cubit.dart';
@@ -39,6 +43,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
 
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  CountryModel? _selectedCountry ;
   bool typeIsProvider = true;
   late TabController _tabController;
   @override
@@ -63,11 +68,22 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
 
         String phone = _phoneController.text;
         String password = _passwordController.text;
-        var response = await BlocProvider.of<LoginCubit>(context, listen: false).login(
-          phone,
-          password,
-          typeIsProvider,
+
+        LoginParams loginBody = LoginParams(
+          phone: phone,
+          password: password,
+          countryModel: _selectedCountry,
         );
+        if(_selectedCountry == null){
+          AppSnackbar.show(
+            context: context,
+            title: LocaleKeys.notification,
+            message: LocaleKeys.selectCountry.tr(),
+            type: SnackbarType.error,
+          );
+          return;
+        }
+        var response = await BlocProvider.of<LoginCubit>(context, listen: false).login(loginBody, typeIsProvider);
 
         if (response.isSuccess) {
           UserModel userEntity = response.data;
@@ -85,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
         } else if (response.error?.code == 301) {
           NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
             'phone': _phoneController.text,
-            'code': _viewModel.body.code,
+            'code': _viewModel.params.countryModel?.code ?? '20',
             'checkOTPType': CheckOTPType.register,
             'typeIsProvider': typeIsProvider,
           });
@@ -113,7 +129,6 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     LoginlState state = context.watch<LoginCubit>().state;
-    LoginBody body = context.watch<LoginCubit>().body;
 
     return SafeArea(
       child: Scaffold(
@@ -155,7 +170,6 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                               //Tabs
                               TabBar(
                                 controller: _tabController,
-                                
                                 tabs: const [
                                   Tab(child: CustomText("مزود خدمة")),
                                   Tab(child: CustomText("مستخدم")),
@@ -163,7 +177,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                               ),
 
                               VerticalSpace(kScreenPaddingLarge.h),
-                              _buildForm(body),
+                              _buildForm(),
                               VerticalSpace(kScreenPaddingNormal.h),
                               Align(
                                 alignment: Alignment.bottomLeft,
@@ -213,19 +227,19 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     );
   }
 
-  _buildForm(LoginBody body) {
+  _buildForm() {
     return Form(
         key: _formKey,
         child: Column(
           children: [
-            CustomTextFieldPhoneCode(
-              label: tr(LocaleKeys.yourPhoneNumber),
+              CustomTextFieldPhoneCountry(
               controller: _phoneController,
-              onCountryChanged: _viewModel.onCountryCode,
-              disableLengthCheck: true,
-              textInputAction: TextInputAction.next,
-              countries: ["EG"],
+              selectedCountry: _selectedCountry,
+              onCountryChanged: (value) {
+                _selectedCountry = value;
+              },
             ),
+       
             const VerticalSpace(kScreenPaddingNormal),
             CustomTextFieldPassword(hint: tr(LocaleKeys.password), controller: _passwordController),
           ],

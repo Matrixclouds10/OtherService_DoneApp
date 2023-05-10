@@ -1,15 +1,6 @@
 import 'dart:io';
 
-import 'package:weltweit/presentation/component/inputs/phone_country/countries.dart';
-
- const Country _countryEg = Country(
-    name: "Egypt",
-    flag: "🇪🇬",
-    code: "EG",
-    dialCode: "20",
-    minLength: 10,
-    maxLength: 10,
-);
+import 'package:weltweit/features/data/models/response/country/country_model.dart';
 
 class RegisterBody {
   final String name;
@@ -17,8 +8,7 @@ class RegisterBody {
   final String email;
   final String password;
   final String confirmPassword;
-  final Country country;
-  final int countryId;
+  final CountryModel country;
   final bool isConfirmTerms;
   final File? image;
   final bool? isIndividual;
@@ -31,11 +21,10 @@ class RegisterBody {
     this.email = '',
     this.password = '',
     this.confirmPassword = '',
-    this.country = _countryEg,
     this.isConfirmTerms = false,
     this.isIndividual = true,
+    required this.country,
     required this.typeIsProvider,
-    required this.countryId,
   });
 
   copyWith({
@@ -44,7 +33,7 @@ class RegisterBody {
     String? email,
     String? password,
     String? confirmPassword,
-    Country? country,
+    CountryModel? country,
     bool? isConfirmTerms,
     bool? isIndividual,
     bool? typeIsProvider,
@@ -60,7 +49,6 @@ class RegisterBody {
       isConfirmTerms: isConfirmTerms ?? this.isConfirmTerms,
       isIndividual: isIndividual ?? this.isIndividual,
       image: image ?? this.image,
-      countryId: 1, //TODO fix this
       typeIsProvider: typeIsProvider ?? this.typeIsProvider,
     );
   }
@@ -71,9 +59,9 @@ class RegisterBody {
     data['mobile_number'] = mobile;
     data['email'] = email;
     data['password'] = password;
-    data['country_code'] = country.dialCode;
-    data['country_iso'] = country.code;
-    data['country_id'] = countryId;
+    data['country_code'] = country.code ?? '20';
+    data['country_iso'] = country.code ?? 'EG';
+    data['country_id'] = country.id ;
     if (isIndividual != null) data['is_company'] = isIndividual! ? 0 : 1;
 
     return data;

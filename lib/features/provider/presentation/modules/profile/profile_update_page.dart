@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/extensions/num_extensions.dart';
 import 'package:weltweit/core/resources/resources.dart';
+import 'package:weltweit/features/data/models/response/country/country_model.dart';
+import 'package:weltweit/features/logic/country/country_cubit.dart';
 import 'package:weltweit/features/provider/domain/usecase/profile/change_password_usecase.dart';
 import 'package:weltweit/features/provider/domain/usecase/profile/update_profile_usecase.dart';
 import 'package:weltweit/features/provider/logic/profile/profile_cubit.dart';
@@ -17,8 +19,7 @@ import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
-
-
+import 'package:weltweit/presentation/component/inputs/phone_country/custom_text_filed_phone_country.dart';
 
 class ProfileUpdatePage extends StatefulWidget {
   const ProfileUpdatePage({super.key});
@@ -37,14 +38,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
   final TextEditingController _confirmPasswordController = TextEditingController();
   File? image;
   String? nerworkImage;
-  Country? country = Country(
-    name: "Egypt",
-    flag: "🇪🇬",
-    code: "EG",
-    dialCode: "20",
-    minLength: 10,
-    maxLength: 10,
-  );
+  CountryModel? country;
   bool isMale = true;
 
   final _formKey = GlobalKey<FormState>();
@@ -69,16 +63,15 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
           return;
         }
         UpdateProfileParams updateProfileParams = UpdateProfileParams(
-          name: name,
-          mobileNumber: phone,
-          email: email,
-          image: image,
-          countryCode: country?.dialCode,
-          countryIso: country?.name,
-          genderIsMale: isMale,
-          countryId: 1, //TODO fix
-          description: desc
-        );
+            name: name,
+            mobileNumber: phone,
+            email: email,
+            image: image,
+            countryCode: country?.code,
+            countryIso: country?.title,
+            genderIsMale: isMale,
+            countryId: 1, //TODO fix
+            description: desc);
         await BlocProvider.of<ProfileProviderCubit>(context, listen: false).updateProfile(updateProfileParams);
       }
     }
@@ -179,11 +172,8 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                 _emailController.text = state.data?.email ?? "";
                 _phoneController.text = state.data?.mobileNumber ?? "";
                 nerworkImage = state.data?.image;
-                if (countries.where((element) => element.dialCode == state.data?.countryCode).isNotEmpty) {
-                  country = countries.where((element) => element.dialCode == state.data?.countryCode).first;
-                } else {
-                  country = countries.firstWhere((element) => element.name == "Saudi Arabia");
-                }
+
+                country = state.data?.countryModel;
 
                 return _buildBody(context, state.data);
               case BaseState.error:
@@ -273,18 +263,31 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
               label: LocaleKeys.name.tr(),
             ),
             const VerticalSpace(kScreenPaddingNormal),
-            CustomTextFieldPhoneCode(
-              label: tr(LocaleKeys.yourPhoneNumber),
+            CustomTextFieldPhoneCountry(
               controller: _phoneController,
-              textInputAction: TextInputAction.next,
-              defaultValue: _phoneController.text,
-              disableLengthCheck: true,
-              initialCountryCode: country?.dialCode,
-              countries: ["EG"],
+              selectedCountry: country,
               onCountryChanged: (value) {
                 country = value;
               },
             ),
+            if (false) //TODO remove below
+              BlocBuilder<CountryCubit, CountryState>(
+                builder: (context, state) {
+                  return CustomTextFieldPhoneCode(
+                    label: tr(LocaleKeys.yourPhoneNumber),
+                    controller: _phoneController,
+                    textInputAction: TextInputAction.next,
+                    disableLengthCheck: true,
+                    enabled: state.state == BaseState.loaded,
+                    enable: state.state == BaseState.loaded,
+                    initialCountry: country,
+                    countries: state.data,
+                    onCountryChanged: (value) {
+                      country = value;
+                    },
+                  );
+                },
+              ),
             const VerticalSpace(kScreenPaddingNormal),
             CustomTextFieldEmail(label: tr(LocaleKeys.email), controller: _emailController, textInputAction: TextInputAction.next),
             // const VerticalSpace(kScreenPaddingNormal),
@@ -309,7 +312,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
             //   ],
             // ),
             const VerticalSpace(kScreenPaddingNormal),
-             CustomTextFieldArea(
+            CustomTextFieldArea(
               controller: _descController,
               hint: LocaleKeys.descrption.tr(),
               textInputAction: TextInputAction.next,

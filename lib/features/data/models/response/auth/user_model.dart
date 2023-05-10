@@ -1,3 +1,5 @@
+import 'package:weltweit/features/data/models/response/country/country_model.dart';
+
 class UserModel {
   int? id;
   String? name;
@@ -12,7 +14,7 @@ class UserModel {
   String gender;
   String? desc;
   int? isCompany;
-
+  CountryModel? countryModel;
   UserModel({
     this.id,
     this.name,
@@ -27,6 +29,7 @@ class UserModel {
     this.image,
     this.desc,
     this.isCompany,
+    this.countryModel,
   });
 
   bool isAvailable() {
@@ -57,6 +60,7 @@ class UserModel {
         gender: json['gender'] ?? "male",
         desc: json['description'] ?? "",
         isCompany: json['is_company'] as int?,
+        countryModel: json['country'] == null ? null : CountryModel.fromJson(json['country'] as Map<String, dynamic>),
       );
 
   Map<String, dynamic> toJson() => {
@@ -71,5 +75,6 @@ class UserModel {
         'country_code': countryCode,
         'image': image,
         'is_company': isCompany,
+        'country_id': countryModel?.id,
       };
 }

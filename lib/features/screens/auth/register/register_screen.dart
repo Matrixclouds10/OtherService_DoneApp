@@ -9,8 +9,11 @@ import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/utils/logger.dart';
+import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
+import 'package:weltweit/features/data/models/response/country/country_model.dart';
+import 'package:weltweit/features/logic/country/country_cubit.dart';
 import 'package:weltweit/features/services/domain/request_body/check_otp_body.dart';
 import 'package:weltweit/features/services/domain/request_body/register_body.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
@@ -18,6 +21,7 @@ import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
 import 'package:weltweit/presentation/component/inputs/phone_country/countries.dart';
+import 'package:weltweit/presentation/component/inputs/phone_country/custom_text_filed_phone_country.dart';
 
 import 'register_cubit.dart';
 
@@ -35,17 +39,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
+  CountryModel? selectedCountry;
   bool joinAsIndividual = true;
   bool isConfirmTerms = true;
   File? image;
-  Country? country = Country(
-    name: "Egypt",
-    flag: "🇪🇬",
-    code: "EG",
-    dialCode: "20",
-    minLength: 10,
-    maxLength: 10,
-  );
 
   final _formKey = GlobalKey<FormState>();
 
@@ -68,7 +65,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           );
           return;
         }
-        if (country == null) {
+        if (selectedCountry == null) {
           AppSnackbar.show(
             context: context,
             title: LocaleKeys.notification.tr(),
@@ -83,18 +80,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
           name: name,
           password: password,
           mobile: phone,
-          country: country!,
+          country: selectedCountry!,
           isConfirmTerms: isConfirmTerms,
           typeIsProvider: widget.typeIsProvider,
           isIndividual: joinAsIndividual,
-          countryId: 1,
         );
 
         var response = await BlocProvider.of<RegisterCubit>(context, listen: false).register(registerBody);
         if (response.isSuccess) {
           NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
             'phone': _phoneController.text,
-            'code': country?.code,
+            'code': selectedCountry?.code ?? '20',
             'checkOTPType': CheckOTPType.register,
             'typeIsProvider': widget.typeIsProvider,
           });
@@ -250,15 +246,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
               autofocus: false,
             ),
             const VerticalSpace(kScreenPaddingNormal),
-            CustomTextFieldPhoneCode(
-              label: tr(LocaleKeys.yourPhoneNumber),
+              CustomTextFieldPhoneCountry(
               controller: _phoneController,
-              textInputAction: TextInputAction.next,
-              countries: ["EG"],
-              onCountryChanged: (countryVal) {
-                country = countryVal;
+              selectedCountry: selectedCountry,
+              onCountryChanged: (value) {
+                selectedCountry = value;
               },
-              disableLengthCheck: true,
+            ),
+            if(false) //TODO: remove below
+            BlocBuilder<CountryCubit, CountryState>(
+              builder: (context, state) {
+                return CustomTextFieldPhoneCode(
+                  label: tr(LocaleKeys.yourPhoneNumber),
+                  controller: _phoneController,
+                  textInputAction: TextInputAction.next,
+                  enable: state.state == BaseState.loaded,
+                  enabled:  state.state == BaseState.loaded,
+                  countries: state.data,
+                  onCountryChanged: (countryVal) {
+                    selectedCountry = countryVal;
+                  },
+                  disableLengthCheck: true,
+                );
+              },
             ),
             const VerticalSpace(kScreenPaddingNormal),
             CustomTextFieldEmail(label: tr(LocaleKeys.email), controller: _emailController, textInputAction: TextInputAction.next),

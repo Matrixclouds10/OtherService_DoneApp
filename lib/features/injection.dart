@@ -1,8 +1,8 @@
+import 'package:weltweit/features/domain/usecase/country/country_usecase.dart';
 import 'package:weltweit/features/services/domain/usecase/address/address_update_usecase%20copy.dart';
 import 'package:weltweit/features/services/domain/usecase/order_cancel/order_cancel_usecase.dart';
 import 'package:weltweit/features/data/repository/auth_repository_imp.dart';
 import 'package:weltweit/features/domain/usecase/auth/update_fcm_token_usecase.dart';
-import 'package:weltweit/features/domain/usecase/profile/update_profile_availablity_usecase.dart';
 import 'package:weltweit/features/domain/usecase/profile/update_profile_location_usecase%20copy.dart';
 import 'package:weltweit/features/domain/repositoy/auth_repo.dart';
 import 'package:weltweit/features/domain/usecase/auth/check_otp_usecase.dart';
@@ -106,4 +106,5 @@ Future<void> init() async {
   getIt.registerLazySingleton(() => AboutUseCase(getIt()));
   getIt.registerLazySingleton(() => PolicyUseCase(getIt()));
   getIt.registerLazySingleton(() => ContactUsUseCase(getIt()));
+  getIt.registerLazySingleton(() => CountryUseCase(getIt()));
 }

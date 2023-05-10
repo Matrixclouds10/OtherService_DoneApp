@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/data/injection.dart';
+import 'package:weltweit/features/logic/country/country_cubit.dart';
 import 'package:weltweit/features/logic/profile/profile_cubit.dart';
 import 'package:weltweit/features/screens/auth/login/login_cubit.dart';
 import 'package:weltweit/features/screens/auth/otp/otp_cubit.dart';
@@ -53,4 +54,5 @@ final List<dynamic> kServicesProviders = [
   BlocProvider<OrdersCubit>(create: (BuildContext context) => OrdersCubit(getIt())),
   BlocProvider<OrderCubit>(create: (BuildContext context) => OrderCubit(getIt(), getIt())),
   BlocProvider<CreateOrderCubit>(create: (BuildContext context) => CreateOrderCubit(getIt())),
+  BlocProvider<CountryCubit>(create: (BuildContext context) => CountryCubit(getIt())),
 ];

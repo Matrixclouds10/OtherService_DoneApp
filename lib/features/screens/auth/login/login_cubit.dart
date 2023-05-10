@@ -3,10 +3,7 @@ import 'package:weltweit/core/notification/device_token.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/data/models/base/response_model.dart';
 import 'package:weltweit/core/utils/logger.dart';
-import 'package:weltweit/features/data/models/response/auth/user_model.dart';
-import 'package:weltweit/features/services/domain/request_body/login_body.dart';
 import 'package:weltweit/features/domain/usecase/auth/sign_in_usecase.dart';
-import 'package:weltweit/presentation/component/inputs/phone_country/countries.dart';
 
 part 'login_state.dart';
 
@@ -19,46 +16,27 @@ class LoginCubit extends Cubit<LoginlState> {
         super(LoginViewInitial());
 
   ///variables
-  final LoginBody _body = LoginBody(phone: "", password: "", deviceToken: '',code: '20');//TODO country code
-
-  ///getters
-  LoginBody get body => _body;
-
-  onCountryCode(Country country) {
-    _body.updateCode(country.dialCode);
-    emit(state);
-  }
+  final LoginParams params = LoginParams();
 
   ///calling APIs Functions
-  Future<ResponseModel> login(
-    String phone,
-    String password,
-    bool typeIsProvider,
-  ) async {
+  Future<ResponseModel> login(LoginParams loginBody, bool typeIsProvider) async {
     emit(LoginViewLoading());
     String? fcmToken;
     try {
       fcmToken = await getDeviceToken();
+      loginBody.deviceToken = fcmToken;
     } catch (e) {
       log('login', ' fcmToken error: $e');
       emit(LoginViewError(error: null));
     }
     emit(LoginViewLoading());
-
-    _assignLoginBody(phone, password, fcmToken ?? '');
-    ResponseModel responseModel = await _signInUseCase.call(loginBody: body,typeIsProvider: typeIsProvider);
+    ResponseModel responseModel = await _signInUseCase(loginBody: loginBody, typeIsProvider: typeIsProvider);
     if (responseModel.isSuccess) {
-      UserModel userEntity = responseModel.data;
-
       emit(LoginViewSuccessfully());
     } else {
       emit(LoginViewError(error: responseModel.error));
     }
 
     return responseModel;
-  }
-
-  void _assignLoginBody(String userName, String password, String fcmToken) {
-    body.setData(phone: userName, password: password, deviceToken: fcmToken);
   }
 }

@@ -82,4 +82,5 @@ class AppURL {
   static const String terms = "$kBaseURL/terms";
   static const String privacy = "$kBaseURL/privacy";
   static const String contactUs = "$kBaseURL/contanct-us";
+  static const String countries = "$kBaseURL/get-countries";
 }

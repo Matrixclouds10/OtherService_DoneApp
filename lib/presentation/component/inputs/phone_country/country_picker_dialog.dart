@@ -1,5 +1,6 @@
 import 'package:weltweit/core/utils/validators.dart';
 import 'package:flutter/material.dart';
+import 'package:weltweit/features/data/models/response/country/country_model.dart';
 
 import '../../../../core/resources/resources.dart';
 import 'countries.dart';
@@ -40,11 +41,11 @@ class PickerDialogStyle {
 }
 
 class CountryPickerDialog extends StatefulWidget {
-  final List<Country> countryList;
-  final Country selectedCountry;
-  final ValueChanged<Country> onCountryChanged;
+  final List<CountryModel> countryList;
+  final CountryModel? selectedCountry;
+  final ValueChanged<CountryModel> onCountryChanged;
   final String searchText;
-  final List<Country> filteredCountries;
+  final List<CountryModel> filteredCountries;
   final PickerDialogStyle? style;
 
   const CountryPickerDialog({
@@ -62,8 +63,8 @@ class CountryPickerDialog extends StatefulWidget {
 }
 
 class _CountryPickerDialogState extends State<CountryPickerDialog> {
-  late List<Country> _filteredCountries;
-  late Country _selectedCountry;
+  late List<CountryModel> _filteredCountries;
+   CountryModel? _selectedCountry;
 
   @override
   void initState() {
@@ -110,10 +111,10 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
                 onChanged: (value) {
                   _filteredCountries = Validators.isNumeric(value)
                       ? widget.countryList
-                          .where((country) => country.dialCode.contains(value))
+                          .where((country) => country.code!.contains(value))
                           .toList()
                       : widget.countryList
-                          .where((country) => country.name
+                          .where((country) => country.title!
                               .toLowerCase()
                               .contains(value.toLowerCase()))
                           .toList();
@@ -129,24 +130,24 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
                 itemBuilder: (ctx, index) => Column(
                   children: <Widget>[
                     ListTile(
-                      leading: Image.asset(
-                        'lib/presentation/component/inputs/phone_country/flags/${_filteredCountries[index].code.toLowerCase()}.png',
-                        width: 32,
-                      ),
+                      // leading: Image.asset(
+                      //   'lib/presentation/component/inputs/phone_country/flags/${_filteredCountries[index].code?.toLowerCase()}.png',
+                      //   width: 32,
+                      // ),
                       contentPadding: widget.style?.listTilePadding,
                       title: Text(
-                        _filteredCountries[index].name,
+                        _filteredCountries[index].title ?? '',
                         style: widget.style?.countryNameStyle ??
                             const TextStyle(fontWeight: FontWeight.w700),
                       ),
-                      trailing: Text(
-                        '+${_filteredCountries[index].dialCode}',
+                      trailing:_filteredCountries[index].code==null?null: Text(
+                        '+${_filteredCountries[index].code}',
                         style: widget.style?.countryCodeStyle ??
                             const TextStyle(fontWeight: FontWeight.w700),
                       ),
                       onTap: () {
                         _selectedCountry = _filteredCountries[index];
-                        widget.onCountryChanged(_selectedCountry);
+                        widget.onCountryChanged(_selectedCountry!);
                         Navigator.of(context).pop();
                       },
                     ),

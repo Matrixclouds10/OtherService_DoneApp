@@ -1,7 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
+import 'package:weltweit/features/core/base/base_usecase.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
+import 'package:weltweit/features/data/models/response/country/country_model.dart';
 import 'package:weltweit/features/services/data/models/response/chat/chat_model.dart';
 import 'package:weltweit/features/services/data/models/response/order/order.dart';
 import 'package:weltweit/features/services/data/models/response/portfolio/portfolio_image.dart';
@@ -53,4 +55,6 @@ abstract class AppRepository {
   Future<Either<ErrorModel, BaseResponse>> sendContactUs({required ContactUsParams params});
   Future<Either<ErrorModel, BaseResponse>> sendChatMessage({required ChatSendMessageParams params});
   Future<Either<ErrorModel, List<ChatModel>>> getChatMessages({required ChatMessagesParams params});
+
+  Future<Either<ErrorModel, List<CountryModel>>> getcountry({required NoParameters params});
 }

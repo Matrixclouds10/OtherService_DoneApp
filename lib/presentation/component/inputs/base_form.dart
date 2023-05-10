@@ -160,21 +160,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
         isHorizontal: widget._isHorizontal,
         children: [
           if (widget._isHorizontal) ...[
-            CircleAvatar(
-                radius: 4.r,
-                backgroundColor: widget._isDark
-                    ? Theme.of(context).cardColor
-                    : Theme.of(context).hintColor),
+            CircleAvatar(radius: 4.r, backgroundColor: widget._isDark ? Theme.of(context).cardColor : Theme.of(context).hintColor),
             HorizontalSpace(8.h),
             if (widget._label != null) ...[
               Expanded(
                   flex: 2,
                   child: Text(
                     widget._label!,
-                    style: const TextStyle().regularStyle().customColor(
-                        widget._isDark
-                            ? Theme.of(context).cardColor
-                            : Theme.of(context).hintColor),
+                    style: const TextStyle().regularStyle().customColor(widget._isDark ? Theme.of(context).cardColor : Theme.of(context).hintColor),
                   )),
             ]
           ],
@@ -188,9 +181,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           ExpandedHelperView(
             isExpanded: widget._isHorizontal,
             child: TextFormField(
-              cursorColor: widget._isDark
-                  ? Theme.of(context).cardColor
-                  : Theme.of(context).primaryColor,
+              cursorColor: widget._isDark ? Theme.of(context).cardColor : Theme.of(context).primaryColor,
               readOnly: widget._readOnly,
               textInputAction: widget._textInputAction,
               maxLength: widget._maxLength,
@@ -200,64 +191,27 @@ class _CustomTextFieldState extends State<CustomTextField> {
               onTap: widget._onTap,
               controller: widget._controller,
               textAlign: widget._textAlign ?? TextAlign.start,
-              autovalidateMode: widget._autoValidate
-                  ? AutovalidateMode.always
-                  : AutovalidateMode.disabled,
+              autovalidateMode: widget._autoValidate ? AutovalidateMode.always : AutovalidateMode.disabled,
               style: TextStyle(
-                color:
-                    widget._isDark ? Theme.of(context).cardColor : Colors.black,
+                color: widget._isDark ? Theme.of(context).cardColor : Colors.black,
                 fontSize: 14.sp,
                 fontFamily: FontConstants.fontFamily,
               ),
               decoration: InputDecoration(
-
-                  // border: widget._noBorder ? InputBorder.none : Theme.of(context).inputDecorationTheme.border,
-                  // disabledBorder: widget._noBorder ? InputBorder.none : Theme.of(context).inputDecorationTheme.disabledBorder,
-                  // focusedBorder: widget._noBorder ? InputBorder.none :  Theme.of(context).inputDecorationTheme.focusedBorder,
-                  // errorBorder: widget._noBorder ? InputBorder.none :Theme.of(context).inputDecorationTheme.errorBorder,
-
-                  border: widget._noBorder
-                      ? InputBorder.none
-                      : Theme.of(context).inputDecorationTheme.border,
-                  disabledBorder: widget._noBorder
-                      ? InputBorder.none
-                      : Theme.of(context).inputDecorationTheme.disabledBorder,
-                  focusedBorder: widget._noBorder
-                      ? InputBorder.none
-                      : Theme.of(context).inputDecorationTheme.focusedBorder,
-                  errorBorder: widget._noBorder
-                      ? InputBorder.none
-                      : Theme.of(context).inputDecorationTheme.errorBorder,
+                  border: widget._noBorder ? InputBorder.none : Theme.of(context).inputDecorationTheme.border,
+                  disabledBorder: widget._noBorder ? InputBorder.none : Theme.of(context).inputDecorationTheme.disabledBorder,
+                  focusedBorder: widget._noBorder ? InputBorder.none : Theme.of(context).inputDecorationTheme.focusedBorder,
+                  errorBorder: widget._noBorder ? InputBorder.none : Theme.of(context).inputDecorationTheme.errorBorder,
+                  
                   errorStyle: Theme.of(context).inputDecorationTheme.errorStyle,
-                  hintStyle: Theme.of(context)
-                      .inputDecorationTheme
-                      .hintStyle
-                      ?.copyWith(
-                          color: widget._isDark
-                              ? Theme.of(context).highlightColor
-                              : Theme.of(context).hintColor),
-                  labelStyle: Theme.of(context)
-                      .inputDecorationTheme
-                      .labelStyle
-                      ?.copyWith(
-                          color: widget._isDark
-                              ? Theme.of(context).cardColor
-                              : Theme.of(context).textTheme.bodyMedium?.color),
-                  suffixStyle:
-                      Theme.of(context).inputDecorationTheme.suffixStyle,
+                  hintStyle: Theme.of(context).inputDecorationTheme.hintStyle?.copyWith(color: widget._isDark ? Theme.of(context).highlightColor : Theme.of(context).hintColor),
+                  labelStyle: Theme.of(context).inputDecorationTheme.labelStyle?.copyWith(color: widget._isDark ? Theme.of(context).cardColor : Theme.of(context).textTheme.bodyMedium?.color),
+                  suffixStyle: Theme.of(context).inputDecorationTheme.suffixStyle,
                   hintText: widget._hint,
                   labelText: widget._label,
                   filled: true,
-                  fillColor: widget._isDark
-                      ? Theme.of(context).primaryColor
-                      : widget._enable
-                          ? widget._background ??
-                              Theme.of(context).cardColor /*enable background*/
-                          : widget._background ??
-                              Theme.of(context)
-                                  .disabledColor /*disable background*/,
-                  counterStyle:
-                      TextStyle(color: Theme.of(context).primaryColor),
+                  fillColor: widget._isDark ? Theme.of(context).primaryColor : widget._background ?? Theme.of(context).cardColor,
+                  counterStyle: TextStyle(color: Theme.of(context).primaryColor),
                   suffixText: widget._suffixText,
                   // suffixIcon: widget._icon!= null ?Container(width: 50,alignment: Alignment.center,child: widget._icon):(widget._suffixData ?? (widget._suffixIconData == null ? null : Icon(widget._suffixIconData, color:widget._isDark?Theme.of(context).cardColor:Theme.of(context).primaryColor,))),
                   suffixIcon: widget._suffixData != null
@@ -285,19 +239,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
                           : Icon(
                               widget._prefixIcon,
                               size: 24,
-                              color: widget._prefixIconColor ??
-                                  (widget._isDark
-                                      ? Theme.of(context).cardColor
-                                      : Colors.black),
+                              color: widget._prefixIconColor ?? (widget._isDark ? Theme.of(context).cardColor : Colors.black),
                             )),
-                  contentPadding: const EdgeInsets.symmetric(
-                      horizontal: kScreenPaddingNormal, vertical: 10)),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: kScreenPaddingNormal, vertical: 10)),
               keyboardType: widget._type,
               validator: (value) {
                 if (widget._validateFunc != null && widget._isRequired) {
                   return widget._validateFunc!(value);
-                } else if ((value == null || value.isEmpty) &&
-                    widget._isRequired) {
+                } else if ((value == null || value.isEmpty) && widget._isRequired) {
                   return tr(LocaleKeys.msgFormFieldRequired);
                 }
                 return null;
@@ -306,18 +255,15 @@ class _CustomTextFieldState extends State<CustomTextField> {
               maxLines: widget._lines,
               inputFormatters: widget._formatter,
               onChanged: (String newValue) {
-                if (widget._onChange != null)
-                  return widget._onChange!(newValue);
+                if (widget._onChange != null) return widget._onChange!(newValue);
                 return;
               },
               onFieldSubmitted: (String newValue) {
-                if (widget._onSubmit != null)
-                  return widget._onSubmit!(newValue);
+                if (widget._onSubmit != null) return widget._onSubmit!(newValue);
                 return;
               },
               onSaved: (String? newValue) {
-                if (widget._onSaved != null)
-                  return widget._onSaved!(newValue ?? '');
+                if (widget._onSaved != null) return widget._onSaved!(newValue ?? '');
                 return;
               },
             ),
