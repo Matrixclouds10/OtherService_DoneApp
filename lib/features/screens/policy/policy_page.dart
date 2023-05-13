@@ -24,13 +24,14 @@ class _PolicyPageState extends State<PolicyPage> {
     super.initState();
     context.read<PolicyCubit>().getPolicy();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: servicesTheme.scaffoldBackgroundColor,
       appBar: CustomAppBar(
         color: Colors.white,
-        titleWidget:  CustomText(LocaleKeys.privacyPolicy.tr()).header(),
+        titleWidget: CustomText(LocaleKeys.privacyPolicy.tr()).header(),
         isCenterTitle: true,
       ),
       body: SingleChildScrollView(
@@ -52,14 +53,15 @@ class _PolicyPageState extends State<PolicyPage> {
                         children: [
                           Container(
                             decoration: const BoxDecoration(color: Colors.white).radius(radius: 12),
-                            child:  CustomText(state.data),
+                            child: CustomText(state.data),
                           ),
                         ],
                       ),
                     );
                 }
               },
-            )
+            ),
+            const SizedBox(height: 120),
           ],
         ),
       ),

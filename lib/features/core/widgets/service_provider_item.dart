@@ -70,7 +70,7 @@ class ServiceProviderItemWidget extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                            if (providersModel.rateAvg != null && canMakeAppointment == null) ratesAsStars(double.parse(providersModel.rateAvg!)),
+                            if (providersModel.rateAvg != null && canMakeAppointment == null) ratesAsStars(double.parse(providersModel.rateAvg!), providersModel.rateCount ?? 0),
                             if (showFavoriteButton)
                               IconButton(
                                 icon: Icon(
@@ -101,8 +101,7 @@ class ServiceProviderItemWidget extends StatelessWidget {
                         ],
                       ),
                     // CustomText('no profession', color: Colors.grey, align: TextAlign.start, pv: 0),
-                    if (providersModel.description != null && providersModel.description!.isNotEmpty)
-                    CustomText(providersModel.description??"", maxLines: 2, color: Colors.grey, align: TextAlign.start, pv: 4).footer(),
+                    if (providersModel.description != null && providersModel.description!.isNotEmpty) CustomText(providersModel.description ?? "", maxLines: 2, color: Colors.grey, align: TextAlign.start, pv: 4).footer(),
                     SizedBox(height: 4),
                     // if (address != null)
                     // textWithIcon(
@@ -151,12 +150,12 @@ class ServiceProviderItemWidget extends StatelessWidget {
     );
   }
 
-  Widget ratesAsStars(double d) {
+  Widget ratesAsStars(double rate, int rateCount) {
     return Row(
       children: [
-        for (var i = 0; i < d; i++) const Icon(Icons.star, size: 12, color: Colors.yellow),
-        for (var i = 0; i < 5 - d; i++) const Icon(Icons.star, size: 12, color: Colors.grey),
-        CustomText(' ($d)', color: Colors.grey, align: TextAlign.start, pv: 0).footer(),
+        for (var i = 0; i < rate; i++) const Icon(Icons.star, size: 12, color: Colors.yellow),
+        for (var i = 0; i < 5 - rate; i++) const Icon(Icons.star, size: 12, color: Colors.grey),
+        CustomText(' ($rateCount)', color: Colors.grey, align: TextAlign.start, pv: 0).footer(),
       ],
     );
   }

@@ -1,24 +1,26 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/routing/routes.dart';
+import 'package:weltweit/core/utils/globals.dart';
+import 'package:weltweit/data/injection.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/logic/profile/profile_cubit.dart';
 import 'package:weltweit/features/services/logic/orders/orders_cubit.dart';
-import 'package:weltweit/features/services/modules/layout/layout_cubit.dart';
 import 'package:weltweit/features/services/modules/my_addresses/logic/address_cubit.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/presentation/component/component.dart';
-import 'package:weltweit/presentation/dialog/base/simple_dialogs.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    GlobalParams globalParams = getIt();
     return Scaffold(
         backgroundColor: servicesTheme.scaffoldBackgroundColor,
         appBar: CustomAppBar(
@@ -32,10 +34,6 @@ class ProfilePage extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).pushNamed(RoutesServices.servicesProfileEdit);
               },
-            ),
-            IconButton(
-              icon: const Icon(Icons.more_vert, color: Colors.black),
-              onPressed: () {},
             ),
           ],
         ),
@@ -54,6 +52,7 @@ class ProfilePage extends StatelessWidget {
                     if (state.data == null) {
                       return Container();
                     }
+
                     return Container(
                       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                       child: Row(
@@ -71,6 +70,16 @@ class ProfilePage extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                if (kDebugMode) ...[
+                                  CustomButton(
+                                    onTap: () {
+                                      context.read<ProfileCubit>().getProfile();
+                                    },
+                                    width: 200,
+                                    title: "get profile debug",
+                                  ),
+                                  Text("name ${globalParams.user?.name}"),
+                                ],
                                 const SizedBox(height: 4),
                                 textWithIcon(icon: Icons.person, text: state.data!.name ?? ''),
                                 const SizedBox(height: 4),
@@ -124,7 +133,6 @@ class ProfilePage extends StatelessWidget {
                         onTap: () {
                           Navigator.pushNamed(context, Routes.about);
                         }),
-
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
                         icon: Icons.arrow_forward_ios,

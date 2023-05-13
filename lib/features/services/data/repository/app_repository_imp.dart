@@ -11,6 +11,7 @@ import 'package:weltweit/features/data/models/response/country/country_model.dar
 import 'package:weltweit/features/core/base/base_usecase.dart';
 import 'package:weltweit/features/services/data/app_urls/app_url.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
+import 'package:weltweit/features/services/data/models/response/banner/banner_model.dart';
 import 'package:weltweit/features/services/data/models/response/chat/chat_model.dart';
 import 'package:weltweit/features/services/data/models/response/order/order.dart';
 import 'package:weltweit/features/services/data/models/response/portfolio/portfolio_image.dart';
@@ -20,6 +21,7 @@ import 'package:weltweit/features/services/data/models/response/services/service
 import 'package:weltweit/features/domain/usecase/chat_messages/chat_messages_usecase.dart';
 import 'package:weltweit/features/domain/usecase/contact_us/contact_us_usecase.dart';
 import 'package:weltweit/features/domain/usecase/chat_send_message/chat_send_message_usecase.dart';
+import 'package:weltweit/features/services/domain/usecase/banner/banner_usecase.dart';
 import 'package:weltweit/features/services/domain/usecase/order_cancel/order_cancel_usecase.dart';
 import 'package:weltweit/features/services/domain/repository/app_repo.dart';
 import 'package:weltweit/features/services/domain/usecase/create_order/create_order_usecase.dart';
@@ -361,7 +363,7 @@ class AppRepositoryImp implements AppRepository {
     Map<String, dynamic> data = params.toJson();
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
 
-    return result.fold((l) => Left(l), (r) => Right(r.data.map<ChatModel>((e) => ChatModel.fromJson(e)).toList()));
+    return result.fold((l) => Left(l), (r) => Right(r.data.map<ChatModel>((e) => ChatModel.fromJson(e['1'])).toList()));
   }
 
   @override
@@ -386,7 +388,12 @@ class AppRepositoryImp implements AppRepository {
     String url = AppURL.sendMessage;
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = params.toJson();
-    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+    Either<ErrorModel, BaseResponse> result = await networkClient(
+      url: url,
+      data: data,
+      type: type,
+      formData: await params.toJsonFormData(),
+    );
 
     return result.fold((l) => Left(l), (r) => Right(r));
   }
@@ -402,7 +409,7 @@ class AppRepositoryImp implements AppRepository {
   }
 
   @override
-  Future<Either<ErrorModel, List<CountryModel>>> getcountry({required NoParameters params}) async {
+  Future<Either<ErrorModel, List<CountryModel>>> getCountries({required NoParameters params}) async {
     String url = AppURL.countries;
     NetworkCallType type = NetworkCallType.get;
     Map<String, dynamic> data = {};
@@ -411,6 +418,56 @@ class AppRepositoryImp implements AppRepository {
       try {
         List<CountryModel> data = r.data.map<CountryModel>((e) => CountryModel.fromJson(e)).toList();
         return Right(data);
+      } catch (e) {
+        return Left(ErrorModel(errorMessage: e.toString()));
+      }
+    });
+  }
+
+  @override
+  Future<Either<ErrorModel, CountryModel>> getcountry({required int id}) async {
+    String url = '${AppURL.country}/$id';
+    NetworkCallType type = NetworkCallType.get;
+    Map<String, dynamic> data = {};
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+    return result.fold((l) => Left(l), (r) {
+      try {
+        CountryModel data =  CountryModel.fromJson(r.data);
+        return Right(data);
+      } catch (e) {
+        return Left(ErrorModel(errorMessage: e.toString()));
+      }
+    });
+  }
+
+  @override
+  Future<Either<ErrorModel, List<BannerModel>>> getbanner({required BannerParams params}) async {
+    String url = AppURL.banners;
+    NetworkCallType type = NetworkCallType.get;
+    Map<String, dynamic> data = {};
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+    return result.fold((l) => Left(l), (r) {
+      try {
+        List<BannerModel> data = r.data.map<BannerModel>((e) => BannerModel.fromJson(e)).toList();
+        return Right(data);
+      } catch (e) {
+        return Left(ErrorModel(errorMessage: e.toString()));
+      }
+    });
+  }
+  
+  @override
+  Future<Either<ErrorModel, List<ProvidersModel>>> getMostRequestedProviders() async {
+   
+    String url = AppURL.getMostRequestedProviders;
+    NetworkCallType type = NetworkCallType.get;
+    Map<String, dynamic> data = {};
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+
+    return result.fold((l) => Left(l), (r) {
+      try {
+        List<ProvidersModel> providers = r.data.map<ProvidersModel>((e) => ProvidersModel.fromJson(e)).toList();
+        return Right(providers);
       } catch (e) {
         return Left(ErrorModel(errorMessage: e.toString()));
       }

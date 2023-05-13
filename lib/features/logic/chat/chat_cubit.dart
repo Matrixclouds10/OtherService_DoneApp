@@ -18,21 +18,43 @@ class ChatCubit extends Cubit<ChatState> {
     this.chatSendMessageUseCase,
   ) : super(const ChatState());
 
-  Future<void> getChat(int orderId) async {
+  Future<void> getChat(int orderId, {bool loading = true}) async {
     initStates();
-    emit(state.copyWith(state: BaseState.loading));
+    if (loading) emit(state.copyWith(state: BaseState.loading));
     final result = await chatUseCase(ChatMessagesParams(id: orderId));
-
-    result.fold(
-      (error) => emit(state.copyWith(state: BaseState.error, error: error)),
-      (data) {
-        emit(state.copyWith(state: BaseState.loaded, data: data));
-      },
-    );
+    if (loading) {
+      result.fold(
+        (error) => emit(state.copyWith(state: BaseState.error, error: error)),
+        (data) {
+          emit(state.copyWith(state: BaseState.loaded, data: data));
+        },
+      );
+    }
+    if (!loading) {
+      result.fold(
+        (error) => null,
+        (data) {
+          emit(state.copyWith(data: data));
+        },
+      );
+    }
   }
 
   Future<bool> sendMessage(int id, String text) async {
     final result = await chatSendMessageUseCase(ChatSendMessageParams(id: id, message: text));
+
+    return result.fold(
+      (error) {
+        throw error.errorMessage ?? LocaleKeys.somethingWentWrong.tr();
+      },
+      (data) {
+        return true;
+      },
+    );
+  }
+
+  Future<bool> sendImage(int id, String path) async {
+    final result = await chatSendMessageUseCase(ChatSendMessageParams(id: id, message: '', image: path));
 
     return result.fold(
       (error) {
@@ -49,5 +71,17 @@ class ChatCubit extends Cubit<ChatState> {
       state: BaseState.initial,
       error: null,
     ));
+  }
+
+  Future<bool> sendLocation(int id, double latitude, double longitude) async {
+    final result = await chatSendMessageUseCase(ChatSendMessageParams(id: id, message: 'location', lat: latitude.toString(), lng: longitude.toString()));
+    return result.fold(
+      (error) {
+        throw error.errorMessage ?? LocaleKeys.somethingWentWrong.tr();
+      },
+      (data) {
+        return true;
+      },
+    );
   }
 }

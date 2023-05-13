@@ -11,6 +11,7 @@ import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
+import 'package:weltweit/features/provider/domain/logger.dart';
 import 'package:weltweit/features/services/data/models/response/provider/providers_model.dart';
 import 'package:weltweit/features/services/data/models/response/services/service.dart';
 import 'package:weltweit/features/services/domain/usecase/create_order/create_order_usecase.dart';
@@ -91,6 +92,7 @@ class _ReservationPageState extends State<ReservationPage> {
                       prefixIconColor: Colors.grey,
                       background: Colors.white,
                       onTap: () {
+                        if (state.state == BaseState.loading) return;
                         showModalBottomSheet(
                           context: context,
                           builder: (context) {
@@ -152,6 +154,7 @@ class _ReservationPageState extends State<ReservationPage> {
                           title: const CustomText("حسب الوقت المحدد", align: TextAlign.start),
                           contentPadding: EdgeInsets.zero,
                           onChanged: (value) {
+                            if (state.state == BaseState.loading) return;
                             setState(() {
                               reservationTimeNow = value as bool;
                             });
@@ -166,6 +169,7 @@ class _ReservationPageState extends State<ReservationPage> {
                           contentPadding: EdgeInsets.zero,
                           title: const CustomText("فورا", align: TextAlign.start),
                           onChanged: (value) {
+                            if (state.state == BaseState.loading) return;
                             setState(() {
                               reservationTimeNow = value as bool;
                             });
@@ -189,6 +193,7 @@ class _ReservationPageState extends State<ReservationPage> {
                             prefixIconColor: Colors.grey,
                             background: Colors.white,
                             onTap: () async {
+                              if (state.state == BaseState.loading) return;
                               DateTime? picked = await showDatePicker(
                                 context: context,
                                 initialDate: DateTime.now(),
@@ -214,6 +219,7 @@ class _ReservationPageState extends State<ReservationPage> {
                             prefixIconColor: Colors.grey,
                             background: Colors.white,
                             onTap: () async {
+                              if (state.state == BaseState.loading) return;
                               TimeOfDay? picked = await showTimePicker(
                                 context: context,
                                 initialTime: TimeOfDay.now(),
@@ -230,6 +236,7 @@ class _ReservationPageState extends State<ReservationPage> {
                   const SizedBox(height: 12),
                   GestureDetector(
                     onTap: () {
+                      if (state.state == BaseState.loading) return;
                       showModalBottomSheet(
                         context: context,
                         builder: (context) {
@@ -442,7 +449,11 @@ class _ReservationPageState extends State<ReservationPage> {
 
     await context.read<CreateOrderCubit>().createOrder(CreateOrderParams(
           date: "$date $time",
-          file: images.isNotEmpty ? images[0] : null,
+          file: video != null
+              ? video
+              : images.isNotEmpty
+                  ? images[0]
+                  : null,
           serviceId: selectedService!.id!,
           providerId: widget.providersModel.id!,
         ));
@@ -495,13 +506,13 @@ class _ReservationPageState extends State<ReservationPage> {
 
     if (pickedFile != null) {
       video = File(pickedFile.path);
-      // videoPlayerController = VideoPlayerController.file(video!);
-      // try {
-      //   videoPlayerController!.initialize();
-      // } catch (e) {
-      //   logger.e(e);
-      // }
-      // setState(() {});
+      videoPlayerController = VideoPlayerController.file(video!);
+      try {
+        videoPlayerController!.initialize();
+      } catch (e) {
+        logger.e(e);
+      }
+      setState(() {});
     }
   }
 }

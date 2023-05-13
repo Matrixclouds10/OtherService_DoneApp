@@ -9,8 +9,8 @@ class ProvidersModel {
   String? countryCode;
   int? otpVerified;
   int? approved;
-  dynamic lat;
-  dynamic lng;
+  String? lat;
+  String? lng;
   String? image;
   dynamic distance;
   List<ServiceModel>? services;
@@ -53,7 +53,7 @@ class ProvidersModel {
       lng: json['lng'] as dynamic,
       image: json['image'] as String?,
       distance: json['distance'] as dynamic,
-      services: json['services']['data'] == null ? [] : json['services']['data'].map<ServiceModel>((e) => ServiceModel.fromJson(e)).toList(),
+      services: json['services'] == null ? [] : json['services'].map<ServiceModel>((e) => ServiceModel.fromJson(e)).toList(),
       rateAvg: json['rate_avg'] as String?,
       rateCount: json['rate_count'] as int?,
       isFavorite: "${json['is_fav']}".toLowerCase() == "true",

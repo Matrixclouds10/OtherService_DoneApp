@@ -12,6 +12,7 @@ import 'package:weltweit/features/provider/domain/usecase/portfolio/portfolio_up
 import 'package:weltweit/features/provider/domain/usecase/profile/change_password_usecase.dart';
 import 'package:weltweit/features/provider/domain/usecase/profile/update_profile_usecase.dart';
 import 'package:weltweit/features/provider/domain/usecase/services/update_services_usecase.dart';
+import 'package:weltweit/features/provider/data/models/subscription/subscription_model.dart';
 
 abstract class AppRepositoryProvider {
   Future<Either<ErrorModel, UserModel>> getProfile();
@@ -40,4 +41,7 @@ abstract class AppRepositoryProvider {
   Future<Either<ErrorModel, BaseResponse>>   addPortfolio({required File image});
   Future<Either<ErrorModel, BaseResponse>>   updatePortfolio({required PortfolioParams params});
   Future<Either<ErrorModel, BaseResponse>>   deletePortfolio({required int id});
+
+  Future<Either<ErrorModel, List<SubscriptionModel>>> getSubscription();
+
 }

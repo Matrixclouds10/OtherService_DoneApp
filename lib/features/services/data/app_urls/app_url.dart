@@ -52,6 +52,7 @@ class AppURL {
   static const String updateLocation = "$kBaseURL/profile/update-location";
 
   //provider
+  static const String getMostRequestedProviders = "$kBaseURL/most-requested-providers";
   static const String getProviders = "$kBaseURL/services/get-providers";
   static const String getProvider = "$kBaseURL/services/get-provider";
   static const String getProviderPortfolio = "$kBaseURL/services/get-provider-portfolio";
@@ -81,6 +82,8 @@ class AppURL {
   static const String about = "$kBaseURL/about-us";
   static const String terms = "$kBaseURL/terms";
   static const String privacy = "$kBaseURL/privacy";
-  static const String contactUs = "$kBaseURL/contanct-us";
+  static const String contactUs = "$kBaseURL/send-contact-message";
   static const String countries = "$kBaseURL/get-countries";
+  static const String country = "$kBaseURL/get-country";
+  static const String banners = "$kBaseURL/get-banners";
 }

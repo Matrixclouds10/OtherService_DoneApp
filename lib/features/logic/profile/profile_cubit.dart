@@ -3,8 +3,10 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
+import 'package:weltweit/core/utils/globals.dart';
 import 'package:weltweit/core/utils/permission_heloper.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
+import 'package:weltweit/data/injection.dart';
 import 'package:weltweit/features/domain/usecase/auth/update_fcm_token_usecase.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
@@ -38,13 +40,22 @@ class ProfileCubit extends Cubit<ProfileState> {
     this.changePasswordUseCase,
     this.updateProfileLocationUseCase,
   ) : super(const ProfileState());
-  Future<void> getProfile() async {
+  Future<UserModel> getProfile({bool returnSaved = false}) async {
+    if (returnSaved) {
+      if (state.data != null) return state.data!;
+    }
     resetState();
     emit(state.copyWith(state: BaseState.loading));
     final result = await profileUseCase.call(NoParameters());
-    result.fold(
-      (error) => emit(state.copyWith(state: BaseState.error, error: error)),
-      (data) => emit(state.copyWith(state: BaseState.loaded, data: data)),
+    return result.fold(
+      (error) {
+        emit(state.copyWith(state: BaseState.error, error: error));
+        return Future.error(error);
+      },
+      (data) {
+        emit(state.copyWith(state: BaseState.loaded, data: data));
+        return data;
+      },
     );
   }
 
@@ -117,6 +128,4 @@ class ProfileCubit extends Cubit<ProfileState> {
       log('Location Error', e.toString());
     }
   }
-
-  
 }

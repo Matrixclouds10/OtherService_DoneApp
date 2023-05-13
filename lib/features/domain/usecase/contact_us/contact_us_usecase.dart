@@ -21,12 +21,20 @@ class ContactUsUseCase extends BaseUseCase<BaseResponse, ContactUsParams> {
 }
 
 class ContactUsParams {
-
-  ContactUsParams();
+  String name;
+  String email;
+  String message;
+  ContactUsParams({
+    required this.name,
+    required this.email,
+    required this.message,
+  });
 
   toJson() {
     return {
+      'name': name,
+      'email': email,
+      'message': message,
     };
   }
 }
-

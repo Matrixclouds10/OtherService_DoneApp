@@ -4,18 +4,19 @@ import 'package:weltweit/features/data/models/response/country/country_model.dar
 import 'package:weltweit/features/services/domain/repository/app_repo.dart';
 import '../../../core/base/base_usecase.dart';
 
-class CountryUseCase extends BaseUseCase<CountryModel, int> {
+class CountriesUseCase extends BaseUseCase<List<CountryModel>, NoParameters> {
   final AppRepository repository;
 
-  CountryUseCase(this.repository);
+  CountriesUseCase(this.repository);
 
   @override
-  Future<Either<ErrorModel, CountryModel>> call(int parameters) async {
-    return await repository.getcountry(id: parameters);
+  Future<Either<ErrorModel, List<CountryModel>>> call(NoParameters parameters) async {
+    return await repository.getCountries(params: parameters);
   }
 
   @override
-  Future<Either<ErrorModel, CountryModel>> callTest(int parameters) {
+  Future<Either<ErrorModel, List<CountryModel>>> callTest(NoParameters parameters) {
     throw UnimplementedError();
   }
 }
+

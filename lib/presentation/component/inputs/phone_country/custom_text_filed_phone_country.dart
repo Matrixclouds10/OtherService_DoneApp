@@ -26,7 +26,7 @@ class _CustomTextFieldPhoneCountryState extends State<CustomTextFieldPhoneCountr
   @override
   void initState() {
     super.initState();
-    context.read<CountryCubit>().getCountry();
+    context.read<CountryCubit>().getCountries();
   }
 
   @override

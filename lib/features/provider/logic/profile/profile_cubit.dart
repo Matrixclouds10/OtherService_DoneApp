@@ -5,8 +5,10 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
+import 'package:weltweit/core/utils/globals.dart';
 import 'package:weltweit/core/utils/permission_heloper.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
+import 'package:weltweit/data/injection.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
@@ -48,6 +50,8 @@ class ProfileProviderCubit extends Cubit<ProfileProviderState> {
       (error) => emit(state.copyWith(state: BaseState.error, error: error)),
       (data) => emit(state.copyWith(state: BaseState.loaded, data: data)),
     );
+    GlobalParams globalParams = getIt();
+    globalParams = globalParams.copyWith(user: state.data);
   }
 
   void updateAvailability() async {

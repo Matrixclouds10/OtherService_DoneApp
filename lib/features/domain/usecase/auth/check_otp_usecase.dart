@@ -1,3 +1,4 @@
+import 'package:logger/logger.dart';
 import 'package:weltweit/features/data/models/base/base_model.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/services/domain/request_body/check_otp_body.dart';
@@ -19,6 +20,8 @@ class CheckOTPUseCase implements BaseUseCase<UserModel> {
     try {
       String? token = baseModel.responseData['token'];
       if (token != null) {
+        Logger().i('token: $token');
+        Logger().i('token: ${baseModel.responseData}');
         UserModel user = UserModel.fromJson(baseModel.responseData);
         return ResponseModel(true, baseModel.message, data: user);
       } else {

@@ -2,6 +2,11 @@
 
 abstract class LocaleKeys {
   
+  static const most_requested_providers = "most_requested_providers";
+  static const or = "or";
+  static const msgMessageRequired = "msgMessageRequired";
+  static const share_location = "share_location";
+  static const location_permission_denied = "location_permission_denied";
   static const selectCountry = "selectCountry";
   static const descrption = "descrption";
   static const editAddress = "editAddress";

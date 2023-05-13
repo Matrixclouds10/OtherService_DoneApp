@@ -1,3 +1,4 @@
+import 'package:weltweit/features/domain/usecase/country/countries_usecase.dart';
 import 'package:weltweit/features/domain/usecase/country/country_usecase.dart';
 import 'package:weltweit/features/services/domain/usecase/address/address_update_usecase%20copy.dart';
 import 'package:weltweit/features/services/domain/usecase/order_cancel/order_cancel_usecase.dart';
@@ -46,6 +47,10 @@ import 'package:weltweit/features/domain/usecase/chat_send_message/chat_send_mes
 import 'package:weltweit/features/domain/usecase/contact_us/contact_us_usecase.dart';
 import 'package:weltweit/features/domain/usecase/policy/policy_usecase.dart';
 
+import 'provider/domain/usecase/subscription/subscription_usecase.dart';
+import 'services/domain/usecase/banner/banner_usecase.dart';
+import 'services/domain/usecase/provider/most_requested_providers_usecase.dart';
+
 Future<void> init() async {
   getIt.registerLazySingleton(() => NetworkClient());
 
@@ -84,6 +89,7 @@ Future<void> init() async {
   getIt.registerLazySingleton(() => AllServicesUseCase(repository: getIt()));
   getIt.registerLazySingleton(() => UpdateServicesUseCase(repository: getIt()));
   getIt.registerLazySingleton(() => ProvidersUseCase(repository: getIt()));
+  getIt.registerLazySingleton(() => MostRequestedProivdersUseCase(repository: getIt()));
 
   //Settings
   getIt.registerLazySingleton(() => UpdateFcmUseCase(repository: getIt()));
@@ -107,4 +113,7 @@ Future<void> init() async {
   getIt.registerLazySingleton(() => PolicyUseCase(getIt()));
   getIt.registerLazySingleton(() => ContactUsUseCase(getIt()));
   getIt.registerLazySingleton(() => CountryUseCase(getIt()));
+  getIt.registerLazySingleton(() => CountriesUseCase(getIt()));
+  getIt.registerLazySingleton(() => BannerUseCase(getIt()));
+  getIt.registerLazySingleton(() => SubscriptionUseCase(getIt()));
 }

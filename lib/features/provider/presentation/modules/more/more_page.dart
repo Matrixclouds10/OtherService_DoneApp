@@ -63,7 +63,7 @@ class MorePage extends StatelessWidget {
                     singleCustomListTile(
                         image: "assets/images/file.png",
                         text: 'سجل الطلبات',
-                        trailingText: "٣ طلبات",
+                        trailingText: "",
                         onTap: () {
                           Navigator.pushNamed(context, RoutesProvider.providerOrders);
                         }),

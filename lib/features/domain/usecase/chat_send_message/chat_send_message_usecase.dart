@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
@@ -23,17 +24,30 @@ class ChatSendMessageUseCase extends BaseUseCase<BaseResponse, ChatSendMessagePa
 class ChatSendMessageParams {
   int id;
   String message;
+  String? lat;
+  String? lng;
+  String? image;
 
   ChatSendMessageParams({
     required this.id,
     required this.message,
+    this.lat,
+    this.lng,
+    this.image,
   });
 
   toJson() {
     return {
       'service_order_id': id,
-      'message': message,
+      'message': image != null ? 'image' : message,
+      if (lat != null) 'lat': lat,
+      if (lng != null) 'lng': lng,
     };
   }
-}
 
+  toJsonFormData() async {
+    return FormData.fromMap({
+      if (image != null) 'image': await MultipartFile.fromFile(image!, filename: 'image'),
+    });
+  }
+}

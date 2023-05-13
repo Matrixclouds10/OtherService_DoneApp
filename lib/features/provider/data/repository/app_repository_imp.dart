@@ -17,7 +17,7 @@ import 'package:weltweit/features/provider/domain/usecase/portfolio/portfolio_up
 import 'package:weltweit/features/provider/domain/usecase/profile/change_password_usecase.dart';
 import 'package:weltweit/features/provider/domain/usecase/profile/update_profile_usecase.dart';
 import 'package:weltweit/features/provider/domain/usecase/services/update_services_usecase.dart';
-
+import 'package:weltweit/features/provider/data/models/subscription/subscription_model.dart';
 
 class AppRepositoryImpProvider implements AppRepositoryProvider {
   final NetworkClient networkClient;
@@ -240,7 +240,6 @@ class AppRepositoryImpProvider implements AppRepositoryProvider {
     return result.fold((l) => Left(l), (r) => Right(r));
   }
 
-
   @override
   Future<Either<ErrorModel, UserModel>> updateProfile({required UpdateProfileParams params}) async {
     String url = AppURL.updateProfile;
@@ -265,4 +264,19 @@ class AppRepositoryImpProvider implements AppRepositoryProvider {
     });
   }
 
+  @override
+  Future<Either<ErrorModel, List<SubscriptionModel>>> getSubscription() async {
+    String url = AppURL.getSubscriptionPackages;
+    NetworkCallType type = NetworkCallType.get;
+    Map<String, dynamic> data = {};
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+    return result.fold((l) => Left(l), (r) {
+      try {
+        List<SubscriptionModel> data = r.data.map<SubscriptionModel>((e) => SubscriptionModel.fromJson(e)).toList();
+        return Right(data);
+      } catch (e) {
+        return Left(ErrorModel(errorMessage: e.toString()));
+      }
+    });
+  }
 }

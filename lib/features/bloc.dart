@@ -17,6 +17,9 @@ import 'package:weltweit/features/services/logic/service/services_cubit.dart';
 import 'package:weltweit/features/services/modules/layout/layout_cubit.dart';
 import 'package:weltweit/features/services/modules/my_addresses/logic/address_cubit.dart';
 
+import 'provider/logic/subscription/subscription_cubit.dart';
+import 'services/logic/banner/banner_cubit.dart';
+
 final List<dynamic> kServicesProviders = [
   BlocProvider(create: (_) => getIt<LoginCubit>()),
   BlocProvider(create: (_) => getIt<RegisterCubit>()),
@@ -47,12 +50,14 @@ final List<dynamic> kServicesProviders = [
 
   //Services
   BlocProvider<ServicesCubit>(create: (BuildContext context) => ServicesCubit(getIt(), getIt())),
-  BlocProvider<ProvidersCubit>(create: (BuildContext context) => ProvidersCubit(getIt())),
+  BlocProvider<ProvidersCubit>(create: (BuildContext context) => ProvidersCubit(getIt(),getIt())),
   BlocProvider<ProviderCubit>(create: (BuildContext context) => ProviderCubit(getIt())),
   BlocProvider<ProviderServicesCubit>(create: (BuildContext context) => ProviderServicesCubit(getIt())),
   BlocProvider<FavoriteCubit>(create: (BuildContext context) => FavoriteCubit(getIt(), getIt())),
   BlocProvider<OrdersCubit>(create: (BuildContext context) => OrdersCubit(getIt())),
   BlocProvider<OrderCubit>(create: (BuildContext context) => OrderCubit(getIt(), getIt())),
   BlocProvider<CreateOrderCubit>(create: (BuildContext context) => CreateOrderCubit(getIt())),
-  BlocProvider<CountryCubit>(create: (BuildContext context) => CountryCubit(getIt())),
+  BlocProvider<CountryCubit>(create: (BuildContext context) => CountryCubit(getIt(),getIt())),
+  BlocProvider<BannerCubit>(create: (BuildContext context) => BannerCubit(getIt())..getBanner()),
+  BlocProvider<SubscriptionCubit>(create: (BuildContext context) => SubscriptionCubit(getIt())),
 ];

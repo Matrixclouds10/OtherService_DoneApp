@@ -146,15 +146,7 @@ class _ServiceProviderViewState extends State<ServiceProviderView> with SingleTi
                 },
               ),
 
-              //more
-              IconButton(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                iconSize: 22,
-                visualDensity: VisualDensity.compact,
-                constraints: const BoxConstraints(),
-                icon: const Icon(Icons.more_vert),
-                onPressed: () {},
-              ),
+             
             ],
           ),
           backgroundColor: servicesTheme.scaffoldBackgroundColor,
@@ -307,14 +299,14 @@ class _ServiceProviderViewState extends State<ServiceProviderView> with SingleTi
           child: Row(
             children: [
               const SizedBox(width: 12),
-              const CustomText("3.4", size: 28),
+               CustomText(double.parse(widget.provider.rateAvg??'0').toString() , size: 28),
               const SizedBox(width: 12),
               Column(
                 children: [
-                  ratesAsStars(3),
+                  ratesAsStars(double.parse(widget.provider.rateAvg ?? '0')),
                   Row(
                     children: [
-                      CustomText("256", color: Colors.grey[500]!),
+                      CustomText("${widget.provider.rateCount??0}", color: Colors.grey[500]!),
                       const SizedBox(width: 4),
                       Icon(Icons.person, color: Colors.grey[500]!, size: 14),
                     ],

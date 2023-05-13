@@ -6,7 +6,6 @@ import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/logic/profile/profile_cubit.dart';
-import 'package:weltweit/features/services/logic/favorite/favorite_cubit.dart';
 import 'package:weltweit/features/services/logic/service/services_cubit.dart';
 import 'package:weltweit/features/services/modules/layout/layout_cubit.dart';
 import 'package:weltweit/features/services/modules/layout/widgets/navigation_tabs.dart';

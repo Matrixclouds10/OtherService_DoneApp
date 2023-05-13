@@ -9,6 +9,7 @@ class UserModel {
   String? token;
   int? approved;
   int? otpVerified;
+  int? countryId;
   String? countryCode;
   String? image;
   String gender;
@@ -22,6 +23,7 @@ class UserModel {
     this.email,
     required this.gender,
     this.mobileNumber,
+    this.countryId,
     this.token,
     this.approved,
     this.otpVerified,
@@ -46,22 +48,49 @@ class UserModel {
   int getID() => id ?? 0;
   int getIsCompany() => isCompany ?? 0;
 
-  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-        id: json['id'] as int?,
-        name: json['name'] as String?,
-        isOnline: json['is_online'] as String?,
-        email: json['email'] as String?,
-        mobileNumber: json['mobile_number'] as String?,
-        token: json['token'] == null ? null : '${json['token']}',
-        approved: json['approved'] as int?,
-        otpVerified: json['otp_verified'] as int?,
-        countryCode: json['country_code'] as String?,
-        image: json['image'] as String?,
-        gender: json['gender'] ?? "male",
-        desc: json['description'] ?? "",
-        isCompany: json['is_company'] as int?,
-        countryModel: json['country'] == null ? null : CountryModel.fromJson(json['country'] as Map<String, dynamic>),
-      );
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    print('user model json: id ${json[" print('user model json:"]})');
+    print('user model json: name ${json[" print('user model json:"]})');
+    print('user model json: isOnline ${json[" print('user model json:"]})');
+    print('user model json: email ${json[" print('user model json:"]})');
+    print('user model json: mobileNumber ${json[" print('user model json:"]})');
+    print('user model json: token ${json[" print('user model json:"]})');
+    print('user model json: approved ${json[" print('user model json:"]})');
+    print('user model json: otpVerified ${json[" print('user model json:"]})');
+    print('user model json: countryCode ${json[" print('user model json:"]})');
+    print('user model json: image ${json[" print('user model json:"]})');
+    print('user model json: gender ${json[" print('user model json:"]})');
+    print('user model json: desc ${json[" print('user model json:"]})');
+    print('user model json: countryId ${json[" print('user model json:"]})');
+    print('user model json: isCompany ${json[" print('user model json:"]})');
+    print('user model json: ${json['id']}');
+
+    Map<String, dynamic>? countryJson;
+    if (json['country'] != null) {
+      try {
+        countryJson = json['country']['data'];
+      } catch (e) {
+        countryJson = json['country'];
+      }
+    }
+    return UserModel(
+      id: json['id'] as int?,
+      name: json['name'] as String?,
+      isOnline: json['is_online'] as String?,
+      email: json['email'] as String?,
+      mobileNumber: json['mobile_number'] as String?,
+      token: json['token'] == null ? null : '${json['token']}',
+      approved: json['approved'] as int?,
+      otpVerified: json['otp_verified'] as int?,
+      countryCode: json['country_code'] as String?,
+      image: json['image'] as String?,
+      gender: json['gender'] ?? "male",
+      desc: json['description'] ?? "",
+      countryId: 1,
+      isCompany: json['is_company'] as int?,
+      countryModel: countryJson != null ? CountryModel.fromJson(countryJson) : null,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         'id': id,

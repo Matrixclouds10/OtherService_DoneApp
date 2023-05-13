@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:weltweit/core/resources/resources.dart';
@@ -157,8 +158,6 @@ class CustomTextFieldPhoneCode extends StatefulWidget {
 }
 
 class _CustomTextFieldPhoneCodeState extends State<CustomTextFieldPhoneCode> {
-  List<CountryModel> _countryList = [];
-  List<CountryModel> filteredCountries = [];
   CountryModel? _selectedCountry;
 
   String? validatorMessage;
@@ -166,22 +165,19 @@ class _CustomTextFieldPhoneCodeState extends State<CustomTextFieldPhoneCode> {
   @override
   void initState() {
     super.initState();
-    _countryList.addAll(widget.countries);
-    filteredCountries = _countryList;
-    _selectedCountry = widget.initialCountry ?? filteredCountries[0];
+    _selectedCountry = widget.initialCountry ;
   }
 
   Future<void> _changeCountry() async {
-    filteredCountries = _countryList;
     await showDialog(
       context: context,
       useRootNavigator: false,
       builder: (context) => StatefulBuilder(
         builder: (ctx, setState) => CountryPickerDialog(
           style: widget.pickerDialogStyle,
-          filteredCountries: filteredCountries,
+          filteredCountries:  widget.countries,
           searchText: widget.searchText,
-          countryList: _countryList,
+          countryList: widget.countries,
           selectedCountry: _selectedCountry,
           onCountryChanged: (CountryModel country) {
             _selectedCountry = country;
@@ -230,6 +226,8 @@ class _CustomTextFieldPhoneCodeState extends State<CustomTextFieldPhoneCode> {
   }
 
   Container _buildFlagsButton() {
+    String selectCountryHint = LocaleKeys.selectCountry.tr();
+    if(kDebugMode) selectCountryHint = selectCountryHint + ' (${widget.countries.length})';
     return Container(
       margin: widget.flagsButtonMargin,
       child: DecoratedBox(
@@ -252,7 +250,7 @@ class _CustomTextFieldPhoneCodeState extends State<CustomTextFieldPhoneCode> {
                     decoration: BoxDecoration().chip().radius(radius: 4),
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     child: Text(
-                      _selectedCountry?.title == null ? LocaleKeys.selectCountry.tr() : '${_selectedCountry?.title}',
+                      _selectedCountry?.title == null ? '${selectCountryHint}' : '${_selectedCountry?.title}',
                       style: TextStyle(fontSize: 12),
                     ),
                   ),

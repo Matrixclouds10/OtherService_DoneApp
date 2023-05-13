@@ -60,7 +60,7 @@ class ApiErrorHandler {
                   if (errorResponse.message != null &&
                       errorResponse.message!.isNotEmpty) {
                     log('ApiErrorHandler', 'default ${error.response!.data}');
-                    return errorResponse;
+                    return ErrorModel(errorMessage: errorResponse.message!);
                   } else {
                     return ErrorModel(
                         code: error.response?.statusCode ?? 0,

@@ -1,9 +1,11 @@
-
 class ChatModel {
   int id;
   int serviceOrderId;
   int clientId;
   String message;
+  String? image;
+  String? lat;
+  String? lng;
   DateTime createdAt;
   DateTime updatedAt;
   ClientModel? client;
@@ -14,7 +16,10 @@ class ChatModel {
     required this.message,
     required this.createdAt,
     required this.updatedAt,
-     this.client,
+    required this.image,
+    required this.lat,
+    required this.lng,
+    this.client,
   });
 
   factory ChatModel.fromJson(Map<String, dynamic> json) => ChatModel(
@@ -25,6 +30,9 @@ class ChatModel {
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
         client: json["client"] != null ? ClientModel.fromJson(json["client"]) : null,
+        image: json["image"],
+        lat: "${json["lat"]}",
+        lng: "${json["lng"]}",
       );
 
   Map<String, dynamic> toJson() => {
@@ -52,4 +60,3 @@ class ClientModel {
         "id": id,
       };
 }
-

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 
 import 'package:weltweit/app.dart';
@@ -38,8 +39,8 @@ class DioClient {
     dio = dioC ?? Dio();
     dio!
       ..options.baseUrl = baseUrl
-      ..options.connectTimeout = 30000
-      ..options.receiveTimeout = 30000
+      ..options.connectTimeout = kDebugMode ? 10000 : 120000
+      ..options.receiveTimeout = kDebugMode ? 10000 : 120000
       ..httpClientAdapter
       ..options.headers = {
         'Accept': 'application/json; charset=UTF-8',

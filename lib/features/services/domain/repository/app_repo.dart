@@ -4,6 +4,7 @@ import 'package:weltweit/features/core/base/base_response.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/data/models/response/country/country_model.dart';
+import 'package:weltweit/features/services/data/models/response/banner/banner_model.dart';
 import 'package:weltweit/features/services/data/models/response/chat/chat_model.dart';
 import 'package:weltweit/features/services/data/models/response/order/order.dart';
 import 'package:weltweit/features/services/data/models/response/portfolio/portfolio_image.dart';
@@ -13,6 +14,7 @@ import 'package:weltweit/features/services/data/models/response/services/service
 import 'package:weltweit/features/domain/usecase/chat_messages/chat_messages_usecase.dart';
 import 'package:weltweit/features/domain/usecase/chat_send_message/chat_send_message_usecase.dart';
 import 'package:weltweit/features/domain/usecase/contact_us/contact_us_usecase.dart';
+import 'package:weltweit/features/services/domain/usecase/banner/banner_usecase.dart';
 import 'package:weltweit/features/services/domain/usecase/create_order/create_order_usecase.dart';
 import 'package:weltweit/features/domain/usecase/profile/change_password_usecase.dart';
 import 'package:weltweit/features/domain/usecase/profile/update_profile_usecase.dart';
@@ -37,6 +39,7 @@ abstract class AppRepository {
 
   //* Providers
   Future<Either<ErrorModel, List<ProvidersModel>>> getProviders({required ProvidersParams params});
+  Future<Either<ErrorModel, List<ProvidersModel>>> getMostRequestedProviders();
   Future<Either<ErrorModel, ProvidersModel>> getProvider({required int id});
   Future<Either<ErrorModel, List<ServiceModel>>> getProviderServices({required int id});
   Future<Either<ErrorModel, List<PortfolioModel>>> getProviderPortfolio({required int id});
@@ -56,5 +59,8 @@ abstract class AppRepository {
   Future<Either<ErrorModel, BaseResponse>> sendChatMessage({required ChatSendMessageParams params});
   Future<Either<ErrorModel, List<ChatModel>>> getChatMessages({required ChatMessagesParams params});
 
-  Future<Either<ErrorModel, List<CountryModel>>> getcountry({required NoParameters params});
+  Future<Either<ErrorModel, CountryModel>> getcountry({required int id});
+  Future<Either<ErrorModel, List<CountryModel>>> getCountries({required NoParameters params});
+
+  Future<Either<ErrorModel, List<BannerModel>>> getbanner({required BannerParams params});
 }
