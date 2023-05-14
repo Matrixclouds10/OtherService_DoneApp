@@ -16,7 +16,6 @@ class AppURL {
   static const String addressSetDefaultUrl = "$kBaseURL/address/set-default";
   static const String addressDeleteUrl = "$kBaseURL/address/delete";
 
-
   ///profile
   static const String profile = "$kBaseURL/profile";
   static const String changeStatus = "$kBaseURL/profile/change_status";
@@ -75,8 +74,10 @@ class AppURL {
   static const String getOrder = "$kBaseURL/appointment/get-single";
 
   //Chat
-  static const String getChatMessages = "$kBaseURL/appointment/chat";
-  static const String sendMessage = "$kBaseURL/appointment/chat/send-message";
+  static const String getChatMessagesClient = "$kBaseURL/appointment/chat";
+  static const String getChatMessagesProvider = "$kBaseURL/service-provider/appointment/chat";
+  static const String sendMessageClient = "$kBaseURL/appointment/chat/send-message";
+  static const String sendMessageProvider = "$kBaseURL/service-provider/appointment/chat/send-message";
 
   //Basic
   static const String about = "$kBaseURL/about-us";

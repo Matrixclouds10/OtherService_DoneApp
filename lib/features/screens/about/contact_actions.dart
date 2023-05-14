@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -69,7 +70,7 @@ class _ContactActionState extends State<ContactAction> {
             ],
           );
         }
-        if (state.countryModel == null) {
+        if (state.countryModel == null && kDebugMode) {
           return Center(child: Text('debug countryModel is null }'));
         }
         return Container();

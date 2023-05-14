@@ -3,9 +3,12 @@ import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:weltweit/core/services/local/cache_consumer.dart';
+import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/core/services/network/network_client.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/core/utils/logger.dart';
+import 'package:weltweit/data/injection.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
 import 'package:weltweit/features/data/models/response/country/country_model.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
@@ -358,12 +361,14 @@ class AppRepositoryImp implements AppRepository {
 
   @override
   Future<Either<ErrorModel, List<ChatModel>>> getChatMessages({required ChatMessagesParams params}) async {
-    String url = AppURL.getChatMessages;
+    AppPrefs prefs = getIt<AppPrefs>();
+    bool isProvider = prefs.get(PrefKeys.isTypeProvider);
+    String url = isProvider ? AppURL.getChatMessagesProvider : AppURL.getChatMessagesClient;
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = params.toJson();
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
 
-    return result.fold((l) => Left(l), (r) => Right(r.data.map<ChatModel>((e) => ChatModel.fromJson(e['1'])).toList()));
+    return result.fold((l) => Left(l), (r) => Right(r.data.map<ChatModel>((e) => ChatModel.fromJson(e)).toList()));
   }
 
   @override
@@ -385,8 +390,11 @@ class AppRepositoryImp implements AppRepository {
 
   @override
   Future<Either<ErrorModel, BaseResponse>> sendChatMessage({required ChatSendMessageParams params}) async {
-    String url = AppURL.sendMessage;
+    AppPrefs prefs = getIt<AppPrefs>();
+    bool isProvider = prefs.get(PrefKeys.isTypeProvider);
+    String url = isProvider ? AppURL.sendMessageProvider : AppURL.sendMessageClient;
     NetworkCallType type = NetworkCallType.post;
+
     Map<String, dynamic> data = params.toJson();
     Either<ErrorModel, BaseResponse> result = await networkClient(
       url: url,
@@ -432,7 +440,7 @@ class AppRepositoryImp implements AppRepository {
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
     return result.fold((l) => Left(l), (r) {
       try {
-        CountryModel data =  CountryModel.fromJson(r.data);
+        CountryModel data = CountryModel.fromJson(r.data);
         return Right(data);
       } catch (e) {
         return Left(ErrorModel(errorMessage: e.toString()));
@@ -455,10 +463,9 @@ class AppRepositoryImp implements AppRepository {
       }
     });
   }
-  
+
   @override
   Future<Either<ErrorModel, List<ProvidersModel>>> getMostRequestedProviders() async {
-   
     String url = AppURL.getMostRequestedProviders;
     NetworkCallType type = NetworkCallType.get;
     Map<String, dynamic> data = {};

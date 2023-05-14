@@ -76,8 +76,10 @@ class OtpCubit extends Cubit<OtpState> {
     if (type == CheckOTPType.register && responseModel.isSuccess && responseModel.data != null) {
       UserModel userEntity = responseModel.data;
       String token = userEntity.token ?? '';
+      int id = userEntity.id ?? 0;
       AppPrefs prefs = getIt();
       prefs.save(PrefKeys.token, token);
+      prefs.save(PrefKeys.id, id);
       prefs.save(PrefKeys.isTypeProvider, typeIsProvider);
     }
     _isLoading = false;

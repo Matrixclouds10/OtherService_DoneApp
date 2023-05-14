@@ -48,7 +48,7 @@ class RouteProviderGenerator {
       case RoutesProvider.providerDocuments:
         return platformPageRoute(const DocumentPage());
       case RoutesProvider.providerOrderDetails:
-        return platformPageRoute(OrderDetails(orderStatus: arguments!["orderStatus"]));
+        return platformPageRoute(OrderDetails(orderModel: arguments!["order"]));
       case RoutesProvider.providerProviders:
         return platformPageRoute(ServiceProvidersPage(service: arguments!["serviceName"]));
       case RoutesProvider.providerProvider:

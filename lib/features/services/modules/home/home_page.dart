@@ -3,14 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
-import 'package:weltweit/features/services/domain/usecase/provider/most_requested_providers_usecase.dart';
 import 'package:weltweit/features/services/logic/banner/banner_cubit.dart';
 import 'package:weltweit/features/services/modules/home/home_banner.dart';
 import 'package:weltweit/features/services/modules/home/home_most_requested_providers.dart';
 import 'package:weltweit/features/services/modules/home/home_offers.dart';
 import 'package:weltweit/features/services/modules/home/home_services.dart';
-import 'package:weltweit/generated/assets.dart';
-import 'package:weltweit/presentation/component/component.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

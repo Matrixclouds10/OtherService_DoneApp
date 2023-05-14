@@ -66,7 +66,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
           mobileNumber: phone,
           email: email,
           image: image,
-          countryCode: selectedCountry?.code ?? "20",
+          countryCode: selectedCountry?.code ?? '20',
           countryIso: selectedCountry?.code ?? "EG",
           genderIsMale: isMale ?? true,
           countryId: 1,

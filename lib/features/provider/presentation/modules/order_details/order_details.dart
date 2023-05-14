@@ -2,21 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/core/resources/color.dart';
+import 'package:weltweit/core/routing/navigation_services.dart';
+import 'package:weltweit/core/routing/routes.dart';
 import 'package:weltweit/features/provider/presentation/modules/order_details/video_player.dart';
+import 'package:weltweit/features/services/data/models/response/order/order.dart';
+import 'package:weltweit/generated/locale_keys.g.dart';
 
 import 'package:weltweit/presentation/component/component.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 
 class OrderDetails extends StatelessWidget {
-  final String orderStatus; // "completed" or "accepted" or "cancelled"
-  const OrderDetails({required this.orderStatus, super.key});
+  final OrderModel orderModel; // "completed" or "accepted" or "cancelled"
+  const OrderDetails({required this.orderModel, super.key});
   @override
   Widget build(BuildContext context) {
     //get argument
     return Scaffold(
       appBar: CustomAppBar(
         color: Colors.white,
-        titleWidget: CustomText("تفاصيل الطلب").header(),
+        titleWidget: CustomText(LocaleKeys.orderDetails).header(),
         isCenterTitle: true,
         actions: [
           //chat
@@ -27,8 +31,10 @@ class OrderDetails extends StatelessWidget {
             style: ButtonStyle(
               padding: MaterialStateProperty.all(EdgeInsets.zero),
             ),
-            icon: Icon(FontAwesomeIcons.comment),
-            onPressed: () {},
+            icon: Icon(FontAwesomeIcons.message),
+            onPressed: () {
+              NavigationService.push(Routes.chatScreen, arguments: {'orderModel': orderModel});
+            },
           ),
 
           //more
@@ -78,14 +84,9 @@ class OrderDetails extends StatelessWidget {
                       CustomText("07/01/2020 - 3 م : 5 م", pv: 0).footer(),
                       Spacer(),
                       Container(
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 2, vertical: 2),
-                        decoration: BoxDecoration(
-                            color: Color(0xff57A4C3),
-                            borderRadius: BorderRadius.circular(4)),
-                        child: CustomText("صيانة سباكة",
-                                color: Colors.white, size: 14, ph: 8, pv: 0)
-                            .footer(),
+                        margin: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+                        decoration: BoxDecoration(color: Color(0xff57A4C3), borderRadius: BorderRadius.circular(4)),
+                        child: CustomText("صيانة سباكة", color: Colors.white, size: 14, ph: 8, pv: 0).footer(),
                       )
                     ],
                   ),
@@ -93,9 +94,7 @@ class OrderDetails extends StatelessWidget {
                     children: [
                       Icon(Icons.my_location, size: 16),
                       SizedBox(width: 4),
-                      CustomText("الرياض ، ميدان سننية، ٨٦ شارع المعتزبالله",
-                              pv: 0)
-                          .footer(),
+                      CustomText("الرياض ، ميدان سننية، ٨٦ شارع المعتزبالله", pv: 0).footer(),
                     ],
                   ),
                   Row(
@@ -113,16 +112,11 @@ class OrderDetails extends StatelessWidget {
                         Column(
                           children: [
                             CustomText("حالة الطلب", pv: 0).header(),
-                            CustomText("بإنتظار ردك",
-                                    pv: 0, color: AppColorLight().kAccentColor)
-                                .footer(),
+                            CustomText("بإنتظار ردك", pv: 0, color: AppColorLight().kAccentColor).footer(),
                           ],
                         ),
                         Spacer(),
-                        Transform.rotate(
-                            angle: 0.4,
-                            child: Icon(Icons.timer,
-                                size: 32, color: Colors.grey[500])),
+                        Transform.rotate(angle: 0.4, child: Icon(Icons.timer, size: 32, color: Colors.grey[500])),
                       ],
                     ),
                   ),
@@ -141,8 +135,7 @@ class OrderDetails extends StatelessWidget {
                       Spacer(),
                       CustomText("إضافة مبلغ إضافي", pv: 0),
                       SizedBox(width: 12),
-                      Icon(Icons.add,
-                          size: 30, color: primaryColor),
+                      Icon(Icons.add, size: 30, color: primaryColor),
                     ],
                   ),
                   SizedBox(height: 12),
@@ -186,9 +179,7 @@ class OrderDetails extends StatelessWidget {
             decoration: BoxDecoration(color: color, shape: BoxShape.circle),
           ),
           SizedBox(width: 5),
-          Expanded(
-              child: CustomText(text,
-                  color: color, align: TextAlign.start, size: 15)),
+          Expanded(child: CustomText(text, color: color, align: TextAlign.start, size: 15)),
         ],
       ),
     );

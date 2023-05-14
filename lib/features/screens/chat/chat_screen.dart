@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:weltweit/core/resources/values_manager.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
+import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/data/injection.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
@@ -32,17 +33,15 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   final TextEditingController _messageController = TextEditingController();
   List<ChatModel> _messages = [];
   Timer? timer;
-
+  AppPrefs appPrefs = getIt<AppPrefs>();
+  int myId = 0;
   @override
   void initState() {
     super.initState();
+    myId = appPrefs.get(PrefKeys.isTypeProvider, defaultValue: 0);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ChatCubit>().getChat(widget.orderModel.id);
     });
-
-    // timer = Timer(Duration(seconds: 30), () {
-    //   context.read<ChatCubit>().getChat(widget.orderModel.id, loading: false);
-    // });
   }
 
   @override
@@ -77,12 +76,12 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                         itemBuilder: (context, index) {
                           final message = _messages[index];
                           return Align(
-                            alignment: message.clientId != widget.orderModel.provider?.id ? Alignment.centerRight : Alignment.centerLeft,
+                            alignment: message.clientId == myId || message.clientId == 0 ? Alignment.centerRight : Alignment.centerLeft,
                             child: Container(
                               margin: const EdgeInsets.all(8.0),
                               padding: const EdgeInsets.all(8.0),
                               decoration: BoxDecoration(
-                                color: message.clientId != widget.orderModel.provider?.id ? Colors.blue : Colors.grey,
+                                color: message.clientId == myId || message.clientId == 0 ? Colors.lightBlueAccent : Colors.grey.shade300,
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                               child: _buildMessage(message),
@@ -209,8 +208,6 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                   ],
                 ),
               );
-
-              break;
             case BaseState.error:
               return ErrorLayout(errorModel: state.error);
           }
@@ -297,13 +294,13 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   }
 
   _buildMessage(ChatModel message) {
-    if (message.image != null) {
+    if (message.message == 'image') {
       return CustomImage(
         imageUrl: message.image!,
         width: deviceWidth / 2,
       );
     }
-    if (message.lat != null && message.lng != null) {
+    if (message.message == 'location') {
       return Column(
         children: [
           SizedBox(

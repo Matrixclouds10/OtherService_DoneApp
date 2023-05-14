@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
-import 'package:weltweit/features/core/widgets/order_item_widget.dart';
 import 'package:weltweit/features/core/widgets/order_item_widget_client_info.dart';
 import 'package:weltweit/features/services/logic/orders/orders_cubit.dart';
 import 'package:weltweit/features/widgets/app_text_tile.dart';
@@ -147,16 +146,7 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
                 .where((element) => element.status.toLowerCase() == 'accepted')
                 .map((e) => GestureDetector(
                       onTap: () {},
-                      child: OrderItemWidgetClient(
-                        orderModel: e,
-                        // name: state.pendingData[i].provider?.name ?? '',
-                        // profession: '',
-                        // date: DateFormat('yyyy-MM-dd').format(state.pendingData[i].date),
-                        // time: DateFormat('HH:mm').format(state.pendingData[i].date),
-                        // orderStatus: state.pendingData[i].status,
-                        // price: '',
-                        // tags: const [],
-                      ),
+                      child: OrderItemWidgetClient(orderModel: e),
                     ))
                 .toList(),
           ],
@@ -166,23 +156,10 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
   }
 
   completedOrders() {
-    return Column(
-      children: [
-        // for (var i = 0; i < 4; i++)
-        //   OrderItemWidget(
-        //     avatar: Assets.imagesAvatar,
-        //     name: "مسعد معوض",
-        //     profession: getRandomTags()[0],
-        //     date: getRandomDate(),
-        //     time: getRadomTime(),
-        //     orderStatus: "completed",
-        //     price: "${100 * (i + 1)} ج",
-        //     tags: getRandomTags(),
-        //   )
-      ],
+    return const Column(
+      children: [],
     );
   }
-
 
   Widget newOrders() {
     return BlocBuilder<OrdersCubit, OrdersState>(
@@ -232,16 +209,7 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
                 .where((element) => element.status.toLowerCase() == 'pending')
                 .map((e) => GestureDetector(
                       onTap: () {},
-                      child: OrderItemWidgetClient(
-                        orderModel: e,
-                        // name: state.pendingData[i].provider?.name ?? '',
-                        // profession: '',
-                        // date: DateFormat('yyyy-MM-dd').format(state.pendingData[i].date),
-                        // time: DateFormat('HH:mm').format(state.pendingData[i].date),
-                        // orderStatus: state.pendingData[i].status,
-                        // price: '',
-                        // tags: const [],
-                      ),
+                      child: OrderItemWidgetClient(orderModel: e),
                     ))
                 .toList(),
           ],
@@ -249,7 +217,6 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
       },
     );
   }
-
 
   Widget ratesAsStars(double d) {
     return Row(

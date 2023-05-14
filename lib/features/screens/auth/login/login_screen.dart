@@ -88,9 +88,11 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
         if (response.isSuccess) {
           UserModel userEntity = response.data;
           String token = userEntity.token ?? '';
+          int id = userEntity.id ?? 0;
           if (token.isNotEmpty) {
             AppPrefs prefs = getIt();
             prefs.save(PrefKeys.token, token);
+            prefs.save(PrefKeys.id, id);
             prefs.save(PrefKeys.isTypeProvider, typeIsProvider);
           }
           if (typeIsProvider) {
