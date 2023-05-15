@@ -6,9 +6,7 @@ class Constants {
   static const String empty = "";
   static const int connectTimeout = kDebugMode ? 10000 : 120000;
 
-  static const String kGoogleMapKey = 'AIzaSyDni6NI_DWPFL2snl8Dqnn2K5fqXpNbC4w';
-  // static const String  kGoogleMapKey= 'AIzaSyDNSpdaE88kKP67ne51BWtpyQsdZJIeV5E';
-  // static const String  kGoogleMapKey= 'AIzaSyBvjoIOOX8uJteEXBRDoYmt_lK2a4tpwok';
+  static const String kGoogleMapKey = '';
 
   static const String kTerms = '${AppURL.kBaseURL}setting/setting-view/terms';
   static const String kAboutUs =

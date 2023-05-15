@@ -39,9 +39,7 @@
             android:value="2" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDni6NI_DWPFL2snl8Dqnn2K5fqXpNbC4w" />
-<!--            android:value="AIzaSyBvjoIOOX8uJteEXBRDoYmt_lK2a4tpwok" />-->
-<!--            android:value="AIzaSyDNSpdaE88kKP67ne51BWtpyQsdZJIeV5E" />-->
+            android:value="" />
     </application>
     <!-- Provide required visibility configuration for API level 30 and above -->
 <queries>
