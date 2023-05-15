@@ -1,6 +1,6 @@
 import 'package:weltweit/features/domain/usecase/auth/sign_in_usecase.dart';
-import 'package:weltweit/features/services/domain/request_body/check_otp_body.dart';
-import 'package:weltweit/features/services/domain/request_body/register_body.dart';
+import 'package:weltweit/features/domain/request_body/check_otp_body.dart';
+import 'package:weltweit/features/domain/request_body/register_body.dart';
 
 import '../../data/models/base/api_response.dart';
 

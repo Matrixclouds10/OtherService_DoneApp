@@ -9,7 +9,7 @@ import 'package:weltweit/features/screens/chat/chat_screen.dart';
 import 'package:weltweit/features/screens/contact/contact_page.dart';
 import 'package:weltweit/features/screens/policy/policy_page.dart';
 import 'package:weltweit/features/screens/splash/splash_screen.dart';
-import 'package:weltweit/features/services/data/models/response/order/order.dart';
+import 'package:weltweit/features/data/models/order/order.dart';
 
 import 'platform_page_route.dart';
 import 'undefined_route_screen.dart';

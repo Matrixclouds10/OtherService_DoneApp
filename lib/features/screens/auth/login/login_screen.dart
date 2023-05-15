@@ -19,7 +19,7 @@ import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/data/models/response/country/country_model.dart';
 import 'package:weltweit/features/domain/usecase/auth/sign_in_usecase.dart';
 import 'package:weltweit/features/logic/country/country_cubit.dart';
-import 'package:weltweit/features/services/domain/request_body/check_otp_body.dart';
+import 'package:weltweit/features/domain/request_body/check_otp_body.dart';
 import 'package:weltweit/features/widgets/app_back_button.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/assets.dart';
@@ -54,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       logger.d('typeIsProvider $typeIsProvider');
     });
     if (kDebugMode) {
-      _phoneController.text = '1006896871';
+      _phoneController.text = '1010101040';
       _passwordController.text = '123456';
     }
     super.initState();

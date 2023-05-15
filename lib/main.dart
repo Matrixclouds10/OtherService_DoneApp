@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:weltweit/bloc.dart';
 import 'package:weltweit/features/injection.dart' as services_injection;
-import 'package:weltweit/features/provider/domain/injection.dart' as services_provider_injection;
 
 import 'app.dart';
 import 'data/injection.dart' as data_injection;
@@ -28,7 +27,6 @@ void main() async {
   await injection.init();
 
   await services_injection.init();
-  await services_provider_injection.init();
 
   runApp(GenerateMultiBloc(
     child: EasyLocalization(

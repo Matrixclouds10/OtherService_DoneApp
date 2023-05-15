@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
-import 'package:weltweit/features/services/domain/repository/app_repo.dart';
+import 'package:weltweit/features/domain/repositoy/app_repo.dart';
 
 class ChangePasswordUseCase implements BaseUseCase<BaseResponse, ChangePasswordParams> {
   final AppRepository repository;

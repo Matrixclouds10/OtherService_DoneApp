@@ -6,7 +6,7 @@ import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/data/injection.dart';
 import 'package:weltweit/features/data/models/base/response_model.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
-import 'package:weltweit/features/services/domain/request_body/check_otp_body.dart';
+import 'package:weltweit/features/domain/request_body/check_otp_body.dart';
 import 'package:weltweit/features/domain/usecase/auth/check_otp_usecase.dart';
 import 'package:weltweit/features/domain/usecase/auth/forget_password_usecase.dart';
 import 'package:weltweit/features/domain/usecase/auth/update_fcm_token_usecase.dart';

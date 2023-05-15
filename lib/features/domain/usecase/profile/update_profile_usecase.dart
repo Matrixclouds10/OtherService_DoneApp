@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
-import 'package:weltweit/features/services/domain/repository/app_repo.dart';
+import 'package:weltweit/features/domain/repositoy/app_repo.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
 
 class UpdateProfileUseCase
@@ -52,7 +52,7 @@ class UpdateProfileParams {
     if (mobileNumber != null) data['mobile'] = mobileNumber;
     if (countryCode != null) data['country_code'] = countryCode;
     if (countryIso != null) data['country_iso'] = countryIso;
-    if (genderIsMale != null) data['gender'] = genderIsMale ? 'male' : 'female';
+ data['gender'] = genderIsMale ? 'male' : 'female';
     return data;
   }
 }

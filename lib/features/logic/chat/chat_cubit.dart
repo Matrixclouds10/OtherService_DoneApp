@@ -5,7 +5,7 @@ import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/domain/usecase/chat_messages/chat_messages_usecase.dart';
 import 'package:weltweit/features/domain/usecase/chat_send_message/chat_send_message_usecase.dart';
-import 'package:weltweit/features/services/data/models/response/chat/chat_model.dart';
+import 'package:weltweit/features/data/models/chat/chat_model.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 
 part 'chat_state.dart';
@@ -69,6 +69,7 @@ class ChatCubit extends Cubit<ChatState> {
   void initStates() {
     emit(state.copyWith(
       state: BaseState.initial,
+      data: [],
       error: null,
     ));
   }

@@ -9,9 +9,9 @@ import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 
 import 'package:weltweit/features/core/widgets/custom_text.dart';
+import 'package:weltweit/features/logic/orders/orders_cubit.dart';
 import 'package:weltweit/features/logic/profile/profile_cubit.dart';
-import 'package:weltweit/features/services/logic/orders/orders_cubit.dart';
-import 'package:weltweit/features/services/modules/my_addresses/logic/address_cubit.dart';
+import 'package:weltweit/features/screens/my_addresses/logic/address_cubit.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/presentation/component/component.dart';
 

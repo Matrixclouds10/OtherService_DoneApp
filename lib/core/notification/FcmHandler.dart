@@ -205,9 +205,7 @@ class _FcmHandlerState extends State<FcmHandler> {
     // String? itemType = data.type;
     // int? itemId = data.referenceId;
 
-    if (model != null) {
-      NotificationHelper.notificationNav(model, navigatorKey: navigatorKey);
-    }
+    NotificationHelper.notificationNav(model, navigatorKey: navigatorKey);
   }
 
   void openDownloadedFile(String path) async {

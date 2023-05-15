@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
-import 'package:weltweit/features/services/data/models/response/services/service.dart';
+import 'package:weltweit/features/data/models/services/service.dart';
 import 'package:weltweit/presentation/component/component.dart';
 
 class ServiceItemWidget extends StatelessWidget {

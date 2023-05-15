@@ -4,8 +4,8 @@ import 'package:weltweit/core/resources/decoration.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
-import 'package:weltweit/features/services/data/models/response/provider/providers_model.dart';
-import 'package:weltweit/features/services/logic/favorite/favorite_cubit.dart';
+import 'package:weltweit/features/data/models/provider/providers_model.dart';
+import 'package:weltweit/features/logic/favorite/favorite_cubit.dart';
 import 'package:weltweit/presentation/component/component.dart';
 
 class ServiceProviderItemWidget extends StatelessWidget {

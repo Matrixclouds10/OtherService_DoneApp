@@ -1,5 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:weltweit/features/provider/domain/usecase/document/document_add_usecase.dart';
+import 'package:weltweit/features/domain/usecase/provider_document/document_add_usecase.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 
 class AppConverters {

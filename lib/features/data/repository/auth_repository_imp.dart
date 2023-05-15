@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:weltweit/features/data/models/base/api_response.dart';
 import 'package:weltweit/features/domain/usecase/auth/sign_in_usecase.dart';
-import 'package:weltweit/features/services/domain/request_body/check_otp_body.dart';
-import 'package:weltweit/features/services/domain/request_body/register_body.dart';
+import 'package:weltweit/features/domain/request_body/check_otp_body.dart';
+import 'package:weltweit/features/domain/request_body/register_body.dart';
 
 import '../../domain/repositoy/auth_repo.dart';
 import '../../../data/app_urls/app_url.dart';

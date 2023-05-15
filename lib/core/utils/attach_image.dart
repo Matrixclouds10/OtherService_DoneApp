@@ -13,8 +13,7 @@ Future<String?> onPickImagesPressed(BuildContext context) async {
     _paths = (await FilePicker.platform.pickFiles(
       type: _filesType,
       allowMultiple: _multiPick,
-      allowedExtensions:
-          (true) ? _extensions.replaceAll(' ', '').split(',') : null,
+      allowedExtensions: _extensions.replaceAll(' ', '').split(','),
     ))
         ?.files;
   } on PlatformException catch (e) {

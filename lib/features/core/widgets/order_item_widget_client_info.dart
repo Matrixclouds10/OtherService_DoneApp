@@ -4,7 +4,7 @@ import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
-import 'package:weltweit/features/services/data/models/response/order/order.dart';
+import 'package:weltweit/features/data/models/order/order.dart';
 import 'package:weltweit/presentation/component/images/custom_image.dart';
 
 class OrderItemWidgetClient extends StatelessWidget {

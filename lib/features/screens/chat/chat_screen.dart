@@ -14,8 +14,8 @@ import 'package:weltweit/data/injection.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/logic/chat/chat_cubit.dart';
-import 'package:weltweit/features/services/data/models/response/chat/chat_model.dart';
-import 'package:weltweit/features/services/data/models/response/order/order.dart';
+import 'package:weltweit/features/data/models/chat/chat_model.dart';
+import 'package:weltweit/features/data/models/order/order.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
@@ -38,7 +38,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    myId = appPrefs.get(PrefKeys.isTypeProvider, defaultValue: 0);
+    myId = appPrefs.get(PrefKeys.id, defaultValue: 0);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ChatCubit>().getChat(widget.orderModel.id);
     });
@@ -58,7 +58,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       ),
       body: BlocBuilder<ChatCubit, ChatState>(
         builder: (context, state) {
-          if (_messages.isEmpty) _messages = state.data;
+          if (_messages.isEmpty) _messages.addAll(state.data.reversed);
           switch (state.state) {
             case BaseState.initial:
             case BaseState.loading:
@@ -76,12 +76,12 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                         itemBuilder: (context, index) {
                           final message = _messages[index];
                           return Align(
-                            alignment: message.clientId == myId || message.clientId == 0 ? Alignment.centerRight : Alignment.centerLeft,
+                            alignment: message.providerId == myId || message.providerId == 0 ? Alignment.centerRight : Alignment.centerLeft,
                             child: Container(
                               margin: const EdgeInsets.all(8.0),
                               padding: const EdgeInsets.all(8.0),
                               decoration: BoxDecoration(
-                                color: message.clientId == myId || message.clientId == 0 ? Colors.lightBlueAccent : Colors.grey.shade300,
+                                color: message.providerId == myId || message.providerId == 0 ? Colors.lightBlueAccent : Colors.grey.shade300,
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                               child: _buildMessage(message),
@@ -178,7 +178,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                                       ChatModel(
                                         id: 0,
                                         serviceOrderId: 0,
-                                        clientId: 0,
+                                        providerId: 0,
                                         image: null,
                                         lat: position.latitude.toString(),
                                         lng: position.longitude.toString(),
@@ -227,7 +227,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             ChatModel(
               id: 0,
               serviceOrderId: 0,
-              clientId: 0,
+              providerId: 0,
               image: null,
               lat: null,
               lng: null,
@@ -254,7 +254,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           ChatModel(
             id: 0,
             serviceOrderId: 0,
-            clientId: 0,
+            providerId: 0,
             image: pickedFile.path,
             lat: null,
             lng: null,
@@ -279,7 +279,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           ChatModel(
             id: 0,
             serviceOrderId: 0,
-            clientId: 0,
+            providerId: 0,
             image: pickedFile.path,
             lat: null,
             lng: null,
