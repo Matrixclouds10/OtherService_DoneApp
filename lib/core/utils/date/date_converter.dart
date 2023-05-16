@@ -4,7 +4,7 @@ import 'package:weltweit/app.dart';
 
 class DateConverter {
   static String formatDate(DateTime dateTime) {
-    return DateFormat('yyyy-MM-dd hh:mm:our_clients').format(dateTime);
+    return DateFormat('yyyy-MM-dd hh:mm').format(dateTime);
   }
 
   static String estimatedDate(DateTime dateTime) {

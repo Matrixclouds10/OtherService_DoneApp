@@ -19,6 +19,7 @@ import 'package:weltweit/features/domain/usecase/provider_profile/change_passwor
 import 'package:weltweit/features/domain/usecase/provider_profile/update_profile_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_services/update_services_usecase.dart';
 import 'package:weltweit/features/data/models/subscription/subscription_model.dart';
+import 'package:weltweit/features/domain/usecase/provider_subscription/subscribe_usecase.dart';
 class ProviderRepositoryImpProvider implements ProviderRepositoryProvider {
   final NetworkClient networkClient;
   ProviderRepositoryImpProvider({required this.networkClient});
@@ -294,5 +295,15 @@ class ProviderRepositoryImpProvider implements ProviderRepositoryProvider {
         return Left(ErrorModel(errorMessage: e.toString()));
       }
     });
+  }
+
+  @override
+  Future<Either<ErrorModel, BaseResponse>> subscribe({required SubscribeParams params}) async{
+     String url = AppURL.subscribe;
+    NetworkCallType type = NetworkCallType.post;
+    Map<String, dynamic> data = params.toJson();
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+    return result.fold((l) => Left(l), (r) => Right(r));
+
   }
 }

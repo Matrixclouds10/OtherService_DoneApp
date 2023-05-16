@@ -12,6 +12,7 @@ import 'package:weltweit/data/injection.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
 import 'package:weltweit/features/data/models/response/country/country_model.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
+import 'package:weltweit/features/domain/usecase/order/order_accept_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_cancel_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_finish_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/orders_usecase.dart';
@@ -276,7 +277,9 @@ class AppRepositoryImp implements AppRepository {
 
   @override
   Future<Either<ErrorModel, OrderModel>> getOrder({required int params}) async {
-    String url = "${AppURL.getOrder}/$params";
+    AppPrefs prefs = getIt.get<AppPrefs>();
+    bool isProvider = prefs.get(PrefKeys.isTypeProvider, defaultValue: false);
+    String url = isProvider ? "${AppURL.providerGetOrder}/$params" : "${AppURL.getOrder}/$params";
     NetworkCallType type = NetworkCallType.get;
     Map<String, dynamic> data = {};
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
@@ -311,7 +314,20 @@ class AppRepositoryImp implements AppRepository {
 
   @override
   Future<Either<ErrorModel, BaseResponse>> cancelOrder({required OrderCancelParams params}) async {
-    String url = AppURL.cancelOrder;
+    AppPrefs prefs = getIt.get<AppPrefs>();
+    bool isProvider = prefs.get(PrefKeys.isTypeProvider, defaultValue: false);
+
+    String url = isProvider ? AppURL.providerCancelOrder : AppURL.cancelOrder;
+    NetworkCallType type = NetworkCallType.post;
+    Map<String, dynamic> data = params.toJson();
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+
+    return result.fold((l) => Left(l), (r) => Right(r));
+  }
+
+  @override
+  Future<Either<ErrorModel, BaseResponse>> acceptOrder({required OrderAcceptParams params}) async {
+    String url = AppURL.providerAcceptOrder;
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = params.toJson();
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
@@ -321,7 +337,7 @@ class AppRepositoryImp implements AppRepository {
 
   @override
   Future<Either<ErrorModel, BaseResponse>> finishOrder({required OrderFinishParams params}) async {
-    String url = AppURL.orderFinish;
+    String url = AppURL.providerOrderFinish;
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = params.toJson();
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);

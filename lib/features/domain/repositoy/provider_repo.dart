@@ -14,6 +14,8 @@ import 'package:weltweit/features/domain/usecase/provider_profile/change_passwor
 import 'package:weltweit/features/domain/usecase/provider_profile/update_profile_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_services/update_services_usecase.dart';
 import 'package:weltweit/features/data/models/subscription/subscription_model.dart';
+import 'package:weltweit/features/domain/usecase/provider_subscription/subscribe_usecase.dart';
+
 abstract class ProviderRepositoryProvider {
   Future<Either<ErrorModel, UserModel>> getProfile();
   Future<Either<ErrorModel, bool>> deleteProfile({required int id});
@@ -44,8 +46,8 @@ abstract class ProviderRepositoryProvider {
 
   //* Subscription
   Future<Either<ErrorModel, List<SubscriptionModel>>> getSubscription();
+  Future<Either<ErrorModel, BaseResponse>> subscribe({required SubscribeParams params});
 
   //* Wallet
   Future<Either<ErrorModel, List<WalletModel>>> getWalletHistory();
-
 }

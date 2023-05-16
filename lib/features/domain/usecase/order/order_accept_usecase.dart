@@ -4,35 +4,32 @@ import 'package:weltweit/features/core/base/base_response.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
 import 'package:weltweit/features/domain/repositoy/app_repo.dart';
 
-class OrderFinishUseCase extends BaseUseCase<BaseResponse, OrderFinishParams> {
+class OrderAcceptUseCase extends BaseUseCase<BaseResponse, OrderAcceptParams> {
   final AppRepository repository;
 
-  OrderFinishUseCase(this.repository);
+  OrderAcceptUseCase(this.repository);
 
   @override
-  Future<Either<ErrorModel, BaseResponse>> call(OrderFinishParams parameters) async {
-    return await repository.finishOrder(params: parameters);
+  Future<Either<ErrorModel, BaseResponse>> call(OrderAcceptParams parameters) async {
+    return await repository.acceptOrder(params: parameters);
   }
 
   @override
-  Future<Either<ErrorModel, BaseResponse>> callTest(OrderFinishParams parameters) {
+  Future<Either<ErrorModel, BaseResponse>> callTest(OrderAcceptParams parameters) {
     throw UnimplementedError();
   }
 }
 
-class OrderFinishParams {
+class OrderAcceptParams {
   int id;
-  String price;
 
-  OrderFinishParams({
+  OrderAcceptParams({
     required this.id,
-    required this.price,
   });
 
   toJson() {
     return {
       'order_id': id,
-      'price': price,
     };
   }
 }

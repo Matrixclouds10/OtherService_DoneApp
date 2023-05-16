@@ -6,17 +6,13 @@ class Constants {
   static const String empty = "";
   static const int connectTimeout = kDebugMode ? 10000 : 120000;
 
-  static const String kGoogleMapKey = '';
+  static const String kGoogleMapKey = 'AIzaSyDni6NI_DWPFL2snl8Dqnn2K5fqXpNbC4w';
 
   static const String kTerms = '${AppURL.kBaseURL}setting/setting-view/terms';
-  static const String kAboutUs =
-      '${AppURL.kBaseURL}setting/setting-view/about_us';
-  static const String kPayment =
-      '${AppURL.kBaseURL}orders/payment?order_id=6&payment_type=cash';
+  static const String kAboutUs = '${AppURL.kBaseURL}setting/setting-view/about_us';
+  static const String kPayment = '${AppURL.kBaseURL}orders/payment?order_id=6&payment_type=cash';
 
-  static String getPaymentMethodLink(
-          {required int requestId, required String type}) =>
-      '${AppURL.kBaseURL}orders/payment?order_id=$requestId&payment_type=$type';
+  static String getPaymentMethodLink({required int requestId, required String type}) => '${AppURL.kBaseURL}orders/payment?order_id=$requestId&payment_type=$type';
 }
 
 double convertToDouble(var d) => d / 1;

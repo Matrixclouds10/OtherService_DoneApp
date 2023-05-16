@@ -2,9 +2,11 @@ import 'package:weltweit/features/data/repository/address_repository_imp.dart';
 import 'package:weltweit/features/data/repository/app_repository_imp.dart';
 import 'package:weltweit/features/domain/usecase/country/countries_usecase.dart';
 import 'package:weltweit/features/domain/usecase/country/country_usecase.dart';
+import 'package:weltweit/features/domain/usecase/order/order_accept_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_finish_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_usecase.dart';
-import 'package:weltweit/features/domain/usecase/provider_subscription/subscription_usecase.dart';
+import 'package:weltweit/features/domain/usecase/provider_subscription/subscribe_usecase.dart';
+import 'package:weltweit/features/domain/usecase/provider_subscription/subscribtions_usecase.dart';
 import 'package:weltweit/features/domain/repositoy/address_repository.dart';
 
 import 'package:weltweit/features/domain/usecase/address/address_update_usecase%20copy.dart';
@@ -108,6 +110,7 @@ Future<void> init() async {
   getIt.registerLazySingleton<AuthRepository>(() => AuthRepositoryImp(dioClient: getIt()));
 
   getIt.registerLazySingleton(() => OrderCancelUseCase(getIt()));
+  getIt.registerLazySingleton(() => OrderAcceptUseCase(getIt()));
   getIt.registerLazySingleton(() => OrderFinishUseCase(getIt()));
   getIt.registerLazySingleton(() => ChatMessagesUseCase(getIt()));
   getIt.registerLazySingleton(() => ChatSendMessageUseCase(getIt()));
@@ -117,5 +120,6 @@ Future<void> init() async {
   getIt.registerLazySingleton(() => CountryUseCase(getIt()));
   getIt.registerLazySingleton(() => CountriesUseCase(getIt()));
   getIt.registerLazySingleton(() => BannerUseCase(getIt()));
-  getIt.registerLazySingleton(() => SubscriptionUseCase(getIt()));
+  getIt.registerLazySingleton(() => SubscribeUseCase(getIt()));
+  getIt.registerLazySingleton(() => SubscribtionUseCase(getIt()));
 }

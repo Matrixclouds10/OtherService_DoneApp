@@ -41,6 +41,7 @@ class AppURL {
   static const String updateFcm = "$kBaseURL/profile/fcm_token";
   static const String updateLocation = "$kBaseURL/profile/update-location";
   static const String getSubscriptionPackages = "$kBaseURL/get-subscriptions";
+  static const String subscribe = "$kBaseURL/update-subscription";
 
   //*Wallet
   static const String getWalletHistory = "$kBaseURL/wallet/history";

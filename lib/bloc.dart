@@ -29,6 +29,7 @@ import 'package:weltweit/features/logic/favorite/favorite_cubit.dart';
 import 'package:weltweit/features/logic/provider/provider/provider_cubit.dart';
 import 'package:weltweit/features/logic/provider/provider_services/provider_services_cubit.dart';
 import 'package:weltweit/features/logic/provider/providers_cubit.dart';
+
 class GenerateMultiBloc extends StatelessWidget {
   final Widget child;
 
@@ -36,7 +37,6 @@ class GenerateMultiBloc extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ///TODO add bloc
     return MultiBlocProvider(
       providers: [
         //*user
@@ -46,10 +46,8 @@ class GenerateMultiBloc extends StatelessWidget {
         BlocProvider<LayoutCubit>(create: (BuildContext context) => LayoutCubit()),
         //Profile
         BlocProvider<ProfileCubit>(create: (BuildContext context) => ProfileCubit(getIt(), getIt(), getIt(), getIt(), getIt(), getIt())),
-
         //Address
         BlocProvider<AddressCubit>(create: (BuildContext context) => AddressCubit(getIt(), getIt(), getIt(), getIt(), getIt())),
-
         //Services
         BlocProvider<ServicesCubit>(create: (BuildContext context) => ServicesCubit(getIt(), getIt())),
         BlocProvider<ProvidersCubit>(create: (BuildContext context) => ProvidersCubit(getIt(), getIt())),
@@ -57,24 +55,25 @@ class GenerateMultiBloc extends StatelessWidget {
         BlocProvider<ProviderServicesCubit>(create: (BuildContext context) => ProviderServicesCubit(getIt())),
         BlocProvider<FavoriteCubit>(create: (BuildContext context) => FavoriteCubit(getIt(), getIt())),
         BlocProvider<OrdersCubit>(create: (BuildContext context) => OrdersCubit(getIt())),
-        BlocProvider<OrderCubit>(create: (BuildContext context) => OrderCubit(getIt(), getIt())),
+        BlocProvider<OrderCubit>(create: (BuildContext context) => OrderCubit(getIt(), getIt(), getIt(), getIt())),
         BlocProvider<CreateOrderCubit>(create: (BuildContext context) => CreateOrderCubit(getIt())),
         BlocProvider<CountryCubit>(create: (BuildContext context) => CountryCubit(getIt(), getIt())),
         BlocProvider<BannerCubit>(create: (BuildContext context) => BannerCubit(getIt())..getBanner()),
-        BlocProvider<SubscriptionCubit>(create: (BuildContext context) => SubscriptionCubit(getIt())),
+        BlocProvider<SubscribtionCubit>(create: (BuildContext context) => SubscribtionCubit(getIt(),getIt())),
         /* -------------------------------------------------------------------------- */
         //*Provider
         BlocProvider<LayoutProviderCubit>(create: (BuildContext context) => LayoutProviderCubit()),
         BlocProvider<ProfileProviderCubit>(create: (BuildContext context) => ProfileProviderCubit(getIt(), getIt(), getIt(), getIt(), getIt(), getIt(), getIt())),
         BlocProvider<PortfoliosCubit>(create: (BuildContext context) => PortfoliosCubit(getIt(), getIt(), getIt(), getIt())),
         BlocProvider<ServicesProviderCubit>(create: (BuildContext context) => ServicesProviderCubit(getIt(), getIt())),
-        BlocProvider<SubscriptionCubit>(create: (BuildContext context) => SubscriptionCubit(getIt())),
         BlocProvider<WalletCubit>(create: (BuildContext context) => WalletCubit(getIt())),
         BlocProvider<ChatCubit>(create: (BuildContext context) => ChatCubit(getIt(), getIt())),
         BlocProvider<AboutCubit>(create: (BuildContext context) => AboutCubit(getIt())),
         BlocProvider<PolicyCubit>(create: (BuildContext context) => PolicyCubit(getIt())),
         BlocProvider<ContactUsCubit>(create: (BuildContext context) => ContactUsCubit(getIt())),
         /* -------------------------------------------------------------------------- */
+
+        //DI 
       ],
       child: child,
     );

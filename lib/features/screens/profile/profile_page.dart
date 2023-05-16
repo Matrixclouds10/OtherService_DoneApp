@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,6 +14,7 @@ import 'package:weltweit/features/logic/orders/orders_cubit.dart';
 import 'package:weltweit/features/logic/profile/profile_cubit.dart';
 import 'package:weltweit/features/screens/my_addresses/logic/address_cubit.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
+import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -27,7 +29,7 @@ class ProfilePage extends StatelessWidget {
           isBackButtonExist: false,
           isCenterTitle: true,
           color: Colors.white,
-          titleWidget: const CustomText("حسابي").header(),
+          titleWidget:  CustomText(LocaleKeys.myProfile.tr()).header(),
           actions: [
             IconButton(
               icon: const Icon(Icons.edit_note, color: Colors.black),

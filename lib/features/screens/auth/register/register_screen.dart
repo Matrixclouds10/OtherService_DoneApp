@@ -5,22 +5,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/extensions/num_extensions.dart';
-import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/utils/logger.dart';
-import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/data/models/response/country/country_model.dart';
-import 'package:weltweit/features/logic/country/country_cubit.dart';
 import 'package:weltweit/features/domain/request_body/check_otp_body.dart';
 import 'package:weltweit/features/domain/request_body/register_body.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
-import 'package:weltweit/presentation/component/inputs/phone_country/countries.dart';
 import 'package:weltweit/presentation/component/inputs/phone_country/custom_text_filed_phone_country.dart';
 
 import 'register_cubit.dart';
@@ -246,28 +242,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
               autofocus: false,
             ),
             const VerticalSpace(kScreenPaddingNormal),
-              CustomTextFieldPhoneCountry(
+            CustomTextFieldPhoneCountry(
               controller: _phoneController,
               selectedCountry: selectedCountry,
               onCountryChanged: (value) {
                 selectedCountry = value;
-              },
-            ),
-            if(false) //TODO: remove below
-            BlocBuilder<CountryCubit, CountryState>(
-              builder: (context, state) {
-                return CustomTextFieldPhoneCode(
-                  label: tr(LocaleKeys.yourPhoneNumber),
-                  controller: _phoneController,
-                  textInputAction: TextInputAction.next,
-                  enable: state.state == BaseState.loaded,
-                  enabled:  state.state == BaseState.loaded,
-                  countries: state.data,
-                  onCountryChanged: (countryVal) {
-                    selectedCountry = countryVal;
-                  },
-                  disableLengthCheck: true,
-                );
               },
             ),
             const VerticalSpace(kScreenPaddingNormal),

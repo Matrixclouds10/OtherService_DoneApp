@@ -14,6 +14,7 @@ import 'package:weltweit/features/core/widgets/service_provider_item.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/data/models/portfolio/portfolio_image.dart';
 import 'package:weltweit/features/domain/usecase/provider_portfolio/portfolio_update_usecase.dart';
+import 'package:weltweit/features/logic/profile/profile_cubit.dart';
 import 'package:weltweit/features/logic/provider_portfolio/portfolio_cubit.dart';
 import 'package:weltweit/features/logic/provider_profile/profile_cubit.dart';
 import 'package:weltweit/features/logic/provider_service/services_cubit.dart';
@@ -56,7 +57,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
         isBackButtonExist: false,
         isCenterTitle: true,
         color: Colors.white,
-        titleWidget: CustomText("حسابي").header(),
+        titleWidget: CustomText(LocaleKeys.myProfile.tr()).header(),
         actions: [
           IconButton(
             icon: Icon(Icons.edit_note, color: Colors.black),
@@ -95,7 +96,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                           isOnline: state.data?.isOnline?.toLowerCase() == "yes",
                         ),
                         canMakeAppointment: null,
-                        moreInfoButton: true,
+                        moreInfoButton: false,
                         showFavoriteButton: false,
                       ),
                     );
@@ -161,11 +162,11 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
       child: Column(
         children: [
           Row(
-            children: const [
+            children: [
               SizedBox(width: 24),
               Icon(FontAwesomeIcons.plusCircle, size: 30, color: primaryColor),
               SizedBox(width: 12),
-              CustomText("إضافة خدمة جديدة", pv: 0),
+              CustomText(LocaleKeys.addNewService.tr(), pv: 0),
               Spacer(),
             ],
           ),
@@ -178,6 +179,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                   for (var i = 0; i < state.myServices.length; i++)
                     Container(
                       margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -313,85 +315,89 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
   }
 
   reviews() {
-    return Column(
-      children: [
-        Container(
-          color: Colors.white,
-          padding: EdgeInsets.all(8),
-          child: Row(
-            children: [
-              SizedBox(width: 12),
-              CustomText("3.4", size: 28),
-              SizedBox(width: 12),
-              Column(
+    return BlocBuilder<ProfileCubit, ProfileState>(
+      builder: (context, state) {
+        return Column(
+          children: [
+            Container(
+              color: Colors.white,
+              padding: EdgeInsets.all(8),
+              child: Row(
                 children: [
-                  ratesAsStars(3),
-                  Row(
+                  SizedBox(width: 12),
+                  CustomText("3.4", size: 28),
+                  SizedBox(width: 12),
+                  Column(
                     children: [
-                      CustomText("256", color: Colors.grey[500]!),
-                      SizedBox(width: 4),
-                      Icon(Icons.person, color: Colors.grey[500]!, size: 14),
+                      ratesAsStars(3),
+                      Row(
+                        children: [
+                          CustomText("256", color: Colors.grey[500]!),
+                          SizedBox(width: 4),
+                          Icon(Icons.person, color: Colors.grey[500]!, size: 14),
+                        ],
+                      ),
                     ],
                   ),
-                ],
-              ),
-              SizedBox(width: 24),
-              Expanded(
-                child: Column(
-                  children: const [
-                    LinearProgressIndicator(value: 0.9, color: Colors.greenAccent),
-                    SizedBox(height: 2),
-                    LinearProgressIndicator(value: 0.6, color: Colors.green),
-                    SizedBox(height: 2),
-                    LinearProgressIndicator(value: 0.7, color: Colors.orangeAccent),
-                    SizedBox(height: 2),
-                    LinearProgressIndicator(value: 0.4, color: Colors.orange),
-                    SizedBox(height: 2),
-                    LinearProgressIndicator(value: 0.1, color: Colors.red),
-                  ],
-                ),
-              ),
-              SizedBox(width: 12),
-            ],
-          ),
-        ),
-        for (var i = 0; i < 4; i++)
-          Container(
-              margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(top: 8),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(250),
-                      child: Image.asset(
-                        Assets.imagesAvatar,
-                        fit: BoxFit.fill,
-                        width: MediaQuery.of(context).size.width / 7,
-                        height: MediaQuery.of(context).size.width / 7,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 8),
+                  SizedBox(width: 24),
                   Expanded(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CustomText("مسعد معوض", pv: 2),
-                        ratesAsStars(Random().nextInt(4) + 1),
-                        CustomText("إنه سباك محترف وقام بجميع الأعمال المتعلقة بالسباكة في منزلنا. انا اوصي بشده به", align: TextAlign.start, color: Colors.grey[500]!, pv: 0).footer(),
+                      children: const [
+                        LinearProgressIndicator(value: 0.9, color: Colors.greenAccent),
+                        SizedBox(height: 2),
+                        LinearProgressIndicator(value: 0.6, color: Colors.green),
+                        SizedBox(height: 2),
+                        LinearProgressIndicator(value: 0.7, color: Colors.orangeAccent),
+                        SizedBox(height: 2),
+                        LinearProgressIndicator(value: 0.4, color: Colors.orange),
+                        SizedBox(height: 2),
+                        LinearProgressIndicator(value: 0.1, color: Colors.red),
                       ],
                     ),
                   ),
+                  SizedBox(width: 12),
                 ],
-              )),
-      ],
+              ),
+            ),
+            for (var i = 0; i < 4; i++)
+              Container(
+                  margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(top: 8),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(250),
+                          child: Image.asset(
+                            Assets.imagesAvatar,
+                            fit: BoxFit.fill,
+                            width: MediaQuery.of(context).size.width / 7,
+                            height: MediaQuery.of(context).size.width / 7,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CustomText("مسعد معوض", pv: 2),
+                            ratesAsStars(Random().nextInt(4) + 1),
+                            CustomText("إنه سباك محترف وقام بجميع الأعمال المتعلقة بالسباكة في منزلنا. انا اوصي بشده به", align: TextAlign.start, color: Colors.grey[500]!, pv: 0).footer(),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )),
+          ],
+        );
+      },
     );
   }
 

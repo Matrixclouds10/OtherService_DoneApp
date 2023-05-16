@@ -4,10 +4,10 @@ import 'package:weltweit/features/core/base/base_usecase.dart';
 import 'package:weltweit/features/data/models/subscription/subscription_model.dart';
 import 'package:weltweit/features/domain/repositoy/provider_repo.dart';
 
-class SubscriptionUseCase extends BaseUseCase<List<SubscriptionModel>, NoParameters> {
+class SubscribtionUseCase extends BaseUseCase<List<SubscriptionModel>, NoParameters> {
   final ProviderRepositoryProvider repository;
 
-  SubscriptionUseCase(this.repository);
+  SubscribtionUseCase(this.repository);
 
   @override
   Future<Either<ErrorModel, List<SubscriptionModel>>> call(NoParameters parameters) async {

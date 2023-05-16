@@ -10,15 +10,12 @@ import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/data/injection.dart';
-import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/routing/routes_provider.dart';
-import 'package:weltweit/features/data/models/base/response_model.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/data/models/response/country/country_model.dart';
 import 'package:weltweit/features/domain/usecase/auth/sign_in_usecase.dart';
-import 'package:weltweit/features/logic/country/country_cubit.dart';
 import 'package:weltweit/features/domain/request_body/check_otp_body.dart';
 import 'package:weltweit/features/widgets/app_back_button.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
@@ -108,15 +105,13 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             'typeIsProvider': typeIsProvider,
           });
         } else {
-          if (response is ResponseModel) {
-            String message = response.error?.errorMessage ?? response.message ?? '';
-            AppSnackbar.show(
-              context: context,
-              title: LocaleKeys.notification,
-              message: message,
-              type: SnackbarType.error,
-            );
-          }
+          String message = response.error?.errorMessage ?? response.message ?? '';
+          AppSnackbar.show(
+            context: context,
+            title: LocaleKeys.notification,
+            message: message,
+            type: SnackbarType.error,
+          );
         }
       }
     }

@@ -59,13 +59,17 @@ class AppURL {
   static const String getPendingOrders = "$kBaseURL/appointment/get/pending";
   static const String getCompletedOrders = "$kBaseURL/appointment/get/completed";
   static const String getCancelledOrders = "$kBaseURL/appointment/get/cancelled";
-  static const String orderFinish = "$kBaseURL/appointment/finish";
+  static const String orderDone = "$kBaseURL/appointment/done";
 
+  static const String providerOrderFinish = "$kBaseURL/service-provider/appointment/finish";
   static const String providerGetPendingOrders = "$kBaseURL/service-provider/appointment/get/pending";
   static const String providerGetCompletedOrders = "$kBaseURL/service-provider/appointment/get/completed";
   static const String providerGetCancelledOrders = "$kBaseURL/service-provider/appointment/get/cancelled";
+  static const String providerGetOrder = "$kBaseURL/service-provider/appointment/get-single";
+  static const String providerCancelOrder = "$kBaseURL/service-provider/appointment/cancel";
   static const String cancelOrder = "$kBaseURL/appointment/cancel";
   static const String getOrder = "$kBaseURL/appointment/get-single";
+  static const String providerAcceptOrder = "$kBaseURL/service-provider/appointment/accept";
 
   //Chat
   static const String getChatMessagesClient = "$kBaseURL/appointment/chat";

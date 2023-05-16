@@ -15,9 +15,5 @@ class LoginResponse {
             : UserModel.fromJson(json['user_model'] as Map<String, dynamic>),
       );
 
-  Map<String, dynamic> toJson() => {
-        'code': code,
-        'message': message,
-        'user_model': userModel?.toJson(),
-      };
+  
 }

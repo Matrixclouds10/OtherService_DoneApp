@@ -16,7 +16,7 @@ class CustomLoadingSpinner extends BasePlatformWidget<Center, Center> {
   @override
   Center createCupertinoWidget(BuildContext context) {
     return Center(
-        child: SpinKitDoubleBounce(
+        child: SpinKitFadingFour(
             color: color ?? Theme.of(context).primaryColor, size: 35));
     // return Center(child: CupertinoActivityIndicator(radius: 24.r));
   }

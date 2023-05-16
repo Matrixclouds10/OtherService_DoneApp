@@ -2,6 +2,26 @@
 
 abstract class LocaleKeys {
   
+  static const subscribeNow = "subscribeNow";
+  static const successfullyFinishOrder = "successfullyFinishOrder";
+  static const enterAmount = "enterAmount";
+  static const finishOrder = "finishOrder";
+  static const finished = "finished";
+  static const inProgress = "inProgress";
+  static const canceled = "canceled";
+  static const successfullyAcceptOrder = "successfullyAcceptOrder";
+  static const cancelOrder = "cancelOrder";
+  static const cancelReason = "cancelReason";
+  static const reasonRequired = "reasonRequired";
+  static const successfullyCanceledOrder = "successfullyCanceledOrder";
+  static const myWallet = "myWallet";
+  static const acceptOrder = "acceptOrder";
+  static const primaryAmount = "primaryAmount";
+  static const totalCost = "totalCost";
+  static const orderStatus = "orderStatus";
+  static const waitingForYourResponse = "waitingForYourResponse";
+  static const addNewService = "addNewService";
+  static const totalAmount = "totalAmount";
   static const most_requested_providers = "most_requested_providers";
   static const or = "or";
   static const msgMessageRequired = "msgMessageRequired";

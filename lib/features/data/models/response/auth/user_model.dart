@@ -1,4 +1,5 @@
 import 'package:weltweit/features/data/models/response/country/country_model.dart';
+import 'package:weltweit/features/data/models/subscription/subscription_model.dart';
 
 class UserModel {
   int? id;
@@ -16,6 +17,8 @@ class UserModel {
   String? desc;
   int? isCompany;
   CountryModel? countryModel;
+  double? wallet;
+  SubscriptionModel? subscriptionModel;
   UserModel({
     this.id,
     this.name,
@@ -32,39 +35,15 @@ class UserModel {
     this.desc,
     this.isCompany,
     this.countryModel,
+    this.wallet,
+    this.subscriptionModel,
   });
 
   bool isAvailable() {
     return '$isOnline'.toLowerCase() == "yes" || '$isOnline'.toLowerCase() == "on";
   }
 
-  String getName() => name ?? "";
-  String getMobileNumber() => mobileNumber ?? "";
-  String getEmail() => email ?? "";
-  String getGender() => gender;
-  String getImage() => image ?? "";
-  String getCountryCode() => countryCode ?? "";
-  String getToken() => token ?? "";
-  int getID() => id ?? 0;
-  int getIsCompany() => isCompany ?? 0;
-
   factory UserModel.fromJson(Map<String, dynamic> json) {
-    print('user model json: id ${json[" print('user model json:"]})');
-    print('user model json: name ${json[" print('user model json:"]})');
-    print('user model json: isOnline ${json[" print('user model json:"]})');
-    print('user model json: email ${json[" print('user model json:"]})');
-    print('user model json: mobileNumber ${json[" print('user model json:"]})');
-    print('user model json: token ${json[" print('user model json:"]})');
-    print('user model json: approved ${json[" print('user model json:"]})');
-    print('user model json: otpVerified ${json[" print('user model json:"]})');
-    print('user model json: countryCode ${json[" print('user model json:"]})');
-    print('user model json: image ${json[" print('user model json:"]})');
-    print('user model json: gender ${json[" print('user model json:"]})');
-    print('user model json: desc ${json[" print('user model json:"]})');
-    print('user model json: countryId ${json[" print('user model json:"]})');
-    print('user model json: isCompany ${json[" print('user model json:"]})');
-    print('user model json: ${json['id']}');
-
     Map<String, dynamic>? countryJson;
     if (json['country'] != null) {
       try {
@@ -89,21 +68,8 @@ class UserModel {
       countryId: 1,
       isCompany: json['is_company'] as int?,
       countryModel: countryJson != null ? CountryModel.fromJson(countryJson) : null,
+      wallet: json['wallet'] as double?,
+      subscriptionModel: json['subscription'] != null ? SubscriptionModel.fromJson(json['subscription']) : null,
     );
   }
-
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'is_online': isOnline,
-        'email': email,
-        'mobile_number': mobileNumber,
-        'token': token,
-        'approved': approved,
-        'otp_verified': otpVerified,
-        'country_code': countryCode,
-        'image': image,
-        'is_company': isCompany,
-        'country_id': countryModel?.id,
-      };
 }

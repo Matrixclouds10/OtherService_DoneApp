@@ -4,7 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
+import 'package:weltweit/features/domain/usecase/order/order_accept_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_cancel_usecase.dart';
+import 'package:weltweit/features/domain/usecase/order/order_finish_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_usecase.dart';
 import 'package:weltweit/features/data/models/order/order.dart';
 
@@ -13,9 +15,13 @@ part 'order_state.dart';
 class OrderCubit extends Cubit<OrderState> {
   final OrderUseCase orderUseCase;
   final OrderCancelUseCase orderCancelUseCase;
+  final OrderAcceptUseCase acceptUseCase;
+  final OrderFinishUseCase finishUseCase;
   OrderCubit(
     this.orderUseCase,
     this.orderCancelUseCase,
+    this.acceptUseCase,
+    this.finishUseCase,
   ) : super(const OrderState());
 
   Future<void> getOrder(int params) async {
@@ -49,6 +55,41 @@ class OrderCubit extends Cubit<OrderState> {
       },
       (data) {
         emit(state.copyWith(cancelState: BaseState.loaded));
+        return true;
+      },
+    );
+  }
+
+  Future<bool> acceptOrder({required int id}) async {
+    emit(state.copyWith(acceptState: BaseState.loading));
+    Either<ErrorModel, BaseResponse> result = await acceptUseCase(OrderAcceptParams(id: id));
+
+    return result.fold(
+      (error) {
+        emit(state.copyWith(acceptState: BaseState.error, error: error));
+        return false;
+      },
+      (data) {
+        emit(state.copyWith(acceptState: BaseState.loaded));
+        return true;
+      },
+    );
+  }
+
+  Future<bool> finishOrder({required int id, required String price}) async {
+    emit(state.copyWith(finishState: BaseState.loading));
+    Either<ErrorModel, BaseResponse> result = await finishUseCase(OrderFinishParams(
+      id: id,
+      price: price,
+    ));
+
+    return result.fold(
+      (error) {
+        emit(state.copyWith(finishState: BaseState.error, error: error));
+        return false;
+      },
+      (data) {
+        emit(state.copyWith(finishState: BaseState.loaded));
         return true;
       },
     );
