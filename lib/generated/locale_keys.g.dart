@@ -1,13 +1,35 @@
 // DO NOT EDIT. This is code generated via package:easy_localization/generate.dart
 
 abstract class LocaleKeys {
-  
+  static const rate = "rate";
+  static const subscribtionHistory = "subscribtionHistory";
+  static const back = "back";
+  static const selectRate = "selectRate";
+  static const rateSuccess = "rateSuccess";
+  static const comment = "comment";
+  static const rateOrder = "rateOrder";
+  static const reservation = "reservation";
+  static const successfullySendOrder = "successfullySendOrder";
+  static const somethingWentWrong = "somethingWentWrong";
+  static const camera = "camera";
+  static const gallery = "gallery";
+  static const video = "video";
+  static const whenDoYouNeedThisService = "whenDoYouNeedThisService";
+  static const accordingToSpecifiedTime = "accordingToSpecifiedTime";
+  static const rightNow = "rightNow";
+  static const date = "date";
+  static const time = "time";
+  static const selectService = "selectService";
+  static const cantAddMoreThan5Images = "cantAddMoreThan5Images";
+  static const waitingForApproval = "waitingForApproval";
+  static const approved = "approved";
+  static const inProgress = "inProgress";
+  static const giverate = "giverate";
   static const subscribeNow = "subscribeNow";
   static const successfullyFinishOrder = "successfullyFinishOrder";
   static const enterAmount = "enterAmount";
   static const finishOrder = "finishOrder";
   static const finished = "finished";
-  static const inProgress = "inProgress";
   static const canceled = "canceled";
   static const successfullyAcceptOrder = "successfullyAcceptOrder";
   static const cancelOrder = "cancelOrder";
@@ -35,7 +57,6 @@ abstract class LocaleKeys {
   static const searchByProviderName = "searchByProviderName";
   static const confirmLogout = "confirmLogout";
   static const address = "address";
-  static const video = "video";
   static const add = "add";
   static const addNewAddressDescription = "addNewAddressDescription";
   static const addNewAddress = "addNewAddress";
@@ -55,19 +76,15 @@ abstract class LocaleKeys {
   static const ar = 'ar';
   static const error = 'error';
   static const cantGetNewOrders = 'cantGetNewOrders';
-  static const makeSureToSelectServicesYouProvide =
-      'makeSureToSelectServicesYouProvide';
+  static const makeSureToSelectServicesYouProvide = 'makeSureToSelectServicesYouProvide';
   static const makeSureToUploadAllFiles = 'makeSureToUploadAllFiles';
   static const makeSureToBeOnline = 'makeSureToBeOnline';
   static const mustAcceptTerms = 'mustAcceptTerms';
   static const mustSelectCountry = 'mustSelectCountry';
-  static const somethingWentWrong = 'somethingWentWrong';
   static const notification = 'notification';
   static const indvidual = 'indvidual';
   static const company = 'company';
   static const selectImageSource = 'selectImageSource';
-  static const camera = 'camera';
-  static const gallery = 'gallery';
   static const welcomToOurWorld = 'welcomToOurWorld';
   static const alreadyHaveAccount = 'alreadyHaveAccount';
   static const joinOurWorld = 'joinOurWorld';
@@ -137,8 +154,7 @@ abstract class LocaleKeys {
   static const deleteAccount = 'deleteAccount';
   static const subject = 'subject';
   static const message = 'message';
-  static const theRequestHasBeenSentSuccessfully =
-      'theRequestHasBeenSentSuccessfully';
+  static const theRequestHasBeenSentSuccessfully = 'theRequestHasBeenSentSuccessfully';
   static const theMalfunctionImages = 'theMalfunctionImages';
   static const theMalfunctionDesc = 'theMalfunctionDesc';
   static const voiceRecording = 'voiceRecording';
@@ -165,8 +181,7 @@ abstract class LocaleKeys {
   static const registerPrivacyMassage = 'registerPrivacyMassage';
   static const otpVerification = 'otpVerification';
   static const phoneVerification = 'phoneVerification';
-  static const anAuthenticationCodeHasBeenSentTo =
-      'anAuthenticationCodeHasBeenSentTo';
+  static const anAuthenticationCodeHasBeenSentTo = 'anAuthenticationCodeHasBeenSentTo';
   static const iDidNotReceiveCode = 'iDidNotReceiveCode';
   static const secLeft = 'secLeft';
   static const verifyNow = 'verifyNow';
@@ -188,8 +203,7 @@ abstract class LocaleKeys {
   static const payment = 'payment';
   static const chooseYourPaymentMethod = 'chooseYourPaymentMethod';
   static const promoCode = 'promoCode';
-  static const saveTimeByAddingYourFavoritePlacesHear =
-      'saveTimeByAddingYourFavoritePlacesHear';
+  static const saveTimeByAddingYourFavoritePlacesHear = 'saveTimeByAddingYourFavoritePlacesHear';
   static const allServices = 'allServices';
   static const showAll = 'showAll';
   static const favorite = 'favorite';
@@ -234,10 +248,9 @@ abstract class LocaleKeys {
   static const toContactUs = 'toContactUs';
   static const yourAccountInReview = 'yourAccountInReview';
   static const goToMyFiles = 'goToMyFiles';
-   static const allowLocationStatusToBeShownForNearbyUsers= 'السماح للموقع ليتم عرضه للمستخدمين القريبين';
+  static const allowLocationStatusToBeShownForNearbyUsers = 'السماح للموقع ليتم عرضه للمستخدمين القريبين';
   static const selectAction = 'اختر العملية';
   static const other = 'other';
   static const letsStart = 'letsStart';
   static const loginAsVisitor = 'loginAsVisitor';
-
 }

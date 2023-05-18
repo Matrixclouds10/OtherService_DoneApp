@@ -228,7 +228,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         return Column(
           children: [
             ...state.pendingData
-                .where((element) => element.status.toLowerCase() == 'accepted')
+                .where((element) => element.statusCode?.toLowerCase() == 'provider_accept')
                 .map((e) => GestureDetector(
                       onTap: () {},
                       child: OrderItemWidgetClient(
@@ -294,7 +294,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         return Column(
           children: [
             ...state.pendingData
-                .where((element) => element.status.toLowerCase() == 'pending')
+                .where((element) => element.statusCode?.toLowerCase() == 'pending')
                 .map((e) => GestureDetector(
                       onTap: () {},
                       child: OrderItemWidgetClient(

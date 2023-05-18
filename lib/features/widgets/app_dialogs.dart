@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:material_dialogs/material_dialogs.dart';
 import 'package:material_dialogs/shared/types.dart';
@@ -16,9 +17,15 @@ import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/data/injection.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
+import 'package:weltweit/features/data/models/order/order.dart';
+import 'package:weltweit/features/domain/usecase/order/order_rate_usecase.dart';
+import 'package:weltweit/features/logic/order/order_cubit.dart';
 import 'package:weltweit/features/screens/layout/layout_cubit.dart';
+import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/features/widgets/app_text_tile.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
+import 'package:weltweit/presentation/component/custom_button.dart';
+import 'package:weltweit/presentation/component/inputs/base_form.dart';
 
 class AppDialogs {
   Future<File?> pickImage(BuildContext context) async {
@@ -290,4 +297,97 @@ class AppDialogs {
     );
     return result ?? false;
   }
+
+  void rateOrderDialog(BuildContext context, OrderModel orderModel) async {
+    double rate = 0;
+    bool loading = false;
+    TextEditingController controller = TextEditingController();
+    Dialogs.materialDialog(
+      title: LocaleKeys.rate.tr(),
+      msg: LocaleKeys.rateOrder.tr(),
+      color: Colors.white,
+      context: context,
+      actions: [
+        StatefulBuilder(
+          builder: (context, setState) {
+            return Column(
+              children: [
+                RatingBar.builder(
+                  initialRating: 0,
+                  minRating: 1,
+                  direction: Axis.horizontal,
+                  allowHalfRating: false,
+                  itemCount: 5,
+                  itemSize: 30,
+                  itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                  itemBuilder: (context, _) => Icon(
+                    Icons.star,
+                    color: primaryColor,
+                  ),
+                  onRatingUpdate: (rating) {
+                    setState(() {
+                      rate = rating;
+                    });
+                  },
+                ),
+                SizedBox(height: 10),
+                CustomTextField(
+                  hint: LocaleKeys.comment.tr(),
+                  controller: controller,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                CustomButton(
+                  onTap: () async {
+                    if (rate == 0) {
+                      AppSnackbar.show(
+                        context: context,
+                        message: LocaleKeys.selectRate.tr(),
+                        type: SnackbarType.error,
+                      );
+                    } else {
+                      OrderRateParams params = OrderRateParams(
+                        comment: controller.text,
+                        rate: rate.ceil(),
+                        orderId: orderModel.id,
+                        providerId: orderModel.provider!.id!,
+                      );
+                      loading = true;
+                      setState(() {});
+                      bool status = await context.read<OrderCubit>().rateOrder(params: params);
+                      loading = false;
+                      setState(() {});
+                      if (status) {
+                        NavigationService.goBack();
+                        if (context.mounted) {
+                          AppSnackbar.show(
+                            context: context,
+                            message: LocaleKeys.rateSuccess.tr(),
+                            type: SnackbarType.success,
+                          );
+                        }
+                      } else {
+                        if (context.mounted) {
+                          AppSnackbar.show(
+                            context: context,
+                            message: LocaleKeys.selectRate.tr(),
+                            type: SnackbarType.error,
+                          );
+                        }
+                      }
+                    }
+                  },
+                  loading: loading,
+                  title: LocaleKeys.rate.tr(),
+                ),
+              ],
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  //
 }

@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/resources/decoration.dart';
+import 'package:weltweit/core/routing/navigation_services.dart';
+import 'package:weltweit/core/routing/routes.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/data/models/subscription/subscription_model.dart';
 import 'package:weltweit/features/logic/provider_subscription/subscription_cubit.dart';
+import 'package:weltweit/features/screens/provider_subscribe/subscribtion_history_page.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/features/widgets/empty_widget.dart';
 import 'package:weltweit/generated/assets.dart';
@@ -38,6 +41,15 @@ class _SubscribePageState extends State<SubscribePage> {
         color: Colors.white,
         titleWidget: CustomText("تفعيل الحساب").header(),
         isCenterTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              //go to history screen
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SubscribtionHistoryPage()));
+            },
+            icon: Icon(Icons.history),
+          )
+        ],
       ),
       body: Container(
         height: double.infinity,
@@ -68,7 +80,7 @@ class _SubscribePageState extends State<SubscribePage> {
                     fit: BoxFit.fitHeight,
                   ),
                   ...state.data.map((e) => _buildItem(e)).toList(),
-                  // SizedBox(height: 12),
+                  SizedBox(height: 64),
                   // Container(
                   //   margin: EdgeInsets.symmetric(horizontal: 24),
                   //   decoration: BoxDecoration(color: Colors.white).radius(radius: 12),
@@ -122,8 +134,8 @@ class _SubscribePageState extends State<SubscribePage> {
           SizedBox(height: 12),
           Container(
             margin: EdgeInsets.symmetric(horizontal: 24),
-            child: TextButton(
-              onPressed: () {
+            child: CustomButton(
+              onTap: () {
                 List<String> subscreptionMethods = ["wallet", "credit", "request"];
                 var selectedMethod = subscreptionMethods.first;
                 showDialog(
@@ -182,7 +194,11 @@ class _SubscribePageState extends State<SubscribePage> {
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
                                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                                   ),
-                                  child: CustomText(LocaleKeys.subscribeNow.tr(), color: Colors.white).headerExtra(),
+                                  child: CustomText(
+                                    LocaleKeys.subscribeNow.tr(),
+                                    color: Colors.white,
+                                  ).headerExtra(),
+                                  
                                 ),
                               ],
                             ),
@@ -193,12 +209,9 @@ class _SubscribePageState extends State<SubscribePage> {
                   },
                 );
               },
-              child: CustomText(LocaleKeys.subscribeNow.tr(), color: primaryColor).headerExtra(),
-              style: TextButton.styleFrom(
-                foregroundColor: primaryColor,
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              ),
+              title: LocaleKeys.subscribeNow.tr(),
+              fontSize: 16,
+           
             ),
           ),
         ],
@@ -210,9 +223,9 @@ class _SubscribePageState extends State<SubscribePage> {
     Navigator.pop(context);
     try {
       BaseResponse response = await context.read<SubscribtionCubit>().subscribe(e.id, selectedMethod);
-      if (context.mounted) AppSnackbar.show(context: context, message: response.message ?? "");
+      AppSnackbar.show(context: context, message: response.message ?? "");
     } catch (e) {
-      print(e);
+      AppSnackbar.show(context: context, message: LocaleKeys.somethingWentWrong.tr());
     }
   }
 }

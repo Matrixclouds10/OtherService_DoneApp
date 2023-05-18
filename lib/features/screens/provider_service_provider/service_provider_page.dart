@@ -1,10 +1,12 @@
 import 'dart:math';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/features/core/widgets/service_provider_item.dart';
 import 'package:weltweit/features/data/models/provider/providers_model.dart';
 import 'package:weltweit/generated/assets.dart';
+import 'package:weltweit/generated/locale_keys.g.dart';
 
 import 'package:weltweit/presentation/component/component.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
@@ -100,9 +102,9 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> with SingleTi
                     },
                     unselectedLabelColor: Colors.grey,
                     tabs: [
-                      singleTab(0, "خدماتي"),
-                      singleTab(1, 'معرض الصور'),
-                      singleTab(2, "التقييمات"),
+                      singleTab(0,LocaleKeys.myServices.tr()),
+                      singleTab(1,LocaleKeys.gallery.tr()),
+                      singleTab(2,LocaleKeys.rates.tr()),
                     ],
                   ),
                 ),

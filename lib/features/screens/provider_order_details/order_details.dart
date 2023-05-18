@@ -95,14 +95,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                     physics: NeverScrollableScrollPhysics(),
                     scrollDirection: Axis.vertical,
                     children: [
-                      // Row(
-                      //   children: [CustomText("إصلاح صنبور الماء", pv: 0, bold: true).header()],
-                      // ),
-                      // CustomText(
-                      //   "لدي صنبور نحاسي به مشكلة كبيرة ، وهناك منحدر مائي رهيب. اتمنى لمن لديه حلول مرفقة بك فيديو للمشكلة شكرا لك",
-                      //   align: TextAlign.start,
-                      //   pv: 0,
-                      // ),
+                  
                       Row(
                         children: [
                           Icon(FontAwesomeIcons.calendar, size: 16),
@@ -118,24 +111,12 @@ class _OrderDetailsState extends State<OrderDetails> {
                             )
                         ],
                       ),
-                      // Row(
-                      //   children: [
-                      //     Icon(Icons.my_location, size: 16),
-                      //     SizedBox(width: 4),
-                      //     CustomText("الرياض ، ميدان سننية، ٨٦ شارع المعتزبالله", pv: 0).footer(),
-                      //   ],
-                      // ),
-                      // Row(
-                      //   children: [
-                      //     Icon(Icons.route, size: 16),
-                      //     SizedBox(width: 4),
-                      //     CustomText("6 كم", pv: 0).footer(),
-                      //   ],
-                      // ),
-                      if (state.data?.statusCode == "pending") pendingView(state.data!),
-                      if (state.data?.statusCode == "provider_cancel") cacncelledView(state.data!),
-                      if (state.data?.statusCode == "provider_accept") inProgressView(state.data!),
-                      if (state.data?.statusCode == "client_done") finishedView(state.data!),
+                
+                      if (state.data!.statusCode!.toLowerCase().contains("pending")) pendingView(state.data!),
+                      if (state.data!.statusCode!.toLowerCase().contains("provider_cancel")) cacncelledView(state.data!),
+                      if (state.data!.statusCode!.toLowerCase().contains("provider_finish")) finishedView(state.data!),
+                      if (state.data!.statusCode!.toLowerCase().contains("provider_accept")) inProgressView(state.data!),
+                      if (state.data!.statusCode!.toLowerCase().contains("client_done")) finishedView(state.data!),
                     ],
                   ),
                 )

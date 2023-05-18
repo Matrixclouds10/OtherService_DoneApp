@@ -82,7 +82,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                         orderModel: state.data!,
                       ),
                     ),
-                    if (state.data!.status!.toLowerCase().contains("accepted"))
+                    if (state.data!.statusCode!.toLowerCase().contains("provider_accept"))
                       Container(
                         decoration: const BoxDecoration(color: Colors.white),
                         child: Column(
@@ -108,8 +108,10 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 12),
                               child: CustomButton(
-                                onTap: () {},
-                                title: "موافقة",
+                                onTap: () {
+                                 NavigationService.goBack();
+                                },
+                                title: LocaleKeys.back.tr(),
                                 fontSize: 18,
                                 color: const Color(0xffE67E23),
                                 textColor: Colors.white,
@@ -119,7 +121,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                           ],
                         ),
                       ),
-                    if (state.data!.status!.toLowerCase().contains("cancel"))
+                    if (state.data!.status.toLowerCase().contains("cancel"))
                       Container(
                         decoration: const BoxDecoration(color: Colors.white),
                         child: Column(
@@ -158,7 +160,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                           ],
                         ),
                       ),
-                    if (state.data!.status!.contains("completed")) ...[
+                    if (state.data!.status.contains("completed")) ...[
                       Container(
                         decoration: const BoxDecoration(color: Colors.white),
                         child: Column(
@@ -237,7 +239,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                       ),
                       const SizedBox(height: 30),
                     ],
-                    if (state.data!.status!.toLowerCase().contains("pending")) ...[
+                    if (state.data!.status.toLowerCase().contains("pending")) ...[
                       Container(
                         decoration: const BoxDecoration(color: Colors.white),
                         child: Column(
@@ -349,4 +351,45 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
       ),
     );
   }
+
+
+  void actionDoneOrder(BuildContext context, {required int id}) async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: CustomText(LocaleKeys.acceptOrder.tr()),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  TextButton(
+                      onPressed: () async {
+                        if (context.mounted) {
+                          bool result = await context.read<OrderCubit>().acceptOrder(id: id);
+                          if (result) {
+                            if (context.mounted) Navigator.pop(context);
+                            if (context.mounted) Navigator.pop(context);
+                            if (context.mounted) AppSnackbar.show(context: context, message: LocaleKeys.successfullyAcceptOrder.tr());
+                          }
+                        }
+                      },
+                      child: CustomText(LocaleKeys.acceptOrder.tr(), color: Colors.green).headerExtra()),
+                  const Spacer(),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: CustomText(LocaleKeys.cancel.tr(), color: Colors.black).headerExtra()),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
 }

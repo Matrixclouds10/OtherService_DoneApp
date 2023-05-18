@@ -7,6 +7,7 @@ import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/data/models/documents/document.dart';
 import 'package:weltweit/features/data/models/portfolio/portfolio_image.dart';
 import 'package:weltweit/features/data/models/services/service.dart';
+import 'package:weltweit/features/data/models/subscription/subscription_history_model.dart';
 import 'package:weltweit/features/data/models/wallet/wallet_model.dart';
 import 'package:weltweit/features/domain/usecase/provider_document/document_add_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_portfolio/portfolio_update_usecase.dart';
@@ -46,8 +47,10 @@ abstract class ProviderRepositoryProvider {
 
   //* Subscription
   Future<Either<ErrorModel, List<SubscriptionModel>>> getSubscription();
+  Future<Either<ErrorModel, List<SubscriptionHistoryModel>>> getSubscriptionHistory();
   Future<Either<ErrorModel, BaseResponse>> subscribe({required SubscribeParams params});
 
   //* Wallet
   Future<Either<ErrorModel, List<WalletModel>>> getWalletHistory();
+
 }

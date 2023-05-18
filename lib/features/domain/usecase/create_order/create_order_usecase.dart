@@ -24,13 +24,13 @@ class CreateOrderUseCase extends BaseUseCase<OrderModel, CreateOrderParams> {
 
 class CreateOrderParams {
   //file date service_id provider_id
-  final File? file;
+  final List<File>? files;
   final String date;
   final int serviceId;
   final int providerId;
 
   CreateOrderParams({
-    required this.file,
+    required this.files,
     required this.date,
     required this.serviceId,
     required this.providerId,

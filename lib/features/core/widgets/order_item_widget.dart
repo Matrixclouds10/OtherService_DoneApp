@@ -1,8 +1,13 @@
+import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/data/models/order/order.dart';
+import 'package:weltweit/features/logic/order/order_cubit.dart';
+import 'package:weltweit/features/widgets/app_dialogs.dart';
+import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/images/custom_image.dart';
 
 class OrderItemWidget extends StatelessWidget {
@@ -59,14 +64,23 @@ class OrderItemWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            if (orderModel.status.toLowerCase() == "cancelled") const Icon(Icons.close, color: Colors.red, size: 40),
-            if (orderModel.status.toLowerCase() != "cancelled")
+            if (orderModel.statusCode?.toLowerCase() == "cancelled") const Icon(Icons.close, color: Colors.red, size: 40),
+            if (orderModel.statusCode?.toLowerCase() != "cancelled")
               Column(
                 children: [
                   // if (orderModel..isNotEmpty) CustomText(price, color: servicesTheme.primaryColor, pv: 0).header(),
-                  if (orderModel.status.toLowerCase() == "pending") CustomText("بإنتظار الموافقة", color: servicesTheme.primaryColor, pv: 0).footer(),
-                  if (orderModel.status.toLowerCase() == "accepted") const CustomText("قيد التنفيذ", pv: 0).footer(),
-                  if (orderModel.status.toLowerCase() == "completed") const CustomText("اعطِ تقييم", color: Colors.blueAccent, pv: 0).footer(),
+                  if (orderModel.statusCode?.toLowerCase() == "pending") CustomText(LocaleKeys.waitingForApproval.tr(), color: servicesTheme.primaryColor, pv: 0).footer(),
+                  if (orderModel.statusCode?.toLowerCase() == "provider_accept") CustomText(LocaleKeys.approved.tr(), color: Colors.green, pv: 0).footer(),
+                  if (orderModel.statusCode?.toLowerCase() == "accepted") CustomText(LocaleKeys.inProgress.tr(), pv: 0).footer(),
+                  if (orderModel.statusCode?.toLowerCase() == "completed")
+                  Container(
+                    color: Colors.transparent,
+                    padding: EdgeInsets.all(4),
+                    child: CustomText(LocaleKeys.giverate.tr(), color: Colors.blueAccent, pv: 0).footer(),
+                  ).onTap(() {
+                    //create a dialog to rate the order
+                     AppDialogs().rateOrderDialog(context, orderModel);
+                  }),
                 ],
               ),
             const SizedBox(width: 8),

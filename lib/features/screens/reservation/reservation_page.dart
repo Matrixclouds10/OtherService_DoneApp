@@ -51,7 +51,7 @@ class _ReservationPageState extends State<ReservationPage> {
         appBar: CustomAppBar(
           isCenterTitle: true,
           color: Colors.white,
-          titleWidget: const CustomText("حجز موعد").header(),
+          titleWidget: CustomText(LocaleKeys.reservation.tr()).header(),
         ),
         body: BlocConsumer<CreateOrderCubit, CreateOrderState>(
           listener: (context, state) {
@@ -61,12 +61,12 @@ class _ReservationPageState extends State<ReservationPage> {
 
               NavigationService.push(RoutesServices.servicesOrderDetails, arguments: {"orderModel": state.data});
 
-              AppSnackbar.show(context: context, message: "تم إرسال طلبك بنجاح");
+              AppSnackbar.show(context: context, message: LocaleKeys.successfullySendOrder.tr());
             }
             if (state.state == BaseState.error) {
               AppSnackbar.show(
                 context: context,
-                message: state.error?.errorMessage ?? "حدث خطأ ما",
+                message: state.error?.errorMessage ?? LocaleKeys.somethingWentWrong.tr(),
                 type: SnackbarType.error,
               );
             }
@@ -142,7 +142,7 @@ class _ReservationPageState extends State<ReservationPage> {
                     ),
                   ),
 
-                  const CustomText("متي تحتاج هذه الخدمة؟").header(),
+                  CustomText(LocaleKeys.whenDoYouNeedThisService.tr()).header(),
                   //Two radio buttons
                   Row(
                     children: [
@@ -151,7 +151,7 @@ class _ReservationPageState extends State<ReservationPage> {
                         child: RadioListTile(
                           value: false,
                           groupValue: reservationTimeNow,
-                          title: const CustomText("حسب الوقت المحدد", align: TextAlign.start),
+                          title: CustomText(LocaleKeys.accordingToSpecifiedTime.tr(), align: TextAlign.start),
                           contentPadding: EdgeInsets.zero,
                           onChanged: (value) {
                             if (state.state == BaseState.loading) return;
@@ -167,7 +167,7 @@ class _ReservationPageState extends State<ReservationPage> {
                           value: true,
                           groupValue: reservationTimeNow,
                           contentPadding: EdgeInsets.zero,
-                          title: const CustomText("فورا", align: TextAlign.start),
+                          title: CustomText(LocaleKeys.rightNow.tr(), align: TextAlign.start),
                           onChanged: (value) {
                             if (state.state == BaseState.loading) return;
                             setState(() {
@@ -185,7 +185,7 @@ class _ReservationPageState extends State<ReservationPage> {
                         Expanded(
                           flex: 1,
                           child: CustomTextField(
-                            hint: selectedDate == null ? "التاريخ" : DateFormat('yyyy-MM-dd').format(selectedDate!),
+                            hint: selectedDate == null ? LocaleKeys.date.tr() : DateFormat('yyyy-MM-dd').format(selectedDate!),
                             prefixIcon: Icons.calendar_today,
                             enable: false,
                             radius: 4,
@@ -211,7 +211,7 @@ class _ReservationPageState extends State<ReservationPage> {
                         Expanded(
                           flex: 1,
                           child: CustomTextField(
-                            hint: selectedTime == null ? "الوقت" : selectedTime!.format(context),
+                            hint: selectedTime == null ? LocaleKeys.time.tr() : selectedTime!.format(context),
                             prefixIcon: Icons.access_time,
                             enable: false,
                             radius: 4,
@@ -266,7 +266,7 @@ class _ReservationPageState extends State<ReservationPage> {
                       );
                     },
                     child: CustomTextField(
-                      hint: selectedService == null ? "اختر الخدمة" : selectedService!.title,
+                      hint: selectedService == null ? LocaleKeys.selectService.tr() : selectedService!.title,
                       prefixIcon: Icons.handyman,
                       enable: false,
                       radius: 4,
@@ -443,17 +443,16 @@ class _ReservationPageState extends State<ReservationPage> {
       time = "${selectedTime!.hour}:${selectedTime!.minute}:00";
     }
     if (selectedService == null) {
-      AppSnackbar.show(context: context, message: "اختر الخدمة");
+      AppSnackbar.show(context: context, message: LocaleKeys.selectService.tr());
       return;
     }
-
+    List<File> files = images.toList();
+    if (video != null) {
+      files.add(video!);
+    }
     await context.read<CreateOrderCubit>().createOrder(CreateOrderParams(
           date: "$date $time",
-          file: video != null
-              ? video
-              : images.isNotEmpty
-                  ? images[0]
-                  : null,
+          files: files,
           serviceId: selectedService!.id!,
           providerId: widget.providersModel.id!,
         ));
@@ -467,7 +466,7 @@ class _ReservationPageState extends State<ReservationPage> {
       List<File> files = images;
       File file = File(pickedFile.path);
       if (files.length >= 5) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('لا يمكن إضافة أكثر من 5 صور')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(LocaleKeys.cantAddMoreThan5Images.tr())));
         return;
       } else {
         files.add(file);
@@ -486,7 +485,7 @@ class _ReservationPageState extends State<ReservationPage> {
       for (var element in pickedFile) {
         File file = File(element.path);
         if (files.length >= 5) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('لا يمكن إضافة أكثر من 5 صور')));
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(LocaleKeys.cantAddMoreThan5Images.tr())));
           continue;
         } else {
           files.add(file);

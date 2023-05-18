@@ -32,6 +32,7 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
   void initState() {
     super.initState();
     context.read<ProviderCubit>().getProvider(widget.provider.id!);
+    context.read<ProviderCubit>().getRates(widget.provider.id!);
   }
 
   @override
@@ -51,7 +52,7 @@ class _ServiceProviderPageState extends State<ServiceProviderPage> {
             body = ErrorLayout(
               errorModel: state.error,
               onRetry: () {
-                // context.read<ProviderCubit>().getProvider(widget.provider.id!);
+                context.read<ProviderCubit>().getProvider(widget.provider.id!);
               },
             );
             break;
@@ -145,8 +146,6 @@ class _ServiceProviderViewState extends State<ServiceProviderView> with SingleTi
                   );
                 },
               ),
-
-             
             ],
           ),
           backgroundColor: servicesTheme.scaffoldBackgroundColor,
@@ -205,7 +204,9 @@ class _ServiceProviderViewState extends State<ServiceProviderView> with SingleTi
           color: isSelected ? const Color(0xffE67E23) : Colors.white,
           borderRadius: BorderRadius.circular(4),
         ),
-        child: CustomText(title, color: isSelected ? Colors.white : Colors.black),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: CustomText(title, color: isSelected ? Colors.white : Colors.black)),
       ),
     );
   }
@@ -291,85 +292,125 @@ class _ServiceProviderViewState extends State<ServiceProviderView> with SingleTi
   }
 
   reviews() {
-    return Column(
-      children: [
-        Container(
-          color: Colors.white,
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            children: [
-              const SizedBox(width: 12),
-               CustomText(double.parse(widget.provider.rateAvg??'0').toString() , size: 28),
-              const SizedBox(width: 12),
-              Column(
+    return BlocBuilder<ProviderCubit, ProviderState>(
+      builder: (context, state) {
+        if (state.rateState == BaseState.loading) {
+          return Container(padding: EdgeInsets.symmetric(horizontal: 8), child: CustomLoadingSpinner());
+        }
+
+        if (state.rateState == BaseState.error) {
+          return ErrorView(
+            message: LocaleKeys.somethingWentWrong.tr(),
+            onRetry: () {
+              context.read<ProviderCubit>().getRates(widget.provider.id ?? 0);
+            },
+          );
+        }
+
+        int rate1StarCount = state.dataRates.where((element) => element.rate == 1).length;
+        int rate2StarCount = state.dataRates.where((element) => element.rate == 2).length;
+        int rate3StarCount = state.dataRates.where((element) => element.rate == 3).length;
+        int rate4StarCount = state.dataRates.where((element) => element.rate == 4).length;
+        int rate5StarCount = state.dataRates.where((element) => element.rate == 5).length;
+
+        double rate1StarPercent = state.dataRates.isEmpty?0:(rate1StarCount / state.dataRates.length);
+        double rate2StarPercent = state.dataRates.isEmpty?0:(rate2StarCount / state.dataRates.length);
+        double rate3StarPercent = state.dataRates.isEmpty?0:(rate3StarCount / state.dataRates.length);
+        double rate4StarPercent = state.dataRates.isEmpty?0:(rate4StarCount / state.dataRates.length);
+        double rate5StarPercent = state.dataRates.isEmpty?0:(rate5StarCount / state.dataRates.length);
+        return Column(
+          children: [
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.all(8),
+              child: Row(
                 children: [
-                  ratesAsStars(double.parse(widget.provider.rateAvg ?? '0')),
-                  Row(
+                  const SizedBox(width: 12),
+                  CustomText(double.parse(widget.provider.rateAvg ?? '0').toString(), size: 28),
+                  const SizedBox(width: 12),
+                  Column(
                     children: [
-                      CustomText("${widget.provider.rateCount??0}", color: Colors.grey[500]!),
-                      const SizedBox(width: 4),
-                      Icon(Icons.person, color: Colors.grey[500]!, size: 14),
+                      ratesAsStars(double.parse(widget.provider.rateAvg ?? '0')),
+                      Row(
+                        children: [
+                          CustomText("${widget.provider.rateCount ?? 0}", color: Colors.grey[500]!),
+                          const SizedBox(width: 4),
+                          Icon(Icons.person, color: Colors.grey[500]!, size: 14),
+                        ],
+                      ),
                     ],
                   ),
-                ],
-              ),
-              const SizedBox(width: 24),
-              Expanded(
-                child: Column(
-                  children: [
-                    const LinearProgressIndicator(value: 0.9, color: Colors.greenAccent),
-                    const SizedBox(height: 2),
-                    const LinearProgressIndicator(value: 0.6, color: Colors.green),
-                    const SizedBox(height: 2),
-                    LinearProgressIndicator(value: 0.7, color: servicesTheme.primaryColor),
-                    const SizedBox(height: 2),
-                    LinearProgressIndicator(value: 0.4, color: servicesTheme.primaryColor),
-                    const SizedBox(height: 2),
-                    const LinearProgressIndicator(value: 0.1, color: Colors.red),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 12),
-            ],
-          ),
-        ),
-        for (var i = 0; i < 4; i++)
-          Container(
-              margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 8),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(250),
-                      child: Image.asset(
-                        Assets.imagesAvatar,
-                        fit: BoxFit.fill,
-                        width: MediaQuery.of(context).size.width / 7,
-                        height: MediaQuery.of(context).size.width / 7,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 24),
                   Expanded(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const CustomText("مسعد معوض", pv: 2),
-                        ratesAsStars(Random().nextInt(4) + 1),
-                        CustomText("إنه سباك محترف وقام بجميع الأعمال المتعلقة بالسباكة في منزلنا. انا اوصي بشده به", align: TextAlign.start, color: Colors.grey[500]!, pv: 0).footer(),
+                        // CustomText(rate5StarPercent.toString()),
+                        // const SizedBox(height: 2),
+                        // CustomText(rate4StarPercent.toString()),
+                        // const SizedBox(height: 2),
+                        // CustomText(rate3StarPercent.toString()),
+                        // const SizedBox(height: 2),
+                        // CustomText(rate2StarPercent.toString()),
+                        // const SizedBox(height: 2),
+                        // CustomText(rate1StarPercent.toString()),
+                        LinearProgressIndicator(value: rate5StarPercent, color: Colors.red),
+                        const SizedBox(height: 2),
+                        LinearProgressIndicator(value: rate4StarPercent, color: servicesTheme.primaryColor),
+                        const SizedBox(height: 2),
+                        LinearProgressIndicator(value: rate3StarPercent, color: servicesTheme.primaryColor.withOpacity(0.7)),
+                        const SizedBox(height: 2),
+                        LinearProgressIndicator(value: rate2StarPercent, color: Colors.green),
+                        const SizedBox(height: 2),
+                        LinearProgressIndicator(value: rate1StarPercent, color: Colors.greenAccent),
                       ],
                     ),
                   ),
+                  const SizedBox(width: 12),
                 ],
-              )),
-      ],
+              ),
+            ),
+            ...state.dataRates
+                .map(
+                  (e) => Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(top: 8),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(250),
+                              child: Image.asset(
+                                Assets.imagesAvatar,
+                                fit: BoxFit.fill,
+                                width: MediaQuery.of(context).size.width / 7,
+                                height: MediaQuery.of(context).size.width / 7,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomText(e.clientName ?? "N/A", pv: 2),
+                                ratesAsStars(e.rate?.toDouble() ?? 5),
+                                CustomText(e.comment ?? "No comment", align: TextAlign.start, color: Colors.grey[500]!, pv: 0).footer(),
+                              ],
+                            ),
+                          ),
+                        ],
+                      )),
+                )
+                .toList(),
+          ],
+        );
+      },
     );
   }
 

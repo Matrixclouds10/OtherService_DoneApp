@@ -5,6 +5,7 @@ import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/data/injection.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
+import 'package:weltweit/features/data/models/wallet/wallet_model.dart';
 import 'package:weltweit/features/logic/profile/profile_cubit.dart';
 import 'package:weltweit/features/logic/provider_wallet/wallet_cubit.dart';
 import 'package:weltweit/generated/assets.dart';
@@ -23,9 +24,7 @@ class _WalletPageState extends State<WalletPage> {
   @override
   void initState() {
     super.initState();
-    final WalletCubit walletCubit = getIt<WalletCubit>();
-    final ProfileCubit profileCubit = getIt<ProfileCubit>();
-    profileCubit.getProfile(returnSaved: true);
+    WalletCubit walletCubit = context.read<WalletCubit>();
     walletCubit.getWallet();
   }
 
@@ -83,6 +82,25 @@ class _WalletPageState extends State<WalletPage> {
                               errorModel: state.error,
                               onRetry: () => context.read<WalletCubit>().getWallet(),
                             ),
+
+                          if (state.data.isEmpty)
+                            Center(
+                              child: CustomText("لا يوجد عمليات سابقة", color: Colors.black, align: TextAlign.start, pv: 0, ph: 12).header(),
+                            ),
+
+                          if (state.data.isNotEmpty)
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    ...state.data.map((e) => _singleItem(e)).toList(),
+                                    SizedBox(height: 64),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          SizedBox(height: 16),
+
                           // Row(
                           //   children: [
                           //     CustomText("المبلغ المطلوب تسليمة", color: Colors.black, align: TextAlign.start, pv: 0, ph: 12).header(),
@@ -129,9 +147,6 @@ class _WalletPageState extends State<WalletPage> {
                           //           SizedBox(width: 8),
                           //         ],
                           //       )),
-                      
-                      
-                      
                         ],
                       ),
                     );
@@ -140,6 +155,33 @@ class _WalletPageState extends State<WalletPage> {
               )
             ],
           ),
+        ));
+  }
+
+  _singleItem(WalletModel e) {
+    return Container(
+        margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        padding: EdgeInsets.symmetric(horizontal: 12,vertical: 16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomText("#${e.providerId}", align: TextAlign.start, color: Colors.grey[500]!, pv: 0).footer(),
+                  CustomText("${e.message}", align: TextAlign.start, color: Colors.grey[500]!, pv: 0).footer(),
+                ],
+              ),
+            ),
+            CustomText("${e.amount} ج", align: TextAlign.start, color: Colors.grey[500]!, pv: 0).footer(),
+            SizedBox(width: 8),
+          ],
         ));
   }
 }

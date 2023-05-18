@@ -16,7 +16,7 @@ import 'package:weltweit/features/screens/provider_reservation/reservation_page.
 import 'package:weltweit/features/screens/provider_service_provider/service_provider_page.dart';
 import 'package:weltweit/features/screens/provider_service_providers/service_providers_page.dart';
 import 'package:weltweit/features/screens/provider_services/services_page.dart';
-import 'package:weltweit/features/screens/provider_subscribe/subscribe.dart';
+import 'package:weltweit/features/screens/provider_subscribe/subscribe_page.dart';
 
 import 'routes_provider.dart';
 

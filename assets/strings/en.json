@@ -2,6 +2,27 @@
   "en": "English",
   "or": "or",
 
+
+"rate":  "Rate",
+"subscribtionHistory":  "Subscribtion History",
+"back":  "Back",
+"selectRate":  "Select Rate",
+"rateSuccess":  "Rate Success",
+"comment": "Comment",
+"rateOrder":  "Rate Order",
+"reservation": "Reservation",
+"successfullySendOrder": "Successfully Send Order",
+"whenDoYouNeedThisService": "When do you need this service?",
+"accordingToSpecifiedTime": "According to specified time",
+"rightNow": "Right now",
+"date": "Date",
+"time": "Time",
+"selectService": "Select Service",
+"cantAddMoreThan5Images": "Can't add more than 5 images",
+"subscribeNow": "Subscribe Now",
+"addedToFavorite": "Added to favorite",
+
+
   "successfullyFinishOrder": "Order successfully finished",
   "enterAmount": "Enter the amount",
   "finished": "Finished",

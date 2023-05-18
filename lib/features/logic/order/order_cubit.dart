@@ -7,6 +7,7 @@ import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/domain/usecase/order/order_accept_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_cancel_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_finish_usecase.dart';
+import 'package:weltweit/features/domain/usecase/order/order_rate_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_usecase.dart';
 import 'package:weltweit/features/data/models/order/order.dart';
 
@@ -16,11 +17,13 @@ class OrderCubit extends Cubit<OrderState> {
   final OrderUseCase orderUseCase;
   final OrderCancelUseCase orderCancelUseCase;
   final OrderAcceptUseCase acceptUseCase;
+  final OrderRateUseCase rateUseCase;
   final OrderFinishUseCase finishUseCase;
   OrderCubit(
     this.orderUseCase,
     this.orderCancelUseCase,
     this.acceptUseCase,
+    this.rateUseCase,
     this.finishUseCase,
   ) : super(const OrderState());
 
@@ -92,6 +95,14 @@ class OrderCubit extends Cubit<OrderState> {
         emit(state.copyWith(finishState: BaseState.loaded));
         return true;
       },
+    );
+  }
+
+  Future<bool> rateOrder({required OrderRateParams params}) async {
+    Either<ErrorModel, BaseResponse> result = await rateUseCase(params);
+    return result.fold(
+      (error) => false,
+      (data) => true,
     );
   }
 }

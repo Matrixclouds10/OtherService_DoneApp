@@ -5,6 +5,7 @@ import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/data/models/provider/providers_model.dart';
+import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/logic/favorite/favorite_cubit.dart';
 import 'package:weltweit/presentation/component/component.dart';
 
@@ -13,6 +14,7 @@ class ServiceProviderItemWidget extends StatelessWidget {
   final bool? canMakeAppointment;
   final bool? moreInfoButton;
   final bool showFavoriteButton;
+  final UserModel? userModel;
 
   const ServiceProviderItemWidget({
     required this.providersModel,
@@ -20,6 +22,7 @@ class ServiceProviderItemWidget extends StatelessWidget {
     this.moreInfoButton,
     required this.showFavoriteButton,
     super.key,
+    this.userModel,
   });
 
   @override
@@ -120,6 +123,17 @@ class ServiceProviderItemWidget extends StatelessWidget {
                             decoration: const BoxDecoration(color: Color(0xff00A35E)).radius(radius: 4),
                             child: const CustomText(
                               "غير متوفر",
+                              color: Colors.white,
+                              pv: 2,
+                              ph: 8,
+                              size: 14,
+                            ),
+                          ),
+                        if (userModel != null && userModel!.currentSubscription != null)
+                          Container(
+                            decoration: const BoxDecoration(color: Color(0xff00A35E)).radius(radius: 4),
+                            child:  CustomText(
+                              "${userModel!.currentSubscription!.status}",
                               color: Colors.white,
                               pv: 2,
                               ph: 8,

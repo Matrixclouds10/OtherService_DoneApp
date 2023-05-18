@@ -49,6 +49,7 @@ class AppURL {
   static const String getProvider = "$kBaseURL/services/get-provider";
   static const String getProviderPortfolio = "$kBaseURL/services/get-provider-portfolio";
   static const String getProviderServices = "$kBaseURL/services/get-provider-serviceso";
+  static const String getProviderRates = "$kBaseURL/services/get-provider-rates";
 
   //Favorite
   static const String getFavorites = "$kBaseURL/fav_providers/fav_providers_list";
@@ -60,6 +61,7 @@ class AppURL {
   static const String getCompletedOrders = "$kBaseURL/appointment/get/completed";
   static const String getCancelledOrders = "$kBaseURL/appointment/get/cancelled";
   static const String orderDone = "$kBaseURL/appointment/done";
+  static const String orderRate = "$kBaseURL/appointment/rate";
 
   static const String providerOrderFinish = "$kBaseURL/service-provider/appointment/finish";
   static const String providerGetPendingOrders = "$kBaseURL/service-provider/appointment/get/pending";

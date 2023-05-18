@@ -101,7 +101,7 @@ class MorePage extends StatelessWidget {
                     singleCustomListTile(
                         image: "assets/images/user.png",
                         text: 'اشترك الان',
-                        trailingText: "غير مفعل",
+                        trailingText: "",
                         onTap: () {
                           Navigator.pushNamed(context, RoutesProvider.providerSubscribe);
                         }),

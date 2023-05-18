@@ -143,7 +143,7 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
         return Column(
           children: [
             ...state.pendingData
-                .where((element) => element.status!.toLowerCase() == 'accepted')
+                .where((element) => element.statusCode!.toLowerCase() == 'provider_accept')
                 .map((e) => GestureDetector(
                       onTap: () {},
                       child: OrderItemWidgetClient(orderModel: e),
@@ -206,7 +206,7 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
         return Column(
           children: [
             ...state.pendingData
-                .where((element) => element.status!.toLowerCase() == 'pending')
+                .where((element) => element.statusCode!.toLowerCase() == 'pending')
                 .map((e) => GestureDetector(
                       onTap: () {},
                       child: OrderItemWidgetClient(orderModel: e),

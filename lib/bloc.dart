@@ -43,6 +43,7 @@ class GenerateMultiBloc extends StatelessWidget {
         BlocProvider(create: (_) => getIt<LoginCubit>()),
         BlocProvider(create: (_) => getIt<RegisterCubit>()),
         BlocProvider(create: (_) => getIt<OtpCubit>()),
+        BlocProvider<WalletCubit>(create: (BuildContext context) => WalletCubit(getIt())),
         BlocProvider<LayoutCubit>(create: (BuildContext context) => LayoutCubit()),
         //Profile
         BlocProvider<ProfileCubit>(create: (BuildContext context) => ProfileCubit(getIt(), getIt(), getIt(), getIt(), getIt(), getIt())),
@@ -51,29 +52,35 @@ class GenerateMultiBloc extends StatelessWidget {
         //Services
         BlocProvider<ServicesCubit>(create: (BuildContext context) => ServicesCubit(getIt(), getIt())),
         BlocProvider<ProvidersCubit>(create: (BuildContext context) => ProvidersCubit(getIt(), getIt())),
-        BlocProvider<ProviderCubit>(create: (BuildContext context) => ProviderCubit(getIt())),
+        BlocProvider<ProviderCubit>(create: (BuildContext context) => ProviderCubit(getIt(), getIt())),
         BlocProvider<ProviderServicesCubit>(create: (BuildContext context) => ProviderServicesCubit(getIt())),
         BlocProvider<FavoriteCubit>(create: (BuildContext context) => FavoriteCubit(getIt(), getIt())),
         BlocProvider<OrdersCubit>(create: (BuildContext context) => OrdersCubit(getIt())),
-        BlocProvider<OrderCubit>(create: (BuildContext context) => OrderCubit(getIt(), getIt(), getIt(), getIt())),
+        BlocProvider<OrderCubit>(
+            create: (BuildContext context) => OrderCubit(
+                  getIt(),
+                  getIt(),
+                  getIt(),
+                  getIt(),
+                  getIt(),
+                )),
         BlocProvider<CreateOrderCubit>(create: (BuildContext context) => CreateOrderCubit(getIt())),
         BlocProvider<CountryCubit>(create: (BuildContext context) => CountryCubit(getIt(), getIt())),
         BlocProvider<BannerCubit>(create: (BuildContext context) => BannerCubit(getIt())..getBanner()),
-        BlocProvider<SubscribtionCubit>(create: (BuildContext context) => SubscribtionCubit(getIt(),getIt())),
+        BlocProvider<SubscribtionCubit>(create: (BuildContext context) => SubscribtionCubit(getIt(), getIt(), getIt())),
         /* -------------------------------------------------------------------------- */
         //*Provider
         BlocProvider<LayoutProviderCubit>(create: (BuildContext context) => LayoutProviderCubit()),
         BlocProvider<ProfileProviderCubit>(create: (BuildContext context) => ProfileProviderCubit(getIt(), getIt(), getIt(), getIt(), getIt(), getIt(), getIt())),
         BlocProvider<PortfoliosCubit>(create: (BuildContext context) => PortfoliosCubit(getIt(), getIt(), getIt(), getIt())),
         BlocProvider<ServicesProviderCubit>(create: (BuildContext context) => ServicesProviderCubit(getIt(), getIt())),
-        BlocProvider<WalletCubit>(create: (BuildContext context) => WalletCubit(getIt())),
         BlocProvider<ChatCubit>(create: (BuildContext context) => ChatCubit(getIt(), getIt())),
         BlocProvider<AboutCubit>(create: (BuildContext context) => AboutCubit(getIt())),
         BlocProvider<PolicyCubit>(create: (BuildContext context) => PolicyCubit(getIt())),
         BlocProvider<ContactUsCubit>(create: (BuildContext context) => ContactUsCubit(getIt())),
         /* -------------------------------------------------------------------------- */
 
-        //DI 
+        //DI
       ],
       child: child,
     );

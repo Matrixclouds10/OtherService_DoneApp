@@ -11,6 +11,7 @@ import 'package:weltweit/features/data/app_urls/provider_endpoints_url.dart';
 import 'package:weltweit/features/data/models/documents/document.dart';
 import 'package:weltweit/features/data/models/portfolio/portfolio_image.dart';
 import 'package:weltweit/features/data/models/services/service.dart';
+import 'package:weltweit/features/data/models/subscription/subscription_history_model.dart';
 import 'package:weltweit/features/data/models/wallet/wallet_model.dart';
 import 'package:weltweit/features/domain/repositoy/provider_repo.dart';
 import 'package:weltweit/features/domain/usecase/provider_document/document_add_usecase.dart';
@@ -282,6 +283,22 @@ class ProviderRepositoryImpProvider implements ProviderRepositoryProvider {
   }
 
   @override
+  Future<Either<ErrorModel, List<SubscriptionHistoryModel>>> getSubscriptionHistory() async {
+    String url = AppURL.getSubscriptionHistory;
+    NetworkCallType type = NetworkCallType.get;
+    Map<String, dynamic> data = {};
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+    return result.fold((l) => Left(l), (r) {
+      try {
+        List<SubscriptionHistoryModel> data = r.data.map<SubscriptionHistoryModel>((e) => SubscriptionHistoryModel.fromJson(e)).toList();
+        return Right(data);
+      } catch (e) {
+        return Left(ErrorModel(errorMessage: e.toString()));
+      }
+    });
+  }
+
+  @override
   Future<Either<ErrorModel, List<WalletModel>>> getWalletHistory() async {
     String url = AppURL.getWalletHistory;
     NetworkCallType type = NetworkCallType.get;
@@ -289,7 +306,7 @@ class ProviderRepositoryImpProvider implements ProviderRepositoryProvider {
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
     return result.fold((l) => Left(l), (r) {
       try {
-        List<WalletModel> data = r.data.map<WalletModel>((e) => WalletModel.fromJson(e)).toList();
+        List<WalletModel> data = r.data['data'].map<WalletModel>((e) => WalletModel.fromJson(e)).toList();
         return Right(data);
       } catch (e) {
         return Left(ErrorModel(errorMessage: e.toString()));

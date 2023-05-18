@@ -10,11 +10,13 @@ import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/data/injection.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
+import 'package:weltweit/features/data/models/provider/provider_rates_model.dart';
 import 'package:weltweit/features/data/models/response/country/country_model.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_accept_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_cancel_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_finish_usecase.dart';
+import 'package:weltweit/features/domain/usecase/order/order_rate_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/orders_usecase.dart';
 import 'package:weltweit/features/data/app_urls/client_endpoints_url.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
@@ -256,11 +258,13 @@ class AppRepositoryImp implements AppRepository {
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = params.toJson();
 
-    File? file = params.file;
+    List<File>? files = params.files;
     FormData? formData;
-    if (file != null) {
-      formData = FormData.fromMap({
-        'image': await MultipartFile.fromFile(file.path, filename: file.path.split('/').last),
+    if (files != null && files.isNotEmpty) {
+      files.forEach((element) async {
+        formData = FormData.fromMap({
+          'file': await MultipartFile.fromFile(element.path, filename: element.path.split('/').last),
+        });
       });
     }
 
@@ -482,4 +486,31 @@ class AppRepositoryImp implements AppRepository {
       }
     });
   }
+
+  @override
+  Future<Either<ErrorModel, BaseResponse>> orderRate({required OrderRateParams params}) {
+    String url = AppURL.orderRate;
+    NetworkCallType type = NetworkCallType.post;
+    Map<String, dynamic> data = params.toJson();
+    return networkClient(url: url, data: data, type: type).then((value) {
+      return value.fold((l) => Left(l), (r) => Right(r));
+    });
+  }
+
+    @override
+  Future<Either<ErrorModel, List<ProviderRateModel>>> getProviderRates({required int id}) async {
+    String url = "${AppURL.getProviderRates}/$id";
+    NetworkCallType type = NetworkCallType.get;
+    Map<String, dynamic> data = {};
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+    return result.fold((l) => Left(l), (r) {
+      try {
+        List<ProviderRateModel> data = r.data.map<ProviderRateModel>((e) => ProviderRateModel.fromJson(e)).toList();
+        return Right(data);
+      } catch (e) {
+        return Left(ErrorModel(errorMessage: e.toString()));
+      }
+    });
+  }
+
 }

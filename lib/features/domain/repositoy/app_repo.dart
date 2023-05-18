@@ -2,11 +2,13 @@ import 'package:dartz/dartz.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
+import 'package:weltweit/features/data/models/provider/provider_rates_model.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/data/models/response/country/country_model.dart';
 import 'package:weltweit/features/domain/usecase/order/order_accept_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_cancel_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_finish_usecase.dart';
+import 'package:weltweit/features/domain/usecase/order/order_rate_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/orders_usecase.dart';
 import 'package:weltweit/features/data/models/banner/banner_model.dart';
 import 'package:weltweit/features/data/models/chat/chat_model.dart';
@@ -68,4 +70,6 @@ abstract class AppRepository {
 
   Future<Either<ErrorModel, List<BannerModel>>> getbanner({required BannerParams params});
 
+  Future<Either<ErrorModel, BaseResponse>> orderRate({required OrderRateParams params});
+  Future<Either<ErrorModel, List<ProviderRateModel>>> getProviderRates({required int id});
 }

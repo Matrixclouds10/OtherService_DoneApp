@@ -95,6 +95,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
                           email: state.data?.email,
                           isOnline: state.data?.isOnline?.toLowerCase() == "yes",
                         ),
+                        userModel: user,
                         canMakeAppointment: null,
                         moreInfoButton: false,
                         showFavoriteButton: false,

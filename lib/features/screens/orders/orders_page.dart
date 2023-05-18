@@ -115,7 +115,12 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
     return BlocBuilder<OrdersCubit, OrdersState>(
       builder: (context, state) {
         if (state.pendingState == BaseState.error) {
-          return ErrorView(message: state.error?.errorMessage ?? "حدث خطأ ما");
+          return ErrorView(
+            message: state.error?.errorMessage ?? "حدث خطأ ما",
+            onRetry: () {
+              context.read<OrdersCubit>().getPendingOrders(typeIsProvider: false);
+            },
+          );
         }
         if (state.pendingState == BaseState.loading) {
           return const Center(child: CircularProgressIndicator());
@@ -153,7 +158,12 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
     return BlocBuilder<OrdersCubit, OrdersState>(
       builder: (context, state) {
         if (state.completedState == BaseState.error) {
-          return ErrorView(message: state.error?.errorMessage ?? "حدث خطأ ما");
+          return ErrorView(
+            message: state.error?.errorMessage ?? "حدث خطأ ما",
+            onRetry: () {
+              context.read<OrdersCubit>().getCompletedOrders(typeIsProvider: false);
+            },
+          );
         }
         if (state.completedState == BaseState.loading) {
           return const Center(child: CircularProgressIndicator());
@@ -184,7 +194,12 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
     return BlocBuilder<OrdersCubit, OrdersState>(
       builder: (context, state) {
         if (state.cancelledState == BaseState.error) {
-          return ErrorView(message: state.error?.errorMessage ?? "حدث خطأ ما");
+          return ErrorView(
+            message: state.error?.errorMessage ?? "حدث خطأ ما",
+             onRetry: () {
+              context.read<OrdersCubit>().getCancelledOrders(typeIsProvider: false);
+            },
+          );
         }
         if (state.cancelledState == BaseState.loading) {
           return const Center(child: CircularProgressIndicator());

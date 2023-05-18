@@ -15,7 +15,7 @@ class OrderModel {
 
   final int id;
   final DateTime date;
-  final String file;
+  final List<String> file;
   final String status;
   final String? statusCode;
   final Client? client;
@@ -25,7 +25,7 @@ class OrderModel {
   factory OrderModel.fromJson(Map<String, dynamic> json) => OrderModel(
         id: json["id"],
         date: DateTime.parse(json["date"]),
-        file: json["file"] == null ? "" : json["file"],
+        file: json["file"] == null ? [] : List<String>.from(json["file"].map((x) => x)),
         status: json["status"] ?? "",
         statusCode: json["status_code"],
         client: Client.fromJson(json["client"]),

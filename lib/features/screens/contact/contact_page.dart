@@ -50,11 +50,11 @@ class _ContactPageState extends State<ContactPage> {
             physics: const NeverScrollableScrollPhysics(),
             children: [
               //Log
+              SizedBox(height: 12),
               Image.asset(
-                Assets.imagesPlaceholder,
+                Assets.imagesLogo,
                 width: double.infinity,
-                fit: BoxFit.cover,
-                height: 120,
+                height: 90,
               ),
               const SizedBox(height: 12),
               Container(
@@ -82,6 +82,7 @@ class _ContactPageState extends State<ContactPage> {
                               message: _messageController.text,
                             );
                             await context.read<ContactUsCubit>()(params);
+                            Navigator.pop(context);
                           },
                           loading: state.state == BaseState.loading,
                           title: LocaleKeys.send.tr(),

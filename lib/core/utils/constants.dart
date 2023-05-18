@@ -4,7 +4,7 @@ import '../../data/app_urls/app_url.dart';
 
 class Constants {
   static const String empty = "";
-  static const int connectTimeout = kDebugMode ? 10000 : 120000;
+  static const int connectTimeout = kDebugMode ? 15000 : 120000;
 
   static const String kGoogleMapKey = 'AIzaSyDni6NI_DWPFL2snl8Dqnn2K5fqXpNbC4w';
 

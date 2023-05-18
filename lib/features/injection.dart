@@ -4,8 +4,11 @@ import 'package:weltweit/features/domain/usecase/country/countries_usecase.dart'
 import 'package:weltweit/features/domain/usecase/country/country_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_accept_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_finish_usecase.dart';
+import 'package:weltweit/features/domain/usecase/order/order_rate_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_usecase.dart';
+import 'package:weltweit/features/domain/usecase/provider/rates/provider_rates_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_subscription/subscribe_usecase.dart';
+import 'package:weltweit/features/domain/usecase/provider_subscription/subscribtions_history_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_subscription/subscribtions_usecase.dart';
 import 'package:weltweit/features/domain/repositoy/address_repository.dart';
 
@@ -99,6 +102,7 @@ Future<void> init() async {
   getIt.registerLazySingleton(() => ProviderUseCase(getIt()));
   getIt.registerLazySingleton(() => PortfolioUseCase(getIt()));
   getIt.registerLazySingleton(() => ProviderServicesUseCase(getIt()));
+  getIt.registerLazySingleton(() => ProviderRatesUseCase(getIt()));
   getIt.registerLazySingleton(() => FavoriteUseCase(getIt()));
   getIt.registerLazySingleton(() => AddFavoriteUseCase(getIt()));
   getIt.registerLazySingleton(() => RemoveFavoriteUseCase(getIt()));
@@ -111,6 +115,7 @@ Future<void> init() async {
 
   getIt.registerLazySingleton(() => OrderCancelUseCase(getIt()));
   getIt.registerLazySingleton(() => OrderAcceptUseCase(getIt()));
+  getIt.registerLazySingleton(() => OrderRateUseCase(getIt()));
   getIt.registerLazySingleton(() => OrderFinishUseCase(getIt()));
   getIt.registerLazySingleton(() => ChatMessagesUseCase(getIt()));
   getIt.registerLazySingleton(() => ChatSendMessageUseCase(getIt()));
@@ -122,4 +127,5 @@ Future<void> init() async {
   getIt.registerLazySingleton(() => BannerUseCase(getIt()));
   getIt.registerLazySingleton(() => SubscribeUseCase(getIt()));
   getIt.registerLazySingleton(() => SubscribtionUseCase(getIt()));
+  getIt.registerLazySingleton(() => SubscribtionHistoryUseCase(getIt()));
 }
