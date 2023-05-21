@@ -98,8 +98,8 @@ class CustomPersonImage extends StatelessWidget {
               bottom: 0,
               right: 0,
               child: Container(
-                height: 40,
-                width: 40,
+            height: 35,
+                width: 35,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
@@ -122,6 +122,7 @@ class CustomPersonImage extends StatelessWidget {
                     child: const Icon(
                       Icons.edit,
                       color: Colors.white,
+                      size: 18,
                     ),
                   ),
                 ),

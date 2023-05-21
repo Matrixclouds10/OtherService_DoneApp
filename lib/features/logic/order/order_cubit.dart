@@ -79,11 +79,11 @@ class OrderCubit extends Cubit<OrderState> {
     );
   }
 
-  Future<bool> finishOrder({required int id, required String price}) async {
+  Future<bool> finishOrder({required int id, required String? price}) async {
     emit(state.copyWith(finishState: BaseState.loading));
     Either<ErrorModel, BaseResponse> result = await finishUseCase(OrderFinishParams(
       id: id,
-      price: price,
+      price: price ?? "",
     ));
 
     return result.fold(

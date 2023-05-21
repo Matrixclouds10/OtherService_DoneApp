@@ -35,31 +35,31 @@ class _ContactActionState extends State<ContactAction> {
                 _imageGestureDetector(
                     image: Assets.imagesIcWhats,
                     onTap: () {
-                      openWhatsApp(whatsapp);
+                      openWhatsApp(whatsapp, state.countryModel?.code ?? "");
                     }),
               if (facebook != null)
                 _imageGestureDetector(
                     image: Assets.imagesIcFacebook,
                     onTap: () {
-                      final Uri facebookLaunchUri = Uri(scheme: 'https', path: '$facebook');
+                      String url = facebook.replaceAll('https://', '');
+                      final Uri facebookLaunchUri = Uri(path: url, scheme: 'https');
                       launchUrl(facebookLaunchUri);
                     }),
               if (twitter != null)
                 _imageGestureDetector(
                     image: Assets.imagesIcTwitter,
                     onTap: () {
-                      final Uri twitterLaunchUri = Uri(scheme: 'https', path: twitter);
-                      launchUrl(twitterLaunchUri);
+                      launch(twitter);
                     }),
-              _imageGestureDetector(
-                  image: Assets.imagesIcCall,
-                  onTap: () {
-                    final Uri instagramLaunchUri = Uri(
-                      scheme: 'tel',
-                      path: '+201000000000',
-                    );
-                    launchUrl(instagramLaunchUri);
-                  }),
+              // _imageGestureDetector(
+              //     image: Assets.imagesIcCall,
+              //     onTap: () {
+              //       final Uri instagramLaunchUri = Uri(
+              //         scheme: 'tel',
+              //         path: '+201000000000',
+              //       );
+              //       launchUrl(instagramLaunchUri);
+              //     }),
               // _imageGestureDetector(image: Assets.imagesIcCall, onTap: () {
               //   final Uri instagramLaunchUri = Uri(
               //     scheme: 'https',
@@ -88,14 +88,14 @@ class _ContactActionState extends State<ContactAction> {
     );
   }
 
-  openWhatsApp(String whatsAppnumber) async {
-    bool status = await canLaunch('https://api.whatsapp.com/send?phone=$whatsAppnumber');
+  openWhatsApp(String whatsAppnumber, String countryCode) async {
+    bool status = await canLaunch('https://api.whatsapp.com/send?phone=$countryCode$whatsAppnumber');
     if (status)
-      launch('https://api.whatsapp.com/send?phone=$whatsAppnumber');
+      launch('https://api.whatsapp.com/send?phone=$countryCode$whatsAppnumber');
     else {
-      bool status2 = await canLaunch('https://wsend.co/$whatsAppnumber');
+      bool status2 = await canLaunch('https://wsend.co/$countryCode$whatsAppnumber');
 
-      if (status2) launch('https://wsend.co/$whatsAppnumber');
+      if (status2) launch('https://wsend.co/$countryCode$whatsAppnumber');
     }
   }
 }

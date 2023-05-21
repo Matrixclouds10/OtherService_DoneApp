@@ -70,7 +70,6 @@ class DioClient {
         onReceiveProgress: onReceiveProgress,
       );
 
-      Logger().d(response.data);
       return response;
     } on SocketException catch (e) {
       throw SocketException(e.toString());

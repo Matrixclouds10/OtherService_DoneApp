@@ -25,7 +25,7 @@ class ChatModel {
   factory ChatModel.fromJson(Map<String, dynamic> json) => ChatModel(
         id: json["id"],
         serviceOrderId: json["service_order_id"],
-        providerId: json["provider_id"] ??0,
+        providerId: json["provider_id"] ?? 0,
         message: json["message"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
@@ -47,13 +47,18 @@ class ChatModel {
 
 class ClientModel {
   int id;
-
+  String name;
+  String fullImage;
   ClientModel({
     required this.id,
+    required this.name,
+    required this.fullImage,
   });
 
   factory ClientModel.fromJson(Map<String, dynamic> json) => ClientModel(
         id: json["id"],
+        name: json["name"],
+        fullImage: json["full_image"],
       );
 
   Map<String, dynamic> toJson() => {

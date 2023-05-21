@@ -36,7 +36,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
   final TextEditingController _confirmPasswordController = TextEditingController();
   File? image;
   String? nerworkImage;
-  CountryModel? country;
+  CountryModel? selectedCountry;
   bool isMale = true;
 
   final _formKey = GlobalKey<FormState>();
@@ -52,7 +52,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
         String phone = _phoneController.text;
         String email = _emailController.text;
 
-        if (country == null) {
+        if (selectedCountry == null) {
           AppSnackbar.show(
             context: context,
             title: LocaleKeys.notification.tr(),
@@ -65,8 +65,8 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
             mobileNumber: phone,
             email: email,
             image: image,
-            countryCode: country?.code ?? "20",
-            countryIso: country?.title,
+            countryCode: selectedCountry?.code ?? "20",
+            countryIso: selectedCountry?.title,
             genderIsMale: isMale,
             countryId: 1, //TODO fix
             description: desc);
@@ -170,8 +170,9 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                 _emailController.text = state.data?.email ?? "";
                 _phoneController.text = state.data?.mobileNumber ?? "";
                 nerworkImage = state.data?.image;
-
-                country = state.data?.countryModel;
+                selectedCountry = state.data?.countryModel;
+                print("selectedCountry: ${state.data?.countryModel}");
+                print("selectedCountry: ${selectedCountry.toString()}");
 
                 return _buildBody(context, state.data);
               case BaseState.error:
@@ -263,12 +264,12 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
             const VerticalSpace(kScreenPaddingNormal),
             CustomTextFieldPhoneCountry(
               controller: _phoneController,
-              selectedCountry: country,
+              selectedCountry: selectedCountry,
               onCountryChanged: (value) {
-                country = value;
+                selectedCountry = value;
               },
             ),
-           const VerticalSpace(kScreenPaddingNormal),
+            const VerticalSpace(kScreenPaddingNormal),
             CustomTextFieldEmail(label: tr(LocaleKeys.email), controller: _emailController, textInputAction: TextInputAction.next),
             // const VerticalSpace(kScreenPaddingNormal),
             // Row(

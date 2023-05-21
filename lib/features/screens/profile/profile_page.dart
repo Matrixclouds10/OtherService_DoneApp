@@ -29,7 +29,7 @@ class ProfilePage extends StatelessWidget {
           isBackButtonExist: false,
           isCenterTitle: true,
           color: Colors.white,
-          titleWidget:  CustomText(LocaleKeys.myProfile.tr()).header(),
+          titleWidget: CustomText(LocaleKeys.myProfile.tr()).header(),
           actions: [
             IconButton(
               icon: const Icon(Icons.edit_note, color: Colors.black),
@@ -44,7 +44,6 @@ class ProfilePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: MediaQuery.of(context).padding.top),
-              const SizedBox(height: 12),
               GestureDetector(
                 onTap: () {
                   NavigationService.push(RoutesServices.servicesProfileEdit);
@@ -72,16 +71,6 @@ class ProfilePage extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                if (kDebugMode) ...[
-                                  CustomButton(
-                                    onTap: () {
-                                      context.read<ProfileCubit>().getProfile();
-                                    },
-                                    width: 200,
-                                    title: "get profile debug",
-                                  ),
-                                  Text("name ${globalParams.user?.name}"),
-                                ],
                                 const SizedBox(height: 4),
                                 textWithIcon(icon: Icons.person, text: state.data!.name ?? ''),
                                 const SizedBox(height: 4),
@@ -97,7 +86,7 @@ class ProfilePage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 12),
-              const CustomText("معلوماتي", color: Colors.black, align: TextAlign.start, bold: true, pv: 0, ph: 12).header(),
+              CustomText(LocaleKeys.myInformation.tr(), color: Colors.black, align: TextAlign.start, bold: true, pv: 0, ph: 12).header(),
               Container(
                 color: Colors.white,
                 child: Column(
@@ -106,8 +95,8 @@ class ProfilePage extends StatelessWidget {
                       builder: (context, state) {
                         return singleCustomListTile(
                             icon: Icons.arrow_forward_ios,
-                            text: 'عناويني',
-                            trailingText: state.addresses.isNotEmpty ? "(${state.addresses.length} عنوان)" : "",
+                            text: LocaleKeys.myAddresses.tr(),
+                            trailingText: state.addresses.isNotEmpty ? "(${state.addresses.length} ${LocaleKeys.address.tr()})" : "",
                             onTap: () {
                               Navigator.pushNamed(context, RoutesServices.servicesMyAddresses);
                             });
@@ -118,7 +107,7 @@ class ProfilePage extends StatelessWidget {
                       builder: (context, state) {
                         return singleCustomListTile(
                             icon: Icons.arrow_forward_ios,
-                            text: 'طلباتي',
+                            text: LocaleKeys.myOrders.tr(),
                             trailingText: state.pendingData.isNotEmpty ? "(${state.pendingData.length} طلب)" : "",
                             onTap: () {
                               Navigator.pushNamed(context, RoutesServices.servicesOrders);
@@ -126,11 +115,24 @@ class ProfilePage extends StatelessWidget {
                       },
                     ),
                     Divider(height: 2, color: Colors.grey[300]),
-                    singleCustomListTile(icon: Icons.arrow_forward_ios, text: 'اللغة', trailingText: "العربية", onTap: () {}),
+                    singleCustomListTile(
+                        icon: Icons.arrow_forward_ios,
+                        text: LocaleKeys.language.tr(),
+                        trailingText: (() {
+                          Locale locale = EasyLocalization.of(context)!.locale;
+                          if (locale.languageCode == "ar") {
+                            return "العربية";
+                          } else {
+                            return "English";
+                          }
+                        }()),
+                        onTap: () {
+                          AppDialogs().languageDialog(context);
+                        }),
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
                         icon: Icons.arrow_forward_ios,
-                        text: 'من نحن',
+                        text: LocaleKeys.aboutUs.tr(),
                         trailingText: "",
                         onTap: () {
                           Navigator.pushNamed(context, Routes.about);
@@ -138,7 +140,7 @@ class ProfilePage extends StatelessWidget {
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
                         icon: Icons.arrow_forward_ios,
-                        text: 'الاستخدام والخصوصية',
+                        text: LocaleKeys.privacyPolicy.tr(),
                         trailingText: "",
                         onTap: () {
                           Navigator.pushNamed(context, Routes.policy);
@@ -146,7 +148,7 @@ class ProfilePage extends StatelessWidget {
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
                         icon: Icons.arrow_forward_ios,
-                        text: 'تواصل معنا',
+                        text: LocaleKeys.contactUs.tr(),
                         trailingText: "",
                         onTap: () {
                           Navigator.pushNamed(context, Routes.contactUs);
@@ -154,14 +156,15 @@ class ProfilePage extends StatelessWidget {
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
                         icon: Icons.arrow_forward_ios,
-                        text: 'تسجيل خروج',
+                        text: LocaleKeys.logOut.tr(),
                         trailingText: "",
                         onTap: () {
                           AppDialogs().logoutDialog(context);
                         }),
                   ],
                 ),
-              )
+              ),
+              SizedBox(height: 90),
             ],
           ),
         ));

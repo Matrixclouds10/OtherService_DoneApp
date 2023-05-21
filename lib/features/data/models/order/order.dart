@@ -9,6 +9,7 @@ class OrderModel {
     required this.status,
     required this.statusCode,
     required this.client,
+    required this.price,
     required this.provider,
     required this.service,
   });
@@ -17,6 +18,7 @@ class OrderModel {
   final DateTime date;
   final List<String> file;
   final String status;
+  final String? price;
   final String? statusCode;
   final Client? client;
   final ProvidersModel? provider;
@@ -28,6 +30,7 @@ class OrderModel {
         file: json["file"] == null ? [] : List<String>.from(json["file"].map((x) => x)),
         status: json["status"] ?? "",
         statusCode: json["status_code"],
+        price: json["price"] == null ? null : '${json["price"]}',
         client: Client.fromJson(json["client"]),
         provider: ProvidersModel.fromJson(json["provider"]),
         service: ServiceModel.fromJson(json["service"]),

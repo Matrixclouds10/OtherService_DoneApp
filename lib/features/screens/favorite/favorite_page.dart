@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/resources/decoration.dart';
@@ -9,6 +10,7 @@ import 'package:weltweit/features/core/widgets/offer_item_widget.dart';
 import 'package:weltweit/features/core/widgets/service_provider_item.dart';
 import 'package:weltweit/features/logic/favorite/favorite_cubit.dart';
 import 'package:weltweit/generated/assets.dart';
+import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
 
 class FavoritePage extends StatefulWidget {
@@ -31,7 +33,7 @@ class _FavoritePageState extends State<FavoritePage> with SingleTickerProviderSt
     return Scaffold(
       appBar: CustomAppBar(
         color: Colors.white,
-        titleWidget: const CustomText("المفضلة").header(),
+        titleWidget:  CustomText(LocaleKeys.favorite.tr()).header(),
         isCenterTitle: true,
         isBackButtonExist: false,
       ),
@@ -44,22 +46,22 @@ class _FavoritePageState extends State<FavoritePage> with SingleTickerProviderSt
               scrollDirection: Axis.vertical,
               children: [
                 const SizedBox(height: 0),
-                Container(
-                  color: Colors.white,
-                  child: TabBar(
-                    controller: _tabController,
-                    indicatorColor: Colors.transparent,
-                    labelColor: Colors.black,
-                    onTap: (index) {
-                      setState(() {});
-                    },
-                    unselectedLabelColor: Colors.grey,
-                    tabs: [
-                      singleTab(0, "مزودي الخدمة"),
-                      singleTab(1, 'العروض'),
-                    ],
-                  ),
-                ),
+                // Container(
+                //   color: Colors.white,
+                //   child: TabBar(
+                //     controller: _tabController,
+                //     indicatorColor: Colors.transparent,
+                //     labelColor: Colors.black,
+                //     onTap: (index) {
+                //       setState(() {});
+                //     },
+                //     unselectedLabelColor: Colors.grey,
+                //     tabs: [
+                //       singleTab(0, "مزودي الخدمة"),
+                //       singleTab(1, 'العروض'),
+                //     ],
+                //   ),
+                // ),
                 tabBody(),
               ],
             )
@@ -85,21 +87,22 @@ class _FavoritePageState extends State<FavoritePage> with SingleTickerProviderSt
   }
 
   tabBody() {
-    switch (_tabController.index) {
-      case 0:
         return providers();
-      case 1:
-        return offers();
-      default:
-        return Container();
-    }
+    // switch (_tabController.index) {
+    //   case 0:
+    //     return providers();
+    //   case 1:
+    //     return offers();
+    //   default:
+    //     return Container();
+    // }
   }
 
   providers() {
     return BlocBuilder<FavoriteCubit, FavoriteState>(
       builder: (context, state) {
         if (state.state == BaseState.loading) return const Center(child: CustomLoadingSpinner());
-
+        if(state.data.isEmpty) return  Center(child: CustomText(LocaleKeys.noFavoriteItems.tr()));
         return Column(
           children: [
             const SizedBox(height: 12),

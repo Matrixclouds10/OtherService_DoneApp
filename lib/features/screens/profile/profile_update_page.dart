@@ -259,23 +259,6 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                 selectedCountry = value;
               },
             ),
-            if (false) //TODO remove below
-              BlocBuilder<CountryCubit, CountryState>(
-                builder: (context, state) {
-                  return CustomTextFieldPhoneCode(
-                    label: tr(LocaleKeys.yourPhoneNumber),
-                    controller: _phoneController,
-                    textInputAction: TextInputAction.next,
-                    enable: state.state == BaseState.loaded,
-                    enabled: state.state == BaseState.loaded,
-                    countries: state.data,
-                    onCountryChanged: (countryVal) {
-                      selectedCountry = countryVal;
-                    },
-                    disableLengthCheck: true,
-                  );
-                },
-              ),
             const VerticalSpace(kScreenPaddingNormal),
             CustomTextFieldEmail(label: tr(LocaleKeys.email), controller: _emailController, textInputAction: TextInputAction.next),
             const VerticalSpace(kScreenPaddingNormal),

@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/widgets/order_item_widget_client_info.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
+import 'package:weltweit/features/logic/home/home_cubit.dart';
 import 'package:weltweit/features/logic/orders/orders_cubit.dart';
 import 'package:weltweit/features/logic/provider_profile/profile_cubit.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
@@ -31,9 +32,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-
     context.read<OrdersCubit>().getPendingOrders(typeIsProvider: true);
     context.read<OrdersCubit>().getCompletedOrders(typeIsProvider: true);
+    context.read<HomeCubit>().getCurrentLocationAddress();
   }
 
   @override
@@ -49,17 +50,29 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Icon(FontAwesomeIcons.locationDot),
-                  SizedBox(width: 4),
-                  Container(
-                    decoration: BoxDecoration().radius(radius: 4),
-                    child: CustomText("الرياض", color: Colors.black),
-                  ),
-                ],
+              BlocBuilder<HomeCubit, HomeState>(
+                builder: (context, state) {
+                  if (state.currentLocationAddress.isNotEmpty) {
+                    return Expanded(
+                      child: Tooltip(
+                        message: state.currentLocationAddress,
+                        triggerMode: TooltipTriggerMode.tap,
+                        child: Row(
+                          children: [
+                            Icon(Icons.location_on_outlined, color: Colors.black54),
+                            Expanded(
+                              child: Container(child: CustomText(state.currentLocationAddress, maxLines: 1).footer().start()),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                  return Container();
+                },
               ),
-              CustomText("طلباتي").header(),
+              SizedBox(width: 8),
+              CustomText(LocaleKeys.myOrders.tr()).header(),
               IconButton(
                   onPressed: () {
                     Navigator.pushNamed(context, RoutesProvider.providerNotifications);
@@ -193,57 +206,63 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           return const Center(child: CircularProgressIndicator());
         }
         if (state.pendingState == BaseState.loaded && state.pendingData.isEmpty) {
-          return Column(
-            children: [
-              Image.asset(Assets.imagesBaloon, height: 200, width: 200),
-              SizedBox(height: 12),
-              CustomText(LocaleKeys.cantGetNewOrders.tr(), color: AppColorLight().kAccentColor).header(),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Column(
-                  children: [
-                    ...[
-                      LocaleKeys.makeSureToSelectServicesYouProvide.tr(),
-                      LocaleKeys.makeSureToUploadAllFiles.tr(),
-                      LocaleKeys.makeSureToBeOnline.tr(),
-                    ]
-                        .map((e) => AppTextTile(
-                              title: CustomText(
-                                e,
-                                size: 16,
-                                pv: 0,
-                                align: TextAlign.start,
-                              ),
-                              isTitleExpanded: true,
-                              leading: Icon(Icons.circle, size: 12),
-                            ))
-                        .toList(),
-                  ],
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                Image.asset(Assets.imagesBaloon, height: 160, width: 160),
+                SizedBox(height: 12),
+                CustomText(LocaleKeys.cantGetNewOrders.tr(), color: AppColorLight().kAccentColor).header(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Column(
+                    children: [
+                      ...[
+                        LocaleKeys.makeSureToSelectServicesYouProvide.tr(),
+                        LocaleKeys.makeSureToUploadAllFiles.tr(),
+                        LocaleKeys.makeSureToBeOnline.tr(),
+                      ]
+                          .map((e) => AppTextTile(
+                                title: CustomText(
+                                  e,
+                                  size: 16,
+                                  pv: 0,
+                                  align: TextAlign.start,
+                                ),
+                                isTitleExpanded: true,
+                                leading: Icon(Icons.circle, size: 12),
+                              ))
+                          .toList(),
+                      SizedBox(height: 60),
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(height: 20),
-            ],
+                SizedBox(height: 20),
+              ],
+            ),
           );
         }
-        return Column(
-          children: [
-            ...state.pendingData
-                .where((element) => element.statusCode?.toLowerCase() == 'provider_accept')
-                .map((e) => GestureDetector(
-                      onTap: () {},
-                      child: OrderItemWidgetClient(
-                        orderModel: e,
-                        // name: state.pendingData[i].provider?.name ?? '',
-                        // profession: '',
-                        // date: DateFormat('yyyy-MM-dd').format(state.pendingData[i].date),
-                        // time: DateFormat('HH:mm').format(state.pendingData[i].date),
-                        // orderStatus: state.pendingData[i].status,
-                        // price: '',
-                        // tags: const [],
-                      ),
-                    ))
-                .toList(),
-          ],
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              ...state.pendingData
+                  .where((element) => element.statusCode?.toLowerCase() == 'provider_accept')
+                  .map((e) => GestureDetector(
+                        onTap: () {},
+                        child: OrderItemWidgetClient(
+                          orderModel: e,
+                          // name: state.pendingData[i].provider?.name ?? '',
+                          // profession: '',
+                          // date: DateFormat('yyyy-MM-dd').format(state.pendingData[i].date),
+                          // time: DateFormat('HH:mm').format(state.pendingData[i].date),
+                          // orderStatus: state.pendingData[i].status,
+                          // price: '',
+                          // tags: const [],
+                        ),
+                      ))
+                  .toList(),
+              SizedBox(height: 36),
+            ],
+          ),
         );
       },
     );

@@ -1,45 +1,73 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
+import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/logic/banner/banner_cubit.dart';
+import 'package:weltweit/features/logic/home/home_cubit.dart';
 import 'package:weltweit/features/screens/home/home_banner.dart';
 import 'package:weltweit/features/screens/home/home_most_requested_providers.dart';
 import 'package:weltweit/features/screens/home/home_offers.dart';
 import 'package:weltweit/features/screens/home/home_services.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<HomeCubit>().getCurrentLocationAddress();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: servicesTheme.scaffoldBackgroundColor,
-      // appBar: ServicesAppBar(
-      //   isBackButtonExist: false,
-      //   leading: Container(
-      //     decoration: BoxDecoration().customColor(servicesTheme.primaryColor).radius(radius: 4),
-      //     child: CustomText("Location"),
-      //   ),
-      //   actions: [
-      //     IconButton(onPressed: () {}, icon: Icon(Icons.search)),
-      //     IconButton(onPressed: () {}, icon: Icon(Icons.notifications)),
-      //   ],
-      // ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Column(
           children: [
             SizedBox(height: MediaQuery.of(context).padding.top),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Container(
-                //   decoration: const BoxDecoration().customColor(servicesTheme.primaryColor).radius(radius: 4),
-                //   child: const CustomText("الرياض", color: Colors.white),
-
-                // ),
-                const Spacer(),
+                BlocBuilder<HomeCubit, HomeState>(
+                  builder: (context, state) {
+                    if (state.currentLocationAddress.isNotEmpty) {
+                      return Expanded(
+                        child: Tooltip(
+                          message: state.currentLocationAddress,
+                          triggerMode: TooltipTriggerMode.tap,
+                          child: Row(
+                            children: [
+                              Icon(Icons.location_on_outlined, color: Colors.black54),
+                              Expanded(
+                                child: Container(child: CustomText(state.currentLocationAddress, maxLines: 1).footer().start()),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+                    if (kDebugMode) {
+                      return IconButton(
+                          onPressed: () {
+                            context.read<HomeCubit>().getCurrentLocationAddress();
+                          },
+                          icon: const Icon(Icons.refresh));
+                    }
+                    return Expanded(child:Container());
+                  },
+                ),
+                SizedBox(width: 8),
                 IconButton(
                     onPressed: () {
                       Navigator.pushNamed(context, RoutesServices.servicesNotifications);
@@ -53,13 +81,14 @@ class HomePage extends StatelessWidget {
                 return Container();
               },
             ),
+            const SizedBox(height: 8),
             const HomeServices(
               key: Key('home_services'),
             ),
             const SizedBox(height: 16),
             const MostRequestedProviders(),
-            const SizedBox(height: 16),
-            const HomeOffers(),
+            // const SizedBox(height: 16),
+            // const HomeOffers(),
             const SizedBox(height: 90),
           ],
         ),

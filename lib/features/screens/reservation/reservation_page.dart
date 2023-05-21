@@ -84,7 +84,7 @@ class _ReservationPageState extends State<ReservationPage> {
                   Container(
                     decoration: const BoxDecoration(color: Colors.transparent).radius(radius: 12),
                     child: CustomTextField(
-                      hint: "حمل صورة أو فيديو بالمشكلة",
+                      hint: LocaleKeys.deployImageOrVideoIssue.tr(),
                       prefixIcon: Icons.camera_alt,
                       enable: false,
                       radius: 4,
@@ -431,11 +431,21 @@ class _ReservationPageState extends State<ReservationPage> {
   }
 
   _submit(BuildContext context) async {
+    List<File> files = images.toList();
+    if (video != null) {
+      files.add(video!);
+    }
+
+    if(files.isEmpty){
+      AppSnackbar.show(context: context, message: LocaleKeys.pleaseAddImageOrVideo.tr());
+      return;
+    }
+
     String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
     String time = "${TimeOfDay.now().hour}:${TimeOfDay.now().minute}:00";
 
     if (!reservationTimeNow && selectedDate == null && selectedTime == null) {
-      AppSnackbar.show(context: context, message: "اختر التاريخ والوقت");
+      AppSnackbar.show(context: context, message: LocaleKeys.selectDateAndTime.tr());
       return;
     }
     if (selectedDate != null && selectedTime != null) {
@@ -446,10 +456,7 @@ class _ReservationPageState extends State<ReservationPage> {
       AppSnackbar.show(context: context, message: LocaleKeys.selectService.tr());
       return;
     }
-    List<File> files = images.toList();
-    if (video != null) {
-      files.add(video!);
-    }
+
     await context.read<CreateOrderCubit>().createOrder(CreateOrderParams(
           date: "$date $time",
           files: files,

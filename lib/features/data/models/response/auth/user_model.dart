@@ -17,7 +17,7 @@ class UserModel {
   String? desc;
   int? isCompany;
   CountryModel? countryModel;
-  double? wallet;
+  String? wallet;
   CurrentSubscribtion? currentSubscription;
   UserModel({
     this.id,
@@ -46,12 +46,13 @@ class UserModel {
   factory UserModel.fromJson(Map<String, dynamic> json) {
     Map<String, dynamic>? countryJson;
     if (json['country'] != null) {
-      try {
+      if (json['country']['data'] != null) {
         countryJson = json['country']['data'];
-      } catch (e) {
+      } else {
         countryJson = json['country'];
       }
     }
+
     return UserModel(
       id: json['id'] as int?,
       name: json['name'] as String?,
@@ -68,7 +69,7 @@ class UserModel {
       countryId: 1,
       isCompany: json['is_company'] as int?,
       countryModel: countryJson != null ? CountryModel.fromJson(countryJson) : null,
-      wallet: json['wallet'] as double?,
+      wallet: "${json['wallets']}",
       currentSubscription: json['current_subscription'] != null ? CurrentSubscribtion.fromJson(json['current_subscription']) : null,
     );
   }

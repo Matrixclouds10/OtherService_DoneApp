@@ -1,5 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/data/datasource/remote/dio/dio_client.dart';
@@ -18,15 +20,17 @@ class NetworkClient {
   }) async {
     DioClient dioClient = getIt<DioClient>();
     late Response response;
+    AppPrefs prefs = getIt();
+    String lang = await prefs.get(PrefKeys.lang, defaultValue: "ar");
+
     Options options = Options(
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Accept-Language': 'ar', //TODO change this
+        'Accept-Language': lang,
         'User-Agents': 'android', //TODO change this
       },
     );
-    AppPrefs prefs = getIt();
     String? token = await prefs.getSecuredData(PrefKeys.token);
     token ??= await prefs.get(PrefKeys.token);
     if (token != null) {
@@ -43,15 +47,10 @@ class NetworkClient {
     try {
       switch (type) {
         case NetworkCallType.get:
-          response =
-              await dioClient.get(url, queryParameters: data, options: options);
+          response = await dioClient.get(url, queryParameters: data, options: options);
           break;
         case NetworkCallType.post:
-          response = await dioClient.post(url,
-              queryParameters: data,
-              data: formData,
-              ignorePath: true,
-              options: options);
+          response = await dioClient.post(url, queryParameters: data, data: formData, ignorePath: true, options: options);
           break;
         case NetworkCallType.put:
           response = await dioClient.put(url, data: data, options: options);

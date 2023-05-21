@@ -20,14 +20,14 @@ class CheckOTPUseCase implements BaseUseCase<UserModel> {
     try {
       String? token = baseModel.responseData['token'];
       if (token != null) {
-        Logger().i('token: $token');
-        Logger().i('token: ${baseModel.responseData}');
         UserModel user = UserModel.fromJson(baseModel.responseData);
         return ResponseModel(true, baseModel.message, data: user);
       } else {
         return ResponseModel(true, baseModel.message, data: baseModel.responseData);
       }
     } catch (e) {
+        Logger().e('error:otp ${baseModel.responseData}');
+      
       return ResponseModel(true, baseModel.message, data: baseModel.responseData);
     }
   }

@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:full_screen_image/full_screen_image.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
@@ -35,12 +37,19 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   Timer? timer;
   AppPrefs appPrefs = getIt<AppPrefs>();
   int myId = 0;
+  ScrollController _scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
     myId = appPrefs.get(PrefKeys.id, defaultValue: 0);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ChatCubit>().getChat(widget.orderModel.id);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await context.read<ChatCubit>().getChat(widget.orderModel.id);
+      await Future.delayed(Duration(milliseconds: 500));
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
     });
   }
 
@@ -72,6 +81,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                   children: [
                     Expanded(
                       child: ListView.builder(
+                        controller: _scrollController,
                         itemCount: _messages.length,
                         itemBuilder: (context, index) {
                           final message = _messages[index];
@@ -81,129 +91,160 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                               margin: const EdgeInsets.all(8.0),
                               padding: const EdgeInsets.all(8.0),
                               decoration: BoxDecoration(
-                                color: message.providerId == myId || message.providerId == 0 ? Colors.lightBlueAccent : Colors.grey.shade300,
+                                color: message.providerId == myId || message.providerId == 0 ? Colors.orangeAccent : Colors.grey.shade300,
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
-                              child: _buildMessage(message),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (message.client?.fullImage != null) ...[
+                                    Tooltip(
+                                      message: message.client?.name ?? "",
+                                      triggerMode: TooltipTriggerMode.tap,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(120.0),
+                                        child: CachedNetworkImage(
+                                          imageUrl: message.client!.fullImage,
+                                          height: 40,
+                                          width: 40,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 8.0),
+                                  ],
+                                  SizedBox(
+                                    width: deviceWidth * 0.64,
+                                    child: _buildMessage(message),
+                                  ),
+                                  if (message.client?.fullImage == null) ...[
+                                    SizedBox(width: 8.0),
+                                    Tooltip(
+                                      message: widget.orderModel.provider?.name ?? "",
+                                      triggerMode: TooltipTriggerMode.tap,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(120.0),
+                                        child: CachedNetworkImage(
+                                          imageUrl: widget.orderModel.provider?.image ?? "",
+                                          height: 40,
+                                          width: 40,
+                                        ),
+                                      ),
+                                    ),
+                                  ]
+                                ],
+                              ),
                             ),
                           );
                         },
                       ),
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: _messageController,
-                            textInputAction: TextInputAction.send,
-                            onSubmitted: (value) {
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _messageController,
+                              textInputAction: TextInputAction.send,
+                              onSubmitted: (value) {
+                                _addMessage(Message(
+                                  text: value,
+                                  isMe: true,
+                                ));
+                              },
+                              decoration: InputDecoration(
+                                hintText: 'Type a message',
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 8.0),
+                          IconButton(
+                            onPressed: () {
                               _addMessage(Message(
-                                text: value,
+                                text: _messageController.text,
                                 isMe: true,
                               ));
                             },
-                            decoration: InputDecoration(
-                              labelText: 'Type a message',
-                            ),
+                            icon: Icon(Icons.send),
                           ),
-                        ),
-                        SizedBox(width: 8.0),
-                        IconButton(
-                          onPressed: () {
-                            _addMessage(Message(
-                              text: _messageController.text,
-                              isMe: true,
-                            ));
-                          },
-                          icon: Icon(Icons.send),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (context) {
-                                return Container(
-                                  height: 150,
-                                  color: Colors.red,
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(vertical: 12),
-                                    decoration: const BoxDecoration(
-                                      color: Colors.white,
-                                      border: Border(
-                                        top: BorderSide(color: Colors.grey, width: 1),
-                                      ),
-                                    ),
-                                    height: 25,
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            ElevatedButton.icon(
-                                              onPressed: _actionCamera,
-                                              icon: Icon(Icons.camera_alt),
-                                              label: CustomText(LocaleKeys.camera.tr()),
-                                            ),
-                                            ElevatedButton.icon(
-                                              onPressed: _actionGallery,
-                                              icon: Icon(Icons.image, color: Colors.blue.shade400),
-                                              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue.shade100),
-                                              label: CustomText(LocaleKeys.gallery.tr()),
-                                            ),
-                                          ],
+                          IconButton(
+                            onPressed: () {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  return Container(
+                                    height: 150,
+                                    color: Colors.red,
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(vertical: 12),
+                                      decoration: const BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border(
+                                          top: BorderSide(color: Colors.grey, width: 1),
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                          icon: Icon(Icons.camera_alt),
-                        ),
-
-                        //share live location
-                        IconButton(
-                          onPressed: () async {
-                            bool status = await AppDialogs().confirm(context, message: LocaleKeys.share_location.tr());
-
-                            if (status) {
-                              LocationPermission checkPermission = await Geolocator.checkPermission();
-                              if (checkPermission == LocationPermission.whileInUse || checkPermission == LocationPermission.always) {
-                                Position position = await Geolocator.getCurrentPosition();
-                                bool status = await context.read<ChatCubit>().sendLocation(widget.orderModel.id, position.latitude, position.longitude);
-                                if (status) {
-                                  setState(() {
-                                    _messages.add(
-                                      ChatModel(
-                                        id: 0,
-                                        serviceOrderId: 0,
-                                        providerId: 0,
-                                        image: null,
-                                        lat: position.latitude.toString(),
-                                        lng: position.longitude.toString(),
-                                        message: 'location',
-                                        createdAt: DateTime.now(),
-                                        updatedAt: DateTime.now(),
                                       ),
-                                    );
-                                  });
-                                }
-                              } else if (checkPermission == LocationPermission.deniedForever) {
-                                AppSnackbar.show(
-                                  context: context,
-                                  message: LocaleKeys.location_permission_denied.tr(),
-                                );
-                              } else {
-                                await Geolocator.requestPermission();
-                              }
-                            }
-                          },
-                          icon: Icon(Icons.location_on),
-                        ),
+                                      height: 25,
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                            children: [
+                                              ElevatedButton.icon(
+                                                onPressed: _actionCamera,
+                                                icon: Icon(Icons.camera_alt),
+                                                label: CustomText(LocaleKeys.camera.tr()),
+                                              ),
+                                              ElevatedButton.icon(
+                                                onPressed: _actionGallery,
+                                                icon: Icon(Icons.image, color: Colors.lightBlueAccent.shade400),
+                                                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue.shade100),
+                                                label: CustomText(LocaleKeys.gallery.tr()),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            icon: Icon(Icons.camera_alt),
+                          ),
 
-                        SizedBox(width: 8.0),
-                      ],
+                          //share live location
+                          IconButton(
+                            onPressed: () async {
+                              bool status = await AppDialogs().confirm(context, message: LocaleKeys.share_location.tr());
+
+                              if (status) {
+                                LocationPermission checkPermission = await Geolocator.checkPermission();
+                                if (checkPermission == LocationPermission.whileInUse || checkPermission == LocationPermission.always) {
+                                  _getCurrentLocation();
+                                } else if (checkPermission == LocationPermission.deniedForever) {
+                                  AppSnackbar.show(
+                                    context: context,
+                                    message: LocaleKeys.location_permission_denied.tr(),
+                                  );
+                                } else {
+                                  LocationPermission locationPermission = await Geolocator.requestPermission();
+                                  if (locationPermission == LocationPermission.denied || locationPermission == LocationPermission.deniedForever) {
+                                    AppSnackbar.show(
+                                      context: context,
+                                      message: LocaleKeys.location_permission_denied.tr(),
+                                    );
+                                  } else {
+                                    _getCurrentLocation();
+                                  }
+                                }
+                              }
+                            },
+                            icon: Icon(Icons.location_on),
+                          ),
+
+                          SizedBox(width: 8.0),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -237,6 +278,11 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             ),
           );
         });
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
       }
     } catch (e) {
       AppSnackbar.show(context: context, message: e.toString(), type: SnackbarType.error);
@@ -264,7 +310,11 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           ),
         );
       });
-      // if (context.mounted) await context.read<ChatCubit>().getChat(widget.orderModel.id);
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      ); // if (context.mounted) await context.read<ChatCubit>().getChat(widget.orderModel.id);
     }
   }
 
@@ -289,23 +339,43 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           ),
         );
       });
-      // if (context.mounted) await context.read<ChatCubit>().getChat(widget.orderModel.id);
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      ); // if (context.mounted) await context.read<ChatCubit>().getChat(widget.orderModel.id);
     }
   }
 
   _buildMessage(ChatModel message) {
     if (message.message == 'image') {
-      return CustomImage(
-        imageUrl: message.image!,
-        width: deviceWidth / 2,
+      return GestureDetector(
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return Dialog(
+                child: FullScreenWidget(
+                  disposeLevel: DisposeLevel.Low,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image.network(message.image!, fit: BoxFit.cover),
+                  ),
+                ),
+              );
+            },
+          );
+        },
+        child: CustomImage(
+          imageUrl: message.image!,
+        ),
       );
     }
     if (message.message == 'location') {
       return Column(
         children: [
           SizedBox(
-            height: 200,
-            width: deviceWidth * 0.8,
+            height: 130,
             child: GoogleMap(
               initialCameraPosition: CameraPosition(
                 target: LatLng(double.parse(message.lat!), double.parse(message.lng!)),
@@ -319,15 +389,47 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
               },
             ),
           ),
+          SizedBox(height: 4.0),
           TextButton(
-              onPressed: () {
-                launch('https://www.google.com/maps/search/?api=1&query=${message.lat},${message.lng}');
-              },
-              child: CustomText("Open on Google map"))
+            onPressed: () {
+              launch('https://www.google.com/maps/search/?api=1&query=${message.lat},${message.lng}');
+            },
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.black,
+            ),
+            child: CustomText("Open on Google map", pv: 0, white: true),
+          )
         ],
       );
     } else {
-      return Text(message.message);
+      return Container(child: Text(message.message));
+    }
+  }
+
+  void _getCurrentLocation() async {
+    Position position = await Geolocator.getCurrentPosition();
+    bool status = await context.read<ChatCubit>().sendLocation(widget.orderModel.id, position.latitude, position.longitude);
+    if (status) {
+      setState(() {
+        _messages.add(
+          ChatModel(
+            id: 0,
+            serviceOrderId: 0,
+            providerId: 0,
+            image: null,
+            lat: position.latitude.toString(),
+            lng: position.longitude.toString(),
+            message: 'location',
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          ),
+        );
+      });
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
     }
   }
 }

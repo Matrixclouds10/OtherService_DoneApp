@@ -1,8 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/core/widgets/offer_item_widget.dart';
 import 'package:weltweit/generated/assets.dart';
+import 'package:weltweit/generated/locale_keys.g.dart';
 
 class HomeOffers extends StatelessWidget {
   const HomeOffers({super.key});
@@ -19,7 +21,7 @@ class HomeOffers extends StatelessWidget {
               onTap: () {
                 Navigator.pushNamed(context, RoutesServices.servicesOffers);
               },
-              child: const CustomText("عرض الكل" " (20) ", color: Colors.grey)
+              child:  CustomText("${LocaleKeys.showAll.tr()}" " (20) ", color: Colors.grey)
                   .footerExtra(),
             ),
           ],

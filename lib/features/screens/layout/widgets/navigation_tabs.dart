@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:weltweit/core/tabs/tab.dart';
 import 'package:weltweit/features/screens/favorite/favorite_page.dart';
 import 'package:weltweit/features/screens/home/home_page.dart';
+import 'package:weltweit/features/screens/orders/orders_page.dart';
 
 import 'package:weltweit/features/screens/profile/profile_page.dart';
 import 'package:weltweit/features/screens/wallet/wallet_page.dart';
@@ -15,7 +16,7 @@ class NavigationTabs {
   static const home = 0;
   static const favorite = 1;
   static const search = 2;
-  static const wallet = 3;
+  static const orders = 3;
   static const profile = 4;
 }
 
@@ -45,12 +46,12 @@ List<NavigationTab> kTabs = <NavigationTab>[
     index: NavigationTabs.search,
   ),
   const NavigationTab(
-    name: LocaleKeys.wallet,
+    name: LocaleKeys.orders,
     image: '',
-    unSelectIcon: Icons.account_balance_wallet,
-    selectIcon: Icons.account_balance_wallet_outlined,
-    initialRoute: WalletPage(),
-    index: NavigationTabs.wallet,
+    unSelectIcon: Icons.list,
+    selectIcon: Icons.list_alt_outlined,
+    initialRoute: OrdersPage(canGoBack: false),
+    index: NavigationTabs.orders,
   ),
   const NavigationTab(
     name: LocaleKeys.profile,

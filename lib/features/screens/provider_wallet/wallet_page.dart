@@ -7,6 +7,7 @@ import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/data/models/wallet/wallet_model.dart';
 import 'package:weltweit/features/logic/profile/profile_cubit.dart';
+import 'package:weltweit/features/logic/provider_profile/profile_cubit.dart';
 import 'package:weltweit/features/logic/provider_wallet/wallet_cubit.dart';
 import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
@@ -50,7 +51,7 @@ class _WalletPageState extends State<WalletPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              BlocBuilder<ProfileCubit, ProfileState>(
+              BlocBuilder<ProfileProviderCubit, ProfileProviderState>(
                 builder: (context, state) {
                   String totalAmount = state.data?.wallet?.toString() ?? "0";
                   return Column(
@@ -82,12 +83,10 @@ class _WalletPageState extends State<WalletPage> {
                               errorModel: state.error,
                               onRetry: () => context.read<WalletCubit>().getWallet(),
                             ),
-
                           if (state.data.isEmpty)
                             Center(
                               child: CustomText("لا يوجد عمليات سابقة", color: Colors.black, align: TextAlign.start, pv: 0, ph: 12).header(),
                             ),
-
                           if (state.data.isNotEmpty)
                             Expanded(
                               child: SingleChildScrollView(
@@ -100,53 +99,6 @@ class _WalletPageState extends State<WalletPage> {
                               ),
                             ),
                           SizedBox(height: 16),
-
-                          // Row(
-                          //   children: [
-                          //     CustomText("المبلغ المطلوب تسليمة", color: Colors.black, align: TextAlign.start, pv: 0, ph: 12).header(),
-                          //     Spacer(),
-                          //     CustomText("120.00 ج", color: AppColorLight().kAccentColor, ph: 12, bold: true).header(),
-                          //   ],
-                          // ),
-                          // Divider(height: 24),
-                          // CustomText("عمليات الدفع السابقة", color: Colors.black, align: TextAlign.start, pv: 0, ph: 12).header(),
-                          // for (var i = 0; i < 4; i++)
-                          //   Container(
-                          //       margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          //       decoration: BoxDecoration(
-                          //         color: Colors.white,
-                          //         borderRadius: BorderRadius.circular(4),
-                          //       ),
-                          //       child: Row(
-                          //         mainAxisAlignment: MainAxisAlignment.start,
-                          //         crossAxisAlignment: CrossAxisAlignment.center,
-                          //         children: [
-                          //           Container(
-                          //             margin: EdgeInsets.only(top: 8),
-                          //             child: ClipRRect(
-                          //               borderRadius: BorderRadius.circular(250),
-                          //               child: Image.asset(
-                          //                 Assets.imagesAvatar,
-                          //                 fit: BoxFit.fill,
-                          //                 width: MediaQuery.of(context).size.width / 7,
-                          //                 height: MediaQuery.of(context).size.width / 7,
-                          //               ),
-                          //             ),
-                          //           ),
-                          //           SizedBox(width: 8),
-                          //           Expanded(
-                          //             child: Column(
-                          //               crossAxisAlignment: CrossAxisAlignment.start,
-                          //               children: [
-                          //                 CustomText("مسعد معوض", pv: 2),
-                          //                 CustomText("#33215", align: TextAlign.start, color: Colors.grey[500]!, pv: 0).footer(),
-                          //               ],
-                          //             ),
-                          //           ),
-                          //           CustomText("120.00 ج", align: TextAlign.start, color: Colors.grey[500]!, pv: 0).footer(),
-                          //           SizedBox(width: 8),
-                          //         ],
-                          //       )),
                         ],
                       ),
                     );
@@ -161,7 +113,7 @@ class _WalletPageState extends State<WalletPage> {
   _singleItem(WalletModel e) {
     return Container(
         margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        padding: EdgeInsets.symmetric(horizontal: 12,vertical: 16),
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(4),
@@ -179,7 +131,7 @@ class _WalletPageState extends State<WalletPage> {
                 ],
               ),
             ),
-            CustomText("${e.amount} ج", align: TextAlign.start, color: Colors.grey[500]!, pv: 0).footer(),
+            CustomText("${e.amount}${e.amount} ج", align: TextAlign.start, color: Colors.grey[500]!, pv: 0).footer(),
             SizedBox(width: 8),
           ],
         ));

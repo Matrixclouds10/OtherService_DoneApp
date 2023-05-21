@@ -1,6 +1,17 @@
 // DO NOT EDIT. This is code generated via package:easy_localization/generate.dart
 
 abstract class LocaleKeys {
+  static const noOrdersFound = "noOrdersFound";
+
+
+  
+  static const selectLanguage = "noFavoriteItems";
+  static const noFavoriteItems = "noFavoriteItems";
+  static const myInformation = "myInformation";
+  static const pleaseAddImageOrVideo = "pleaseAddImageOrVideo";
+  static const deployImageOrVideoIssue = "deployImageOrVideoIssue";
+  static const selectDateAndTime = "selectDateAndTime";
+  static const subscribtionStatus = "subscribtionStatus";
   static const rate = "rate";
   static const subscribtionHistory = "subscribtionHistory";
   static const back = "back";

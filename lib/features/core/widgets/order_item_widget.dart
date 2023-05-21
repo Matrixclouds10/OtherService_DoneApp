@@ -2,6 +2,8 @@ import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:weltweit/core/extensions/widget_extensions.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/data/models/order/order.dart';
@@ -49,7 +51,19 @@ class OrderItemWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomText(orderModel.provider?.name ?? '', pv: 0),
-                  if (date.isNotEmpty && time.isNotEmpty) CustomText("$date $time", align: TextAlign.start, color: Colors.black, pv: 0).footer(),
+                  if (date.isNotEmpty && time.isNotEmpty) ...[
+                    SizedBox(height: 2),
+                    Row(
+                      children: [
+                        FaIcon(Icons.calendar_today, color: Colors.grey, size: 16),
+                        CustomText(date, align: TextAlign.start, color: Colors.black, pv: 0).footer(),
+                        const SizedBox(width: 8),
+                        FaIcon(Icons.access_time, color: Colors.grey, size: 16),
+                        CustomText(time, align: TextAlign.start, color: Colors.black, pv: 0).footer(),
+                      ],
+                    )
+                  ],
+                  SizedBox(height: 2),
                   if (orderModel.service != null)
                     Wrap(
                       children: [
@@ -71,16 +85,16 @@ class OrderItemWidget extends StatelessWidget {
                   // if (orderModel..isNotEmpty) CustomText(price, color: servicesTheme.primaryColor, pv: 0).header(),
                   if (orderModel.statusCode?.toLowerCase() == "pending") CustomText(LocaleKeys.waitingForApproval.tr(), color: servicesTheme.primaryColor, pv: 0).footer(),
                   if (orderModel.statusCode?.toLowerCase() == "provider_accept") CustomText(LocaleKeys.approved.tr(), color: Colors.green, pv: 0).footer(),
-                  if (orderModel.statusCode?.toLowerCase() == "accepted") CustomText(LocaleKeys.inProgress.tr(), pv: 0).footer(),
-                  if (orderModel.statusCode?.toLowerCase() == "completed")
-                  Container(
-                    color: Colors.transparent,
-                    padding: EdgeInsets.all(4),
-                    child: CustomText(LocaleKeys.giverate.tr(), color: Colors.blueAccent, pv: 0).footer(),
-                  ).onTap(() {
-                    //create a dialog to rate the order
-                     AppDialogs().rateOrderDialog(context, orderModel);
-                  }),
+                  if (orderModel.statusCode?.toLowerCase() == "provider_finish") CustomText(LocaleKeys.finished.tr(), pv: 0).footer(),
+                  if (orderModel.statusCode?.toLowerCase() == "client_done")
+                    Container(
+                      color: Colors.transparent,
+                      padding: EdgeInsets.all(4),
+                      child: CustomText(LocaleKeys.giverate.tr(), color: Colors.blueAccent, pv: 0).footer(),
+                    ).onTap(() {
+                      //create a dialog to rate the order
+                      AppDialogs().rateOrderDialog(context, orderModel);
+                    }),
                 ],
               ),
             const SizedBox(width: 8),

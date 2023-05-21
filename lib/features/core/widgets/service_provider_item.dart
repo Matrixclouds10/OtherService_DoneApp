@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/resources/decoration.dart';
@@ -7,6 +8,7 @@ import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/data/models/provider/providers_model.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/logic/favorite/favorite_cubit.dart';
+import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
 
 class ServiceProviderItemWidget extends StatelessWidget {
@@ -121,27 +123,30 @@ class ServiceProviderItemWidget extends StatelessWidget {
                         if (providersModel.isOnline)
                           Container(
                             decoration: const BoxDecoration(color: Color(0xff00A35E)).radius(radius: 4),
-                            child: const CustomText(
-                              "غير متوفر",
+                            child: CustomText(
+                              LocaleKeys.available.tr(),
                               color: Colors.white,
                               pv: 2,
                               ph: 8,
                               size: 14,
                             ),
                           ),
-                        if (userModel != null && userModel!.currentSubscription != null)
-                          Container(
-                            decoration: const BoxDecoration(color: Color(0xff00A35E)).radius(radius: 4),
-                            child:  CustomText(
-                              "${userModel!.currentSubscription!.status}",
-                              color: Colors.white,
-                              pv: 2,
-                              ph: 8,
-                              size: 14,
-                            ),
-                          ),
+                        SizedBox(width: 4),
                       ],
                     ),
+                    if (userModel != null && userModel!.currentSubscription != null) ...[
+                      SizedBox(height: 4),
+                      Container(
+                        decoration: const BoxDecoration(color: Color.fromARGB(255, 33, 136, 255)).radius(radius: 4),
+                        child: CustomText(
+                          "${LocaleKeys.subscribtionStatus.tr()} ${userModel!.currentSubscription!.status}",
+                          color: Colors.white,
+                          pv: 2,
+                          ph: 8,
+                          size: 14,
+                        ),
+                      ),
+                    ]
                   ],
                 ),
               ),

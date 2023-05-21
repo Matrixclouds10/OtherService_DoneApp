@@ -38,7 +38,7 @@ class RouteServicesGenerator {
       case RoutesServices.servicesMyAddresses:
         return platformPageRoute(Theme(data: servicesTheme, child: const MyAddressesPage()));
       case RoutesServices.servicesOrders:
-        return platformPageRoute(Theme(data: servicesTheme, child: const OrdersPage()));
+        return platformPageRoute(Theme(data: servicesTheme, child: const OrdersPage(canGoBack: true)));
       case RoutesServices.servicesReservationPage:
         return platformPageRoute(Theme(data: servicesTheme, child: ReservationPage(providersModel: arguments!['providersModel'])));
       case RoutesServices.servicesSearch:

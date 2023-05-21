@@ -30,65 +30,65 @@ class MostRequestedProviders extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 60,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(context, RoutesServices.servicesProvider, arguments: {
-                              "provider": snapshot.data![index],
-                            });
-                          },
+                  ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    padding: EdgeInsets.zero,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, RoutesServices.servicesProvider, arguments: {
+                            "provider": snapshot.data![index],
+                          });
+                        },
+                        child: Container(
+                          width: deviceWidth * 0.6,
+                          margin: EdgeInsets.symmetric(horizontal: 6,vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
                           child: Container(
-                            width: deviceWidth * 0.6,
-                            margin: EdgeInsets.symmetric(horizontal: 6),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                              child: Row(
-                                children: [
-                                  AvatarImage(
-                                    size: 26,
-                                    shape: AvatarImageShape.circle,
-                                    child: CustomImage(
-                                      imageUrl: snapshot.data![index].image,
-                                      radius: 250,
-                                    ),
+                            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            child: Row(
+                              children: [
+                                AvatarImage(
+                                  size: 26,
+                                  shape: AvatarImageShape.circle,
+                                  child: CustomImage(
+                                    imageUrl: snapshot.data![index].image,
+                                    radius: 250,
                                   ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        CustomText(
-                                          snapshot.data![index].name ?? '',
-                                          color: Colors.black,
-                                          align: TextAlign.start,
-                                          pv: 0,
-                                        ).footer(),
-                                        CustomText(
-                                          servicesAsString,
-                                          color: Colors.grey,
-                                          align: TextAlign.start,
-                                          pv: 0,
-                                        ).footerExtra(),
-                                      ],
-                                    ),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      CustomText(
+                                        snapshot.data![index].name ?? '',
+                                        color: Colors.black,
+                                        align: TextAlign.start,
+                                        pv: 0,
+                                      ).footer(),
+                                      CustomText(
+                                        servicesAsString,
+                                        color: Colors.grey,
+                                        align: TextAlign.start,
+                                        pv: 0,
+                                      ).footerExtra(),
+                                    ],
                                   ),
-                                  const SizedBox(width: 12),
-                                ],
-                              ),
+                                ),
+                                const SizedBox(width: 12),
+                              ],
                             ),
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      );
+                    },
                   ),
                 ],
               )

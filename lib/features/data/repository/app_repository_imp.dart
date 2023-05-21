@@ -261,10 +261,8 @@ class AppRepositoryImp implements AppRepository {
     List<File>? files = params.files;
     FormData? formData;
     if (files != null && files.isNotEmpty) {
-      files.forEach((element) async {
-        formData = FormData.fromMap({
-          'file': await MultipartFile.fromFile(element.path, filename: element.path.split('/').last),
-        });
+      formData = FormData.fromMap({
+        for (int i = 0; i < files.length; i++) 'file[$i]': await MultipartFile.fromFile(files[i].path, filename: files[i].path.split('/').last),
       });
     }
 
@@ -341,7 +339,10 @@ class AppRepositoryImp implements AppRepository {
 
   @override
   Future<Either<ErrorModel, BaseResponse>> finishOrder({required OrderFinishParams params}) async {
-    String url = AppURL.providerOrderFinish;
+     AppPrefs prefs = getIt.get<AppPrefs>();
+    bool isProvider = prefs.get(PrefKeys.isTypeProvider, defaultValue: false);
+
+    String url = isProvider?  AppURL.providerOrderFinish: AppURL.orderDone;
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = params.toJson();
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
@@ -497,7 +498,7 @@ class AppRepositoryImp implements AppRepository {
     });
   }
 
-    @override
+  @override
   Future<Either<ErrorModel, List<ProviderRateModel>>> getProviderRates({required int id}) async {
     String url = "${AppURL.getProviderRates}/$id";
     NetworkCallType type = NetworkCallType.get;
@@ -512,5 +513,4 @@ class AppRepositoryImp implements AppRepository {
       }
     });
   }
-
 }

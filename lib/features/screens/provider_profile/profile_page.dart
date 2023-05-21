@@ -65,10 +65,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
               NavigationService.push(RoutesProvider.providerProfileUpdateScreen);
             },
           ),
-          IconButton(
-            icon: Icon(Icons.more_vert, color: Colors.black),
-            onPressed: () {},
-          ),
+          
         ],
       ),
       body: SingleChildScrollView(

@@ -5,6 +5,7 @@ import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
+import 'package:weltweit/features/logic/orders/orders_cubit.dart';
 import 'package:weltweit/features/logic/profile/profile_cubit.dart';
 import 'package:weltweit/features/logic/service/services_cubit.dart';
 import 'package:weltweit/features/screens/layout/layout_cubit.dart';
@@ -106,6 +107,9 @@ class LayoutView extends StatelessWidget {
             bottomNavigationBar: BottomNavigationBar(
               onTap: (value) {
                 viewModel.setCurrentIndex(i: value, context: context);
+                if (value == 3) {
+                  context.read<OrdersCubit>().getPendingOrders(typeIsProvider: false);
+                }
               },
               currentIndex: currentIndex,
               type: BottomNavigationBarType.fixed,

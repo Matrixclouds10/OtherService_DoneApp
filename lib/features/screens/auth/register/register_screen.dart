@@ -143,7 +143,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     children: [
                       Center(
                         child: CustomPersonImage(
-                          size: 90.r,
+                          size: 110.r,
                           imageUrl: image?.path,
                           canEdit: true,
                           onAttachImage: (File file) {
@@ -153,45 +153,45 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           },
                         ),
                       ),
-                      if (widget.typeIsProvider) ...[
-                        CustomText(LocaleKeys.joinAs.tr(), align: TextAlign.start, pv: 0),
+                      // if (widget.typeIsProvider) ...[
+                      //   CustomText(LocaleKeys.joinAs.tr(), align: TextAlign.start, pv: 0),
                         //Row for two radio buttons
-                        Row(
-                          children: [
-                            //Radio button for user
-                            Flexible(
-                              flex: 1,
-                              child: RadioListTile(
-                                value: joinAsIndividual,
-                                dense: true,
-                                contentPadding: EdgeInsets.zero,
-                                visualDensity: VisualDensity(horizontal: 0, vertical: -4),
-                                title: CustomText(LocaleKeys.indvidual.tr(), align: TextAlign.start),
-                                groupValue: true,
-                                onChanged: (value) {
-                                  joinAsIndividual = true;
-                                  setState(() {});
-                                },
-                              ),
-                            ),
-                            Flexible(
-                              flex: 1,
-                              child: RadioListTile(
-                                value: joinAsIndividual,
-                                dense: true,
-                                contentPadding: EdgeInsets.zero,
-                                visualDensity: VisualDensity(horizontal: 0, vertical: -4),
-                                title: CustomText(LocaleKeys.company.tr(), align: TextAlign.start),
-                                groupValue: false,
-                                onChanged: (value) {
-                                  joinAsIndividual = false;
-                                  setState(() {});
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                        // Row(
+                        //   children: [
+                        //     //Radio button for user
+                        //     Flexible(
+                        //       flex: 1,
+                        //       child: RadioListTile(
+                        //         value: joinAsIndividual,
+                        //         dense: true,
+                        //         contentPadding: EdgeInsets.zero,
+                        //         visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+                        //         title: CustomText(LocaleKeys.indvidual.tr(), align: TextAlign.start),
+                        //         groupValue: true,
+                        //         onChanged: (value) {
+                        //           joinAsIndividual = true;
+                        //           setState(() {});
+                        //         },
+                        //       ),
+                        //     ),
+                        //     Flexible(
+                        //       flex: 1,
+                        //       child: RadioListTile(
+                        //         value: joinAsIndividual,
+                        //         dense: true,
+                        //         contentPadding: EdgeInsets.zero,
+                        //         visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+                        //         title: CustomText(LocaleKeys.company.tr(), align: TextAlign.start),
+                        //         groupValue: false,
+                        //         onChanged: (value) {
+                        //           joinAsIndividual = false;
+                        //           setState(() {});
+                        //         },
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                      // ],
                       _buildForm(),
                       CheckboxListTile(
                         checkboxShape: RoundedRectangleBorder(

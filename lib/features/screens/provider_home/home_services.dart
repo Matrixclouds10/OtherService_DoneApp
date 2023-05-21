@@ -1,8 +1,10 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/core/widgets/service_item_widget.dart';
 import 'package:weltweit/features/data/models/services/service.dart';
+import 'package:weltweit/generated/locale_keys.g.dart';
 
 class HomeServices extends StatelessWidget {
   const HomeServices({super.key});
@@ -13,13 +15,13 @@ class HomeServices extends StatelessWidget {
       children: [
         Row(
           children: [
-            CustomText("الخدمات", color: Colors.black54).footer(),
+            CustomText(LocaleKeys.services.tr(), color: Colors.black54).footer(),
             Spacer(),
             GestureDetector(
                 onTap: () {
                   Navigator.pushNamed(context, RoutesProvider.providerServices);
                 },
-                child: CustomText("عرض الكل" " (20) ", color: Colors.grey).footer()),
+                child: CustomText("${LocaleKeys.showAll.tr()}", color: Colors.grey).footer()),
           ],
         ),
         Container(

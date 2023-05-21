@@ -1,9 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/routing/routes.dart';
+import 'package:weltweit/core/services/local/cache_consumer.dart';
+import 'package:weltweit/data/injection.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/generated/assets.dart';
@@ -68,11 +71,19 @@ class MorePage extends StatelessWidget {
                         }),
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
-                      image: "assets/images/internet.png",
-                      text: 'اللغة',
-                      trailingText: "العربية",
-                      onTap: () {},
-                    ),
+                        image: "assets/images/internet.png",
+                        text: LocaleKeys.language.tr(),
+                        trailingText: (() {
+                          Locale locale = EasyLocalization.of(context)!.locale;
+                          if (locale.languageCode == "ar") {
+                            return "العربية";
+                          } else {
+                            return "English";
+                          }
+                        }()),
+                        onTap: () {
+                          AppDialogs().languageDialog(context);
+                        }),
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
                         image: "assets/images/info.png",

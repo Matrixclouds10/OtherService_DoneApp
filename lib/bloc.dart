@@ -4,6 +4,7 @@ import 'package:weltweit/data/injection.dart';
 import 'package:weltweit/features/logic/about/about_cubit.dart';
 import 'package:weltweit/features/logic/chat/chat_cubit.dart';
 import 'package:weltweit/features/logic/contact_us/contact_us_cubit.dart';
+import 'package:weltweit/features/logic/home/home_cubit.dart';
 import 'package:weltweit/features/logic/policy/policy_cubit.dart';
 import 'package:weltweit/features/logic/provider_profile/profile_cubit.dart';
 import 'package:weltweit/features/logic/provider_portfolio/portfolio_cubit.dart';
@@ -43,6 +44,7 @@ class GenerateMultiBloc extends StatelessWidget {
         BlocProvider(create: (_) => getIt<LoginCubit>()),
         BlocProvider(create: (_) => getIt<RegisterCubit>()),
         BlocProvider(create: (_) => getIt<OtpCubit>()),
+        BlocProvider<HomeCubit>(create: (BuildContext context) => HomeCubit()),
         BlocProvider<WalletCubit>(create: (BuildContext context) => WalletCubit(getIt())),
         BlocProvider<LayoutCubit>(create: (BuildContext context) => LayoutCubit()),
         //Profile

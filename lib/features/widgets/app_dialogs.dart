@@ -13,6 +13,7 @@ import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/resources/values_manager.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
+import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/data/injection.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
@@ -384,6 +385,42 @@ class AppDialogs {
               ],
             );
           },
+        ),
+      ],
+    );
+  }
+
+  void languageDialog(BuildContext context) {
+    Dialogs.materialDialog(
+      title: LocaleKeys.language.tr(),
+      msg: LocaleKeys.selectLanguage.tr(),
+      color: Colors.white,
+      context: context,
+      actions: [
+        IconsOutlineButton(
+          onPressed: () {
+            context.setLocale(Locale('en'));
+             AppPrefs prefs = getIt<AppPrefs>();
+            prefs.save(PrefKeys.lang, "en");
+          
+            NavigationService.goBack();
+          },
+          text:"English",
+          iconData: Icons.circle_outlined,
+          textStyle: TextStyle(color: primaryColor),
+          iconColor: primaryColor,
+        ),
+        IconsOutlineButton(
+          onPressed: () {
+            context.setLocale(Locale('ar'));
+            AppPrefs prefs = getIt<AppPrefs>();
+            prefs.save(PrefKeys.lang, "ar");
+            NavigationService.goBack();
+          },
+          text: "عربي",
+          iconData: Icons.circle_outlined,
+          textStyle: TextStyle(color: primaryColor),
+          iconColor: primaryColor,
         ),
       ],
     );

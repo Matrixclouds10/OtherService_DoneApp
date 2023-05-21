@@ -38,7 +38,7 @@ class ProvidersCubit extends Cubit<ProvidersState> {
         return [];
       },
       (data) {
-        emit(state.copyWith(providers: data));
+        emit(state.copyWith(mostRequestedProviders: data));
         return data;
       },
     );
