@@ -6,7 +6,7 @@ import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/domain/repositoy/provider_repo.dart';
 class UpdateProfileAvailabilityProviderUseCase
     implements BaseUseCase<UserModel, NoParameters> {
-  final ProviderRepositoryProvider repository;
+  final AppRepositoryProvider repository;
 
   UpdateProfileAvailabilityProviderUseCase({required this.repository});
 

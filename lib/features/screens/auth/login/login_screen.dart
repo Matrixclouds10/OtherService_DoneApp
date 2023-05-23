@@ -9,7 +9,7 @@ import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/core/utils/logger.dart';
-import 'package:weltweit/data/injection.dart';
+import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
@@ -97,14 +97,16 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           } else {
             Navigator.pushNamedAndRemoveUntil(context, RoutesServices.servicesLayoutScreen, (route) => false);
           }
-        } else if (response.error?.code == 301) {
-          NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
-            'phone': _phoneController.text,
-            'code': _viewModel.params.countryModel?.code ?? '20',
-            'checkOTPType': CheckOTPType.register,
-            'typeIsProvider': typeIsProvider,
-          });
-        } else {
+        } 
+        // else if (response.error?.code == 301) {
+        //   NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
+        //     'phone': _phoneController.text,
+        //     'code': _viewModel.params.countryModel?.code ?? '20',
+        //     'checkOTPType': CheckOTPType.register,
+        //     'typeIsProvider': typeIsProvider,
+        //   });
+        // }
+         else {
           String message = response.error?.errorMessage ?? response.message ?? '';
           AppSnackbar.show(
             context: context,
@@ -160,16 +162,16 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                             children: [
                               SizedBox(height: 8),
                               Text(
-                                "مرحبا بك \n سجل دخولك للإستمرار",
+                               LocaleKeys.loginMessage.tr(),
                                 style: const TextStyle().titleStyle(fontSize: 18).boldStyle().customColor(primaryColor),
                                 textAlign: TextAlign.center,
                               ),
                               //Tabs
                               TabBar(
                                 controller: _tabController,
-                                tabs: const [
-                                  Tab(child: CustomText("مزود خدمة")),
-                                  Tab(child: CustomText("مستخدم")),
+                                tabs:  [
+                                  Tab(child: CustomText(LocaleKeys.provider.tr())),
+                                  Tab(child: CustomText(LocaleKeys.user.tr())),
                                 ],
                               ),
 

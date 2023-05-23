@@ -8,8 +8,9 @@ import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/core/services/network/network_client.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/core/utils/logger.dart';
-import 'package:weltweit/data/injection.dart';
+import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
+import 'package:weltweit/features/data/models/notification/notification_model.dart';
 import 'package:weltweit/features/data/models/provider/provider_rates_model.dart';
 import 'package:weltweit/features/data/models/response/country/country_model.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
@@ -339,10 +340,10 @@ class AppRepositoryImp implements AppRepository {
 
   @override
   Future<Either<ErrorModel, BaseResponse>> finishOrder({required OrderFinishParams params}) async {
-     AppPrefs prefs = getIt.get<AppPrefs>();
+    AppPrefs prefs = getIt.get<AppPrefs>();
     bool isProvider = prefs.get(PrefKeys.isTypeProvider, defaultValue: false);
 
-    String url = isProvider?  AppURL.providerOrderFinish: AppURL.orderDone;
+    String url = isProvider ? AppURL.providerOrderFinish : AppURL.orderDone;
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = params.toJson();
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
@@ -415,9 +416,12 @@ class AppRepositoryImp implements AppRepository {
 
   @override
   Future<Either<ErrorModel, BaseResponse>> sendContactUs({required ContactUsParams params}) async {
-    String url = AppURL.contactUs;
+    AppPrefs prefs = getIt<AppPrefs>();
+       bool isProvider = prefs.get(PrefKeys.isTypeProvider, defaultValue: false);
+ String url = AppURL.contactUs;
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = params.toJson();
+    data.addAll({"type": isProvider ? "provider" : "client"});
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
 
     return result.fold((l) => Left(l), (r) => Right(r));
@@ -509,6 +513,28 @@ class AppRepositoryImp implements AppRepository {
         List<ProviderRateModel> data = r.data.map<ProviderRateModel>((e) => ProviderRateModel.fromJson(e)).toList();
         return Right(data);
       } catch (e) {
+        return Left(ErrorModel(errorMessage: e.toString()));
+      }
+    });
+  }
+
+  @override
+  Future<Either<ErrorModel, BaseResponse<List<NotificationModel>>>> getNotifications(int parameters) async {
+    String url = AppURL.getNotifications;
+     if (parameters != 0) {
+      url = '$url?page=$parameters';
+    }
+    NetworkCallType type = NetworkCallType.get;
+    Map<String, dynamic> data = {};
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+    return result.fold((l) => Left(l), (r) {
+      try {
+        List<NotificationModel> data = r.data["data"].map<NotificationModel>((e) => NotificationModel.fromJson(e)).toList();
+        BaseResponse<List<NotificationModel>> baseResponse = BaseResponse<List<NotificationModel>>(data: data, meta: r.meta);
+        print("------> data ${data.length}");
+        return Right(baseResponse);
+      } catch (e) {
+        print("------> e ${e.toString()}");
         return Left(ErrorModel(errorMessage: e.toString()));
       }
     });

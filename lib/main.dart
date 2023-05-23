@@ -10,8 +10,7 @@ import 'package:weltweit/bloc.dart';
 import 'package:weltweit/features/injection.dart' as services_injection;
 
 import 'app.dart';
-import 'data/injection.dart' as data_injection;
-import 'injection.dart' as injection;
+import 'base_injection.dart' as injection;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +20,6 @@ void main() async {
       options.dsn = 'https://ca534611637c4c6f8526c840828a5d68@o4504111766962176.ingest.sentry.io/4505221184225280';
       options.tracesSampleRate = 1.0;
     },
-    appRunner: () => runApp(MyApp()),
   );
 
   Logger.root.level = Level.ALL; // defaults to Level.INFO
@@ -35,9 +33,7 @@ void main() async {
   // initialize Firebase
   await Firebase.initializeApp();
 
-  await data_injection.init();
   await injection.init();
-
   await services_injection.init();
 
   runZonedGuarded(() {

@@ -5,7 +5,7 @@ import 'package:weltweit/features/core/base/base_usecase.dart';
 import 'package:weltweit/features/domain/repositoy/provider_repo.dart';
 
 class UpdateFcmProviderUseCase implements BaseUseCase<BaseResponse, String> {
-  final ProviderRepositoryProvider repository;
+  final AppRepositoryProvider repository;
 
   UpdateFcmProviderUseCase({required this.repository});
 

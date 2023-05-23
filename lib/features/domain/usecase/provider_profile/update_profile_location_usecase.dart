@@ -5,7 +5,7 @@ import 'package:weltweit/features/core/base/base_response.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
 import 'package:weltweit/features/domain/repositoy/provider_repo.dart';
 class UpdateProfileLocationProviderUseCase implements BaseUseCase<BaseResponse, UpdateProfileLocationParams> {
-  final ProviderRepositoryProvider repository;
+  final AppRepositoryProvider repository;
 
   UpdateProfileLocationProviderUseCase({required this.repository});
 

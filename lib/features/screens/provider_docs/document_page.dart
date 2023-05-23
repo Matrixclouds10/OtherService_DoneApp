@@ -106,10 +106,10 @@ class DocumentPage extends StatelessWidget {
                   ),
                   ...[
                     LocaleKeys.makeSureToUploadAllFiles.tr(),
-                    'صورة الهوية',
-                    'صورة ترخيص العمل او مزاولة المهنة',
-                    'صورة من جواز السفر',
-                    'اي مرفقات إضافية',
+                    LocaleKeys.copyOfId.tr(),
+                    LocaleKeys.copyOfWorkLicense.tr(),
+                    LocaleKeys.copyOfPassport.tr(),
+                    LocaleKeys.anyOthers.tr(),
                   ]
                       .map((e) => Padding(
                             padding: EdgeInsets.symmetric(horizontal: 12),

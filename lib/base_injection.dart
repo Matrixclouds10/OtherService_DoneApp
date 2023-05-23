@@ -1,7 +1,17 @@
+import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get_it/get_it.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:weltweit/core/services/local/cache_consumer.dart';
+import 'package:weltweit/core/services/network/api_consumer.dart';
 import 'package:weltweit/core/utils/globals.dart';
-import 'package:weltweit/data/injection.dart';
+import 'package:weltweit/data/datasource/remote/dio/dio_client.dart';
+import 'package:weltweit/data/datasource/remote/dio/logging_interceptor.dart';
 import 'package:weltweit/features/data/repository/provider_repository_imp.dart';
 import 'package:weltweit/features/domain/repositoy/provider_repo.dart';
+import 'package:weltweit/features/domain/usecase/provider/notification/notifications_usecase.dart';
+import 'package:weltweit/features/domain/usecase/provider/notification/provider_notifications_usecase.dart';
 import 'package:weltweit/features/screens/auth/login/login_cubit.dart';
 import 'package:weltweit/features/screens/auth/otp/otp_cubit.dart';
 import 'package:weltweit/features/screens/auth/register/register_cubit.dart';
@@ -25,7 +35,27 @@ import 'package:weltweit/features/domain/usecase/provider_services/my_services_u
 import 'package:weltweit/features/domain/usecase/provider_services/update_services_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_wallet/wallet_history_usecase.dart';
 
+final getIt = GetIt.instance;
+
 Future<void> init() async {
+
+
+  /// Core
+  getIt.registerLazySingleton(() => DioClient("", getIt(), loggingInterceptor: getIt(), cacheConsumer: getIt()));
+
+
+  /// External
+  final sharedPreferences = await SharedPreferences.getInstance();
+  getIt.registerLazySingleton(() => sharedPreferences);
+  getIt.registerLazySingleton(() => Dio());
+  getIt.registerLazySingleton(() => LoggingInterceptor());
+  getIt.registerLazySingleton(() => const FlutterSecureStorage());
+  getIt.registerLazySingleton(() => AppPrefs(secureStorage: getIt(), sharedPreferences: getIt()));
+
+  getIt.registerLazySingleton<PrettyDioLogger>(() => PrettyDioLogger(requestHeader: true, requestBody: true, responseHeader: true));
+  getIt.registerLazySingleton(() => ApiConsumer(getIt<Dio>(), getIt<PrettyDioLogger>(), getIt()));
+
+  
   getIt.registerLazySingleton(() => GlobalParams());
   // Bloc
   getIt.registerLazySingleton(() => LoginCubit(signInUseCase: getIt()));
@@ -37,7 +67,7 @@ Future<void> init() async {
 
   //*Provider
 
-  getIt.registerLazySingleton<ProviderRepositoryProvider>(() => ProviderRepositoryImpProvider(networkClient: getIt()));
+  getIt.registerLazySingleton<AppRepositoryProvider>(() => ProviderRepositoryImpProvider(networkClient: getIt()));
 
   //Profile
   getIt.registerLazySingleton(() => UpdateProfileProviderUseCase(repository: getIt()));
@@ -69,5 +99,10 @@ Future<void> init() async {
   getIt.registerLazySingleton(() => UpdateFcmProviderUseCase(repository: getIt()));
   getIt.registerLazySingleton(() => WalletHistoryUseCase(repository: getIt()));
 
+
+  //Notification
+  getIt.registerLazySingleton(() => NotificationsUseCase(getIt()));
+  getIt.registerLazySingleton(() => ProviderNotificationsUseCase(getIt()));
+  
 /* -------------------------------------------------------------------------- */
 }

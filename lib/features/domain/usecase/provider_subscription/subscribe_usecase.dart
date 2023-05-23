@@ -6,7 +6,7 @@ import 'package:weltweit/features/data/models/subscription/subscription_model.da
 import 'package:weltweit/features/domain/repositoy/provider_repo.dart';
 
 class SubscribeUseCase extends BaseUseCase<BaseResponse, SubscribeParams> {
-  final ProviderRepositoryProvider repository;
+  final AppRepositoryProvider repository;
 
   SubscribeUseCase(this.repository);
 

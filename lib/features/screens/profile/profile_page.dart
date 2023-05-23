@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/routing/routes.dart';
 import 'package:weltweit/core/utils/globals.dart';
-import 'package:weltweit/data/injection.dart';
+import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 

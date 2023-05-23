@@ -5,7 +5,7 @@ import 'package:weltweit/features/data/models/portfolio/portfolio_image.dart';
 import 'package:weltweit/features/domain/repositoy/provider_repo.dart';
 
 class PortfoliosUseCase extends BaseUseCase<List<PortfolioModel>, NoParameters> {
-  final ProviderRepositoryProvider repository;
+  final AppRepositoryProvider repository;
 
   PortfoliosUseCase({required this.repository});
 

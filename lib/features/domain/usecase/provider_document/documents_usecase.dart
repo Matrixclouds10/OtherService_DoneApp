@@ -5,7 +5,7 @@ import 'package:weltweit/features/data/models/documents/document.dart';
 import 'package:weltweit/features/domain/repositoy/provider_repo.dart';
 
 class DocumentsUseCase extends BaseUseCase<List<Document>, NoParameters> {
-  final ProviderRepositoryProvider repository;
+  final AppRepositoryProvider repository;
 
   DocumentsUseCase({required this.repository});
 

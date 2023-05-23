@@ -5,7 +5,7 @@ import 'package:weltweit/features/data/models/subscription/subscription_model.da
 import 'package:weltweit/features/domain/repositoy/provider_repo.dart';
 
 class SubscribtionUseCase extends BaseUseCase<List<SubscriptionModel>, NoParameters> {
-  final ProviderRepositoryProvider repository;
+  final AppRepositoryProvider repository;
 
   SubscribtionUseCase(this.repository);
 

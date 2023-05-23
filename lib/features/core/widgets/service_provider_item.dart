@@ -68,8 +68,8 @@ class ServiceProviderItemWidget extends StatelessWidget {
                                 child: Container(
                                   margin: const EdgeInsets.only(bottom: 6),
                                   decoration: BoxDecoration(color: servicesTheme.colorScheme.secondary).radius(radius: 4),
-                                  child: const CustomText(
-                                    "حجز موعد",
+                                  child:  CustomText(
+                                    LocaleKeys.makeAppointment.tr(),
                                     color: Colors.white,
                                     pv: 6,
                                   ),

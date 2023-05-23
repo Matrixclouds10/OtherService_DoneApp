@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
-import 'package:weltweit/data/injection.dart';
+import 'package:weltweit/base_injection.dart';
 
 class NavigationService {
   static GlobalKey<NavigatorState> navigationKey = GlobalKey<NavigatorState>();

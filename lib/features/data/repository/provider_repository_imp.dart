@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:weltweit/core/services/network/network_client.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
+import 'package:weltweit/features/data/models/notification/notification_model.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/data/app_urls/provider_endpoints_url.dart';
 import 'package:weltweit/features/data/models/documents/document.dart';
@@ -21,7 +22,7 @@ import 'package:weltweit/features/domain/usecase/provider_profile/update_profile
 import 'package:weltweit/features/domain/usecase/provider_services/update_services_usecase.dart';
 import 'package:weltweit/features/data/models/subscription/subscription_model.dart';
 import 'package:weltweit/features/domain/usecase/provider_subscription/subscribe_usecase.dart';
-class ProviderRepositoryImpProvider implements ProviderRepositoryProvider {
+class ProviderRepositoryImpProvider implements AppRepositoryProvider {
   final NetworkClient networkClient;
   ProviderRepositoryImpProvider({required this.networkClient});
 
@@ -322,5 +323,26 @@ class ProviderRepositoryImpProvider implements ProviderRepositoryProvider {
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
     return result.fold((l) => Left(l), (r) => Right(r));
 
+  }
+
+ 
+   @override
+  Future<Either<ErrorModel,  BaseResponse<List<NotificationModel>>>> getProviderNotifications(int parameters) async {
+    String url = AppURL.getNotifications ;
+    if (parameters != 0) {
+      url = '$url?page=$parameters';
+    }
+    NetworkCallType type = NetworkCallType.get;
+    Map<String, dynamic> data = {};
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+    return result.fold((l) => Left(l), (r) {
+      try {
+        List<NotificationModel> data = r.data["data"].map<NotificationModel>((e) => NotificationModel.fromJson(e)).toList();
+        BaseResponse<List<NotificationModel>> baseResponse = BaseResponse<List<NotificationModel>>(data: data, meta: r.meta);
+        return Right(baseResponse);
+      } catch (e) {
+        return Left(ErrorModel(errorMessage: e.toString()));
+      }
+    });
   }
 }

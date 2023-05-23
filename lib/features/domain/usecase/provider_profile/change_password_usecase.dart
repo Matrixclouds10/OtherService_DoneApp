@@ -6,7 +6,7 @@ import 'package:weltweit/features/domain/repositoy/provider_repo.dart';
 
 class ChangePasswordProviderUseCase
     implements BaseUseCase<BaseResponse, ChangePasswordParams> {
-  final ProviderRepositoryProvider repository;
+  final AppRepositoryProvider repository;
 
   ChangePasswordProviderUseCase({required this.repository});
 

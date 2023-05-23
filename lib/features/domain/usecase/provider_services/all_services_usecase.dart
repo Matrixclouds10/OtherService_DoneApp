@@ -5,7 +5,7 @@ import 'package:weltweit/features/data/models/services/service.dart';
 import 'package:weltweit/features/domain/repositoy/provider_repo.dart';
 
 class AllServicesUseCase extends BaseUseCase<List<ServiceModel>, NoParameters> {
-  final ProviderRepositoryProvider repository;
+  final AppRepositoryProvider repository;
 
   AllServicesUseCase({required this.repository});
 

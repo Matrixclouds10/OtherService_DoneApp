@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 
 import 'package:weltweit/app.dart';
-import 'package:weltweit/data/injection.dart';
+import 'package:weltweit/base_injection.dart';
 import '../../../../core/services/local/cache_consumer.dart';
 import '../../../../core/services/local/storage_keys.dart';
 import '../../../../core/utils/logger.dart';

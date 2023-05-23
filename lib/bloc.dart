@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weltweit/data/injection.dart';
+import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/features/logic/about/about_cubit.dart';
 import 'package:weltweit/features/logic/chat/chat_cubit.dart';
 import 'package:weltweit/features/logic/contact_us/contact_us_cubit.dart';
 import 'package:weltweit/features/logic/home/home_cubit.dart';
+import 'package:weltweit/features/logic/notification/notifications_cubit.dart';
 import 'package:weltweit/features/logic/policy/policy_cubit.dart';
 import 'package:weltweit/features/logic/provider_profile/profile_cubit.dart';
 import 'package:weltweit/features/logic/provider_portfolio/portfolio_cubit.dart';
@@ -41,9 +42,11 @@ class GenerateMultiBloc extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         //*user
-        BlocProvider(create: (_) => getIt<LoginCubit>()),
-        BlocProvider(create: (_) => getIt<RegisterCubit>()),
-        BlocProvider(create: (_) => getIt<OtpCubit>()),
+        BlocProvider<LoginCubit>(create: (_) => getIt<LoginCubit>()),
+        BlocProvider<RegisterCubit>(create: (_) => getIt<RegisterCubit>()),
+        BlocProvider<OtpCubit>(create: (_) => getIt<OtpCubit>()),
+
+
         BlocProvider<HomeCubit>(create: (BuildContext context) => HomeCubit()),
         BlocProvider<WalletCubit>(create: (BuildContext context) => WalletCubit(getIt())),
         BlocProvider<LayoutCubit>(create: (BuildContext context) => LayoutCubit()),
@@ -52,6 +55,7 @@ class GenerateMultiBloc extends StatelessWidget {
         //Address
         BlocProvider<AddressCubit>(create: (BuildContext context) => AddressCubit(getIt(), getIt(), getIt(), getIt(), getIt())),
         //Services
+        BlocProvider<NotificationsCubit>(create: (BuildContext context) => NotificationsCubit(getIt(), getIt())),
         BlocProvider<ServicesCubit>(create: (BuildContext context) => ServicesCubit(getIt(), getIt())),
         BlocProvider<ProvidersCubit>(create: (BuildContext context) => ProvidersCubit(getIt(), getIt())),
         BlocProvider<ProviderCubit>(create: (BuildContext context) => ProviderCubit(getIt(), getIt())),

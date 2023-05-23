@@ -5,7 +5,7 @@ import 'package:weltweit/features/core/base/base_usecase.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/domain/repositoy/provider_repo.dart';
 class ProfileProviderUseCase extends BaseUseCase<UserModel, NoParameters> {
-  final ProviderRepositoryProvider repository;
+  final AppRepositoryProvider repository;
 
   ProfileProviderUseCase({required this.repository});
 

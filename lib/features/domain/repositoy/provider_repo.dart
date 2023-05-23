@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
+import 'package:weltweit/features/core/base/base_usecase.dart';
+import 'package:weltweit/features/data/models/notification/notification_model.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/data/models/documents/document.dart';
 import 'package:weltweit/features/data/models/portfolio/portfolio_image.dart';
@@ -17,7 +19,7 @@ import 'package:weltweit/features/domain/usecase/provider_services/update_servic
 import 'package:weltweit/features/data/models/subscription/subscription_model.dart';
 import 'package:weltweit/features/domain/usecase/provider_subscription/subscribe_usecase.dart';
 
-abstract class ProviderRepositoryProvider {
+abstract class AppRepositoryProvider {
   Future<Either<ErrorModel, UserModel>> getProfile();
   Future<Either<ErrorModel, bool>> deleteProfile({required int id});
   Future<Either<ErrorModel, UserModel>> updateAvailability();
@@ -52,5 +54,7 @@ abstract class ProviderRepositoryProvider {
 
   //* Wallet
   Future<Either<ErrorModel, List<WalletModel>>> getWalletHistory();
+  Future<Either<ErrorModel,  BaseResponse<List<NotificationModel>>>> getProviderNotifications(int parameters);
+
 
 }

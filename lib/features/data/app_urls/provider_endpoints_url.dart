@@ -1,7 +1,6 @@
 class AppURL {
   static const String kAPIKey = "";
-  static const String kBaseURL =
-      "http://don.dev01.matrix-clouds.com/api/service-provider";
+  static const String kBaseURL = "http://don.dev01.matrix-clouds.com/api/service-provider";
 
   ///Auth
   static const String loginURI = "$kBaseURL/login";
@@ -13,6 +12,7 @@ class AppURL {
   static const String kResetPasswordURI = "";
   static const String kDeleteAccountURI = "";
   static const String kUpdateFCMTokenURI = "$kBaseURL/fcm_token";
+
   ///profile
   static const String profile = "$kBaseURL/profile";
   static const String changeStatus = "$kBaseURL/profile/change_status";
@@ -47,6 +47,6 @@ class AppURL {
   //*Wallet
   static const String getWalletHistory = "$kBaseURL/wallet/history";
 
-
-
+//*Notifications
+  static const String getNotifications = "$kBaseURL/get-notifications";
 }

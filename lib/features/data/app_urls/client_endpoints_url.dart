@@ -87,4 +87,7 @@ class AppURL {
   static const String countries = "$kBaseURL/get-countries";
   static const String country = "$kBaseURL/get-country";
   static const String banners = "$kBaseURL/get-banners";
+
+  //Notification
+  static const String getNotifications = "$kBaseURL/get-notifications";
 }

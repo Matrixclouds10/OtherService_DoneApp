@@ -5,7 +5,7 @@ import 'package:weltweit/features/data/models/wallet/wallet_model.dart';
 import 'package:weltweit/features/domain/repositoy/provider_repo.dart';
 
 class WalletHistoryUseCase extends BaseUseCase<List<WalletModel>, NoParameters> {
-  final ProviderRepositoryProvider repository;
+  final AppRepositoryProvider repository;
 
   WalletHistoryUseCase({required this.repository});
 

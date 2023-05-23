@@ -6,7 +6,7 @@ import 'package:weltweit/features/domain/repositoy/provider_repo.dart';
 
 class UpdateServicesUseCase
     extends BaseUseCase<List<ServiceModel>, UpdateServicesParams> {
-  final ProviderRepositoryProvider repository;
+  final AppRepositoryProvider repository;
 
   UpdateServicesUseCase({required this.repository});
 

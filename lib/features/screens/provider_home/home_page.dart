@@ -26,7 +26,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  late UserModel user;
 
   @override
   void initState() {
@@ -39,7 +38,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    user = context.watch<ProfileProviderCubit>().state.data!;
+   
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(children: [
@@ -72,7 +71,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 },
               ),
               SizedBox(width: 8),
-              CustomText(LocaleKeys.myOrders.tr()).header(),
               IconButton(
                   onPressed: () {
                     Navigator.pushNamed(context, RoutesProvider.providerNotifications);
@@ -103,73 +101,67 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             controller: _tabController,
             physics: NeverScrollableScrollPhysics(),
             children: [
-              Container(
-                color: AppColorLight().kScaffoldBackgroundColor,
-                child: Column(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      decoration: BoxDecoration().customColor(Colors.white).radius(radius: 4),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
+              BlocBuilder<ProfileProviderCubit, ProfileProviderState>(
+                builder: (context, state) {
+                  return Container(
+                    color: AppColorLight().kScaffoldBackgroundColor,
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          decoration: BoxDecoration().customColor(Colors.white).radius(radius: 4),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              CustomText("${LocaleKeys.goodMorning.tr()}, ${user.name}").header(),
-                              Spacer(),
-                              Icon(Icons.circle, color: user.isAvailable() ? Color(0xff20CA6E) : Color(0xffEF2027)),
-                            ],
-                          ),
-                          CustomText(LocaleKeys.goodMorningDesc.tr()),
-                          Row(
-                            children: [
-                              Spacer(),
-                              BlocBuilder<ProfileProviderCubit, ProfileProviderState>(
-                                buildWhen: (previous, current) => previous.availabilityState != current.availabilityState,
-                                builder: (context, state) {
-                                  return CustomButton(
-                                    onTap: () {
-                                      context.read<ProfileProviderCubit>().updateAvailability();
-                                      if (user.isAvailable()) {
-                                        context.read<ProfileProviderCubit>().updateLocation(context);
-                                      }
+                              Row(
+                                children: [
+                                  CustomText("${LocaleKeys.goodMorning.tr()}, ${state.data?.name ??''}").header(),
+                                  Spacer(),
+                                  Icon(Icons.circle, color: state.data?.isAvailable() ?? false ? Color(0xff20CA6E) : Color(0xffEF2027)),
+                                ],
+                              ),
+                              CustomText(LocaleKeys.goodMorningDesc.tr()),
+                              Row(
+                                children: [
+                                  Spacer(),
+                                  BlocBuilder<ProfileProviderCubit, ProfileProviderState>(
+                                    buildWhen: (previous, current) => previous.availabilityState != current.availabilityState,
+                                    builder: (context, state) {
+                                      return CustomButton(
+                                        onTap: () {
+                                          context.read<ProfileProviderCubit>().updateAvailability();
+                                          if (state.data?.isAvailable() ?? false) {
+                                            context.read<ProfileProviderCubit>().updateLocation(context);
+                                          }
+                                        },
+                                        title: state.data?.isAvailable() ?? false ? LocaleKeys.available.tr() : LocaleKeys.unavailable.tr(),
+                                        radius: 4,
+                                        height: 40,
+                                        loading: state.availabilityState == BaseState.loading,
+                                        expanded: false,
+                                        color: state.data?.isAvailable() ?? false? Color(0xff20CA6E) : Color(0xffEF2027),
+                                      );
                                     },
-                                    title: user.isAvailable() ? LocaleKeys.available.tr() : LocaleKeys.unavailable.tr(),
-                                    radius: 4,
-                                    height: 40,
-                                    loading: state.availabilityState == BaseState.loading,
-                                    expanded: false,
-                                    color: user.isAvailable() ? Color(0xff20CA6E) : Color(0xffEF2027),
-                                  );
-                                },
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
-                      ),
+                        ),
+                        SizedBox(height: 12),
+                        Expanded(child: newOrders()),
+                      ],
                     ),
-                    SizedBox(height: 12),
-                    Expanded(child: currentOrders()),
-                  ],
-                ),
+                  );
+                },
               ),
               Container(
                 color: AppColorLight().kScaffoldBackgroundColor,
                 child: ListView(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   children: [
-                    newOrders(),
-                    //   OrderItemWidget(
-                    //     avatar: Assets.imagesAvatar,
-                    //     name: "مسعد معوض",
-                    //     profession: "",
-                    //     date: getRandomDate(),
-                    //     time: getRadomTime(),
-                    //     orderStatus: i % 2 == 0 ? "accepted" : "accepted",
-                    //     price: i % 2 == 0 ? "300 ج" : "250 ج",
-                    //     tags: getRandomTags(),
-                    //   ),
+                    currentOrders(),
                     SizedBox(height: 80),
                   ],
                 ),
@@ -318,13 +310,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                       onTap: () {},
                       child: OrderItemWidgetClient(
                         orderModel: e,
-                        // name: state.pendingData[i].provider?.name ?? '',
-                        // profession: '',
-                        // date: DateFormat('yyyy-MM-dd').format(state.pendingData[i].date),
-                        // time: DateFormat('HH:mm').format(state.pendingData[i].date),
-                        // orderStatus: state.pendingData[i].status,
-                        // price: '',
-                        // tags: const [],
                       ),
                     ))
                 .toList(),

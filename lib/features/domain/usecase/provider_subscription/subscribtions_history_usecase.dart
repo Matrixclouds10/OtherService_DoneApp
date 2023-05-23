@@ -5,7 +5,7 @@ import 'package:weltweit/features/data/models/subscription/subscription_history_
 import 'package:weltweit/features/domain/repositoy/provider_repo.dart';
 
 class SubscribtionHistoryUseCase extends BaseUseCase<List<SubscriptionHistoryModel>, NoParameters> {
-  final ProviderRepositoryProvider repository;
+  final AppRepositoryProvider repository;
 
   SubscribtionHistoryUseCase(this.repository);
 

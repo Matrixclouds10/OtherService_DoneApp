@@ -34,14 +34,15 @@ class OrderItemWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
+              padding: EdgeInsets.all(4),
               margin: const EdgeInsets.only(top: 8),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(250),
                 child: CustomImage(
                   imageUrl: orderModel.provider?.image ?? '',
                   fit: BoxFit.fill,
-                  width: MediaQuery.of(context).size.width / 6.4,
-                  height: MediaQuery.of(context).size.width / 6.4,
+                  width: MediaQuery.of(context).size.width / 6.6,
+                  height: MediaQuery.of(context).size.width / 6.6,
                 ),
               ),
             ),
@@ -50,19 +51,11 @@ class OrderItemWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CustomText(orderModel.provider?.name ?? '', pv: 0),
-                  if (date.isNotEmpty && time.isNotEmpty) ...[
-                    SizedBox(height: 2),
-                    Row(
-                      children: [
-                        FaIcon(Icons.calendar_today, color: Colors.grey, size: 16),
-                        CustomText(date, align: TextAlign.start, color: Colors.black, pv: 0).footer(),
-                        const SizedBox(width: 8),
-                        FaIcon(Icons.access_time, color: Colors.grey, size: 16),
-                        CustomText(time, align: TextAlign.start, color: Colors.black, pv: 0).footer(),
-                      ],
-                    )
-                  ],
+                  CustomText(orderModel.provider?.name ?? '', pv: 0, bold: true),
+                  SizedBox(height: 2),
+                  _dateWidget(date, time),
+                  if (date.isNotEmpty && time.isNotEmpty) ...[],
+                  SizedBox(height: 2),
                   SizedBox(height: 2),
                   if (orderModel.service != null)
                     Wrap(
@@ -70,35 +63,51 @@ class OrderItemWidget extends StatelessWidget {
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
                           decoration: BoxDecoration(color: servicesTheme.colorScheme.secondary, borderRadius: BorderRadius.circular(4)),
-                          child: CustomText(orderModel.service!.title ?? '', color: Colors.white, size: 14, ph: 8, pv: 0).footer(),
+                          child: CustomText(orderModel.service!.title ?? '', color: Colors.white, size: 14, ph: 8, pv: 2).footer(),
                         ),
                       ],
-                    )
+                    ),
+                  SizedBox(height: 2),
                 ],
               ),
             ),
-            const SizedBox(width: 8),
-            if (orderModel.statusCode?.toLowerCase() == "cancelled") const Icon(Icons.close, color: Colors.red, size: 40),
-            if (orderModel.statusCode?.toLowerCase() != "cancelled")
-              Column(
-                children: [
-                  // if (orderModel..isNotEmpty) CustomText(price, color: servicesTheme.primaryColor, pv: 0).header(),
-                  if (orderModel.statusCode?.toLowerCase() == "pending") CustomText(LocaleKeys.waitingForApproval.tr(), color: servicesTheme.primaryColor, pv: 0).footer(),
-                  if (orderModel.statusCode?.toLowerCase() == "provider_accept") CustomText(LocaleKeys.approved.tr(), color: Colors.green, pv: 0).footer(),
-                  if (orderModel.statusCode?.toLowerCase() == "provider_finish") CustomText(LocaleKeys.finished.tr(), pv: 0).footer(),
-                  if (orderModel.statusCode?.toLowerCase() == "client_done")
-                    Container(
-                      color: Colors.transparent,
-                      padding: EdgeInsets.all(4),
-                      child: CustomText(LocaleKeys.giverate.tr(), color: Colors.blueAccent, pv: 0).footer(),
-                    ).onTap(() {
-                      //create a dialog to rate the order
-                      AppDialogs().rateOrderDialog(context, orderModel);
-                    }),
-                ],
-              ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 12),
+            _statusWidget(),
+            const SizedBox(width: 4),
           ],
         ));
+  }
+
+  _statusWidget() {
+    return Builder(builder: (context) {
+      return Column(
+        children: [
+          if (orderModel.statusCode?.toLowerCase() == "cancelled") Icon(Icons.close, color: Colors.red, size: 40),
+          if (orderModel.statusCode?.toLowerCase() == "pending") CustomText(LocaleKeys.waitingForApproval.tr(), color: servicesTheme.primaryColor, pv: 0).footer(),
+          if (orderModel.statusCode?.toLowerCase() == "provider_accept") CustomText(LocaleKeys.approved.tr(), color: Colors.green, pv: 0).footer(),
+          if (orderModel.statusCode?.toLowerCase() == "provider_finish") CustomText(LocaleKeys.finished.tr(), pv: 0).footer(),
+          if (orderModel.statusCode?.toLowerCase() == "client_done")
+            Container(
+              color: Colors.transparent,
+              padding: EdgeInsets.all(4),
+              child: CustomText(LocaleKeys.giverate.tr(), color: Colors.blueAccent, pv: 0).footer(),
+            ).onTap(() {
+              AppDialogs().rateOrderDialog(context, orderModel);
+            }),
+        ],
+      );
+    });
+  }
+
+  _dateWidget(String date, String time) {
+    return Row(
+      children: [
+        FaIcon(Icons.calendar_today, color: Colors.grey, size: 16),
+        CustomText(date, align: TextAlign.start, color: Colors.black, pv: 0).footer(),
+        const SizedBox(width: 4),
+        FaIcon(Icons.access_time, color: Colors.grey, size: 16),
+        CustomText(time, align: TextAlign.start, color: Colors.black, pv: 0).footer(),
+      ],
+    );
   }
 }

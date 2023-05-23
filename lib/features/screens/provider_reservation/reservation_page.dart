@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/features/core/routing/routes_provider.dart';
+import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/presentation/component/inputs/base_form.dart';
@@ -23,7 +25,7 @@ class _ReservationPageState extends State<ReservationPage> {
         appBar: CustomAppBar(
           isCenterTitle: true,
           color: Colors.white,
-          titleWidget: CustomText("حجز موعد").header(),
+          titleWidget: CustomText(LocaleKeys.makeAppointment.tr()).header(),
         ),
         body: SingleChildScrollView(
           padding: EdgeInsets.all(12),

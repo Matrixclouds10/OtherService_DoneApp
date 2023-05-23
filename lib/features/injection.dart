@@ -1,3 +1,4 @@
+import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/features/data/repository/address_repository_imp.dart';
 import 'package:weltweit/features/data/repository/app_repository_imp.dart';
 import 'package:weltweit/features/domain/usecase/country/countries_usecase.dart';
@@ -6,6 +7,8 @@ import 'package:weltweit/features/domain/usecase/order/order_accept_usecase.dart
 import 'package:weltweit/features/domain/usecase/order/order_finish_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_rate_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_usecase.dart';
+import 'package:weltweit/features/domain/usecase/provider/notification/notifications_usecase.dart';
+import 'package:weltweit/features/domain/usecase/provider/notification/provider_notifications_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider/rates/provider_rates_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_subscription/subscribe_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_subscription/subscribtions_history_usecase.dart';
@@ -32,7 +35,6 @@ import 'package:weltweit/features/domain/usecase/provider/services/services_usec
 import 'package:weltweit/features/domain/usecase/provider/portfolio/portfolio_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider/provider/provider_usecase.dart';
 import 'package:weltweit/core/services/network/network_client.dart';
-import 'package:weltweit/data/injection.dart';
 import 'package:weltweit/features/domain/repositoy/app_repo.dart';
 import 'package:weltweit/features/domain/usecase/address/address_create_usecase.dart';
 import 'package:weltweit/features/domain/usecase/address/address_delete_usecase.dart';
@@ -113,19 +115,27 @@ Future<void> init() async {
   /// Repository
   getIt.registerLazySingleton<AuthRepository>(() => AuthRepositoryImp(dioClient: getIt()));
 
+  //Order
   getIt.registerLazySingleton(() => OrderCancelUseCase(getIt()));
   getIt.registerLazySingleton(() => OrderAcceptUseCase(getIt()));
   getIt.registerLazySingleton(() => OrderRateUseCase(getIt()));
   getIt.registerLazySingleton(() => OrderFinishUseCase(getIt()));
-  getIt.registerLazySingleton(() => ChatMessagesUseCase(getIt()));
-  getIt.registerLazySingleton(() => ChatSendMessageUseCase(getIt()));
+
+  //Basic
   getIt.registerLazySingleton(() => AboutUseCase(getIt()));
   getIt.registerLazySingleton(() => PolicyUseCase(getIt()));
   getIt.registerLazySingleton(() => ContactUsUseCase(getIt()));
   getIt.registerLazySingleton(() => CountryUseCase(getIt()));
   getIt.registerLazySingleton(() => CountriesUseCase(getIt()));
   getIt.registerLazySingleton(() => BannerUseCase(getIt()));
+
+  //Chat
+  getIt.registerLazySingleton(() => ChatMessagesUseCase(getIt()));
+  getIt.registerLazySingleton(() => ChatSendMessageUseCase(getIt()));
+
+  //Subscription
   getIt.registerLazySingleton(() => SubscribeUseCase(getIt()));
   getIt.registerLazySingleton(() => SubscribtionUseCase(getIt()));
   getIt.registerLazySingleton(() => SubscribtionHistoryUseCase(getIt()));
+
 }

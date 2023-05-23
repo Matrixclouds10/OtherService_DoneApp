@@ -7,7 +7,7 @@ import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/domain/repositoy/provider_repo.dart';
 
 class PortfolioAddUseCase extends BaseUseCase<BaseResponse, File> {
-  final ProviderRepositoryProvider repository;
+  final AppRepositoryProvider repository;
 
   PortfolioAddUseCase({required this.repository});
 

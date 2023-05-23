@@ -8,7 +8,7 @@ import 'package:location/location.dart';
 import 'package:weltweit/core/utils/globals.dart';
 import 'package:weltweit/core/utils/permission_heloper.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
-import 'package:weltweit/data/injection.dart';
+import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';

@@ -27,6 +27,9 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
   @override
   void initState() {
     super.initState();
+    context.read<OrdersCubit>().reset();
+    context.read<OrdersCubit>().getPendingOrders(typeIsProvider: true);
+    context.read<OrdersCubit>().getCompletedOrders(typeIsProvider: true);
     _tabController = TabController(length: 2, vsync: this);
   }
 
@@ -112,31 +115,7 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
             children: [
               Image.asset(Assets.imagesBaloon, height: 200, width: 200),
               SizedBox(height: 12),
-              CustomText(LocaleKeys.cantGetNewOrders.tr(), color: AppColorLight().kAccentColor).header(),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Column(
-                  children: [
-                    ...[
-                      LocaleKeys.makeSureToSelectServicesYouProvide.tr(),
-                      LocaleKeys.makeSureToUploadAllFiles.tr(),
-                      LocaleKeys.makeSureToBeOnline.tr(),
-                    ]
-                        .map((e) => AppTextTile(
-                              title: CustomText(
-                                e,
-                                size: 16,
-                                pv: 0,
-                                align: TextAlign.start,
-                              ),
-                              isTitleExpanded: true,
-                              leading: Icon(Icons.circle, size: 12),
-                            ))
-                        .toList(),
-                  ],
-                ),
-              ),
-              SizedBox(height: 20),
+              CustomText(LocaleKeys.noOrdersFound.tr(), color: AppColorLight().kAccentColor).header(),
             ],
           );
         }
@@ -156,7 +135,7 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
   }
 
   completedOrders() {
-    return  Column(
+    return Column(
       children: [],
     );
   }
@@ -175,30 +154,7 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
             children: [
               Image.asset(Assets.imagesBaloon, height: 200, width: 200),
               SizedBox(height: 12),
-              CustomText(LocaleKeys.cantGetNewOrders.tr(), color: AppColorLight().kAccentColor).header(),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Column(
-                  children: [
-                    ...[
-                      LocaleKeys.makeSureToSelectServicesYouProvide.tr(),
-                      LocaleKeys.makeSureToUploadAllFiles.tr(),
-                      LocaleKeys.makeSureToBeOnline.tr(),
-                    ]
-                        .map((e) => AppTextTile(
-                              title: CustomText(
-                                e,
-                                size: 16,
-                                pv: 0,
-                                align: TextAlign.start,
-                              ),
-                              isTitleExpanded: true,
-                              leading: Icon(Icons.circle, size: 12),
-                            ))
-                        .toList(),
-                  ],
-                ),
-              ),
+              CustomText(LocaleKeys.noOrdersFound.tr(), color: AppColorLight().kAccentColor).header(),
               SizedBox(height: 20),
             ],
           );

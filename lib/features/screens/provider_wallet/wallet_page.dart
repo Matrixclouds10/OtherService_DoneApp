@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/resources/color.dart';
-import 'package:weltweit/data/injection.dart';
+import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/data/models/wallet/wallet_model.dart';
@@ -111,6 +111,7 @@ class _WalletPageState extends State<WalletPage> {
   }
 
   _singleItem(WalletModel e) {
+    String amount = e.amount != null && e.amount! > 0 ? "+ ${e.amount}" : e.amount.toString();
     return Container(
         margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         padding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
@@ -131,7 +132,7 @@ class _WalletPageState extends State<WalletPage> {
                 ],
               ),
             ),
-            CustomText("${e.amount}${e.amount} ج", align: TextAlign.start, color: Colors.grey[500]!, pv: 0).footer(),
+            CustomText("$amount ج", align: TextAlign.start, color: Colors.grey[500]!, pv: 0).footer(),
             SizedBox(width: 8),
           ],
         ));

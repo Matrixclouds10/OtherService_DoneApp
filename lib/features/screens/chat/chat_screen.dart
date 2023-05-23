@@ -12,7 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:weltweit/core/resources/values_manager.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
-import 'package:weltweit/data/injection.dart';
+import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/logic/chat/chat_cubit.dart';

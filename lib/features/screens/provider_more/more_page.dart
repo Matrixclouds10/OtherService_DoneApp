@@ -6,7 +6,7 @@ import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/routing/routes.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
-import 'package:weltweit/data/injection.dart';
+import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/generated/assets.dart';
@@ -42,7 +42,7 @@ class MorePage extends StatelessWidget {
                   children: [
                     singleCustomListTile(
                         image: "assets/images/file.png",
-                        text: 'ملفاتي',
+                        text:  LocaleKeys.myFiles.tr(),
                         trailingText: "",
                         onTap: () {
                           Navigator.pushNamed(context, RoutesProvider.providerDocuments);
@@ -64,7 +64,7 @@ class MorePage extends StatelessWidget {
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
                         image: "assets/images/file.png",
-                        text: 'سجل الطلبات',
+                        text:  LocaleKeys.ordersHistory.tr(),
                         trailingText: "",
                         onTap: () {
                           Navigator.pushNamed(context, RoutesProvider.providerOrders);
@@ -87,31 +87,31 @@ class MorePage extends StatelessWidget {
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
                         image: "assets/images/info.png",
-                        text: 'من نحن',
-                        trailingText: "تعرف علينا",
+                        text: LocaleKeys.aboutUs.tr(),
+                        trailingText:LocaleKeys.aboutUsNote.tr(),
                         onTap: () {
                           Navigator.pushNamed(context, Routes.about);
                         }),
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
                         image: "assets/images/info.png",
-                        text: 'الاستخدام والخصوصية',
-                        trailingText: "سياسة الاستخدام والخصوصية",
+                        text:  LocaleKeys.privacyPolicy.tr(),
+                        trailingText:  LocaleKeys.privacyPolicy.tr(),
                         onTap: () {
                           Navigator.pushNamed(context, Routes.policy);
                         }),
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
                         image: "assets/images/customer-service.png",
-                        text: 'تواصل معنا',
-                        trailingText: "نحن في خدمتك دائما",
+                        text:  LocaleKeys.contactUs.tr(),
+                        trailingText: LocaleKeys.contactUsNote.tr(),
                         onTap: () {
                           Navigator.pushNamed(context, Routes.contactUs);
                         }),
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
                         image: "assets/images/user.png",
-                        text: 'اشترك الان',
+                        text:  LocaleKeys.subscribeNow.tr(),
                         trailingText: "",
                         onTap: () {
                           Navigator.pushNamed(context, RoutesProvider.providerSubscribe);
@@ -161,7 +161,7 @@ class MorePage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CustomText(text, color: text.contains("خروج") ? Colors.red : Colors.black, align: TextAlign.start, pv: 0),
+                    CustomText(text, color: text.contains(LocaleKeys.exit.tr()) ? Colors.red : Colors.black, align: TextAlign.start, pv: 0),
                     if (trailingText != null) CustomText(trailingText, color: Colors.grey, align: TextAlign.start, pv: 0),
                   ],
                 ),

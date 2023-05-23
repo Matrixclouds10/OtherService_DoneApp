@@ -13,7 +13,6 @@ import 'package:weltweit/features/screens/provider_order_details/order_details.d
 import 'package:weltweit/features/screens/provider_orders/orders_page.dart';
 import 'package:weltweit/features/screens/provider_profile/profile_update_page.dart';
 import 'package:weltweit/features/screens/provider_reservation/reservation_page.dart';
-import 'package:weltweit/features/screens/provider_service_provider/service_provider_page.dart';
 import 'package:weltweit/features/screens/provider_service_providers/service_providers_page.dart';
 import 'package:weltweit/features/screens/provider_services/services_page.dart';
 import 'package:weltweit/features/screens/provider_subscribe/subscribe_page.dart';
@@ -25,7 +24,6 @@ class RouteProviderGenerator {
     Map? arguments = settings.arguments as Map<String, dynamic>?;
     switch (settings.name) {
       case RoutesProvider.providerLayoutScreen:
-        NavigationService.navigationKey.currentContext!.read<ProfileProviderCubit>().getProfile();
         return platformPageRoute(const LayoutPage(currentPage: 0));
       case RoutesProvider.providerOffers:
         return platformPageRoute(const OffersPage());
@@ -46,8 +44,6 @@ class RouteProviderGenerator {
         return platformPageRoute(OrderDetails(orderModel: arguments!["order"]));
       case RoutesProvider.providerProviders:
         return platformPageRoute(ServiceProvidersPage(service: arguments!["serviceName"]));
-      case RoutesProvider.providerProvider:
-        return platformPageRoute(ServiceProviderPage(provderName: arguments!["provderName"]));
       case RoutesProvider.providerSubscribe:
         return platformPageRoute(SubscribePage());
       case RoutesProvider.providerProfileUpdateScreen:

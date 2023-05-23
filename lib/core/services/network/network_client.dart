@@ -7,7 +7,7 @@ import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/data/datasource/remote/dio/dio_client.dart';
 import 'package:weltweit/data/datasource/remote/exception/api_error_handler.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
-import 'package:weltweit/data/injection.dart';
+import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
 
@@ -59,6 +59,7 @@ class NetworkClient {
           response = await dioClient.delete(url, data: data, options: options);
           break;
       }
+      logger.i('response ${response.data}');
 
       BaseResponse baseResponse = BaseResponse.fromJson(response.data);
       if (baseResponse.code != 200 || baseResponse.code != 201) {

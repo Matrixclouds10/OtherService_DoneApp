@@ -25,7 +25,7 @@ class _LayoutPageState extends State<LayoutPage> {
   @override
   void initState() {
     super.initState();
-    //call after build
+    context.read<ProfileProviderCubit>().getProfile();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       String? fcmToken = await getDeviceToken();
       // if (fcmToken != null) {
@@ -72,7 +72,6 @@ class LayoutWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    UserModel? user = context.read<ProfileProviderCubit>().state.data;
     return BlocBuilder<LayoutProviderCubit, LayoutProviderState>(
       builder: (context, state) {
         if (state is LayoutInitial) {

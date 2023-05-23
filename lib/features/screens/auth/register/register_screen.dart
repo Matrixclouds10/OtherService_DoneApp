@@ -6,12 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/extensions/num_extensions.dart';
 import 'package:weltweit/core/resources/resources.dart';
-import 'package:weltweit/core/routing/navigation_services.dart';
+import 'package:weltweit/core/services/local/cache_consumer.dart';
+import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/core/utils/logger.dart';
+import 'package:weltweit/base_injection.dart';
+import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
+import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/data/models/response/country/country_model.dart';
-import 'package:weltweit/features/domain/request_body/check_otp_body.dart';
 import 'package:weltweit/features/domain/request_body/register_body.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/assets.dart';
@@ -83,13 +86,40 @@ class _RegisterScreenState extends State<RegisterScreen> {
         );
 
         var response = await BlocProvider.of<RegisterCubit>(context, listen: false).register(registerBody);
-        if (response.isSuccess) {
-          NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
-            'phone': _phoneController.text,
-            'code': selectedCountry?.code ?? '20',
-            'checkOTPType': CheckOTPType.register,
-            'typeIsProvider': widget.typeIsProvider,
-          });
+        if (response.error == null) {
+          UserModel userEntity = UserModel.fromJson(response.data);
+          String token = userEntity.token ?? '';
+          int id = userEntity.id ?? 0;
+          // NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
+          //   'phone': _phoneController.text,
+          //   'code': selectedCountry?.code ?? '20',
+          //   'checkOTPType': CheckOTPType.register,
+          //   'typeIsProvider': widget.typeIsProvider,
+          // });
+          if (token.isNotEmpty) {
+            AppPrefs prefs = getIt();
+            prefs.save(PrefKeys.token, token);
+            prefs.save(PrefKeys.id, id);
+            prefs.save(PrefKeys.isTypeProvider, widget.typeIsProvider);
+            if (widget.typeIsProvider) {
+              Navigator.pushNamedAndRemoveUntil(context, RoutesProvider.providerLayoutScreen, (route) => false);
+            } else {
+              Navigator.pushNamedAndRemoveUntil(context, RoutesServices.servicesLayoutScreen, (route) => false);
+            }
+          } else {
+            AppSnackbar.show(
+              context: context,
+              title: LocaleKeys.notification.tr(),
+              message:  LocaleKeys.somethingWentWrong.tr(),
+            );
+          }
+
+          // NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
+          //   'phone': _phoneController.text,
+          //   'code': selectedCountry?.code ?? '20',
+          //   'checkOTPType': CheckOTPType.register,
+          //   'typeIsProvider': widget.typeIsProvider,
+          // });
         } else {
           AppSnackbar.show(
             context: context,
@@ -155,42 +185,42 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       // if (widget.typeIsProvider) ...[
                       //   CustomText(LocaleKeys.joinAs.tr(), align: TextAlign.start, pv: 0),
-                        //Row for two radio buttons
-                        // Row(
-                        //   children: [
-                        //     //Radio button for user
-                        //     Flexible(
-                        //       flex: 1,
-                        //       child: RadioListTile(
-                        //         value: joinAsIndividual,
-                        //         dense: true,
-                        //         contentPadding: EdgeInsets.zero,
-                        //         visualDensity: VisualDensity(horizontal: 0, vertical: -4),
-                        //         title: CustomText(LocaleKeys.indvidual.tr(), align: TextAlign.start),
-                        //         groupValue: true,
-                        //         onChanged: (value) {
-                        //           joinAsIndividual = true;
-                        //           setState(() {});
-                        //         },
-                        //       ),
-                        //     ),
-                        //     Flexible(
-                        //       flex: 1,
-                        //       child: RadioListTile(
-                        //         value: joinAsIndividual,
-                        //         dense: true,
-                        //         contentPadding: EdgeInsets.zero,
-                        //         visualDensity: VisualDensity(horizontal: 0, vertical: -4),
-                        //         title: CustomText(LocaleKeys.company.tr(), align: TextAlign.start),
-                        //         groupValue: false,
-                        //         onChanged: (value) {
-                        //           joinAsIndividual = false;
-                        //           setState(() {});
-                        //         },
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
+                      //Row for two radio buttons
+                      // Row(
+                      //   children: [
+                      //     //Radio button for user
+                      //     Flexible(
+                      //       flex: 1,
+                      //       child: RadioListTile(
+                      //         value: joinAsIndividual,
+                      //         dense: true,
+                      //         contentPadding: EdgeInsets.zero,
+                      //         visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+                      //         title: CustomText(LocaleKeys.indvidual.tr(), align: TextAlign.start),
+                      //         groupValue: true,
+                      //         onChanged: (value) {
+                      //           joinAsIndividual = true;
+                      //           setState(() {});
+                      //         },
+                      //       ),
+                      //     ),
+                      //     Flexible(
+                      //       flex: 1,
+                      //       child: RadioListTile(
+                      //         value: joinAsIndividual,
+                      //         dense: true,
+                      //         contentPadding: EdgeInsets.zero,
+                      //         visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+                      //         title: CustomText(LocaleKeys.company.tr(), align: TextAlign.start),
+                      //         groupValue: false,
+                      //         onChanged: (value) {
+                      //           joinAsIndividual = false;
+                      //           setState(() {});
+                      //         },
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
                       // ],
                       _buildForm(),
                       CheckboxListTile(
