@@ -4,10 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/widgets/order_item_widget_client_info.dart';
-import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/logic/home/home_cubit.dart';
 import 'package:weltweit/features/logic/orders/orders_cubit.dart';
 import 'package:weltweit/features/logic/provider_profile/profile_cubit.dart';
+import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/presentation/component/component.dart';
@@ -38,72 +38,71 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-   
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(children: [
-        SizedBox(height: MediaQuery.of(context).padding.top),
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 12),
-          color: Colors.white,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              BlocBuilder<HomeCubit, HomeState>(
-                builder: (context, state) {
-                  if (state.currentLocationAddress.isNotEmpty) {
-                    return Expanded(
-                      child: Tooltip(
-                        message: state.currentLocationAddress,
-                        triggerMode: TooltipTriggerMode.tap,
-                        child: Row(
-                          children: [
-                            Icon(Icons.location_on_outlined, color: Colors.black54),
-                            Expanded(
-                              child: Container(child: CustomText(state.currentLocationAddress, maxLines: 1).footer().start()),
+      body: BlocBuilder<ProfileProviderCubit, ProfileProviderState>(
+        builder: (context, state) {
+          return Column(children: [
+            SizedBox(height: MediaQuery.of(context).padding.top),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12),
+              color: Colors.white,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  BlocBuilder<HomeCubit, HomeState>(
+                    builder: (context, state) {
+                      if (state.currentLocationAddress.isNotEmpty) {
+                        return Expanded(
+                          child: Tooltip(
+                            message: state.currentLocationAddress,
+                            triggerMode: TooltipTriggerMode.tap,
+                            child: Row(
+                              children: [
+                                Icon(Icons.location_on_outlined, color: Colors.black54),
+                                Expanded(
+                                  child: Container(child: CustomText(state.currentLocationAddress, maxLines: 1).footer().start()),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }
-                  return Container();
-                },
+                          ),
+                        );
+                      }
+                      return Container();
+                    },
+                  ),
+                  SizedBox(width: 8),
+                  IconButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, RoutesProvider.providerNotifications);
+                      },
+                      icon: Icon(FontAwesomeIcons.bell)),
+                ],
               ),
-              SizedBox(width: 8),
-              IconButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, RoutesProvider.providerNotifications);
-                  },
-                  icon: Icon(FontAwesomeIcons.bell)),
-            ],
-          ),
-        ),
-        Divider(height: 0.5, color: Colors.grey[300]),
-        Container(
-          color: Colors.white,
-          child: TabBar(
-            controller: _tabController,
-            indicatorColor: Colors.transparent,
-            labelColor: Colors.black,
-            onTap: (index) {
-              setState(() {});
-            },
-            unselectedLabelColor: Colors.grey,
-            tabs: [
-              singleTab(0, LocaleKeys.newWord.tr()),
-              singleTab(1, LocaleKeys.current.tr()),
-            ],
-          ),
-        ),
-        Expanded(
-          child: TabBarView(
-            controller: _tabController,
-            physics: NeverScrollableScrollPhysics(),
-            children: [
-              BlocBuilder<ProfileProviderCubit, ProfileProviderState>(
-                builder: (context, state) {
-                  return Container(
+            ),
+            Divider(height: 0.5, color: Colors.grey[300]),
+            Container(
+              color: Colors.white,
+              child: TabBar(
+                controller: _tabController,
+                indicatorColor: Colors.transparent,
+                labelColor: Colors.black,
+                onTap: (index) {
+                  setState(() {});
+                },
+                unselectedLabelColor: Colors.grey,
+                tabs: [
+                  singleTab(0, LocaleKeys.newWord.tr()),
+                  singleTab(1, LocaleKeys.current.tr()),
+                ],
+              ),
+            ),
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                physics: NeverScrollableScrollPhysics(),
+                children: [
+                  Container(
                     color: AppColorLight().kScaffoldBackgroundColor,
                     child: Column(
                       children: [
@@ -116,7 +115,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                             children: [
                               Row(
                                 children: [
-                                  CustomText("${LocaleKeys.goodMorning.tr()}, ${state.data?.name ??''}").header(),
+                                  CustomText("${LocaleKeys.goodMorning.tr()}, ${state.data?.name ?? ''}").header(),
                                   Spacer(),
                                   Icon(Icons.circle, color: state.data?.isAvailable() ?? false ? Color(0xff20CA6E) : Color(0xffEF2027)),
                                 ],
@@ -130,9 +129,13 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                     builder: (context, state) {
                                       return CustomButton(
                                         onTap: () {
-                                          context.read<ProfileProviderCubit>().updateAvailability();
-                                          if (state.data?.isAvailable() ?? false) {
-                                            context.read<ProfileProviderCubit>().updateLocation(context);
+                                          if (state.data?.currentSubscription != null) {
+                                            context.read<ProfileProviderCubit>().updateAvailability();
+                                            if (state.data?.isAvailable() ?? false) {
+                                              context.read<ProfileProviderCubit>().updateLocation(context);
+                                            }
+                                          }else{
+                                            AppSnackbar.show(context: context, message: LocaleKeys.youNeedToSubscribe.tr());
                                           }
                                         },
                                         title: state.data?.isAvailable() ?? false ? LocaleKeys.available.tr() : LocaleKeys.unavailable.tr(),
@@ -140,7 +143,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                         height: 40,
                                         loading: state.availabilityState == BaseState.loading,
                                         expanded: false,
-                                        color: state.data?.isAvailable() ?? false? Color(0xff20CA6E) : Color(0xffEF2027),
+                                        color: state.data?.isAvailable() ?? false ? Color(0xff20CA6E) : Color(0xffEF2027),
                                       );
                                     },
                                   ),
@@ -153,23 +156,23 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                         Expanded(child: newOrders()),
                       ],
                     ),
-                  );
-                },
+                  ),
+                  Container(
+                    color: AppColorLight().kScaffoldBackgroundColor,
+                    child: ListView(
+                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      children: [
+                        currentOrders(),
+                        SizedBox(height: 80),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              Container(
-                color: AppColorLight().kScaffoldBackgroundColor,
-                child: ListView(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  children: [
-                    currentOrders(),
-                    SizedBox(height: 80),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ]),
+            ),
+          ]);
+        },
+      ),
     );
   }
 

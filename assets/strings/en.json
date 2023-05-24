@@ -1,6 +1,8 @@
 {
   "en": "English",
   "or": "or",
+  "youNeedToSubscribe":   "You need to subscribe to continue",
+
   "exit": "Exit",
   "makeAppointment":  "Make Appointment",
   "no_notifications" : "No Notifications",

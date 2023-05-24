@@ -19,16 +19,19 @@ class ContactUsCubit extends Cubit<ContactUsState> {
     ));
   }
 
-  Future<void> call(ContactUsParams parameters) async {
+  Future<bool> call(ContactUsParams parameters) async {
     initStates();
     emit(state.copyWith(state: BaseState.loading));
     final result = await contactUsUseCase(parameters);
-    result.fold(
-      (error) => emit(state.copyWith(state: BaseState.error, error: error)),
+    return result.fold(
+      (error) {
+        emit(state.copyWith(state: BaseState.error, error: error));
+        return false;
+      },
       (data) {
-        emit(state.copyWith(state: BaseState.loaded, data: data.message??''));
+        emit(state.copyWith(state: BaseState.loaded, data: data.message ?? ''));
+        return true;
       },
     );
   }
-
 }

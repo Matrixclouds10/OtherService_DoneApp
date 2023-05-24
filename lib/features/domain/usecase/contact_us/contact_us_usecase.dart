@@ -24,10 +24,12 @@ class ContactUsParams {
   String name;
   String email;
   String message;
+  String type;
   ContactUsParams({
     required this.name,
     required this.email,
     required this.message,
+    required this.type,
   });
 
   toJson() {
@@ -35,6 +37,7 @@ class ContactUsParams {
       'name': name,
       'email': email,
       'message': message,
+      'type': type,
     };
   }
 }

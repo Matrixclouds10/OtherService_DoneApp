@@ -1,7 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
+import 'package:weltweit/core/services/local/cache_consumer.dart';
+import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 
 import 'package:weltweit/features/core/widgets/custom_text.dart';
@@ -72,17 +75,19 @@ class _ContactPageState extends State<ContactPage> {
                         return CustomButton(
                           onTap: () async {
                             if (state.state == BaseState.loading) return;
-                            // if (_nameController.text.isEmpty) return AppSnackbar.show(context: context, message: LocaleKeys.msgNameRequired.tr());
-                            // if (_emailController.text.isEmpty) return AppSnackbar.show(context: context, message: LocaleKeys.msgEmailRequired.tr());
-                            // if (_messageController.text.isEmpty) return AppSnackbar.show(context: context, message: LocaleKeys.msgMessageRequired.tr());
-
+                            if (_nameController.text.isEmpty) return AppSnackbar.show(context: context, message: LocaleKeys.msgNameRequired.tr());
+                            if (_emailController.text.isEmpty) return AppSnackbar.show(context: context, message: LocaleKeys.msgEmailRequired.tr());
+                            if (_messageController.text.isEmpty) return AppSnackbar.show(context: context, message: LocaleKeys.msgMessageRequired.tr());
+                            AppPrefs prefs = getIt<AppPrefs>();
+                            bool isProvider = prefs.get(PrefKeys.isTypeProvider, defaultValue: false);
                             ContactUsParams params = ContactUsParams(
                               name: _nameController.text,
                               email: _emailController.text,
                               message: _messageController.text,
+                              type: isProvider ? 'provider' : 'client',
                             );
-                            await context.read<ContactUsCubit>()(params);
-                            Navigator.pop(context);
+                            bool status = await context.read<ContactUsCubit>()(params);
+                            if (status) Navigator.pop(context);
                           },
                           loading: state.state == BaseState.loading,
                           title: LocaleKeys.send.tr(),

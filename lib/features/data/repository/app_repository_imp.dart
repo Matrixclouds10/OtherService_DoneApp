@@ -416,12 +416,10 @@ class AppRepositoryImp implements AppRepository {
 
   @override
   Future<Either<ErrorModel, BaseResponse>> sendContactUs({required ContactUsParams params}) async {
-    AppPrefs prefs = getIt<AppPrefs>();
-       bool isProvider = prefs.get(PrefKeys.isTypeProvider, defaultValue: false);
- String url = AppURL.contactUs;
+    String url = AppURL.contactUs;
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = params.toJson();
-    data.addAll({"type": isProvider ? "provider" : "client"});
+
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
 
     return result.fold((l) => Left(l), (r) => Right(r));
@@ -521,7 +519,7 @@ class AppRepositoryImp implements AppRepository {
   @override
   Future<Either<ErrorModel, BaseResponse<List<NotificationModel>>>> getNotifications(int parameters) async {
     String url = AppURL.getNotifications;
-     if (parameters != 0) {
+    if (parameters != 0) {
       url = '$url?page=$parameters';
     }
     NetworkCallType type = NetworkCallType.get;
