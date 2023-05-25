@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/resources/decoration.dart';
+import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/data/models/subscription/subscription_model.dart';
@@ -171,9 +172,9 @@ class _SubscribePageState extends State<SubscribePage> {
                         Navigator.pop(context);
                         try {
                           BaseResponse response = await context.read<SubscribtionCubit>().subscribe(e.id, selectedMethod);
-                          AppSnackbar.show(context: context, message: response.message ?? "");
+                          AppSnackbar.show(context: NavigationService.navigationKey.currentContext!, message: response.message ?? "");
                         } catch (e) {
-                          AppSnackbar.show(context: context, message: LocaleKeys.somethingWentWrong.tr());
+                          AppSnackbar.show(context: NavigationService.navigationKey.currentContext!, message: LocaleKeys.somethingWentWrong.tr());
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -236,7 +237,7 @@ class _SubscribePageState extends State<SubscribePage> {
                     //radio select Wallet , credit card , cash
                     ...subscreptionMethods.map((e) {
                       String title = e;
-                      if (e.contains("wallet")) e = "wallet (${profileProviderCubit.state.data?.wallet ?? ''})";
+                      if (e.contains("wallet")) title = "wallet (${profileProviderCubit.state.data?.wallet ?? ''})";
                       bool isEnable = e.contains("credit") ? false : true;
                       if (isEnable) {
                         if (e.contains("wallet")) {
@@ -254,7 +255,7 @@ class _SubscribePageState extends State<SubscribePage> {
                           }
                         },
                         title: CustomText(
-                          e,
+                          title,
                           color: e.contains("credit") ? Colors.grey : Colors.black,
                         ).start(),
                         contentPadding: EdgeInsets.zero,

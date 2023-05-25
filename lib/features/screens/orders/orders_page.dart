@@ -50,6 +50,18 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
               indicatorColor: Colors.transparent,
               labelColor: Colors.black,
               onTap: (index) {
+                if (index == 0) {
+                  context.read<OrdersCubit>().getPendingOrders(typeIsProvider: false);
+                }
+
+                if (index == 1) {
+                  context.read<OrdersCubit>().getCompletedOrders(typeIsProvider: false);
+                }
+
+                if (index == 2) {
+                  context.read<OrdersCubit>().getCancelledOrders(typeIsProvider: false);
+                }
+
                 setState(() {});
               },
               unselectedLabelColor: Colors.grey,

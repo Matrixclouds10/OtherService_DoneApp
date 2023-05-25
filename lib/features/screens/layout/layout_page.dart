@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weltweit/core/notification/FcmHandler.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
@@ -28,6 +29,7 @@ class _LayoutPageState extends State<LayoutPage> {
   void initState() {
     NavigationService.navigationKey.currentContext!.read<ProfileCubit>().getProfile();
     NavigationService.navigationKey.currentContext!.read<ServicesCubit>().getHomeServices();
+    NotificationsFCM();
     super.initState();
   }
 

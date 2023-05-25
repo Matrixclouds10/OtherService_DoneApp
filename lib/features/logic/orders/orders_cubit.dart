@@ -13,7 +13,7 @@ class OrdersCubit extends Cubit<OrdersState> {
     this.ordersUseCase,
   ) : super(const OrdersState());
 
-  Future<void> getPendingOrders({required bool typeIsProvider}) async {
+  Future<void> getPendingOrders({required bool typeIsProvider,}) async {
     emit(state.copyWith(pendingState: BaseState.loading));
     final result = await ordersUseCase(OrdersParams(
       OrdersStatus.pending,

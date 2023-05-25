@@ -2,6 +2,7 @@
 
 abstract class LocaleKeys {
   static const exit = "exit";
+  static const youRated = "youRated";
   static const youNeedToSubscribe = "youNeedToSubscribe";
   static const no_notifications = "no_notifications";
   static const makeAppointment = "makeAppointment";

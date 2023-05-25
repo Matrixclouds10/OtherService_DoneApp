@@ -40,7 +40,7 @@ class AppURL {
   static const String deletePortfolioURI = "$kBaseURL/portfolio-images/delete";
 
   //Settings
-  static const String updateFcm = "$kBaseURL/profile/fcm_token";
+  static const String updateFcm = "$kBaseURL/fcm_token";
   static const String updateLocation = "$kBaseURL/profile/update-location";
 
   //provider

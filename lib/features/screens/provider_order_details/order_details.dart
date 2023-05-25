@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:full_screen_image/full_screen_image.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:video_player/video_player.dart';
 import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
@@ -41,7 +44,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     return Scaffold(
       appBar: CustomAppBar(
         color: Colors.white,
-        titleWidget: CustomText(LocaleKeys.orderDetails).header(),
+        titleWidget: CustomText(LocaleKeys.orderDetails.tr()).header(),
         isCenterTitle: true,
         actions: [
           //chat
@@ -95,7 +98,6 @@ class _OrderDetailsState extends State<OrderDetails> {
                     physics: NeverScrollableScrollPhysics(),
                     scrollDirection: Axis.vertical,
                     children: [
-                  
                       Row(
                         children: [
                           Icon(FontAwesomeIcons.calendar, size: 16),
@@ -111,7 +113,12 @@ class _OrderDetailsState extends State<OrderDetails> {
                             )
                         ],
                       ),
-                
+                      if (state.data!.file.isNotEmpty)
+                        Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: const BoxDecoration(color: Colors.white),
+                          child: _orderFiles(state.data!.file),
+                        ),
                       if (state.data!.statusCode!.toLowerCase().contains("pending")) pendingView(state.data!),
                       if (state.data!.statusCode!.toLowerCase().contains("provider_cancel")) cacncelledView(state.data!),
                       if (state.data!.statusCode!.toLowerCase().contains("provider_finish")) finishedView(state.data!),
@@ -446,5 +453,144 @@ class _OrderDetailsState extends State<OrderDetails> {
       if (context.mounted) Navigator.pop(context);
       if (context.mounted) AppSnackbar.show(context: context, message: LocaleKeys.successfullyFinishOrder.tr());
     }
+  }
+
+  _orderFiles(List<String> file) {
+    List<String> images = [];
+    List<String> videos = [];
+    List<String> other = [];
+    for (var element in file) {
+      if (isFileImage(element)) {
+        images.add(element);
+      } else if (isFileVideo(element)) {
+        videos.add(element);
+      } else {
+        other.add(element);
+      }
+    }
+    VideoPlayerController? videoPlayerController;
+    if (videos.isNotEmpty) {
+      videoPlayerController = VideoPlayerController.network(videos.first);
+      videoPlayerController.initialize();
+    }
+    return Column(
+      children: [
+        if (videos.isNotEmpty && videoPlayerController != null) _buildVideo(videoPlayerController),
+        _buildImages(images),
+        if (other.isNotEmpty) _buildOther(other),
+      ],
+    );
+  }
+
+  _buildVideo(VideoPlayerController videoPlayerController) {
+    return Stack(
+      children: [
+        GestureDetector(
+          onTap: () {
+            videoPlayerController.value.isPlaying ? videoPlayerController.pause() : videoPlayerController.play();
+            setState(() {});
+          },
+          child: Container(
+            alignment: Alignment.center,
+            margin: const EdgeInsets.all(4),
+            height: 160,
+            width: deviceWidth - 8,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(6)),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: VideoPlayer(
+                videoPlayerController,
+              ),
+            ),
+          ),
+        ),
+        if (!videoPlayerController.value.isPlaying)
+          Positioned(
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: GestureDetector(
+              onTap: () {
+                videoPlayerController.value.isPlaying ? videoPlayerController.pause() : videoPlayerController.play();
+                setState(() {});
+              },
+              child: Icon(Icons.play_arrow, color: Colors.white, size: 50),
+            ),
+          ),
+      ],
+    );
+  }
+
+  bool isFileImage(String path) {
+    if (path.contains(".jpg") || path.contains(".png") || path.contains(".jpeg")) return true;
+    return false;
+  }
+
+  bool isFileVideo(String path) {
+    if (path.contains(".mp4") || path.contains(".avi") || path.contains(".mov")) return true;
+    return false;
+  }
+
+  _buildImages(List<String> images) {
+    if (images.isEmpty) return Container();
+
+    return SizedBox(
+      height: 110,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: images.length,
+        itemBuilder: (context, index) {
+          return InkWell(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return Dialog(
+                    child: FullScreenWidget(
+                      disposeLevel: DisposeLevel.Low,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: Image.network(images[index], fit: BoxFit.cover),
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+            child: Container(
+              margin: const EdgeInsets.all(4),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(6)),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(6),
+                child: CustomImage(height: 110, imageUrl: images[index], width: 110),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  _buildOther(List<String> other) {
+    return Column(
+      children: [
+        ...other
+            .map((e) => GestureDetector(
+                  onTap: () {
+                    Uri _url = Uri.parse(e);
+                    launchUrl(_url);
+                  },
+                  child: Row(
+                    children: [
+                      Icon(Icons.attach_file, color: Colors.grey),
+                      const SizedBox(width: 8),
+                      Expanded(child: CustomText(e, color: Colors.blueAccent, maxLines: 1)),
+                    ],
+                  ),
+                ))
+            .toList(),
+      ],
+    );
   }
 }

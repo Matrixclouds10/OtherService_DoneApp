@@ -28,7 +28,7 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
 
   @override
   Future<Either<ErrorModel, UserModel>> getProfile() async {
-    String url = AppURL.profile;
+    String url = AppURLProvider.profile;
     NetworkCallType type = NetworkCallType.get;
     Map<String, dynamic> data = {};
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
@@ -44,7 +44,7 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
 
   @override
   Future<Either<ErrorModel, UserModel>> updateAvailability() async {
-    String url = AppURL.changeStatus;
+    String url = AppURLProvider.changeStatus;
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = {};
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
@@ -60,7 +60,7 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
 
   @override
   Future<Either<ErrorModel, bool>> deleteProfile({required int id}) async {
-    String url = "${AppURL.deleteProfile}/$id";
+    String url = "${AppURLProvider.deleteProfile}/$id";
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = {};
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
@@ -75,7 +75,7 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
 
   @override
   Future<Either<ErrorModel, BaseResponse>> addDocument({required DocumentParams params}) async {
-    String url = AppURL.addDocumentURI;
+    String url = AppURLProvider.addDocumentURI;
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = params.toJson();
     FormData formData = await params.toFormData();
@@ -86,7 +86,7 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
 
   @override
   Future<Either<ErrorModel, BaseResponse>> deleteDocument({required int id}) async {
-    String url = '${AppURL.deleteDocumentURI}/$id';
+    String url = '${AppURLProvider.deleteDocumentURI}/$id';
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = {};
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
@@ -95,7 +95,7 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
 
   @override
   Future<Either<ErrorModel, List<Document>>> getDocuments() async {
-    String url = AppURL.getDocumentsURI;
+    String url = AppURLProvider.getDocumentsURI;
     NetworkCallType type = NetworkCallType.get;
     Map<String, dynamic> data = {};
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
@@ -111,7 +111,7 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
 
   @override
   Future<Either<ErrorModel, BaseResponse>> updateDocument({required DocumentParams params}) async {
-    String url = '${AppURL.updateDocumentURI}/$id';
+    String url = '${AppURLProvider.updateDocumentURI}/$id';
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = params.toJson();
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, formData: await params.toFormData(), data: data, type: type);
@@ -120,7 +120,7 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
 
   @override
   Future<Either<ErrorModel, BaseResponse>> changePassword({required ChangePasswordParams params}) async {
-    String url = AppURL.changePasswordProfile;
+    String url = AppURLProvider.changePasswordProfile;
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = params.toJson();
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
@@ -129,7 +129,7 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
 
   @override
   Future<Either<ErrorModel, List<ServiceModel>>> getAllServices() async {
-    String url = AppURL.services;
+    String url = AppURLProvider.services;
     NetworkCallType type = NetworkCallType.get;
     Map<String, dynamic> data = {};
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
@@ -145,7 +145,7 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
 
   @override
   Future<Either<ErrorModel, List<ServiceModel>>> getMyServices() async {
-    String url = AppURL.myServices;
+    String url = AppURLProvider.myServices;
     NetworkCallType type = NetworkCallType.get;
     Map<String, dynamic> data = {};
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
@@ -161,7 +161,7 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
 
   @override
   Future<Either<ErrorModel, BaseResponse>> updateFcm({required String fcmToken}) async {
-    String url = AppURL.updateFcm;
+    String url = AppURLProvider.updateFcm;
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = {};
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
@@ -170,7 +170,7 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
 
   @override
   Future<Either<ErrorModel, BaseResponse>> updateLocation({required String lat, required String lng}) async {
-    String url = AppURL.updateLocation;
+    String url = AppURLProvider.updateLocation;
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = {"lat": lat, "lng": lng};
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
@@ -179,7 +179,7 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
 
   @override
   Future<Either<ErrorModel, List<ServiceModel>>> updateMyServices({required UpdateServicesParams params}) async {
-    String url = AppURL.updateMyServices;
+    String url = AppURLProvider.updateMyServices;
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = params.toJson();
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
@@ -195,7 +195,7 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
 
   @override
   Future<Either<ErrorModel, BaseResponse>> addPortfolio({required File image}) async {
-    String url = AppURL.addPortfolioURI;
+    String url = AppURLProvider.addPortfolioURI;
     NetworkCallType type = NetworkCallType.post;
     FormData formData = FormData.fromMap({"image": await MultipartFile.fromFile(image.path)});
 
@@ -205,7 +205,7 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
 
   @override
   Future<Either<ErrorModel, BaseResponse>> deletePortfolio({required int id}) async {
-    String url = '${AppURL.deletePortfolioURI}/$id';
+    String url = '${AppURLProvider.deletePortfolioURI}/$id';
     NetworkCallType type = NetworkCallType.get;
     Map<String, dynamic> data = {};
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
@@ -214,7 +214,7 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
 
   @override
   Future<Either<ErrorModel, List<PortfolioModel>>> getPortfolios() async {
-    String url = AppURL.getPortfoliosURI;
+    String url = AppURLProvider.getPortfoliosURI;
     NetworkCallType type = NetworkCallType.get;
     Map<String, dynamic> data = {};
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
@@ -235,7 +235,7 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
 
   @override
   Future<Either<ErrorModel, BaseResponse>> updatePortfolio({required PortfolioParams params}) async {
-    String url = AppURL.updatePortfolioURI;
+    String url = AppURLProvider.updatePortfolioURI;
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = {"id": params.id};
     FormData formData = FormData.fromMap({"image": await MultipartFile.fromFile(params.image.path)});
@@ -245,7 +245,7 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
 
   @override
   Future<Either<ErrorModel, UserModel>> updateProfile({required UpdateProfileParams params}) async {
-    String url = AppURL.updateProfile;
+    String url = AppURLProvider.updateProfile;
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = params.toJson();
 
@@ -269,7 +269,7 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
 
   @override
   Future<Either<ErrorModel, List<SubscriptionModel>>> getSubscription() async {
-    String url = AppURL.getSubscriptionPackages;
+    String url = AppURLProvider.getSubscriptionPackages;
     NetworkCallType type = NetworkCallType.get;
     Map<String, dynamic> data = {};
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
@@ -285,7 +285,7 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
 
   @override
   Future<Either<ErrorModel, List<SubscriptionHistoryModel>>> getSubscriptionHistory() async {
-    String url = AppURL.getSubscriptionHistory;
+    String url = AppURLProvider.getSubscriptionHistory;
     NetworkCallType type = NetworkCallType.get;
     Map<String, dynamic> data = {};
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
@@ -301,7 +301,7 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
 
   @override
   Future<Either<ErrorModel, List<WalletModel>>> getWalletHistory() async {
-    String url = AppURL.getWalletHistory;
+    String url = AppURLProvider.getWalletHistory;
     NetworkCallType type = NetworkCallType.get;
     Map<String, dynamic> data = {};
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
@@ -317,7 +317,7 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
 
   @override
   Future<Either<ErrorModel, BaseResponse>> subscribe({required SubscribeParams params}) async{
-     String url = AppURL.subscribe;
+     String url = AppURLProvider.subscribe;
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = params.toJson();
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
@@ -328,7 +328,7 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
  
    @override
   Future<Either<ErrorModel,  BaseResponse<List<NotificationModel>>>> getProviderNotifications(int parameters) async {
-    String url = AppURL.getNotifications ;
+    String url = AppURLProvider.getNotifications ;
     if (parameters != 0) {
       url = '$url?page=$parameters';
     }

@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:full_screen_image/full_screen_image.dart';
-import 'package:material_dialogs/material_dialogs.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/core/resources/values_manager.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/routing/routes.dart';
+import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/core/widgets/order_item_widget.dart';
@@ -239,7 +239,6 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                             ),
                             textWithDot(text: "تم إنشاء الطلب بنجاح وبإنتظار موافقة مزود الخدمة.", color: const Color(0xffE67E23)),
                             textWithDot(text: "وافق مزود الخدمة علي طلبك وبإنتظار ردك بالموافقة علي السعر الأساسي.", color: servicesTheme.colorScheme.secondary),
-                            textWithDot(text: "تم التأكيد والطلب قيد التنفيذ.", color: Colors.black),
                             textWithDot(text: "تم الإنتهاء من الطلب من مزود الخدمة وبإنتظار تأكيدك.", color: Colors.black),
                             textWithDot(text: "تم الانتهاء من الطلب.", color: Colors.black),
                             const SizedBox(height: 16),
@@ -296,7 +295,33 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                       ),
                       const SizedBox(height: 30),
                     ],
-                    if (orderStatus.contains("pending")) ...[],
+                    if (orderStatus.contains("provider_accept")) ...[
+                      Container(
+                        decoration: const BoxDecoration(color: Colors.white),
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                const SizedBox(width: 10),
+                                const CustomText("حالة الطلب", bold: true).headerExtra(),
+                                const Spacer(),
+                                // CustomText("300 ج", color: Color.fromARGB(255, 230, 35, 35), bold: true).headerExtra(),
+                                // Chip(
+                                //   label: const CustomText("Pending", color: Colors.white).header(),
+                                //   backgroundColor: const Color(0xffE67E23),
+                                //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                // ),
+                                const SizedBox(width: 10),
+                              ],
+                            ),
+                            textWithDot(text: "تم إنشاء الطلب بنجاح وبإنتظار موافقة مزود الخدمة.", color: const Color(0xffE67E23)),
+                            textWithDot(text: "وافق مزود الخدمة علي طلبك.", color: servicesTheme.colorScheme.secondary),
+                            const SizedBox(height: 16),
+                          ],
+                        ),
+                      ),
+                    ],
                     if (orderStatus.contains("provider_finish")) ...[
                       Container(
                         decoration: const BoxDecoration(color: Colors.white),
@@ -318,8 +343,8 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                               ],
                             ),
                             textWithDot(text: "تم إنشاء الطلب بنجاح وبإنتظار موافقة مزود الخدمة.", color: const Color(0xffE67E23)),
-                            textWithDot(text: "وافق مزود الخدمة علي طلبك وبإنتظار ردك بالموافقة علي السعر الأساسي.", color: servicesTheme.colorScheme.secondary),
-                            textWithDot(text: "تم التأكيد والطلب قيد التنفيذ.", color: Colors.black),
+                            textWithDot(text: "وافق مزود الخدمة علي طلبك .", color: servicesTheme.colorScheme.secondary),
+                            // textWithDot(text: "تم التأكيد والطلب قيد التنفيذ.", color: Colors.black),
                             textWithDot(text: "تم الإنتهاء من الطلب من مزود الخدمة وبإنتظار موافقتك.", color: Colors.black),
                           ],
                         ),
@@ -339,23 +364,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                               ],
                             ),
                             const Divider(height: 2),
-                            // ...["المبلغ الأساسي", "إضافات مادية ١", "إضافات مادية 2"].map((e) {
-                            //   return Row(
-                            //     children: [
-                            //       Expanded(
-                            //         child: textWithDot(text: e, color: e.contains("المبلغ") ? const Color(0xffE67E23) : Colors.black),
-                            //       ),
-                            //       const SizedBox(width: 10),
-                            //       Chip(
-                            //         label: const CustomText("300 ج", color: Colors.white).footer(),
-                            //         backgroundColor: e.contains("المبلغ") ? const Color(0xffE67E23) : Colors.black,
-                            //         padding: const EdgeInsets.all(2),
-                            //         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                            //       ),
-                            //       const SizedBox(width: 10),
-                            //     ],
-                            //   );
-                            // }).toList(),
+                        
                             const SizedBox(height: 10),
 
                             BlocBuilder<OrderCubit, OrderState>(
@@ -457,7 +466,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
   void actionDoneOrder(BuildContext context, {required int id}) async {
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (ctx) {
         return AlertDialog(
           title: CustomText(LocaleKeys.finishOrder.tr()),
           content: Column(
@@ -468,14 +477,15 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                 children: [
                   TextButton(
                       onPressed: () async {
-                        if (context.mounted) {
                           if (context.mounted) Navigator.pop(context);
                           bool result = await context.read<OrderCubit>().finishOrder(id: id, price: null);
-                          if (context.mounted) Navigator.pop(context);
                           if (context.mounted) context.read<OrdersCubit>().getPendingOrders(typeIsProvider: false);
+                          if (context.mounted) Navigator.pop(context);
                           if (result) {
-                            if (context.mounted) AppSnackbar.show(context: context, message: LocaleKeys.successfullyFinishOrder.tr());
-                          }
+                             AppSnackbar.show(context: NavigationService.navigationKey.currentContext!, message: LocaleKeys.successfullyFinishOrder.tr());
+                          }else{
+                            AppSnackbar.show(context: NavigationService.navigationKey.currentContext!, message: LocaleKeys.somethingWentWrong.tr());
+
                         }
                       },
                       child: CustomText(LocaleKeys.finishOrder.tr(), color: Colors.orange[700]!).headerExtra()),
@@ -527,7 +537,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
         GestureDetector(
           onTap: () {
             videoPlayerController.value.isPlaying ? videoPlayerController.pause() : videoPlayerController.play();
-                setState(() {});
+            setState(() {});
           },
           child: Container(
             alignment: Alignment.center,
@@ -632,4 +642,5 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
       ],
     );
   }
+
 }

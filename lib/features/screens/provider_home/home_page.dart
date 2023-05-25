@@ -88,6 +88,11 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 indicatorColor: Colors.transparent,
                 labelColor: Colors.black,
                 onTap: (index) {
+                  if (index == 0) {
+                    context.read<OrdersCubit>().getPendingOrders(typeIsProvider: true);
+                  } else {
+                    context.read<OrdersCubit>().getCompletedOrders(typeIsProvider: true);
+                  }
                   setState(() {});
                 },
                 unselectedLabelColor: Colors.grey,
@@ -134,7 +139,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                             if (state.data?.isAvailable() ?? false) {
                                               context.read<ProfileProviderCubit>().updateLocation(context);
                                             }
-                                          }else{
+                                          } else {
                                             AppSnackbar.show(context: context, message: LocaleKeys.youNeedToSubscribe.tr());
                                           }
                                         },

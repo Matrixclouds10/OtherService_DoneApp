@@ -30,7 +30,7 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
     context.read<OrdersCubit>().reset();
     context.read<OrdersCubit>().getPendingOrders(typeIsProvider: true);
     context.read<OrdersCubit>().getCompletedOrders(typeIsProvider: true);
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -39,7 +39,7 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
     return Scaffold(
       appBar: CustomAppBar(
         color: Colors.white,
-        titleWidget: CustomText("سجل الطلبات").header(),
+        titleWidget: CustomText(LocaleKeys.ordersHistory.tr()).header(),
         isCenterTitle: true,
       ),
       backgroundColor: AppColorLight().kScaffoldBackgroundColor,
@@ -57,12 +57,22 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
                     indicatorColor: Colors.transparent,
                     labelColor: Colors.black,
                     onTap: (index) {
+                      if (index == 0) {
+                        context.read<OrdersCubit>().getPendingOrders(typeIsProvider: true);
+                      }
+                      if (index == 1) {
+                        context.read<OrdersCubit>().getPendingOrders(typeIsProvider: true);
+                      }
+                      if (index == 2) {
+                        context.read<OrdersCubit>().getCompletedOrders(typeIsProvider: true);
+                      }
                       setState(() {});
                     },
                     unselectedLabelColor: Colors.grey,
                     tabs: [
-                      singleTab(0, 'الجديدة'),
-                      singleTab(1, "الحالية"),
+                      singleTab(0, LocaleKeys.newWord.tr()),
+                      singleTab(1, LocaleKeys.current.tr()),
+                      singleTab(2, LocaleKeys.theCompleted.tr()),
                     ],
                   ),
                 ),
@@ -96,6 +106,8 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
         return newOrders();
       case 1:
         return currentOrders();
+      case 2:
+        return completedOrders();
       default:
         return Container();
     }
@@ -135,8 +147,33 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
   }
 
   completedOrders() {
-    return Column(
-      children: [],
+    return BlocBuilder<OrdersCubit, OrdersState>(
+      builder: (context, state) {
+        if (state.completedState == BaseState.error) {
+          return ErrorView(message: state.error?.errorMessage ?? "حدث خطأ ما");
+        }
+        if (state.completedState == BaseState.loading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (state.completedState == BaseState.loaded && state.completedData.isEmpty) {
+          return Column(
+            children: [
+              SizedBox(height: 12),
+              CustomText(LocaleKeys.noOrdersFound.tr(), color: AppColorLight().kAccentColor).header(),
+            ],
+          );
+        }
+        return Column(
+          children: [
+            ...state.completedData
+                .map((e) => GestureDetector(
+                      onTap: () {},
+                      child: OrderItemWidgetClient(orderModel: e),
+                    ))
+                .toList(),
+          ],
+        );
+      },
     );
   }
 

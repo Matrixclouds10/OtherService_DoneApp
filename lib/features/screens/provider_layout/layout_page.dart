@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weltweit/core/notification/FcmHandler.dart';
 import 'package:weltweit/core/notification/device_token.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
@@ -27,11 +28,12 @@ class _LayoutPageState extends State<LayoutPage> {
     super.initState();
     context.read<ProfileProviderCubit>().getProfile();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      String? fcmToken = await getDeviceToken();
+      // String? fcmToken = await getDeviceToken();
       // if (fcmToken != null) {
       //   if (context.mounted) BlocProvider.of<ProfileProviderCubit>(context).updateFcm(fcmToken);
       // }
     });
+    NotificationsFCM();
   }
 
   @override

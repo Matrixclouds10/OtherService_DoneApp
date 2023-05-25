@@ -86,14 +86,35 @@ class OrderItemWidget extends StatelessWidget {
           if (orderModel.statusCode?.toLowerCase() == "pending") CustomText(LocaleKeys.waitingForApproval.tr(), color: servicesTheme.primaryColor, pv: 0).footer(),
           if (orderModel.statusCode?.toLowerCase() == "provider_accept") CustomText(LocaleKeys.approved.tr(), color: Colors.green, pv: 0).footer(),
           if (orderModel.statusCode?.toLowerCase() == "provider_finish") CustomText(LocaleKeys.finished.tr(), pv: 0).footer(),
-          if (orderModel.statusCode?.toLowerCase() == "client_done")
-            Container(
-              color: Colors.transparent,
-              padding: EdgeInsets.all(4),
-              child: CustomText(LocaleKeys.giverate.tr(), color: Colors.blueAccent, pv: 0).footer(),
-            ).onTap(() {
-              AppDialogs().rateOrderDialog(context, orderModel);
-            }),
+          if (orderModel.statusCode?.toLowerCase() == "client_done") ...[
+            if (orderModel.rate == null)
+              Container(
+                color: Colors.transparent,
+                padding: EdgeInsets.all(4),
+                child: CustomText(LocaleKeys.giverate.tr(), color: Colors.blueAccent, pv: 0).footer(),
+              ).onTap(() {
+                AppDialogs().rateOrderDialog(context, orderModel);
+              }),
+            if (orderModel.rate != null)
+              Container(
+                color: Colors.transparent,
+                padding: EdgeInsets.all(4),
+                child: Column(
+                  children: [
+                    CustomText(LocaleKeys.youRated.tr(), color: Colors.blueAccent, pv: 0).footer(),
+                    if(orderModel.rate?.rate != null)
+                    Row(
+                      children: [
+                        for (var i = 0; i < orderModel.rate!.rate!; i++) const Icon(Icons.star, size: 12, color: Colors.yellow),
+                        for (var i = 0; i < 5 - orderModel.rate!.rate!; i++) const Icon(Icons.star, size: 12, color: Colors.grey),
+                      ],
+                    )
+                  ],
+                ),
+              ).onTap(() {
+                AppDialogs().rateOrderDialog(context, orderModel);
+              }),
+          ]
         ],
       );
     });

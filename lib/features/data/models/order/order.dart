@@ -11,7 +11,9 @@ class OrderModel {
     required this.client,
     required this.price,
     required this.provider,
+    required this.cancelReason,
     required this.service,
+    required this.rate,
   });
 
   final int id;
@@ -21,9 +23,10 @@ class OrderModel {
   final String? price;
   final String? statusCode;
   final Client? client;
+  final String? cancelReason;
   final ProvidersModel? provider;
   final ServiceModel? service;
-
+  final RateModel? rate;
   factory OrderModel.fromJson(Map<String, dynamic> json) => OrderModel(
         id: json["id"],
         date: DateTime.parse(json["date"]),
@@ -32,8 +35,10 @@ class OrderModel {
         statusCode: json["status_code"],
         price: json["price"] == null ? null : '${json["price"]}',
         client: Client.fromJson(json["client"]),
+        cancelReason: json["cancel_reason"],
         provider: ProvidersModel.fromJson(json["provider"]),
         service: ServiceModel.fromJson(json["service"]),
+        rate: json["rate"] == null? null:RateModel.fromJson(json["rate"]),
       );
 }
 
@@ -79,4 +84,19 @@ class Client {
         "gender": gender,
         "image": image,
       };
+}
+
+class RateModel {
+  final int? rate;
+  final String? comment;
+
+  RateModel({
+    this.rate,
+    this.comment,
+  });
+
+  factory RateModel.fromJson(Map<String, dynamic> json) => RateModel(
+        rate: json["rate"],
+        comment: json["comment"],
+      );
 }

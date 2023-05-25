@@ -1,4 +1,4 @@
-class AppURL {
+class AppURLProvider {
   static const String kAPIKey = "";
   static const String kBaseURL = "http://don.dev01.matrix-clouds.com/api/service-provider";
 
@@ -38,7 +38,7 @@ class AppURL {
   static const String deletePortfolioURI = "$kBaseURL/portfolio-images/delete";
 
   //Settings
-  static const String updateFcm = "$kBaseURL/profile/fcm_token";
+  static const String updateFcm = "$kBaseURL/fcm_token";
   static const String updateLocation = "$kBaseURL/profile/update-location";
   static const String getSubscriptionPackages = "$kBaseURL/get-subscriptions";
   static const String getSubscriptionHistory = "$kBaseURL/subscription-history";

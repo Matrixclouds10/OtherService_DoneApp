@@ -75,7 +75,6 @@ class OrderItemWidgetClient extends StatelessWidget {
                     // if (orderModel..isNotEmpty) CustomText(price, color: servicesTheme.primaryColor, pv: 0).header(),
                     if (orderModel.status.toLowerCase() == "pending") CustomText("بإنتظار الموافقة", color: servicesTheme.primaryColor, pv: 0).footer(),
                     if (orderModel.status.toLowerCase() == "accepted") const CustomText("قيد التنفيذ", pv: 0).footer(),
-                    if (orderModel.status.toLowerCase() == "completed") const CustomText("اعطِ تقييم", color: Colors.blueAccent, pv: 0).footer(),
                   ],
                 ),
               const SizedBox(width: 8),
