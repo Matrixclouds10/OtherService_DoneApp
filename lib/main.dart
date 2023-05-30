@@ -15,9 +15,10 @@ import 'base_injection.dart' as injection;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  //done.app2023@gmail.com
   await SentryFlutter.init(
     (options) {
-      options.dsn = 'https://ca534611637c4c6f8526c840828a5d68@o4504111766962176.ingest.sentry.io/4505221184225280';
+      options.dsn = 'https://b80efbe170784258b7c288ef147e4eb9@o4505269393489920.ingest.sentry.io/4505269463416832';
       options.tracesSampleRate = 1.0;
     },
   );

@@ -124,13 +124,13 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                   context: context,
                                   builder: (context) {
                                     return AlertDialog(
-                                      title: const CustomText("إلغاء الطلب"),
+                                      title:  CustomText(LocaleKeys.cancelOrder.tr()),
                                       content: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           CustomTextFieldArea(
                                             onChange: (value) => cancelReason = value,
-                                            hint: "سبب الإلغاء",
+                                            hint: LocaleKeys.cancelReason.tr()
                                           ),
                                           const SizedBox(height: 10),
                                           Row(
@@ -138,7 +138,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                               TextButton(
                                                   onPressed: () async {
                                                     if (cancelReason.isEmpty) {
-                                                      AppSnackbar.show(context: context, message: "السبب مطوب");
+                                                      AppSnackbar.show(context: context, message: LocaleKeys.reasonRequired.tr());
                                                       return;
                                                     }
                                                     if (context.mounted) {
@@ -146,17 +146,17 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                                       if (result) {
                                                         if (context.mounted) Navigator.pop(context);
                                                         if (context.mounted) Navigator.pop(context);
-                                                        if (context.mounted) AppSnackbar.show(context: context, message: "تم إلغاء الطلب بنجاح");
+                                                        if (context.mounted) AppSnackbar.show(context: context, message: LocaleKeys.successfullyCanceledOrder.tr());
                                                       }
                                                     }
                                                   },
-                                                  child: const CustomText("إلغاء الطلب", color: Colors.red).headerExtra()),
+                                                  child:  CustomText(LocaleKeys.cancelOrder.tr(), color: Colors.red).headerExtra()),
                                               const Spacer(),
                                               TextButton(
                                                   onPressed: () {
                                                     Navigator.pop(context);
                                                   },
-                                                  child: const CustomText("إلغاء", color: Colors.black).headerExtra()),
+                                                  child:  CustomText(LocaleKeys.cancel.tr(), color: Colors.black).headerExtra()),
                                             ],
                                           ),
                                         ],

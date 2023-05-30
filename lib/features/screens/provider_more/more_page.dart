@@ -28,7 +28,7 @@ class MorePage extends StatelessWidget {
           isBackButtonExist: false,
           isCenterTitle: true,
           color: Colors.white,
-          titleWidget: CustomText("المزيد").header(),
+          titleWidget: CustomText(LocaleKeys.more.tr()).header(),
         ),
         body: SingleChildScrollView(
           child: Column(

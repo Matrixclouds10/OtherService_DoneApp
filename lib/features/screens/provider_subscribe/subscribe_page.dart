@@ -39,7 +39,7 @@ class _SubscribePageState extends State<SubscribePage> {
       backgroundColor: AppColorLight().kScaffoldBackgroundColor,
       appBar: CustomAppBar(
         color: Colors.white,
-        titleWidget: CustomText("تفعيل الحساب").header(),
+        titleWidget: CustomText(LocaleKeys.subscribeNow.tr()).header(),
         isCenterTitle: true,
         actions: [
           IconButton(
@@ -69,7 +69,7 @@ class _SubscribePageState extends State<SubscribePage> {
                     context.read<SubscribtionCubit>().getSubscribtions();
                   });
             }
-            if (state.data.isEmpty) return const EmptyView(message: "لا يوجد اشتراكات");
+            if (state.data.isEmpty) return EmptyView(message: LocaleKeys.noSubscribtions.tr());
             return SingleChildScrollView(
               child: ListAnimator(
                 children: [

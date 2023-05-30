@@ -157,8 +157,8 @@ class ServiceProviderItemWidget extends StatelessWidget {
             Container(
               margin: const EdgeInsets.only(top: 6),
               decoration: BoxDecoration(color: servicesTheme.colorScheme.secondary).radius(radius: 45),
-              child: const CustomText(
-                "المزيد من المعلومات",
+              child:  CustomText(
+                LocaleKeys.moreInfo.tr(),
                 color: Colors.white,
                 pv: 6,
                 ph: 40,
