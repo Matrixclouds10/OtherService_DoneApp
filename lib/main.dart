@@ -15,14 +15,6 @@ import 'base_injection.dart' as injection;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  //done.app2023@gmail.com
-  await SentryFlutter.init(
-    (options) {
-      options.dsn = 'https://b80efbe170784258b7c288ef147e4eb9@o4505269393489920.ingest.sentry.io/4505269463416832';
-      options.tracesSampleRate = 1.0;
-    },
-  );
-
   Logger.root.level = Level.ALL; // defaults to Level.INFO
   Logger.root.onRecord.listen((record) {
     // print('${record.level.name}: ${record.time}: ${record.message}');
@@ -37,23 +29,30 @@ void main() async {
   await injection.init();
   await services_injection.init();
 
-  runZonedGuarded(() {
-    return runApp(
-      GenerateMultiBloc(
-        child: EasyLocalization(
-            supportedLocales: supportedLocales,
-            path: 'assets/strings',
-            // if device language not supported
-            fallbackLocale: supportedLocales[0],
-            saveLocale: true,
-            useOnlyLangCode: true,
-            startLocale: supportedLocales[0],
-            child: const MyApp()),
-      ),
-    );
-  }, (error, stack) {
-    if (!kDebugMode) Sentry.captureException(error, stackTrace: stack);
-  });
+  //done.app2023@gmail.com
+  await SentryFlutter.init(
+    (options) {
+      options.dsn = 'https://b80efbe170784258b7c288ef147e4eb9@o4505269393489920.ingest.sentry.io/4505269463416832';
+      options.tracesSampleRate = 1.0;
+    },
+    appRunner: () => runZonedGuarded(() {
+      return runApp(
+        GenerateMultiBloc(
+          child: EasyLocalization(
+              supportedLocales: supportedLocales,
+              path: 'assets/strings',
+              // if device language not supported
+              fallbackLocale: supportedLocales[0],
+              saveLocale: true,
+              useOnlyLangCode: true,
+              startLocale: supportedLocales[0],
+              child: const MyApp()),
+        ),
+      );
+    }, (error, stack) {
+      if (!kDebugMode) Sentry.captureException(error, stackTrace: stack);
+    }),
+  );
 }
 
 final supportedLocales = <Locale>[

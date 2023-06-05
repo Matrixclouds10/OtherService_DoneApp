@@ -4,17 +4,20 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/core/extensions/num_extensions.dart';
 import 'package:weltweit/core/resources/resources.dart';
+import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
+import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/core/utils/logger.dart';
-import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/data/models/response/country/country_model.dart';
+import 'package:weltweit/features/domain/request_body/check_otp_body.dart';
 import 'package:weltweit/features/domain/request_body/register_body.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/assets.dart';
@@ -90,15 +93,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
           UserModel userEntity = UserModel.fromJson(response.data);
           String token = userEntity.token ?? '';
           int id = userEntity.id ?? 0;
-          // NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
-          //   'phone': _phoneController.text,
-          //   'code': selectedCountry?.code ?? '20',
-          //   'checkOTPType': CheckOTPType.register,
-          //   'typeIsProvider': widget.typeIsProvider,
-          // });
+          int countryId = userEntity.countryModel?.id ?? 0;
           if (token.isNotEmpty) {
+            kEcho("Navigate token.isNotEmpty");
             AppPrefs prefs = getIt();
             prefs.save(PrefKeys.token, token);
+            prefs.save(PrefKeys.countryId, countryId);
             prefs.save(PrefKeys.id, id);
             prefs.save(PrefKeys.isTypeProvider, widget.typeIsProvider);
             if (widget.typeIsProvider) {
@@ -107,20 +107,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Navigator.pushNamedAndRemoveUntil(context, RoutesServices.servicesLayoutScreen, (route) => false);
             }
           } else {
-            AppSnackbar.show(
-              context: context,
-              title: LocaleKeys.notification.tr(),
-              message:  LocaleKeys.somethingWentWrong.tr(),
-            );
+            kEcho("Navigate RoutesServices.servicesOtpScreen");
+            NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
+              'email': _emailController.text,
+              'code': selectedCountry?.code ?? '20',
+              'checkOTPType': CheckOTPType.register,
+              'typeIsProvider': widget.typeIsProvider,
+            });
           }
-
-          // NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
-          //   'phone': _phoneController.text,
-          //   'code': selectedCountry?.code ?? '20',
-          //   'checkOTPType': CheckOTPType.register,
-          //   'typeIsProvider': widget.typeIsProvider,
-          // });
         } else {
+          kEcho(":error: ${response.error}");
           AppSnackbar.show(
             context: context,
             title: LocaleKeys.notification.tr(),

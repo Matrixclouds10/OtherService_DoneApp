@@ -8,17 +8,15 @@ import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
-import 'package:weltweit/features/data/models/response/country/country_model.dart';
-import 'package:weltweit/features/logic/country/country_cubit.dart';
-import 'package:weltweit/features/logic/profile/profile_cubit.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
+import 'package:weltweit/features/data/models/response/country/country_model.dart';
 import 'package:weltweit/features/domain/usecase/profile/change_password_usecase.dart';
 import 'package:weltweit/features/domain/usecase/profile/update_profile_usecase.dart';
+import 'package:weltweit/features/logic/profile/profile_cubit.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
-import 'package:weltweit/presentation/component/inputs/phone_country/countries.dart';
 import 'package:weltweit/presentation/component/inputs/phone_country/custom_text_filed_phone_country.dart';
 
 class ProfileUpdatePage extends StatefulWidget {
@@ -69,7 +67,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
           countryCode: selectedCountry?.code ?? '20',
           countryIso: selectedCountry?.code ?? "EG",
           genderIsMale: isMale ?? true,
-          countryId: 1,
+          countryId: selectedCountry?.id ?? 1,
         );
         await BlocProvider.of<ProfileCubit>(context, listen: false).updateProfile(updateProfileParams);
       }

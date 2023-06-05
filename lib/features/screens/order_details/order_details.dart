@@ -9,12 +9,11 @@ import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/core/resources/values_manager.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/routing/routes.dart';
-import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/core/widgets/order_item_widget.dart';
-import 'package:weltweit/features/logic/order/order_cubit.dart';
 import 'package:weltweit/features/data/models/order/order.dart';
+import 'package:weltweit/features/logic/order/order_cubit.dart';
 import 'package:weltweit/features/logic/orders/orders_cubit.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
@@ -104,7 +103,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                             Row(
                               children: [
                                 const SizedBox(width: 10),
-                                const CustomText("حالة الطلب", bold: true).headerExtra(),
+                                CustomText(LocaleKeys.orderStatus.tr(), bold: true).headerExtra(),
                                 const Spacer(),
                                 // CustomText("300 ج", color: Color.fromARGB(255, 230, 35, 35), bold: true).headerExtra(),
                                 // Chip(
@@ -124,14 +123,11 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                   context: context,
                                   builder: (context) {
                                     return AlertDialog(
-                                      title:  CustomText(LocaleKeys.cancelOrder.tr()),
+                                      title: CustomText(LocaleKeys.cancelOrder.tr()),
                                       content: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          CustomTextFieldArea(
-                                            onChange: (value) => cancelReason = value,
-                                            hint: LocaleKeys.cancelReason.tr()
-                                          ),
+                                          CustomTextFieldArea(onChange: (value) => cancelReason = value, hint: LocaleKeys.cancelReason.tr()),
                                           const SizedBox(height: 10),
                                           Row(
                                             children: [
@@ -150,13 +146,13 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                                       }
                                                     }
                                                   },
-                                                  child:  CustomText(LocaleKeys.cancelOrder.tr(), color: Colors.red).headerExtra()),
+                                                  child: CustomText(LocaleKeys.cancelOrder.tr(), color: Colors.red).headerExtra()),
                                               const Spacer(),
                                               TextButton(
                                                   onPressed: () {
                                                     Navigator.pop(context);
                                                   },
-                                                  child:  CustomText(LocaleKeys.cancel.tr(), color: Colors.black).headerExtra()),
+                                                  child: CustomText(LocaleKeys.cancel.tr(), color: Colors.black).headerExtra()),
                                             ],
                                           ),
                                         ],
@@ -165,12 +161,12 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                   },
                                 );
                               },
-                              child: const CustomText("إلغاء الطلب", color: Colors.white).headerExtra(),
                               style: ElevatedButton.styleFrom(
-                                primary: Colors.red,
+                                backgroundColor: Colors.red,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                               ),
+                              child: CustomText(LocaleKeys.cancelOrder.tr(), color: Colors.white).headerExtra(),
                             ),
                             const SizedBox(height: 16),
                           ],
@@ -186,7 +182,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                             Row(
                               children: [
                                 const SizedBox(width: 10),
-                                const CustomText("حالة الطلب", bold: true).headerExtra(),
+                                CustomText(LocaleKeys.orderStatus.tr(), bold: true).headerExtra(),
                                 const Spacer(),
                                 // const CustomText("300 ج", color: Color(0xffE67E23), bold: true).headerExtra(),
                                 // Chip(
@@ -226,7 +222,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                             Row(
                               children: [
                                 const SizedBox(width: 10),
-                                const CustomText("حالة الطلب", bold: true).headerExtra(),
+                                CustomText(LocaleKeys.orderStatus.tr(), bold: true).headerExtra(),
                                 const Spacer(),
                                 // CustomText("300 ج", color: Color.fromARGB(255, 230, 35, 35), bold: true).headerExtra(),
                                 Chip(
@@ -304,7 +300,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                             Row(
                               children: [
                                 const SizedBox(width: 10),
-                                const CustomText("حالة الطلب", bold: true).headerExtra(),
+                                CustomText(LocaleKeys.orderStatus.tr(), bold: true).headerExtra(),
                                 const Spacer(),
                                 // CustomText("300 ج", color: Color.fromARGB(255, 230, 35, 35), bold: true).headerExtra(),
                                 // Chip(
@@ -331,7 +327,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                             Row(
                               children: [
                                 const SizedBox(width: 10),
-                                const CustomText("حالة الطلب", bold: true).headerExtra(),
+                                CustomText(LocaleKeys.orderStatus.tr(), bold: true).headerExtra(),
                                 const Spacer(),
                                 // CustomText("300 ج", color: Color.fromARGB(255, 230, 35, 35), bold: true).headerExtra(),
                                 Chip(
@@ -364,9 +360,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                               ],
                             ),
                             const Divider(height: 2),
-                        
                             const SizedBox(height: 10),
-
                             BlocBuilder<OrderCubit, OrderState>(
                               builder: (context, state) {
                                 if (state.finishState == BaseState.loading) {
@@ -385,7 +379,6 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                 );
                               },
                             ),
-
                             const SizedBox(height: 16),
                           ],
                         ),
@@ -401,7 +394,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                     //       Row(
                     //         children: [
                     //           const SizedBox(width: 10),
-                    //           const CustomText("حالة الطلب", bold: true).headerExtra(),
+                    //           CustomText(LocaleKeys.orderStatus.tr(), bold: true).headerExtra(),
                     //           const Spacer(),
                     //           // const CustomText("300 ج", color: Color(0xffE67E23), bold: true).headerExtra(),
                     //           // Chip(
@@ -477,15 +470,14 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                 children: [
                   TextButton(
                       onPressed: () async {
-                          if (context.mounted) Navigator.pop(context);
-                          bool result = await context.read<OrderCubit>().finishOrder(id: id, price: null);
-                          if (context.mounted) context.read<OrdersCubit>().getPendingOrders(typeIsProvider: false);
-                          if (context.mounted) Navigator.pop(context);
-                          if (result) {
-                             AppSnackbar.show(context: NavigationService.navigationKey.currentContext!, message: LocaleKeys.successfullyFinishOrder.tr());
-                          }else{
-                            AppSnackbar.show(context: NavigationService.navigationKey.currentContext!, message: LocaleKeys.somethingWentWrong.tr());
-
+                        if (context.mounted) Navigator.pop(context);
+                        bool result = await context.read<OrderCubit>().finishOrder(id: id, price: null);
+                        if (context.mounted) context.read<OrdersCubit>().getPendingOrders(typeIsProvider: false);
+                        if (context.mounted) Navigator.pop(context);
+                        if (result) {
+                          AppSnackbar.show(context: NavigationService.navigationKey.currentContext!, message: LocaleKeys.successfullyFinishOrder.tr());
+                        } else {
+                          AppSnackbar.show(context: NavigationService.navigationKey.currentContext!, message: LocaleKeys.somethingWentWrong.tr());
                         }
                       },
                       child: CustomText(LocaleKeys.finishOrder.tr(), color: Colors.orange[700]!).headerExtra()),
@@ -627,8 +619,8 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
         ...other
             .map((e) => GestureDetector(
                   onTap: () {
-                    Uri _url = Uri.parse(e);
-                    launchUrl(_url);
+                    Uri url = Uri.parse(e);
+                    launchUrl(url);
                   },
                   child: Row(
                     children: [
@@ -642,5 +634,4 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
       ],
     );
   }
-
 }

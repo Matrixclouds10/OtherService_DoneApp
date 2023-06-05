@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/core/extensions/num_extensions.dart';
 import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/resources/values_manager.dart';
@@ -9,15 +10,15 @@ import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/core/utils/logger.dart';
-import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/features/core/routing/routes_provider.dart';
-import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
+import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/data/models/response/country/country_model.dart';
-import 'package:weltweit/features/domain/usecase/auth/sign_in_usecase.dart';
 import 'package:weltweit/features/domain/request_body/check_otp_body.dart';
+import 'package:weltweit/features/domain/usecase/auth/sign_in_usecase.dart';
 import 'package:weltweit/features/widgets/app_back_button.dart';
+import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
@@ -40,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
 
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  CountryModel? _selectedCountry ;
+  CountryModel? _selectedCountry;
   bool typeIsProvider = true;
   late TabController _tabController;
   @override
@@ -71,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           password: password,
           countryModel: _selectedCountry,
         );
-        if(_selectedCountry == null){
+        if (_selectedCountry == null) {
           AppSnackbar.show(
             context: context,
             title: LocaleKeys.notification,
@@ -86,27 +87,28 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           UserModel userEntity = response.data;
           String token = userEntity.token ?? '';
           int id = userEntity.id ?? 0;
+          int countryId = userEntity.countryModel?.id ?? 0;
           if (token.isNotEmpty) {
             AppPrefs prefs = getIt();
             prefs.save(PrefKeys.token, token);
             prefs.save(PrefKeys.id, id);
+            prefs.save(PrefKeys.countryId, countryId);
             prefs.save(PrefKeys.isTypeProvider, typeIsProvider);
-          }
-          if (typeIsProvider) {
-            Navigator.pushNamedAndRemoveUntil(context, RoutesProvider.providerLayoutScreen, (route) => false);
+
+            if (typeIsProvider) {
+              Navigator.pushNamedAndRemoveUntil(context, RoutesProvider.providerLayoutScreen, (route) => false);
+            } else {
+              Navigator.pushNamedAndRemoveUntil(context, RoutesServices.servicesLayoutScreen, (route) => false);
+            }
           } else {
-            Navigator.pushNamedAndRemoveUntil(context, RoutesServices.servicesLayoutScreen, (route) => false);
+            NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
+              'email': _phoneController.text,
+              'code': _viewModel.params.countryModel?.code ?? '20',
+              'checkOTPType': CheckOTPType.register,
+              'typeIsProvider': typeIsProvider,
+            });
           }
-        } 
-        // else if (response.error?.code == 301) {
-        //   NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
-        //     'phone': _phoneController.text,
-        //     'code': _viewModel.params.countryModel?.code ?? '20',
-        //     'checkOTPType': CheckOTPType.register,
-        //     'typeIsProvider': typeIsProvider,
-        //   });
-        // }
-         else {
+        } else {
           String message = response.error?.errorMessage ?? response.message ?? '';
           AppSnackbar.show(
             context: context,
@@ -114,6 +116,13 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             message: message,
             type: SnackbarType.error,
           );
+          if (message.contains('active') || message.contains('activate') || message.contains('verify') || message.contains('تفعيل')) {
+            AppDialogs().activateMailDialog(
+              context: context,
+              message: message,
+              typeIsProvider: typeIsProvider,
+            );
+          }
         }
       }
     }
@@ -162,14 +171,14 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                             children: [
                               SizedBox(height: 8),
                               Text(
-                               LocaleKeys.loginMessage.tr(),
+                                LocaleKeys.loginMessage.tr(),
                                 style: const TextStyle().titleStyle(fontSize: 18).boldStyle().customColor(primaryColor),
                                 textAlign: TextAlign.center,
                               ),
                               //Tabs
                               TabBar(
                                 controller: _tabController,
-                                tabs:  [
+                                tabs: [
                                   Tab(child: CustomText(LocaleKeys.provider.tr())),
                                   Tab(child: CustomText(LocaleKeys.user.tr())),
                                 ],
@@ -231,14 +240,13 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
         key: _formKey,
         child: Column(
           children: [
-              CustomTextFieldPhoneCountry(
+            CustomTextFieldPhoneCountry(
               controller: _phoneController,
               selectedCountry: _selectedCountry,
               onCountryChanged: (value) {
                 _selectedCountry = value;
               },
             ),
-       
             const VerticalSpace(kScreenPaddingNormal),
             CustomTextFieldPassword(hint: tr(LocaleKeys.password), controller: _passwordController),
           ],

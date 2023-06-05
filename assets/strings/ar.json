@@ -1,5 +1,7 @@
 {
   "en": "English",
+  "successfullySended":   "تم الإرسال بنجاح",
+  "activate":  "تفعيل",
   "noSubscribtions": "لا يوجد اشتراكات",
   "moreInfo": "المزيد من المعلومات",
   "youNeedToSubscribe":  "يجب عليك الاشتراك للإستمرار",

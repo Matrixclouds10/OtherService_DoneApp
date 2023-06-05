@@ -3,39 +3,40 @@ import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/core/services/network/network_client.dart';
-import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
+import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/core/utils/logger.dart';
-import 'package:weltweit/base_injection.dart';
+import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
-import 'package:weltweit/features/data/models/notification/notification_model.dart';
-import 'package:weltweit/features/data/models/provider/provider_rates_model.dart';
-import 'package:weltweit/features/data/models/response/country/country_model.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
+import 'package:weltweit/features/data/app_urls/client_endpoints_url.dart';
+import 'package:weltweit/features/data/models/banner/banner_model.dart';
+import 'package:weltweit/features/data/models/chat/chat_model.dart';
+import 'package:weltweit/features/data/models/notification/notification_model.dart';
+import 'package:weltweit/features/data/models/order/order.dart';
+import 'package:weltweit/features/data/models/portfolio/portfolio_image.dart';
+import 'package:weltweit/features/data/models/provider/provider_rates_model.dart';
+import 'package:weltweit/features/data/models/provider/providers_model.dart';
+import 'package:weltweit/features/data/models/response/auth/user_model.dart';
+import 'package:weltweit/features/data/models/response/country/country_model.dart';
+import 'package:weltweit/features/data/models/services/service.dart';
+import 'package:weltweit/features/data/models/services/services_response.dart';
+import 'package:weltweit/features/domain/repositoy/app_repo.dart';
+import 'package:weltweit/features/domain/usecase/banner/banner_usecase.dart';
+import 'package:weltweit/features/domain/usecase/chat_messages/chat_messages_usecase.dart';
+import 'package:weltweit/features/domain/usecase/chat_send_message/chat_send_message_usecase.dart';
+import 'package:weltweit/features/domain/usecase/contact_us/contact_us_usecase.dart';
+import 'package:weltweit/features/domain/usecase/create_order/create_order_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_accept_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_cancel_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_finish_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_rate_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/orders_usecase.dart';
-import 'package:weltweit/features/data/app_urls/client_endpoints_url.dart';
-import 'package:weltweit/features/data/models/response/auth/user_model.dart';
-import 'package:weltweit/features/data/models/banner/banner_model.dart';
-import 'package:weltweit/features/data/models/chat/chat_model.dart';
-import 'package:weltweit/features/data/models/order/order.dart';
-import 'package:weltweit/features/data/models/portfolio/portfolio_image.dart';
-import 'package:weltweit/features/data/models/provider/providers_model.dart';
-import 'package:weltweit/features/data/models/services/service.dart';
-import 'package:weltweit/features/data/models/services/services_response.dart';
-import 'package:weltweit/features/domain/usecase/chat_messages/chat_messages_usecase.dart';
-import 'package:weltweit/features/domain/usecase/contact_us/contact_us_usecase.dart';
-import 'package:weltweit/features/domain/usecase/chat_send_message/chat_send_message_usecase.dart';
-import 'package:weltweit/features/domain/usecase/banner/banner_usecase.dart';
-import 'package:weltweit/features/domain/repositoy/app_repo.dart';
 import 'package:weltweit/features/domain/usecase/profile/change_password_usecase.dart';
 import 'package:weltweit/features/domain/usecase/profile/update_profile_usecase.dart';
-import 'package:weltweit/features/domain/usecase/create_order/create_order_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider/providers_usecase.dart';
 import 'package:weltweit/features/domain/usecase/services/update_services_usecase.dart';
 
@@ -117,7 +118,13 @@ class AppRepositoryImp implements AppRepository {
   Future<Either<ErrorModel, ServicesResponse>> getAllServices({required int page}) async {
     String url = AppURL.services;
     NetworkCallType type = NetworkCallType.get;
-    Map<String, dynamic> data = {"page": page};
+    AppPrefs prefs = getIt.get<AppPrefs>();
+    int? countryId = prefs.get(PrefKeys.countryId);
+
+    Map<String, dynamic> data = {
+      "page": page,
+      "countryId": countryId,
+    };
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
 
     return result.fold((l) => Left(l), (r) {
@@ -461,7 +468,14 @@ class AppRepositoryImp implements AppRepository {
   Future<Either<ErrorModel, List<BannerModel>>> getbanner({required BannerParams params}) async {
     String url = AppURL.banners;
     NetworkCallType type = NetworkCallType.get;
-    Map<String, dynamic> data = {};
+    AppPrefs prefs = getIt<AppPrefs>();
+    kEcho("getbanner init");
+    int? countryId = prefs.get(PrefKeys.countryId, defaultValue: null);
+    kEcho("getbanner countryId:$countryId");
+
+    Map<String, dynamic> data = {
+      if (countryId != null) 'country_id': countryId,
+    };
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
     return result.fold((l) => Left(l), (r) {
       try {

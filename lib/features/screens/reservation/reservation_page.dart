@@ -4,14 +4,15 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:video_player/video_player.dart';
 import 'package:weltweit/core/resources/decoration.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/core/resources/values_manager.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
+import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
-import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/features/data/models/provider/providers_model.dart';
 import 'package:weltweit/features/data/models/services/service.dart';
 import 'package:weltweit/features/domain/usecase/create_order/create_order_usecase.dart';
@@ -20,7 +21,6 @@ import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
 import 'package:weltweit/presentation/component/inputs/base_form.dart';
-import 'package:video_player/video_player.dart';
 
 class ReservationPage extends StatefulWidget {
   final ProvidersModel providersModel;
@@ -436,10 +436,10 @@ class _ReservationPageState extends State<ReservationPage> {
       files.add(video!);
     }
 
-    if(files.isEmpty){
-      AppSnackbar.show(context: context, message: LocaleKeys.pleaseAddImageOrVideo.tr());
-      return;
-    }
+    // if(files.isEmpty){
+    //   AppSnackbar.show(context: context, message: LocaleKeys.pleaseAddImageOrVideo.tr());
+    //   return;
+    // }
 
     String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
     String time = "${TimeOfDay.now().hour}:${TimeOfDay.now().minute}:00";

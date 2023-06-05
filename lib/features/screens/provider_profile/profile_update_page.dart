@@ -5,14 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/extensions/num_extensions.dart';
 import 'package:weltweit/core/resources/resources.dart';
+import 'package:weltweit/features/core/base/base_states.dart';
+import 'package:weltweit/features/core/widgets/custom_text.dart';
+import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/data/models/response/country/country_model.dart';
 import 'package:weltweit/features/domain/usecase/provider_profile/change_password_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_profile/update_profile_usecase.dart';
 import 'package:weltweit/features/logic/provider_profile/profile_cubit.dart';
-
-import 'package:weltweit/features/core/base/base_states.dart';
-import 'package:weltweit/features/core/widgets/custom_text.dart';
-import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
@@ -68,7 +67,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
             countryCode: selectedCountry?.code ?? "20",
             countryIso: selectedCountry?.title,
             genderIsMale: isMale,
-            countryId: 1, //TODO fix
+            countryId: selectedCountry?.id ?? 1,
             description: desc);
         await BlocProvider.of<ProfileProviderCubit>(context, listen: false).updateProfile(updateProfileParams);
       }

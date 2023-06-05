@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
@@ -10,7 +9,6 @@ import 'package:weltweit/features/logic/banner/banner_cubit.dart';
 import 'package:weltweit/features/logic/home/home_cubit.dart';
 import 'package:weltweit/features/screens/home/home_banner.dart';
 import 'package:weltweit/features/screens/home/home_most_requested_providers.dart';
-import 'package:weltweit/features/screens/home/home_offers.dart';
 import 'package:weltweit/features/screens/home/home_services.dart';
 
 class HomePage extends StatefulWidget {
@@ -64,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                           },
                           icon: const Icon(Icons.refresh));
                     }
-                    return Expanded(child:Container());
+                    return Expanded(child: Container());
                   },
                 ),
                 SizedBox(width: 8),
@@ -77,14 +75,12 @@ class _HomePageState extends State<HomePage> {
             ),
             BlocBuilder<BannerCubit, BannerState>(
               builder: (context, state) {
-                if (state.state == BaseState.loaded) return HomeBanner(banners: state.data);
+                if (state.state == BaseState.loaded && state.data.isNotEmpty) return HomeBanner(banners: state.data);
                 return Container();
               },
             ),
             const SizedBox(height: 8),
-            const HomeServices(
-              key: Key('home_services'),
-            ),
+            const HomeServices(key: Key('home_services')),
             const SizedBox(height: 16),
             const MostRequestedProviders(),
             // const SizedBox(height: 16),

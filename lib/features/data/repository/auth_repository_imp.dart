@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:weltweit/features/data/models/base/api_response.dart';
-import 'package:weltweit/features/domain/usecase/auth/sign_in_usecase.dart';
 import 'package:weltweit/features/domain/request_body/check_otp_body.dart';
 import 'package:weltweit/features/domain/request_body/register_body.dart';
+import 'package:weltweit/features/domain/usecase/auth/sign_in_usecase.dart';
 
-import '../../domain/repositoy/auth_repo.dart';
 import '../../../data/app_urls/app_url.dart';
 import '../../../data/datasource/remote/dio/dio_client.dart';
 import '../../../data/datasource/remote/exception/api_error_handler.dart';
+import '../../domain/repositoy/auth_repo.dart';
 
 class AuthRepositoryImp implements AuthRepository {
   final DioClient _dioClient;
@@ -44,7 +44,7 @@ class AuthRepositoryImp implements AuthRepository {
         'country_code': registerBody.country.code ?? '20',
         'country_iso': registerBody.country.code ?? 'EG',
         'is_individual': registerBody.isIndividual,
-        'country_id':registerBody.country.id,
+        'country_id': registerBody.country.id,
       });
       Response response = await _dioClient.post(
         url,
@@ -69,11 +69,11 @@ class AuthRepositoryImp implements AuthRepository {
   }
 
   @override
-  Future<ApiResponse> forgetPassword({String? phone}) async {
+  Future<ApiResponse> forgetPassword({String? email}) async {
     try {
       Response response = await _dioClient.post(
         AppURL.kForgetPasswordURI,
-        queryParameters: {'mobile': phone},
+        queryParameters: {'email': email},
       );
       return ApiResponse.withSuccess(response);
     } catch (e) {
@@ -96,11 +96,11 @@ class AuthRepositoryImp implements AuthRepository {
   }
 
   @override
-  Future<ApiResponse> resetPassword({required String phone, required String password}) async {
+  Future<ApiResponse> resetPassword({required String email, required String password}) async {
     try {
       Response response = await _dioClient.post(
         AppURL.kResetPasswordURI,
-        queryParameters: {'phone': phone, 'password': password},
+        queryParameters: {'email': email, 'password': password},
       );
       return ApiResponse.withSuccess(response);
     } catch (e) {

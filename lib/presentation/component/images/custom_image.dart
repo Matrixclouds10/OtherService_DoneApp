@@ -27,7 +27,19 @@ class CustomImage extends StatelessWidget {
   final bool showPlaceholder;
   final Function(String path)? onAttachImage;
 
-  const CustomImage({Key? key, this.radius = 16, this.borderRadius, this.border, this.fit = BoxFit.fill, this.canEdit = false, this.showPlaceholder = true, this.height = 140, this.onAttachImage, this.width, required this.imageUrl}) : super(key: key);
+  const CustomImage({
+    Key? key,
+    this.radius = 16,
+    this.borderRadius,
+    this.border,
+    this.fit = BoxFit.fill,
+    this.canEdit = false,
+    this.showPlaceholder = true,
+    this.height = 140,
+    this.onAttachImage,
+    this.width,
+    required this.imageUrl,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     Widget image = buildImage(context);

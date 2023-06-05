@@ -68,7 +68,12 @@ class _HomeBannerState extends State<HomeBanner> {
             children: <Widget>[
               ...widget.banners.map((singleString) {
                 var index = widget.banners.indexOf(singleString);
-                return Container(width: currentSliderPosition == index ? 24.0 : 8.0, height: 8.0, margin: EdgeInsets.symmetric(horizontal: 4.0), decoration: BoxDecoration(shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(80), color: currentSliderPosition == index ? AppColorLight().kPrimaryColor : Color(0xffE1E1E1)));
+                return Container(
+                    width: currentSliderPosition == index ? 24.0 : 8.0,
+                    height: 8.0,
+                    margin: EdgeInsets.symmetric(horizontal: 4.0),
+                    decoration:
+                        BoxDecoration(shape: BoxShape.rectangle, borderRadius: BorderRadius.circular(80), color: currentSliderPosition == index ? AppColorLight().kPrimaryColor : Color(0xffE1E1E1)));
               }),
             ],
           ),

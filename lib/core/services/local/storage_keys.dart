@@ -5,4 +5,5 @@ class PrefKeys {
   static const String isTypeProvider = "ldfnhjksdfndslfsasdss";
   static const String isFirstTime = "ift";
   static const String lang = "lang";
+  static const String countryId = "cakljsndkjasndkjasd";
 }

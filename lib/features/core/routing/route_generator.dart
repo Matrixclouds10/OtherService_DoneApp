@@ -61,7 +61,7 @@ class RouteServicesGenerator {
         return platformPageRoute(Theme(
           data: servicesTheme,
           child: OTPScreen(
-            phone: arguments?['phone'],
+            email: arguments?['email'],
             code: arguments?['code'],
             checkOTPType: arguments?['checkOTPType'],
             typeIsProvider: arguments?['typeIsProvider'],

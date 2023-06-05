@@ -9,16 +9,17 @@ import 'package:material_dialogs/material_dialogs.dart';
 import 'package:material_dialogs/shared/types.dart';
 import 'package:material_dialogs/widgets/buttons/icon_outline_button.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/resources/values_manager.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/core/utils/logger.dart';
-import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/data/models/order/order.dart';
+import 'package:weltweit/features/domain/request_body/check_otp_body.dart';
 import 'package:weltweit/features/domain/usecase/order/order_rate_usecase.dart';
 import 'package:weltweit/features/logic/order/order_cubit.dart';
 import 'package:weltweit/features/screens/layout/layout_cubit.dart';
@@ -390,6 +391,66 @@ class AppDialogs {
     );
   }
 
+  void activateMailDialog({
+    required BuildContext context,
+    required String message,
+    required bool typeIsProvider,
+  }) async {
+    TextEditingController controller = TextEditingController();
+    Dialogs.materialDialog(
+      title: LocaleKeys.notification.tr(),
+      msg: message,
+      color: Colors.white,
+      context: context,
+      actions: [
+        StatefulBuilder(
+          builder: (context, setState) {
+            return Column(
+              children: [
+                CustomTextField(
+                  hint: LocaleKeys.email.tr(),
+                  controller: controller,
+                ),
+                SizedBox(height: 10),
+                Row(
+                  children: [
+                    SizedBox(width: 4),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: CustomText(LocaleKeys.cancel.tr()),
+                    ),
+                    Spacer(),
+                    TextButton(
+                        onPressed: () {
+                          if (controller.text.isEmpty) {
+                            AppSnackbar.show(
+                              context: context,
+                              message: LocaleKeys.msgEmailRequired.tr(),
+                              type: SnackbarType.error,
+                            );
+                          } else {
+                            NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
+                              'email': controller.text,
+                              'code': '20',
+                              'checkOTPType': CheckOTPType.register,
+                              'typeIsProvider': typeIsProvider,
+                            });
+                          }
+                        },
+                        child: CustomText(LocaleKeys.activate.tr())),
+                    SizedBox(width: 4),
+                  ],
+                )
+              ],
+            );
+          },
+        ),
+      ],
+    );
+  }
+
   void languageDialog(BuildContext context) {
     Dialogs.materialDialog(
       title: LocaleKeys.language.tr(),
@@ -400,12 +461,12 @@ class AppDialogs {
         IconsOutlineButton(
           onPressed: () {
             context.setLocale(Locale('en'));
-             AppPrefs prefs = getIt<AppPrefs>();
+            AppPrefs prefs = getIt<AppPrefs>();
             prefs.save(PrefKeys.lang, "en");
-          
+
             NavigationService.goBack();
           },
-          text:"English",
+          text: "English",
           iconData: Icons.circle_outlined,
           textStyle: TextStyle(color: primaryColor),
           iconColor: primaryColor,

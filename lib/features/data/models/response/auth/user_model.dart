@@ -1,5 +1,4 @@
 import 'package:weltweit/features/data/models/response/country/country_model.dart';
-import 'package:weltweit/features/data/models/subscription/subscription_model.dart';
 
 class UserModel {
   int? id;
@@ -10,7 +9,6 @@ class UserModel {
   String? token;
   int? approved;
   int? otpVerified;
-  int? countryId;
   String? countryCode;
   String? image;
   String gender;
@@ -26,7 +24,6 @@ class UserModel {
     this.email,
     required this.gender,
     this.mobileNumber,
-    this.countryId,
     this.token,
     this.approved,
     this.otpVerified,
@@ -66,7 +63,6 @@ class UserModel {
       image: json['image'] as String?,
       gender: json['gender'] ?? "male",
       desc: json['description'] ?? "",
-      countryId: 1,
       isCompany: json['is_company'] as int?,
       countryModel: countryJson != null ? CountryModel.fromJson(countryJson) : null,
       wallet: "${json['wallets']}",
