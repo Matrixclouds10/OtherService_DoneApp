@@ -4,6 +4,7 @@ import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/core/notification/device_token.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
+import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/features/data/models/base/response_model.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/domain/request_body/check_otp_body.dart';
@@ -78,10 +79,11 @@ class OtpCubit extends Cubit<OtpState> {
       UserModel userEntity = responseModel.data;
       String token = userEntity.token ?? '';
       int id = userEntity.id ?? 0;
-      int countryId = userEntity.countryModel?.id ?? 0;
+      kEcho("countryId ${userEntity.countryModel?.id}");
+          int countryId = userEntity.countryId ?? userEntity.countryModel?.id ?? 0;
       AppPrefs prefs = getIt();
       prefs.save(PrefKeys.token, token);
-      prefs.save(PrefKeys.countryId, countryId);
+       if (countryId != 0) prefs.save(PrefKeys.countryId, countryId);
       prefs.save(PrefKeys.id, id);
       prefs.save(PrefKeys.isTypeProvider, typeIsProvider);
     }

@@ -3,6 +3,10 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
+import 'package:weltweit/base_injection.dart';
+import 'package:weltweit/core/services/local/cache_consumer.dart';
+import 'package:weltweit/core/services/local/storage_keys.dart';
+import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/core/utils/permission_heloper.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/domain/usecase/auth/update_fcm_token_usecase.dart';
@@ -51,6 +55,9 @@ class ProfileCubit extends Cubit<ProfileState> {
       },
       (data) {
         emit(state.copyWith(state: BaseState.loaded, data: data));
+            kEcho("countryId ${data.countryModel?.id}");
+            AppPrefs prefs = getIt();
+           if (data.countryModel?.id != null) prefs.save(PrefKeys.countryId, data.countryModel?.id);
         return data;
       },
     );

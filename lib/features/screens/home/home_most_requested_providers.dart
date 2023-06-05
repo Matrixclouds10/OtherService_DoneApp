@@ -14,6 +14,7 @@ class MostRequestedProviders extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Locale locale = EasyLocalization.of(context)!.locale;
     return FutureBuilder(
       future: context.read<ProvidersCubit>().getMostRequestedProviders(),
       builder: (context, snapshot) {
@@ -22,13 +23,10 @@ class MostRequestedProviders extends StatelessWidget {
         return snapshot.hasData
             ? Column(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: Row(
-                      children: [
-                        CustomText(LocaleKeys.most_requested_providers.tr(), color: Colors.black54).footer(),
-                      ],
-                    ),
+                  Row(
+                    children: [
+                      CustomText(LocaleKeys.most_requested_providers.tr(), color: Colors.black54).footer(),
+                    ],
                   ),
                   ListView.builder(
                     scrollDirection: Axis.vertical,
@@ -45,7 +43,7 @@ class MostRequestedProviders extends StatelessWidget {
                         },
                         child: Container(
                           width: deviceWidth * 0.6,
-                          margin: EdgeInsets.symmetric(horizontal: 6,vertical: 4),
+                          margin: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(6),

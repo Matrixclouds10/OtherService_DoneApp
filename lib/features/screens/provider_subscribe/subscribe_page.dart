@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/resources/decoration.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
+import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/data/models/subscription/subscription_model.dart';
@@ -214,7 +215,7 @@ class _SubscribePageState extends State<SubscribePage> {
 
   void actionShowSubscriptionMethods(SubscriptionModel subscriptionModel) {
     ProfileProviderCubit profileProviderCubit = context.read<ProfileProviderCubit>();
-    List<String> subscreptionMethods = ["wallet", "credit", "request"];
+    List<String> subscreptionMethods = [ "request","wallet", "credit"];
     var selectedMethod = subscreptionMethods.first;
     showDialog(
       context: context,
@@ -249,14 +250,14 @@ class _SubscribePageState extends State<SubscribePage> {
                         value: e,
                         groupValue: selectedMethod,
                         onChanged: (value) {
-                          if (!e.contains("credit")) {
+                          if (isEnable) {
                             selectedMethod = value.toString();
                             setState(() {});
                           }
                         },
                         title: CustomText(
                           title,
-                          color: e.contains("credit") ? Colors.grey : Colors.black,
+                          color:!isEnable ? Colors.grey : Colors.black,
                         ).start(),
                         contentPadding: EdgeInsets.zero,
                         dense: true,

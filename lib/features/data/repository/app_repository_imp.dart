@@ -170,7 +170,11 @@ class AppRepositoryImp implements AppRepository {
   Future<Either<ErrorModel, List<ProvidersModel>>> getProviders({required ProvidersParams params}) async {
     String url = AppURL.getProviders;
     NetworkCallType type = NetworkCallType.post;
-    Map<String, dynamic> data = {};
+
+    AppPrefs prefs = getIt.get<AppPrefs>();
+    int? countryId = prefs.get(PrefKeys.countryId);
+    Map<String, dynamic> data = {"countryId": countryId};
+
     data.addAll(params.toJson());
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
 
@@ -491,7 +495,11 @@ class AppRepositoryImp implements AppRepository {
   Future<Either<ErrorModel, List<ProvidersModel>>> getMostRequestedProviders() async {
     String url = AppURL.getMostRequestedProviders;
     NetworkCallType type = NetworkCallType.get;
-    Map<String, dynamic> data = {};
+
+    AppPrefs prefs = getIt.get<AppPrefs>();
+    int? countryId = prefs.get(PrefKeys.countryId);
+    Map<String, dynamic> data = {"countryId": countryId};
+
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
 
     return result.fold((l) => Left(l), (r) {

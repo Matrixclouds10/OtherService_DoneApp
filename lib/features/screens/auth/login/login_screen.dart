@@ -9,6 +9,7 @@ import 'package:weltweit/core/resources/values_manager.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
+import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
@@ -87,12 +88,13 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
           UserModel userEntity = response.data;
           String token = userEntity.token ?? '';
           int id = userEntity.id ?? 0;
-          int countryId = userEntity.countryModel?.id ?? 0;
+          kEcho("countryId ${userEntity.countryModel?.id}");
+          int countryId = userEntity.countryId ?? userEntity.countryModel?.id ?? 0;
           if (token.isNotEmpty) {
             AppPrefs prefs = getIt();
             prefs.save(PrefKeys.token, token);
             prefs.save(PrefKeys.id, id);
-            prefs.save(PrefKeys.countryId, countryId);
+            if (countryId != 0) prefs.save(PrefKeys.countryId, countryId);
             prefs.save(PrefKeys.isTypeProvider, typeIsProvider);
 
             if (typeIsProvider) {

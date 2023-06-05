@@ -451,8 +451,8 @@ class AppDialogs {
     );
   }
 
-  void languageDialog(BuildContext context) {
-    Dialogs.materialDialog(
+  Future<void> languageDialog(BuildContext context) async{
+   await Dialogs.materialDialog(
       title: LocaleKeys.language.tr(),
       msg: LocaleKeys.selectLanguage.tr(),
       color: Colors.white,

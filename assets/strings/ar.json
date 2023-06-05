@@ -1,6 +1,7 @@
 {
   "en": "English",
   "successfullySended":   "تم الإرسال بنجاح",
+  "activateAccount":  "تفعيل الحساب",
   "activate":  "تفعيل",
   "noSubscribtions": "لا يوجد اشتراكات",
   "moreInfo": "المزيد من المعلومات",
@@ -285,6 +286,7 @@
   "goodMorningDesc": "ابدأ يومك بالحماس وباشر في تلقي الطلبات",
   "goodMorning": "صباح الخير",
   "newWord": "الجديدة",
+  "newOrders":  "الجديدة",
   "current": "الحالية",
   "confirmDelete": "تأكيد الحذف",
   "logOutNote": "لا تغيب عنا طويلا",

@@ -97,7 +97,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 },
                 unselectedLabelColor: Colors.grey,
                 tabs: [
-                  singleTab(0, LocaleKeys.newWord.tr()),
+                  singleTab(0, LocaleKeys.newOrders.tr()),
                   singleTab(1, LocaleKeys.current.tr()),
                 ],
               ),

@@ -4,14 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/routing/routes.dart';
+import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/core/utils/globals.dart';
 import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 
 import 'package:weltweit/features/core/widgets/custom_text.dart';
+import 'package:weltweit/features/logic/home/home_cubit.dart';
 import 'package:weltweit/features/logic/orders/orders_cubit.dart';
 import 'package:weltweit/features/logic/profile/profile_cubit.dart';
+import 'package:weltweit/features/logic/provider/providers_cubit.dart';
+import 'package:weltweit/features/logic/service/services_cubit.dart';
 import 'package:weltweit/features/screens/my_addresses/logic/address_cubit.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
@@ -126,8 +130,9 @@ class ProfilePage extends StatelessWidget {
                             return "English";
                           }
                         }()),
-                        onTap: () {
-                          AppDialogs().languageDialog(context);
+                        onTap: () async {
+                          await AppDialogs().languageDialog(context);
+                        
                         }),
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(

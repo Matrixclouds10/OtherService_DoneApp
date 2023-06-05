@@ -16,6 +16,7 @@ class UserModel {
   int? isCompany;
   CountryModel? countryModel;
   String? wallet;
+  int? countryId;
   CurrentSubscribtion? currentSubscription;
   UserModel({
     this.id,
@@ -34,6 +35,7 @@ class UserModel {
     this.countryModel,
     this.wallet,
     this.currentSubscription,
+    this.countryId,
   });
 
   bool isAvailable() {
@@ -66,6 +68,7 @@ class UserModel {
       isCompany: json['is_company'] as int?,
       countryModel: countryJson != null ? CountryModel.fromJson(countryJson) : null,
       wallet: "${json['wallets']}",
+      countryId: json['country_id'],
       currentSubscription: json['current_subscription'] != null ? CurrentSubscribtion.fromJson(json['current_subscription']) : null,
     );
   }

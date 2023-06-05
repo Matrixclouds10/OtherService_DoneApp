@@ -3,6 +3,9 @@ import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:weltweit/base_injection.dart';
+import 'package:weltweit/core/services/local/cache_consumer.dart';
+import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/core/services/network/network_client.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
@@ -22,6 +25,7 @@ import 'package:weltweit/features/domain/usecase/provider_profile/update_profile
 import 'package:weltweit/features/domain/usecase/provider_services/update_services_usecase.dart';
 import 'package:weltweit/features/data/models/subscription/subscription_model.dart';
 import 'package:weltweit/features/domain/usecase/provider_subscription/subscribe_usecase.dart';
+
 class ProviderRepositoryImpProvider implements AppRepositoryProvider {
   final NetworkClient networkClient;
   ProviderRepositoryImpProvider({required this.networkClient});
@@ -131,7 +135,12 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
   Future<Either<ErrorModel, List<ServiceModel>>> getAllServices() async {
     String url = AppURLProvider.services;
     NetworkCallType type = NetworkCallType.get;
-    Map<String, dynamic> data = {};
+    AppPrefs prefs = getIt.get<AppPrefs>();
+    int? countryId = prefs.get(PrefKeys.countryId);
+
+    Map<String, dynamic> data = {
+      "country_id": countryId,
+    };
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
     return result.fold((l) => Left(l), (r) {
       try {
@@ -147,7 +156,12 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
   Future<Either<ErrorModel, List<ServiceModel>>> getMyServices() async {
     String url = AppURLProvider.myServices;
     NetworkCallType type = NetworkCallType.get;
-    Map<String, dynamic> data = {};
+    AppPrefs prefs = getIt.get<AppPrefs>();
+    int? countryId = prefs.get(PrefKeys.countryId);
+
+    Map<String, dynamic> data = {
+      "country_id": countryId,
+    };
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
     return result.fold((l) => Left(l), (r) {
       try {
@@ -271,7 +285,12 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
   Future<Either<ErrorModel, List<SubscriptionModel>>> getSubscription() async {
     String url = AppURLProvider.getSubscriptionPackages;
     NetworkCallType type = NetworkCallType.get;
-    Map<String, dynamic> data = {};
+    AppPrefs prefs = getIt.get<AppPrefs>();
+    int? countryId = prefs.get(PrefKeys.countryId);
+
+    Map<String, dynamic> data = {
+      "country_id": countryId,
+    };
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
     return result.fold((l) => Left(l), (r) {
       try {
@@ -287,7 +306,12 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
   Future<Either<ErrorModel, List<SubscriptionHistoryModel>>> getSubscriptionHistory() async {
     String url = AppURLProvider.getSubscriptionHistory;
     NetworkCallType type = NetworkCallType.get;
-    Map<String, dynamic> data = {};
+    AppPrefs prefs = getIt.get<AppPrefs>();
+    int? countryId = prefs.get(PrefKeys.countryId);
+
+    Map<String, dynamic> data = {
+      "country_id": countryId,
+    };
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
     return result.fold((l) => Left(l), (r) {
       try {
@@ -316,19 +340,17 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
   }
 
   @override
-  Future<Either<ErrorModel, BaseResponse>> subscribe({required SubscribeParams params}) async{
-     String url = AppURLProvider.subscribe;
+  Future<Either<ErrorModel, BaseResponse>> subscribe({required SubscribeParams params}) async {
+    String url = AppURLProvider.subscribe;
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = params.toJson();
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
     return result.fold((l) => Left(l), (r) => Right(r));
-
   }
 
- 
-   @override
-  Future<Either<ErrorModel,  BaseResponse<List<NotificationModel>>>> getProviderNotifications(int parameters) async {
-    String url = AppURLProvider.getNotifications ;
+  @override
+  Future<Either<ErrorModel, BaseResponse<List<NotificationModel>>>> getProviderNotifications(int parameters) async {
+    String url = AppURLProvider.getNotifications;
     if (parameters != 0) {
       url = '$url?page=$parameters';
     }

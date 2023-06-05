@@ -7,6 +7,8 @@ import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/routing/routes.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/base_injection.dart';
+import 'package:weltweit/core/utils/echo.dart';
+import 'package:weltweit/features/logic/provider_home/home_cubit.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/generated/assets.dart';
@@ -42,7 +44,7 @@ class MorePage extends StatelessWidget {
                   children: [
                     singleCustomListTile(
                         image: "assets/images/file.png",
-                        text:  LocaleKeys.myFiles.tr(),
+                        text: LocaleKeys.myFiles.tr(),
                         trailingText: "",
                         onTap: () {
                           Navigator.pushNamed(context, RoutesProvider.providerDocuments);
@@ -64,7 +66,7 @@ class MorePage extends StatelessWidget {
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
                         image: "assets/images/file.png",
-                        text:  LocaleKeys.ordersHistory.tr(),
+                        text: LocaleKeys.ordersHistory.tr(),
                         trailingText: "",
                         onTap: () {
                           Navigator.pushNamed(context, RoutesProvider.providerOrders);
@@ -81,29 +83,29 @@ class MorePage extends StatelessWidget {
                             return "English";
                           }
                         }()),
-                        onTap: () {
-                          AppDialogs().languageDialog(context);
+                        onTap: () async {
+                          await AppDialogs().languageDialog(context);
                         }),
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
                         image: "assets/images/info.png",
                         text: LocaleKeys.aboutUs.tr(),
-                        trailingText:LocaleKeys.aboutUsNote.tr(),
+                        trailingText: LocaleKeys.aboutUsNote.tr(),
                         onTap: () {
                           Navigator.pushNamed(context, Routes.about);
                         }),
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
                         image: "assets/images/info.png",
-                        text:  LocaleKeys.privacyPolicy.tr(),
-                        trailingText:  LocaleKeys.privacyPolicy.tr(),
+                        text: LocaleKeys.privacyPolicy.tr(),
+                        trailingText: LocaleKeys.privacyPolicy.tr(),
                         onTap: () {
                           Navigator.pushNamed(context, Routes.policy);
                         }),
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
                         image: "assets/images/customer-service.png",
-                        text:  LocaleKeys.contactUs.tr(),
+                        text: LocaleKeys.contactUs.tr(),
                         trailingText: LocaleKeys.contactUsNote.tr(),
                         onTap: () {
                           Navigator.pushNamed(context, Routes.contactUs);
@@ -111,7 +113,7 @@ class MorePage extends StatelessWidget {
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
                         image: "assets/images/user.png",
-                        text:  LocaleKeys.subscribeNow.tr(),
+                        text: LocaleKeys.activateAccount.tr(),
                         trailingText: "",
                         onTap: () {
                           Navigator.pushNamed(context, RoutesProvider.providerSubscribe);

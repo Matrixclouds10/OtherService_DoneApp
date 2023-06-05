@@ -5,6 +5,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
+import 'package:weltweit/core/services/local/cache_consumer.dart';
+import 'package:weltweit/core/services/local/storage_keys.dart';
+import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/core/utils/globals.dart';
 import 'package:weltweit/core/utils/permission_heloper.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
@@ -21,7 +24,6 @@ import 'package:weltweit/features/domain/usecase/provider_profile/update_profile
 import 'package:weltweit/features/domain/usecase/provider_profile/update_fcm_usecase.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
-
 
 part 'profile_state.dart';
 
@@ -47,8 +49,14 @@ class ProfileProviderCubit extends Cubit<ProfileProviderState> {
     final result = await profileUseCase.call(NoParameters());
     result.fold(
       (error) => emit(state.copyWith(state: BaseState.error, error: error)),
-      (data) => emit(state.copyWith(state: BaseState.loaded, data: data)),
+      (data) {
+        emit(state.copyWith(state: BaseState.loaded, data: data));
+        kEcho("countryId ${data.countryModel?.id}");
+        AppPrefs prefs = getIt();
+        if (data.countryModel?.id != null) prefs.save(PrefKeys.countryId, data.countryModel?.id);
+      },
     );
+
     GlobalParams globalParams = getIt();
     globalParams = globalParams.copyWith(user: state.data);
   }
@@ -123,8 +131,7 @@ class ProfileProviderCubit extends Cubit<ProfileProviderState> {
       if (locationData.latitude != null && locationData.longitude != null) {
         updateProfileLocationUseCase(UpdateProfileLocationParams(lat: locationData.latitude.toString(), lng: locationData.longitude.toString()));
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   void deleteAccount() {}

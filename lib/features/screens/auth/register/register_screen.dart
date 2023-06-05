@@ -93,12 +93,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
           UserModel userEntity = UserModel.fromJson(response.data);
           String token = userEntity.token ?? '';
           int id = userEntity.id ?? 0;
-          int countryId = userEntity.countryModel?.id ?? 0;
+          kEcho("countryId ${userEntity.countryModel?.id}");
+          int countryId = userEntity.countryId ?? userEntity.countryModel?.id ?? 0;
           if (token.isNotEmpty) {
             kEcho("Navigate token.isNotEmpty");
             AppPrefs prefs = getIt();
             prefs.save(PrefKeys.token, token);
-            prefs.save(PrefKeys.countryId, countryId);
+            if (countryId != 0) prefs.save(PrefKeys.countryId, countryId);
             prefs.save(PrefKeys.id, id);
             prefs.save(PrefKeys.isTypeProvider, widget.typeIsProvider);
             if (widget.typeIsProvider) {

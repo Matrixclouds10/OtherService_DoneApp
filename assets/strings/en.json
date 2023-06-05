@@ -2,10 +2,13 @@
   "en": "English",
   "successfullySended":  "Successfully Sended",
   "activate": "Activate",
+  "activateAccount": "Activate account",
   "or": "or",
+  "newOrders" : "New",
   "noSubscribtions": "No Subscribtions",
   "moreInfo": "More Information",
-
+  "goodMorningDesc": "Start your day with enthusiasm and start taking orders",
+  "goodMorning": "Good Morning",
   "youNeedToSubscribe": "You need to subscribe to continue",
 
   "walkThroughTitle1": "لخدمات الأعمال",
