@@ -68,7 +68,7 @@ class UserModel {
       isCompany: json['is_company'] as int?,
       countryModel: countryJson != null ? CountryModel.fromJson(countryJson) : null,
       wallet: "${json['wallets']}",
-      countryId: json['country_id'],
+      countryId: json['country_id'] == null ? null : int.tryParse('${json['country_id']}') ,
       currentSubscription: json['current_subscription'] != null ? CurrentSubscribtion.fromJson(json['current_subscription']) : null,
     );
   }
