@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/core/extensions/num_extensions.dart';
 import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
+import 'package:weltweit/core/routing/routes.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/core/utils/echo.dart';
@@ -43,7 +45,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _confirmPasswordController = TextEditingController();
   CountryModel? selectedCountry;
   bool joinAsIndividual = true;
-  bool isConfirmTerms = true;
+  bool isConfirmTerms = false;
   File? image;
 
   final _formKey = GlobalKey<FormState>();
@@ -96,7 +98,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           kEcho("countryId ${userEntity.countryModel?.id}");
           int countryId = userEntity.countryId ?? userEntity.countryModel?.id ?? 0;
           if (token.isNotEmpty) {
-            kEcho("Navigate token.isNotEmpty");
             AppPrefs prefs = getIt();
             prefs.save(PrefKeys.token, token);
             if (countryId != 0) prefs.save(PrefKeys.countryId, countryId);
@@ -108,7 +109,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Navigator.pushNamedAndRemoveUntil(context, RoutesServices.servicesLayoutScreen, (route) => false);
             }
           } else {
-            kEcho("Navigate RoutesServices.servicesOtpScreen");
             NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
               'email': _emailController.text,
               'code': selectedCountry?.code ?? '20',
@@ -117,7 +117,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
             });
           }
         } else {
-          kEcho(":error: ${response.error}");
           AppSnackbar.show(
             context: context,
             title: LocaleKeys.notification.tr(),
@@ -220,22 +219,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       // ),
                       // ],
                       _buildForm(),
-                      CheckboxListTile(
-                        checkboxShape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0.r),
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0.r),
-                        ),
-                        side: MaterialStateBorderSide.resolveWith(
-                          (states) => BorderSide(width: 1.w, color: Colors.black12),
-                        ),
-                        value: isConfirmTerms,
-                        title: CustomText(tr(LocaleKeys.registerPrivacyMassage)).footer().start(),
-                        onChanged: (value) {
-                          isConfirmTerms = !isConfirmTerms;
-                          setState(() {});
-                        },
+                      Row(
+                        children: [
+                          Expanded(
+                              child: Row(
+                            children: [
+                              CustomText(tr(LocaleKeys.byClickingRegisterYouAccept)).footer().start(),
+                              Text(
+                                tr(LocaleKeys.termsAndConditions),
+                                style: TextStyle(
+                                  color: primaryColor,
+                                  fontSize: 12,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ).onTap(() {
+                                Navigator.pushNamed(context, Routes.policy);
+                              }),
+                            ],
+                          )),
+                          Checkbox(
+                            value: isConfirmTerms,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0.r),
+                            ),
+                            onChanged: (value) {
+                              isConfirmTerms = !isConfirmTerms;
+                              setState(() {});
+                            },
+                          ),
+                        ],
                       ),
                       VerticalSpace(kScreenPaddingNormal.h),
                       CustomButton(

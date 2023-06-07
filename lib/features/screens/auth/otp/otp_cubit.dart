@@ -48,11 +48,13 @@ class OtpCubit extends Cubit<OtpState> {
 
   //TODO call API
   //send phone to get code
-  Future<ResponseModel> reSendCode({required String email}) async {
+  Future<ResponseModel> reSendCode({required String email,required bool typeIsProvider}) async {
     if (!_isTimerDone) return ResponseModel(false, tr(LocaleKeys.error));
     _isResendLoading = true;
     emit(OtpState());
-    ResponseModel responseModel = await _forgetPasswordUseCase.call(email: email);
+    ResponseModel responseModel = await _forgetPasswordUseCase.call(
+      email: email,
+      typeIsProvider: typeIsProvider,);
 
     if (responseModel.isSuccess) {
       _isTimerDone = false;
@@ -60,6 +62,13 @@ class OtpCubit extends Cubit<OtpState> {
     }
     _isResendLoading = false;
     emit(OtpState());
+    return responseModel;
+  }
+  Future<ResponseModel> reSendCodeNoState({required String email,required bool typeIsProvider}) async {
+    emit(OtpState());
+    ResponseModel responseModel = await _forgetPasswordUseCase.call(
+      email: email,
+      typeIsProvider: typeIsProvider,);
     return responseModel;
   }
 
@@ -80,10 +89,10 @@ class OtpCubit extends Cubit<OtpState> {
       String token = userEntity.token ?? '';
       int id = userEntity.id ?? 0;
       kEcho("countryId ${userEntity.countryModel?.id}");
-          int countryId = userEntity.countryId ?? userEntity.countryModel?.id ?? 0;
+      int countryId = userEntity.countryId ?? userEntity.countryModel?.id ?? 0;
       AppPrefs prefs = getIt();
       prefs.save(PrefKeys.token, token);
-       if (countryId != 0) prefs.save(PrefKeys.countryId, countryId);
+      if (countryId != 0) prefs.save(PrefKeys.countryId, countryId);
       prefs.save(PrefKeys.id, id);
       prefs.save(PrefKeys.isTypeProvider, typeIsProvider);
     }

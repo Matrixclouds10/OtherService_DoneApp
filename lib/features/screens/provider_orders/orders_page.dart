@@ -134,7 +134,7 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
         return Column(
           children: [
             ...state.pendingData
-                .where((element) => element.statusCode!.toLowerCase() == 'provider_accept')
+                .where((element) => element.statusCode!.toLowerCase() == 'provider_accept' || element.statusCode!.toLowerCase() == 'provider_finish')
                 .map((e) => GestureDetector(
                       onTap: () {},
                       child: OrderItemWidgetClient(orderModel: e),
@@ -221,22 +221,3 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
   }
 }
 
-getRandomTags() {
-  List<String> tags = ["صيانة السباكة", "صيانة الكهرباء", "صيانة النظافة", "صيانة الكمبيوتر", "صيانة السيارات", "صيانة الأجهزة الكهربائية"];
-  List<String> randomTags = [];
-
-  randomTags.add(tags[Random().nextInt(tags.length)]);
-  randomTags.add(tags[Random().nextInt(tags.length)]);
-  if (Random().nextInt(tags.length) % 2 == 0) randomTags.removeLast();
-  return randomTags.isNotEmpty ? [randomTags.first] : randomTags;
-}
-
-getRandomDate() {
-  List<String> dates = ["07/01/2023", "07/02/2023", "07/03/2023", "07/04/2023", "07/05/2023", "07/06/2023"];
-  return dates[Random().nextInt(dates.length)];
-}
-
-getRadomTime() {
-  List<String> times = ["3 م : 5 م", "5 م : 7 م", "7 م : 9 م", "9 م : 11 م", "11 م : 1 ص", "1 ص : 3 ص"];
-  return times[Random().nextInt(times.length)];
-}

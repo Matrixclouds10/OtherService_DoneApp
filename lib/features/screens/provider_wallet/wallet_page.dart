@@ -2,11 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/resources/color.dart';
-import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
+import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/data/models/wallet/wallet_model.dart';
-import 'package:weltweit/features/logic/profile/profile_cubit.dart';
 import 'package:weltweit/features/logic/provider_profile/profile_cubit.dart';
 import 'package:weltweit/features/logic/provider_wallet/wallet_cubit.dart';
 import 'package:weltweit/generated/assets.dart';
@@ -51,7 +50,8 @@ class _WalletPageState extends State<WalletPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              BlocBuilder<ProfileProviderCubit, ProfileProviderState>(
+              FutureBuilder<UserModel>(
+                future: context.read<ProfileProviderCubit>().getProfileNoState(),
                 builder: (context, state) {
                   String totalAmount = state.data?.wallet?.toString() ?? "0";
                   return Column(
@@ -85,7 +85,7 @@ class _WalletPageState extends State<WalletPage> {
                             ),
                           if (state.data.isEmpty)
                             Center(
-                              child: CustomText("لا يوجد عمليات سابقة", color: Colors.black, align: TextAlign.start, pv: 0, ph: 12).header(),
+                              child: CustomText(LocaleKeys.emptyWallet.tr(), color: Colors.black, align: TextAlign.start, pv: 0, ph: 12).header(),
                             ),
                           if (state.data.isNotEmpty)
                             Expanded(

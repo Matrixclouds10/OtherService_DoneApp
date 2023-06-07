@@ -45,7 +45,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   void _onResendCode() async {
-    ResponseModel responseModel = await BlocProvider.of<OtpCubit>(context, listen: false).reSendCode(email: widget._email);
+    ResponseModel responseModel = await BlocProvider.of<OtpCubit>(context, listen: false).reSendCode(email: widget._email,typeIsProvider: widget._typeIsProvider);
     if (responseModel.message != null && responseModel.message!.isNotEmpty) {
       if (responseModel.isSuccess) {
         AppSnackbar.show(context: context, message: LocaleKeys.successfullySended.tr());
@@ -53,6 +53,14 @@ class _OTPScreenState extends State<OTPScreen> {
         AppSnackbar.show(context: context, message: responseModel.message!);
       }
     }
+  }
+
+  @override
+  void initState() {
+    if(widget._checkOTPType == CheckOTPType.reset){
+      _onResendCode();
+    }
+    super.initState();
   }
 
   void _onSubmit(context) async {
@@ -104,7 +112,7 @@ class _OTPScreenState extends State<OTPScreen> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: CustomAppBar(title: el.tr(LocaleKeys.phoneVerification)),
+        appBar: CustomAppBar(title: ""),
         key: scaffoldKey,
         resizeToAvoidBottomInset: true,
         body: SingleChildScrollView(

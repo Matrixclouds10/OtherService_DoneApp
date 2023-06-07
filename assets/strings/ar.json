@@ -1,5 +1,10 @@
 {
   "en": "English",
+  "byClickingRegisterYouAccept":   "بالضغط على تسجيل فانت توافق على",
+  "enterRegisteredEmailAddress":  "أدخل البريد الإلكتروني المسجل",
+  "orderFinishedWaitingForClientConfirmation": "تم إنهاء الطلب وبإنتظار تأكيد العميل",
+  "emptyWallet": "لا يوجد عمليات سابقة",
+  "noServicesFound": "لا يوجد خدمات",
   "successfullySended":   "تم الإرسال بنجاح",
   "activateAccount":  "تفعيل الحساب",
   "activate":  "تفعيل",

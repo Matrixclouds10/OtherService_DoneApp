@@ -121,9 +121,9 @@ class _OrderDetailsState extends State<OrderDetails> {
                         ),
                       if (state.data!.statusCode!.toLowerCase().contains("pending")) pendingView(state.data!),
                       if (state.data!.statusCode!.toLowerCase().contains("provider_cancel")) cacncelledView(state.data!),
-                      if (state.data!.statusCode!.toLowerCase().contains("provider_finish")) finishedView(state.data!),
+                      if (state.data!.statusCode!.toLowerCase().contains("provider_finish")) finishedView(state.data!, false),
                       if (state.data!.statusCode!.toLowerCase().contains("provider_accept")) inProgressView(state.data!),
-                      if (state.data!.statusCode!.toLowerCase().contains("client_done")) finishedView(state.data!),
+                      if (state.data!.statusCode!.toLowerCase().contains("client_done")) finishedView(state.data!, true),
                     ],
                   ),
                 )
@@ -335,23 +335,28 @@ class _OrderDetailsState extends State<OrderDetails> {
     );
   }
 
-  finishedView(OrderModel orderModel) {
+  finishedView(OrderModel orderModel, bool isClientFinished) {
     return Column(
       children: [
         Container(
           padding: EdgeInsets.all(12),
           decoration: BoxDecoration(color: Colors.white),
-          child: Row(
+          child: Column(
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
                 children: [
-                  CustomText(LocaleKeys.orderStatus.tr(), pv: 0).header(),
-                  CustomText(LocaleKeys.finished.tr(), pv: 0, color: Colors.green).footer(),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CustomText(LocaleKeys.orderStatus.tr(), pv: 0).header(),
+                      if (isClientFinished) CustomText(LocaleKeys.finished.tr(), pv: 0, color: Colors.green).footer(),
+                    ],
+                  ),
+                  Spacer(),
+                  Icon(Icons.check, size: 32, color: Colors.green[500]),
                 ],
               ),
-              Spacer(),
-              Icon(Icons.check, size: 32, color: Colors.green[500]),
+              if (!isClientFinished) CustomText(LocaleKeys.orderFinishedWaitingForClientConfirmation.tr(), pv: 4).footer(),
             ],
           ),
         ),

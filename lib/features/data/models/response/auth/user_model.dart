@@ -13,7 +13,7 @@ class UserModel {
   String? image;
   String gender;
   String? desc;
-  int? isCompany;
+  // int? isCompany;
   CountryModel? countryModel;
   String? wallet;
   int? countryId;
@@ -31,7 +31,7 @@ class UserModel {
     this.countryCode,
     this.image,
     this.desc,
-    this.isCompany,
+    // this.isCompany,
     this.countryModel,
     this.wallet,
     this.currentSubscription,
@@ -65,7 +65,7 @@ class UserModel {
       image: json['image'] as String?,
       gender: json['gender'] ?? "male",
       desc: json['description'] ?? "",
-      isCompany: json['is_company'] as int?,
+      // isCompany: json['is_company'] as int?,
       countryModel: countryJson != null ? CountryModel.fromJson(countryJson) : null,
       wallet: "${json['wallets']}",
       countryId: json['country_id'] == null ? null : int.tryParse('${json['country_id']}') ,

@@ -59,7 +59,7 @@ class _AboutPageState extends State<AboutPage> {
                             decoration: const BoxDecoration(color: Colors.white).radius(radius: 12),
                             child: CustomText(state.data),
                           ),
-                          ContactAction(),
+                          ContactAction(showDivider: false),
                         ],
                       ),
                     );

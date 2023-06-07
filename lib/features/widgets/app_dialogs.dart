@@ -15,13 +15,16 @@ import 'package:weltweit/core/resources/values_manager.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
+import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
+import 'package:weltweit/features/data/models/base/response_model.dart';
 import 'package:weltweit/features/data/models/order/order.dart';
 import 'package:weltweit/features/domain/request_body/check_otp_body.dart';
 import 'package:weltweit/features/domain/usecase/order/order_rate_usecase.dart';
 import 'package:weltweit/features/logic/order/order_cubit.dart';
+import 'package:weltweit/features/screens/auth/otp/otp_cubit.dart';
 import 'package:weltweit/features/screens/layout/layout_cubit.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/features/widgets/app_text_tile.dart';
@@ -391,14 +394,77 @@ class AppDialogs {
     );
   }
 
-  void activateMailDialog({
+  // void activateMailDialog({
+  //   required BuildContext context,
+  //   required String message,
+  //   required bool typeIsProvider,
+  // }) async {
+  //   TextEditingController controller = TextEditingController();
+  //   Dialogs.materialDialog(
+  //     title: LocaleKeys.notification.tr(),
+  //     msg: message,
+  //     color: Colors.white,
+  //     context: context,
+  //     actions: [
+  //       StatefulBuilder(
+  //         builder: (context, setState) {
+  //           return Column(
+  //             children: [
+  //               CustomTextField(
+  //                 hint: LocaleKeys.email.tr(),
+  //                 controller: controller,
+  //               ),
+  //               SizedBox(height: 10),
+  //               Row(
+  //                 children: [
+  //                   SizedBox(width: 4),
+  //                   TextButton(
+  //                     onPressed: () {
+  //                       Navigator.pop(context);
+  //                     },
+  //                     child: CustomText(LocaleKeys.cancel.tr()),
+  //                   ),
+  //                   Spacer(),
+  //                   TextButton(
+  //                       onPressed: () {
+  //                         if (controller.text.isEmpty) {
+  //                           AppSnackbar.show(
+  //                             context: context,
+  //                             message: LocaleKeys.msgEmailRequired.tr(),
+  //                             type: SnackbarType.error,
+  //                           );
+  //                         } else {
+  //                           NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
+  //                             'email': controller.text,
+  //                             'code': '20',
+  //                             'checkOTPType':  CheckOTPType.register,
+  //                             'typeIsProvider': typeIsProvider,
+  //                           });
+  //                         }
+  //                       },
+  //                       child: CustomText(LocaleKeys.activate.tr())),
+  //                   SizedBox(width: 4),
+  //                 ],
+  //               )
+  //             ],
+  //           );
+  //         },
+  //       ),
+  //     ],
+  //   );
+  // }
+
+
+  void forgetPassword({
     required BuildContext context,
+    required String title,
     required String message,
     required bool typeIsProvider,
   }) async {
+    bool loading = false;
     TextEditingController controller = TextEditingController();
     Dialogs.materialDialog(
-      title: LocaleKeys.notification.tr(),
+      title: title,
       msg: message,
       color: Colors.white,
       context: context,
@@ -407,10 +473,7 @@ class AppDialogs {
           builder: (context, setState) {
             return Column(
               children: [
-                CustomTextField(
-                  hint: LocaleKeys.email.tr(),
-                  controller: controller,
-                ),
+                CustomTextField(hint: LocaleKeys.email.tr(), controller: controller),
                 SizedBox(height: 10),
                 Row(
                   children: [
@@ -422,24 +485,40 @@ class AppDialogs {
                       child: CustomText(LocaleKeys.cancel.tr()),
                     ),
                     Spacer(),
-                    TextButton(
-                        onPressed: () {
-                          if (controller.text.isEmpty) {
-                            AppSnackbar.show(
-                              context: context,
-                              message: LocaleKeys.msgEmailRequired.tr(),
-                              type: SnackbarType.error,
-                            );
-                          } else {
-                            NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
-                              'email': controller.text,
-                              'code': '20',
-                              'checkOTPType': CheckOTPType.register,
-                              'typeIsProvider': typeIsProvider,
-                            });
-                          }
-                        },
-                        child: CustomText(LocaleKeys.activate.tr())),
+                    if (loading) CircularProgressIndicator(),
+                    if (!loading)
+                      TextButton(
+                          onPressed: () async {
+                            loading = true;
+                            setState(() {});
+                            if (controller.text.isEmpty) {
+                              AppSnackbar.show(
+                                context: context,
+                                message: LocaleKeys.msgEmailRequired.tr(),
+                                type: SnackbarType.error,
+                              );
+                            } else {
+                              try {
+                                await sendOtp(context, controller.text,typeIsProvider);
+
+                                loading = false;
+                                setState(() {});
+                                Navigator.pop(context);
+                                NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
+                                  'email': controller.text,
+                                  'code': '20',
+                                  'checkOTPType': CheckOTPType.register,
+                                  'typeIsProvider': typeIsProvider,
+                                });
+                              } catch (e) {
+                                kEcho(e.toString());
+                                loading = false;
+                                setState(() {});
+                                AppSnackbar.show(context: context, message: e.toString(), type: SnackbarType.error);
+                              }
+                            }
+                          },
+                          child: CustomText(LocaleKeys.send.tr())),
                     SizedBox(width: 4),
                   ],
                 )
@@ -451,8 +530,21 @@ class AppDialogs {
     );
   }
 
-  Future<void> languageDialog(BuildContext context) async{
-   await Dialogs.materialDialog(
+  Future<bool> sendOtp(BuildContext context, String email,bool typeIsProvider) async {
+    ResponseModel responseModel = await BlocProvider.of<OtpCubit>(context, listen: false).reSendCodeNoState(email: email,typeIsProvider: typeIsProvider);
+    if (responseModel.message != null && responseModel.message!.isNotEmpty) {
+      if (responseModel.isSuccess) {
+        return true;
+      } else {
+        return Future.error(responseModel.message ?? LocaleKeys.error.tr());
+      }
+    } else {
+      return Future.error(LocaleKeys.somethingWentWrong.tr());
+    }
+  }
+
+  Future<void> languageDialog(BuildContext context) async {
+    await Dialogs.materialDialog(
       title: LocaleKeys.language.tr(),
       msg: LocaleKeys.selectLanguage.tr(),
       color: Colors.white,

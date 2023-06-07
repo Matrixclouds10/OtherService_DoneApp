@@ -152,40 +152,35 @@ class _ServiceProviderViewState extends State<ServiceProviderView> with SingleTi
           body: SingleChildScrollView(
             child: Column(
               children: [
-                ListAnimator(
-                  physics: const NeverScrollableScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  children: [
-                    const SizedBox(height: 0),
-                    Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(color: Colors.white),
-                      child: ServiceProviderItemWidget(
-                        providersModel: widget.provider,
-                        canMakeAppointment: true,
-                        showFavoriteButton: false,
-                      ),
-                    ),
-                    Container(
-                      color: Colors.white,
-                      child: TabBar(
-                        controller: _tabController,
-                        indicatorColor: Colors.transparent,
-                        labelColor: Colors.black,
-                        onTap: (index) {
-                          setState(() {});
-                        },
-                        unselectedLabelColor: Colors.grey,
-                        tabs: [
-                          singleTab(0, LocaleKeys.myServices.tr()),
-                          singleTab(1, LocaleKeys.gallery.tr()),
-                          singleTab(2, LocaleKeys.rates.tr()),
-                        ],
-                      ),
-                    ),
-                    tabBody(),
-                  ],
-                )
+                const SizedBox(height: 0),
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(color: Colors.white),
+                  child: ServiceProviderItemWidget(
+                    providersModel: widget.provider,
+                    canMakeAppointment: true,
+                    showFavoriteButton: false,
+                  ),
+                ),
+                Container(
+                  color: Colors.white,
+                  child: TabBar(
+                    controller: _tabController,
+                    indicatorColor: Colors.transparent,
+                    labelColor: Colors.black,
+                    onTap: (index) {
+                      setState(() {});
+                    },
+                    unselectedLabelColor: Colors.grey,
+                    tabs: [
+                      singleTab(0, LocaleKeys.myServices.tr()),
+                      singleTab(1, LocaleKeys.gallery.tr()),
+                      singleTab(2, LocaleKeys.rates.tr()),
+                    ],
+                  ),
+                ),
+                tabBody(),
+                SizedBox(height: 30),
               ],
             ),
           ),
@@ -204,9 +199,7 @@ class _ServiceProviderViewState extends State<ServiceProviderView> with SingleTi
           color: isSelected ? const Color(0xffE67E23) : Colors.white,
           borderRadius: BorderRadius.circular(4),
         ),
-        child: FittedBox(
-          fit: BoxFit.scaleDown,
-          child: CustomText(title, color: isSelected ? Colors.white : Colors.black)),
+        child: FittedBox(fit: BoxFit.scaleDown, child: CustomText(title, color: isSelected ? Colors.white : Colors.black)),
       ),
     );
   }
@@ -313,11 +306,11 @@ class _ServiceProviderViewState extends State<ServiceProviderView> with SingleTi
         int rate4StarCount = state.dataRates.where((element) => element.rate == 4).length;
         int rate5StarCount = state.dataRates.where((element) => element.rate == 5).length;
 
-        double rate1StarPercent = state.dataRates.isEmpty?0:(rate1StarCount / state.dataRates.length);
-        double rate2StarPercent = state.dataRates.isEmpty?0:(rate2StarCount / state.dataRates.length);
-        double rate3StarPercent = state.dataRates.isEmpty?0:(rate3StarCount / state.dataRates.length);
-        double rate4StarPercent = state.dataRates.isEmpty?0:(rate4StarCount / state.dataRates.length);
-        double rate5StarPercent = state.dataRates.isEmpty?0:(rate5StarCount / state.dataRates.length);
+        double rate1StarPercent = state.dataRates.isEmpty ? 0 : (rate1StarCount / state.dataRates.length);
+        double rate2StarPercent = state.dataRates.isEmpty ? 0 : (rate2StarCount / state.dataRates.length);
+        double rate3StarPercent = state.dataRates.isEmpty ? 0 : (rate3StarCount / state.dataRates.length);
+        double rate4StarPercent = state.dataRates.isEmpty ? 0 : (rate4StarCount / state.dataRates.length);
+        double rate5StarPercent = state.dataRates.isEmpty ? 0 : (rate5StarCount / state.dataRates.length);
         return Column(
           children: [
             Container(

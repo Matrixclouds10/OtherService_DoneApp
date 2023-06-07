@@ -123,7 +123,7 @@ class AppRepositoryImp implements AppRepository {
 
     Map<String, dynamic> data = {
       "page": page,
-      "countryId": countryId,
+      "country_id": countryId,
     };
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
 
@@ -173,7 +173,7 @@ class AppRepositoryImp implements AppRepository {
 
     AppPrefs prefs = getIt.get<AppPrefs>();
     int? countryId = prefs.get(PrefKeys.countryId);
-    Map<String, dynamic> data = {"countryId": countryId};
+    Map<String, dynamic> data = {"country_id": countryId};
 
     data.addAll(params.toJson());
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
@@ -475,7 +475,6 @@ class AppRepositoryImp implements AppRepository {
     AppPrefs prefs = getIt<AppPrefs>();
     kEcho("getbanner init");
     int? countryId = prefs.get(PrefKeys.countryId, defaultValue: null);
-    kEcho("getbanner countryId:$countryId");
 
     Map<String, dynamic> data = {
       if (countryId != null) 'country_id': countryId,
@@ -498,7 +497,7 @@ class AppRepositoryImp implements AppRepository {
 
     AppPrefs prefs = getIt.get<AppPrefs>();
     int? countryId = prefs.get(PrefKeys.countryId);
-    Map<String, dynamic> data = {"countryId": countryId};
+    Map<String, dynamic> data = {"country_id": countryId};
 
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
 

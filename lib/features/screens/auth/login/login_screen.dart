@@ -119,7 +119,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             type: SnackbarType.error,
           );
           if (message.contains('active') || message.contains('activate') || message.contains('verify') || message.contains('تفعيل')) {
-            AppDialogs().activateMailDialog(
+            AppDialogs().forgetPassword(
+              title: LocaleKeys.notification.tr(),
               context: context,
               message: message,
               typeIsProvider: typeIsProvider,
@@ -194,7 +195,14 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(vertical: kFormPaddingAllSmall),
                                   child: GestureDetector(
-                                    onTap: () {},
+                                    onTap: () {
+                                      AppDialogs().forgetPassword(
+                                        title:  LocaleKeys.forgetPassword.tr(),
+                                        context: context,
+                                        message: LocaleKeys.enterRegisteredEmailAddress.tr(),
+                                        typeIsProvider: typeIsProvider,
+                                      );
+                                    },
                                     child: CustomText(tr(LocaleKeys.forgetPassword)).footer().start(),
                                   ),
                                 ),

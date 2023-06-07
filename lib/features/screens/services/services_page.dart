@@ -62,7 +62,7 @@ class _ServicesPageState extends State<ServicesPage> {
               return CustomLoadingSpinner();
             case BaseState.loaded:
               {
-                if (state.services.isEmpty) return Center(child: CustomText("لا يوجد خدمات").header());
+                if (state.services.isEmpty) return Center(child: CustomText(LocaleKeys.noServicesFound.tr()).header());
                 return Column(
                   children: [
                     Expanded(

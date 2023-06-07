@@ -7,6 +7,7 @@ class AppURL {
   static const String kRegisterURI = "$kBaseURL/auth/register";
   static const String kLogoutURI = "$kBaseURL/auth/logout";
   static const String kForgetPasswordURI = "$kBaseURL/auth/otp";
+  static const String kForgetPasswordProviderURI = "$kBaseURL/service-provider/otp";
   static const String kCheckOTPURI = "$kBaseURL/auth/check-otp";
   static const String kResetPasswordURI = "$kBaseURL/";
   static const String kDeleteAccountURI = "$kBaseURL/";

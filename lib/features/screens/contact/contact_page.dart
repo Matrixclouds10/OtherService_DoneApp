@@ -96,21 +96,8 @@ class _ContactPageState extends State<ContactPage> {
                       },
                     ),
                     const SizedBox(height: 8),
-                    Stack(
-                      children: [
-                        const Divider(height: 40),
-                        Positioned(
-                          child: Center(
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12),
-                              color: servicesTheme.scaffoldBackgroundColor,
-                              child: CustomText(LocaleKeys.or.tr()),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    ContactAction(),
+                  
+                    ContactAction(showDivider: true),
                   ],
                 ),
               )

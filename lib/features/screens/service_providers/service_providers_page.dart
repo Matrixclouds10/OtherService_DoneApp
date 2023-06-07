@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/resources/decoration.dart';
@@ -9,6 +10,7 @@ import 'package:weltweit/features/core/widgets/service_provider_item.dart';
 import 'package:weltweit/features/data/models/services/service.dart';
 import 'package:weltweit/features/domain/usecase/provider/providers_usecase.dart';
 import 'package:weltweit/features/logic/provider/providers_cubit.dart';
+import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
 
 class ServiceProvidersPage extends StatefulWidget {
@@ -48,7 +50,7 @@ class _ServiceProvidersPageState extends State<ServiceProvidersPage> {
               return CustomLoadingSpinner();
             case BaseState.loaded:
               {
-                if (state.providers.isEmpty) return Center(child: CustomText("لا يوجد خدمات").header());
+                if (state.providers.isEmpty) return Center(child: CustomText(LocaleKeys.noServicesFound.tr()).header());
 
                 return   ListAnimator(
                         scrollDirection: Axis.vertical,

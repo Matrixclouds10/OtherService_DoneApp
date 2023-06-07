@@ -10,7 +10,7 @@ mixin AuthRepository {
   Future<ApiResponse> otpCode({required CheckOTPBody checkOTPBody});
   Future<ApiResponse> updateFCMToken({required String fcmToken, required String deviceType});
 
-  Future<ApiResponse> forgetPassword({required String email});
+  Future<ApiResponse> forgetPassword({required String email,required bool typeIsProvider});
   Future<ApiResponse> resetPassword({required String email, required String password});
 
   Future<ApiResponse> register({required RegisterBody registerBody});

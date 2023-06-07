@@ -1,3 +1,4 @@
+import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/features/data/models/base/base_model.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/domain/usecase/auth/base_usecase/base_use_case_call.dart';
@@ -11,8 +12,14 @@ class ForgetPasswordUseCase implements BaseUseCase<UserModel> {
 
   ForgetPasswordUseCase({required this.repository});
 
-  Future<ResponseModel> call({required String email}) async {
-    return BaseUseCaseCall.onGetData<UserModel>(await repository.forgetPassword(email: email), onConvert);
+  Future<ResponseModel> call({required String email,required bool typeIsProvider}) async {
+    kEcho("forgetPassword");
+    return BaseUseCaseCall.onGetData<UserModel>(
+        await repository.forgetPassword(
+          email: email,
+          typeIsProvider: typeIsProvider,
+        ),
+        onConvert);
   }
 
   @override

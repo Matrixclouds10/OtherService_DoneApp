@@ -61,6 +61,11 @@ class ProfileProviderCubit extends Cubit<ProfileProviderState> {
     globalParams = globalParams.copyWith(user: state.data);
   }
 
+  Future<UserModel> getProfileNoState() async {
+    final result = await profileUseCase.call(NoParameters());
+    return result.fold((error) => throw error, (data) => data);
+  }
+
   void updateAvailability() async {
     if (state.availabilityState == BaseState.loading) return;
     emit(state.copyWith(availabilityState: BaseState.loading));

@@ -1,5 +1,10 @@
 {
   "en": "English",
+  "byClickingRegisterYouAccept":   "By clicking register you accept",
+  "enterRegisteredEmailAddress":  "Enter registered email address",
+  "orderFinishedWaitingForClientConfirmation":   "Order finished, waiting for client confirmation",
+  "emptyWallet":  "Empty Wallet",
+  "noServicesFound":  "No Services Found",
   "successfullySended":  "Successfully Sended",
   "activate": "Activate",
   "activateAccount": "Activate account",
