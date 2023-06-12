@@ -25,11 +25,11 @@ class ChatModel {
   factory ChatModel.fromJson(Map<String, dynamic> json) => ChatModel(
         id: json["id"],
         serviceOrderId: json["service_order_id"],
-        providerId: json["provider_id"] ?? 0,
+        providerId: json["provider_id"] ?? json['client_id'] ?? 0,
         message: json["message"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
-        client: json["client"] != null ? ClientModel.fromJson(json["client"]) : null,
+        client: json["client"] != null ? ClientModel.fromJson(json["client"]) : json["provider"] != null ? ClientModel.fromJson(json["provider"]) : null,
         image: json["image"],
         lat: "${json["lat"]}",
         lng: "${json["lng"]}",

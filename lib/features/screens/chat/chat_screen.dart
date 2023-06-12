@@ -97,7 +97,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  if (message.client?.fullImage != null) ...[
+                                  if (message.client?.id == myId) ...[
                                     Tooltip(
                                       message: message.client?.name ?? "",
                                       triggerMode: TooltipTriggerMode.tap,
@@ -116,7 +116,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                                     width: deviceWidth * 0.64,
                                     child: _buildMessage(message),
                                   ),
-                                  if (message.client?.fullImage == null) ...[
+                                  if (message.client?.id != myId) ...[
                                     SizedBox(width: 8.0),
                                     Tooltip(
                                       message: widget.orderModel.provider?.name ?? "",
