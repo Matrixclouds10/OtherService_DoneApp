@@ -34,6 +34,14 @@
 	<string>This app need access to your media library to upload service image/video or change profile picture</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Need to use your location to find nearby services providers</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Need to use your location to find nearby services providers</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Need to use your location to find nearby services providers</string>
+
+
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

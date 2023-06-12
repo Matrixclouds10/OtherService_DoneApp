@@ -13,8 +13,12 @@ class HomeCubit extends Cubit<HomeState> {
     if (state.currentLocationAddress.isNotEmpty) return state.currentLocationAddress;
     LocationPermission checkPermission = await Geolocator.checkPermission();
     if (checkPermission == LocationPermission.whileInUse || checkPermission == LocationPermission.always) {
+    print('getCurrentLocationAddress permission granted');
       Position position = await Geolocator.getCurrentPosition();
+    print('getCurrentLocationAddress position ${position.latitude} ${position.longitude}');
       List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
+    print('getCurrentLocationAddress placemarks ${placemarks.length}');
+
       Placemark place = placemarks[0];
       List<String> address = [];
       if (place.country != null) address.add(place.country!);
@@ -23,6 +27,7 @@ class HomeCubit extends Cubit<HomeState> {
 
       emit(state.copyWith(currentLocationAddress: address.join(', ')));
     } else {
+    print('getCurrentLocationAddress permission not granted');
       LocationPermission locationPermission = await Geolocator.requestPermission();
       if (locationPermission == LocationPermission.whileInUse || locationPermission == LocationPermission.always) {
         Position position = await Geolocator.getCurrentPosition();
