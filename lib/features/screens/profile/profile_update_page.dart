@@ -215,7 +215,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
               onPressed: () async {
                 bool? status = await AppDialogs().showDeleteAccountDialog(context);
                 if (status != null && status) {
-                  if (context.mounted) context.read<ProfileCubit>().deleteAccount();
+                  if (context.mounted) context.read<ProfileCubit>().deleteProfile();
                 }
               },
               child: CustomText(LocaleKeys.deleteAccount.tr(), color: Colors.red).footer()),

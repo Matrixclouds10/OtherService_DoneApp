@@ -1,9 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
 import 'package:weltweit/base_injection.dart';
+import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/core/utils/echo.dart';
@@ -55,9 +57,9 @@ class ProfileCubit extends Cubit<ProfileState> {
       },
       (data) {
         emit(state.copyWith(state: BaseState.loaded, data: data));
-            kEcho("countryId ${data.countryModel?.id}");
-            AppPrefs prefs = getIt();
-           if (data.countryModel?.id != null) prefs.save(PrefKeys.countryId, data.countryModel?.id);
+        kEcho("countryId ${data.countryModel?.id}");
+        AppPrefs prefs = getIt();
+        if (data.countryModel?.id != null) prefs.save(PrefKeys.countryId, data.countryModel?.id);
         return data;
       },
     );
@@ -74,7 +76,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
   }
 
-  void deleteProfile(int deleteId) async {
+  void deleteProfile() async {
     resetState();
     if (state.updateState == BaseState.loading) return;
     if (state.data?.id == null) return;
@@ -111,7 +113,6 @@ class ProfileCubit extends Cubit<ProfileState> {
     ));
   }
 
-  void deleteAccount() {}
 
   void updateLocation(BuildContext context) async {
     bool permissionStatus = await PermissionHelper.checkLocationPermissionStatus();

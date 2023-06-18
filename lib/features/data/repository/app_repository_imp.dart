@@ -92,7 +92,9 @@ class AppRepositoryImp implements AppRepository {
 
   @override
   Future<Either<ErrorModel, bool>> deleteProfile({required int id}) async {
-    String url = "${AppURL.deleteProfile}/$id";
+    AppPrefs prefs = getIt.get<AppPrefs>();
+    bool isProvider = prefs.get(PrefKeys.isTypeProvider, defaultValue: false);
+    String url = isProvider ? AppURL.deleteProfileProvider : AppURL.deleteProfile;
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = {};
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);

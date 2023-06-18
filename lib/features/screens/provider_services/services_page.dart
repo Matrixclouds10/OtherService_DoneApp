@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/core/resources/color.dart';
@@ -70,9 +71,6 @@ class _ServicesPageState extends State<ServicesPage> {
                     ),
                     CustomButton(
                       onTap: () {
-                        logger.i('updateSelectedServices: ${state.services.where((element) => element.myService == true).toList()}}');
-                        logger.e('updateSelectedServices: ${state.services.where((element) => element.myService == false).toList()}}');
-
                         if (state.services.where((element) => element.myService == true).isEmpty) {
                           AppSnackbar.show(
                             context: context,
@@ -83,6 +81,7 @@ class _ServicesPageState extends State<ServicesPage> {
                           return;
                         }
                         BlocProvider.of<ServicesProviderCubit>(context).updateServices(state.services.where((element) => element.myService == true).toList());
+                        NavigationService.goBack();
                       },
                       loading: state.updateState == BaseState.loading,
                       title: LocaleKeys.confirm.tr(),
