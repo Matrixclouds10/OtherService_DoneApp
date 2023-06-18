@@ -1,19 +1,15 @@
-import 'dart:math';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/core/resources/color.dart';
+import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
+import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/core/widgets/order_item_widget_client_info.dart';
 import 'package:weltweit/features/logic/orders/orders_cubit.dart';
-import 'package:weltweit/features/widgets/app_text_tile.dart';
 import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
-
 import 'package:weltweit/presentation/component/component.dart';
-import 'package:weltweit/features/core/widgets/custom_text.dart';
 
 class OrdersPage extends StatefulWidget {
   const OrdersPage({super.key});
@@ -220,4 +216,3 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
     );
   }
 }
-

@@ -2,13 +2,11 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/resources/decoration.dart';
+import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
-import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/features/logic/policy/policy_cubit.dart';
-import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
-
 import 'package:weltweit/presentation/component/component.dart';
 
 class PolicyPage extends StatefulWidget {

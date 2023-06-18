@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
-import 'package:weltweit/features/data/models/order/order.dart';
 import 'package:weltweit/features/domain/repositoy/app_repo.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
 
@@ -19,10 +18,9 @@ class OrderRateUseCase extends BaseUseCase<BaseResponse, OrderRateParams> {
   Future<Either<ErrorModel, BaseResponse>> callTest(OrderRateParams parameters) {
     throw UnimplementedError();
   }
-
-
 }
-class OrderRateParams{
+
+class OrderRateParams {
   final int providerId;
   final int rate;
   final String comment;
@@ -43,5 +41,4 @@ class OrderRateParams{
       'order_id': orderId,
     };
   }
-  
 }

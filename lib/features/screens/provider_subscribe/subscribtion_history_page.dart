@@ -6,17 +6,14 @@ import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/resources/decoration.dart';
 import 'package:weltweit/core/utils/date/date_converter.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
-import 'package:weltweit/features/core/base/base_response.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
+import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/data/models/subscription/subscription_history_model.dart';
-import 'package:weltweit/features/data/models/subscription/subscription_model.dart';
 import 'package:weltweit/features/logic/provider_subscription/subscription_cubit.dart';
-import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/features/widgets/empty_widget.dart';
 import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
-import 'package:weltweit/features/core/widgets/custom_text.dart';
 
 class SubscribtionHistoryPage extends StatefulWidget {
   const SubscribtionHistoryPage({super.key});
@@ -85,7 +82,11 @@ class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
         children: [
           ListTile(title: Text(e.paymentMethod), leading: Icon(Icons.credit_card_outlined, color: Colors.grey), dense: true, contentPadding: EdgeInsets.zero),
           ListTile(title: Text(e.status), leading: Icon(Icons.check_circle_outline, color: Colors.grey), dense: true, contentPadding: EdgeInsets.zero),
-          ListTile(title: Text("${DateConverter.estimatedDate(e.startsAt)}-${DateConverter.estimatedDate(e.endsAt)}"), leading: Icon(Icons.date_range_outlined, color: Colors.grey), dense: true, contentPadding: EdgeInsets.zero),
+          ListTile(
+              title: Text("${DateConverter.estimatedDate(e.startsAt)}-${DateConverter.estimatedDate(e.endsAt)}"),
+              leading: Icon(Icons.date_range_outlined, color: Colors.grey),
+              dense: true,
+              contentPadding: EdgeInsets.zero),
           Divider(),
           Row(
             children: [

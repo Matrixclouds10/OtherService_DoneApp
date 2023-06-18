@@ -1,10 +1,8 @@
-import 'dart:math';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/base_injection.dart';
+import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/core/widgets/service_provider_item.dart';
@@ -12,7 +10,6 @@ import 'package:weltweit/features/data/models/provider/providers_model.dart';
 import 'package:weltweit/features/logic/favorite/favorite_cubit.dart';
 import 'package:weltweit/features/logic/provider/provider/provider_cubit.dart';
 import 'package:weltweit/features/logic/provider/provider_portfolio/provider_portfolio_cubit.dart';
-import 'package:weltweit/features/logic/provider/provider_services/provider_services_cubit.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/assets.dart';

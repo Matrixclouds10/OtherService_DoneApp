@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'base_form.dart';
-import 'package:weltweit/core/extensions/num_extensions.dart';
 
 class CustomTextFieldNormal extends StatelessWidget {
   final String? suffixText;
@@ -45,7 +44,7 @@ class CustomTextFieldNormal extends StatelessWidget {
   final TextEditingController? controller;
   final TextInputAction? textInputAction;
 
-  CustomTextFieldNormal({
+  const CustomTextFieldNormal({
     Key? key,
     this.suffixText,
     this.hint,

@@ -1,11 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:weltweit/core/tabs/tab.dart';
 import 'package:weltweit/features/screens/provider_more/more_page.dart';
 import 'package:weltweit/features/screens/provider_profile/profile_page.dart';
-
 import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
+
 import '../../provider_home/home_page.dart';
 import '../../provider_wallet/wallet_page.dart';
 
@@ -40,8 +39,8 @@ List<NavigationTab> kTabs = <NavigationTab>[
   NavigationTab(
     name: LocaleKeys.profile,
     image: '',
-    selectIcon: FontAwesomeIcons.userAlt,
-    unSelectIcon: FontAwesomeIcons.userAlt,
+    selectIcon: FontAwesomeIcons.userLarge,
+    unSelectIcon: FontAwesomeIcons.userLarge,
     initialRoute: ProfilePage(),
     index: NavigationTabs.profile,
   ),

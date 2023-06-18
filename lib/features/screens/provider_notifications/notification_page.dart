@@ -1,14 +1,10 @@
-import 'dart:math';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
-import 'package:weltweit/core/routing/routes.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/routing/routes_provider.dart';
-import 'package:weltweit/features/core/routing/routes_user.dart';
 
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/data/models/notification/notification_model.dart';
@@ -63,18 +59,18 @@ class _NotificationPageState extends State<NotificationPage> {
 
           return Column(
             children: [
-              if(state.notifications.isEmpty) Expanded(child: Center(child: CustomText(LocaleKeys.no_notifications.tr()))),
-              if(state.notifications.isNotEmpty)
-              Expanded(
-                child: ListView.builder(
-                  controller: _scrollController,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: state.notifications.length,
-                  itemBuilder: (context, index) {
-                    return singleCustomListTile(state.notifications[index]);
-                  },
+              if (state.notifications.isEmpty) Expanded(child: Center(child: CustomText(LocaleKeys.no_notifications.tr()))),
+              if (state.notifications.isNotEmpty)
+                Expanded(
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: state.notifications.length,
+                    itemBuilder: (context, index) {
+                      return singleCustomListTile(state.notifications[index]);
+                    },
+                  ),
                 ),
-              ),
               SizedBox(height: 12),
               BlocBuilder<NotificationsCubit, NotificationsState>(
                 buildWhen: (previous, current) => previous.loadMoreState != current.loadMoreState,

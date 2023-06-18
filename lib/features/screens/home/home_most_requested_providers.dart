@@ -14,7 +14,6 @@ class MostRequestedProviders extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Locale locale = EasyLocalization.of(context)!.locale;
     return FutureBuilder(
       future: context.read<ProvidersCubit>().getMostRequestedProviders(),
       builder: (context, snapshot) {

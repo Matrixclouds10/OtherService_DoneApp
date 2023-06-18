@@ -4,9 +4,9 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
-
 import 'package:weltweit/app.dart';
 import 'package:weltweit/base_injection.dart';
+
 import '../../../../core/services/local/cache_consumer.dart';
 import '../../../../core/services/local/storage_keys.dart';
 import '../../../../core/utils/logger.dart';
@@ -99,10 +99,11 @@ class DioClient {
   }) async {
     options ??= await initOptions();
     try {
-      if (data != null && data.files.isNotEmpty)
-        data.files.forEach((element) {
+      if (data != null && data.files.isNotEmpty) {
+        for (var element in data.files) {
           Logger().d(element.value);
-        });
+        }
+      }
 
       // if (!ignorePath) {
       //   data = await _buildFileData(

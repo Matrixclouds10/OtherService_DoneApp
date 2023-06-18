@@ -6,7 +6,6 @@ import 'package:weltweit/features/domain/usecase/auth/register_usecase.dart';
 part 'register_state.dart';
 
 class RegisterCubit extends Cubit<RegisterState> {
-  final _tag = 'RegisterCubit';
   final RegisterUseCase _registerUseCase;
 
   RegisterCubit({

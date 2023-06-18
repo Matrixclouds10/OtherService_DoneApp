@@ -1,5 +1,4 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -32,7 +31,7 @@ class _ContactActionState extends State<ContactAction> {
           String? facebook = state.countryModel!.facebook;
           String? twitter = state.countryModel!.twitter;
           String? whatsapp = state.countryModel!.whatsapp;
-          String? taam = state.countryModel!.taam;
+          // String? taam = state.countryModel!.taam;
           return Column(
             children: [
               if (widget.showDivider && facebook != null && whatsapp != null && twitter != null) ...[
@@ -95,7 +94,7 @@ class _ContactActionState extends State<ContactAction> {
             ],
           );
         }
-       
+
         return Container();
       },
     );
@@ -113,9 +112,9 @@ class _ContactActionState extends State<ContactAction> {
 
   openWhatsApp(String whatsAppnumber, String countryCode) async {
     bool status = await canLaunch('https://api.whatsapp.com/send?phone=$countryCode$whatsAppnumber');
-    if (status)
+    if (status) {
       launch('https://api.whatsapp.com/send?phone=$countryCode$whatsAppnumber');
-    else {
+    } else {
       bool status2 = await canLaunch('https://wsend.co/$countryCode$whatsAppnumber');
 
       if (status2) launch('https://wsend.co/$countryCode$whatsAppnumber');

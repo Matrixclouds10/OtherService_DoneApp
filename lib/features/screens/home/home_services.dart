@@ -14,7 +14,6 @@ class HomeServices extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   Locale locale = EasyLocalization.of(context)!.locale;
     return BlocBuilder<ServicesCubit, ServicesState>(
       builder: (context, state) {
         return Column(

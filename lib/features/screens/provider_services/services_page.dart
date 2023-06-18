@@ -1,18 +1,16 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weltweit/core/resources/color.dart';
+import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
-import 'package:weltweit/core/resources/resources.dart';
-import 'package:weltweit/core/resources/color.dart';
+import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/data/models/services/service.dart';
-import 'package:weltweit/core/utils/logger.dart';
+import 'package:weltweit/features/logic/provider_service/services_cubit.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
-import 'package:weltweit/features/logic/provider_service/services_cubit.dart';
-
 import 'package:weltweit/presentation/component/component.dart';
-import 'package:weltweit/features/core/widgets/custom_text.dart';
 
 class ServicesPage extends StatefulWidget {
   const ServicesPage({super.key});

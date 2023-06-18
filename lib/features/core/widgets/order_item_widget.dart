@@ -1,13 +1,10 @@
 import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:weltweit/core/extensions/widget_extensions.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/data/models/order/order.dart';
-import 'package:weltweit/features/logic/order/order_cubit.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/images/custom_image.dart';
@@ -102,13 +99,13 @@ class OrderItemWidget extends StatelessWidget {
                 child: Column(
                   children: [
                     CustomText(LocaleKeys.youRated.tr(), color: Colors.blueAccent, pv: 0).footer(),
-                    if(orderModel.rate?.rate != null)
-                    Row(
-                      children: [
-                        for (var i = 0; i < orderModel.rate!.rate!; i++) const Icon(Icons.star, size: 12, color: Colors.yellow),
-                        for (var i = 0; i < 5 - orderModel.rate!.rate!; i++) const Icon(Icons.star, size: 12, color: Colors.grey),
-                      ],
-                    )
+                    if (orderModel.rate?.rate != null)
+                      Row(
+                        children: [
+                          for (var i = 0; i < orderModel.rate!.rate!; i++) const Icon(Icons.star, size: 12, color: Colors.yellow),
+                          for (var i = 0; i < 5 - orderModel.rate!.rate!; i++) const Icon(Icons.star, size: 12, color: Colors.grey),
+                        ],
+                      )
                   ],
                 ),
               ).onTap(() {

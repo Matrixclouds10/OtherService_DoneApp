@@ -9,15 +9,15 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/core/resources/values_manager.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
-import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
-import 'package:weltweit/features/logic/chat/chat_cubit.dart';
 import 'package:weltweit/features/data/models/chat/chat_model.dart';
 import 'package:weltweit/features/data/models/order/order.dart';
+import 'package:weltweit/features/logic/chat/chat_cubit.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
@@ -33,11 +33,11 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   final TextEditingController _messageController = TextEditingController();
-  List<ChatModel> _messages = [];
+  final List<ChatModel> _messages = [];
   Timer? timer;
   AppPrefs appPrefs = getIt<AppPrefs>();
   int myId = 0;
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
@@ -258,7 +258,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   }
 
   void _addMessage(Message message) async {
-    AppPrefs prefs = getIt<AppPrefs>();
+    // AppPrefs prefs = getIt<AppPrefs>();
     try {
       _messageController.clear();
       bool status = await context.read<ChatCubit>().sendMessage(widget.orderModel.id, message.text);

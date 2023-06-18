@@ -7,13 +7,11 @@ import 'package:full_screen_image/full_screen_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:weltweit/core/resources/resources.dart';
-import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/routing/routes.dart';
 import 'package:weltweit/core/utils/date/date_converter.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/logic/order/order_cubit.dart';
-import 'package:weltweit/features/screens/provider_order_details/video_player.dart';
 import 'package:weltweit/features/data/models/order/order.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
@@ -583,8 +581,8 @@ class _OrderDetailsState extends State<OrderDetails> {
         ...other
             .map((e) => GestureDetector(
                   onTap: () {
-                    Uri _url = Uri.parse(e);
-                    launchUrl(_url);
+                    Uri url = Uri.parse(e);
+                    launchUrl(url);
                   },
                   child: Row(
                     children: [

@@ -6,7 +6,6 @@ import 'package:weltweit/features/screens/home/home_page.dart';
 import 'package:weltweit/features/screens/orders/orders_page.dart';
 
 import 'package:weltweit/features/screens/profile/profile_page.dart';
-import 'package:weltweit/features/screens/wallet/wallet_page.dart';
 import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 

@@ -7,8 +7,6 @@ import 'package:weltweit/features/domain/usecase/order/order_accept_usecase.dart
 import 'package:weltweit/features/domain/usecase/order/order_finish_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_rate_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_usecase.dart';
-import 'package:weltweit/features/domain/usecase/provider/notification/notifications_usecase.dart';
-import 'package:weltweit/features/domain/usecase/provider/notification/provider_notifications_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider/rates/provider_rates_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_subscription/subscribe_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_subscription/subscribtions_history_usecase.dart';
@@ -137,5 +135,4 @@ Future<void> init() async {
   getIt.registerLazySingleton(() => SubscribeUseCase(getIt()));
   getIt.registerLazySingleton(() => SubscribtionUseCase(getIt()));
   getIt.registerLazySingleton(() => SubscribtionHistoryUseCase(getIt()));
-
 }

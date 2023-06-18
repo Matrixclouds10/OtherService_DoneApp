@@ -1,9 +1,11 @@
-import 'package:weltweit/core/extensions/num_extensions.dart';
-import 'package:weltweit/core/resources/text_styles.dart';
-import 'package:weltweit/presentation/component/inputs/expaned_form_view.dart';
+// ignore_for_file: unused_field
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:weltweit/core/extensions/num_extensions.dart';
+import 'package:weltweit/core/resources/text_styles.dart';
+import 'package:weltweit/presentation/component/inputs/expaned_form_view.dart';
 
 import '../../../core/resources/font_manager.dart';
 import '../../../core/resources/values_manager.dart';
@@ -202,7 +204,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
                   disabledBorder: widget._noBorder ? InputBorder.none : Theme.of(context).inputDecorationTheme.disabledBorder,
                   focusedBorder: widget._noBorder ? InputBorder.none : Theme.of(context).inputDecorationTheme.focusedBorder,
                   errorBorder: widget._noBorder ? InputBorder.none : Theme.of(context).inputDecorationTheme.errorBorder,
-                  
                   errorStyle: Theme.of(context).inputDecorationTheme.errorStyle,
                   hintStyle: Theme.of(context).inputDecorationTheme.hintStyle?.copyWith(color: widget._isDark ? Theme.of(context).highlightColor : Theme.of(context).hintColor),
                   labelStyle: Theme.of(context).inputDecorationTheme.labelStyle?.copyWith(color: widget._isDark ? Theme.of(context).cardColor : Theme.of(context).textTheme.bodyMedium?.color),

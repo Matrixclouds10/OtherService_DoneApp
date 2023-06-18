@@ -5,23 +5,23 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
+import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/core/utils/globals.dart';
 import 'package:weltweit/core/utils/permission_heloper.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
-import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/domain/usecase/provider_profile/change_password_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_profile/delete_profile_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_profile/profile_read_usecase.dart';
+import 'package:weltweit/features/domain/usecase/provider_profile/update_fcm_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_profile/update_profile_availablity_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_profile/update_profile_location_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_profile/update_profile_usecase.dart';
-import 'package:weltweit/features/domain/usecase/provider_profile/update_fcm_usecase.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 
@@ -136,6 +136,7 @@ class ProfileProviderCubit extends Cubit<ProfileProviderState> {
       if (locationData.latitude != null && locationData.longitude != null) {
         updateProfileLocationUseCase(UpdateProfileLocationParams(lat: locationData.latitude.toString(), lng: locationData.longitude.toString()));
       }
+      // ignore: empty_catches
     } catch (e) {}
   }
 

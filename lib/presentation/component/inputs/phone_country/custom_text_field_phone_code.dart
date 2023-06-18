@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:weltweit/core/resources/resources.dart';
-import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/features/data/models/response/country/country_model.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 
@@ -100,7 +99,7 @@ class CustomTextFieldPhoneCode extends StatefulWidget {
 
   final EdgeInsets flagsButtonMargin;
 
-  CustomTextFieldPhoneCode({
+  const CustomTextFieldPhoneCode({
     Key? key,
     this.suffixText,
     this.hint,
@@ -165,7 +164,7 @@ class _CustomTextFieldPhoneCodeState extends State<CustomTextFieldPhoneCode> {
   @override
   void initState() {
     super.initState();
-    _selectedCountry = widget.initialCountry ;
+    _selectedCountry = widget.initialCountry;
   }
 
   Future<void> _changeCountry() async {
@@ -175,7 +174,7 @@ class _CustomTextFieldPhoneCodeState extends State<CustomTextFieldPhoneCode> {
       builder: (context) => StatefulBuilder(
         builder: (ctx, setState) => CountryPickerDialog(
           style: widget.pickerDialogStyle,
-          filteredCountries:  widget.countries,
+          filteredCountries: widget.countries,
           searchText: widget.searchText,
           countryList: widget.countries,
           selectedCountry: _selectedCountry,
@@ -227,7 +226,7 @@ class _CustomTextFieldPhoneCodeState extends State<CustomTextFieldPhoneCode> {
 
   Container _buildFlagsButton() {
     String selectCountryHint = LocaleKeys.selectCountry.tr();
-    if(kDebugMode) selectCountryHint = selectCountryHint + ' (${widget.countries.length})';
+    if (kDebugMode) selectCountryHint = '$selectCountryHint (${widget.countries.length})';
     return Container(
       margin: widget.flagsButtonMargin,
       child: DecoratedBox(
@@ -250,7 +249,7 @@ class _CustomTextFieldPhoneCodeState extends State<CustomTextFieldPhoneCode> {
                     decoration: BoxDecoration().chip().radius(radius: 4),
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     child: Text(
-                      _selectedCountry?.title == null ? '${selectCountryHint}' : '${_selectedCountry?.title}',
+                      _selectedCountry?.title == null ? selectCountryHint : '${_selectedCountry?.title}',
                       style: TextStyle(fontSize: 12),
                     ),
                   ),

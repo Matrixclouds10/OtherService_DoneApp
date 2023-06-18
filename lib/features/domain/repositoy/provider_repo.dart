@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
-import 'package:weltweit/features/core/base/base_usecase.dart';
 import 'package:weltweit/features/data/models/notification/notification_model.dart';
 import 'package:weltweit/features/data/models/response/auth/user_model.dart';
 import 'package:weltweit/features/data/models/documents/document.dart';
@@ -54,7 +53,5 @@ abstract class AppRepositoryProvider {
 
   //* Wallet
   Future<Either<ErrorModel, List<WalletModel>>> getWalletHistory();
-  Future<Either<ErrorModel,  BaseResponse<List<NotificationModel>>>> getProviderNotifications(int parameters);
-
-
+  Future<Either<ErrorModel, BaseResponse<List<NotificationModel>>>> getProviderNotifications(int parameters);
 }

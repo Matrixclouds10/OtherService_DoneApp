@@ -67,6 +67,7 @@ class AddressCubit extends Cubit<AddressState> {
   Future<void> setAsDefault(int id) async {
     emit(state.copyWith(baseState: BaseState.loading));
 
+    // ignore: unused_local_variable
     Either<ErrorModel, BaseResponse> result = await addressSetAsDefaultUsecase(id);
     emit(state.copyWith(baseState: BaseState.loaded));
   }

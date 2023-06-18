@@ -5,9 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/resources/decoration.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
-import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
+import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/data/models/subscription/subscription_model.dart';
 import 'package:weltweit/features/logic/provider_profile/profile_cubit.dart';
 import 'package:weltweit/features/logic/provider_subscription/subscription_cubit.dart';
@@ -17,7 +17,6 @@ import 'package:weltweit/features/widgets/empty_widget.dart';
 import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
-import 'package:weltweit/features/core/widgets/custom_text.dart';
 
 class SubscribePage extends StatefulWidget {
   const SubscribePage({super.key});
@@ -215,7 +214,7 @@ class _SubscribePageState extends State<SubscribePage> {
 
   void actionShowSubscriptionMethods(SubscriptionModel subscriptionModel) {
     ProfileProviderCubit profileProviderCubit = context.read<ProfileProviderCubit>();
-    List<String> subscreptionMethods = [ "request","wallet", "credit"];
+    List<String> subscreptionMethods = ["request", "wallet", "credit"];
     var selectedMethod = subscreptionMethods.first;
     showDialog(
       context: context,
@@ -257,7 +256,7 @@ class _SubscribePageState extends State<SubscribePage> {
                         },
                         title: CustomText(
                           title,
-                          color:!isEnable ? Colors.grey : Colors.black,
+                          color: !isEnable ? Colors.grey : Colors.black,
                         ).start(),
                         contentPadding: EdgeInsets.zero,
                         dense: true,

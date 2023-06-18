@@ -1,23 +1,17 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/routing/routes.dart';
-import 'package:weltweit/core/services/local/cache_consumer.dart';
-import 'package:weltweit/base_injection.dart';
-import 'package:weltweit/core/utils/echo.dart';
-import 'package:weltweit/features/logic/provider_home/home_cubit.dart';
-import 'package:weltweit/features/widgets/app_dialogs.dart';
-import 'package:weltweit/generated/locale_keys.g.dart';
-import 'package:weltweit/generated/assets.dart';
+import 'package:weltweit/features/core/routing/routes_provider.dart';
+import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/logic/provider_service/services_cubit.dart';
 import 'package:weltweit/features/screens/provider_layout/layout_cubit.dart';
-
-import 'package:weltweit/features/core/routing/routes_provider.dart';
+import 'package:weltweit/features/widgets/app_dialogs.dart';
+import 'package:weltweit/generated/assets.dart';
+import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
-import 'package:weltweit/features/core/widgets/custom_text.dart';
 
 class MorePage extends StatelessWidget {
   const MorePage({super.key});

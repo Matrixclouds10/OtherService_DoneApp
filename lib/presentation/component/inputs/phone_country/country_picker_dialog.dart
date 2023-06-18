@@ -1,9 +1,8 @@
-import 'package:weltweit/core/utils/validators.dart';
 import 'package:flutter/material.dart';
+import 'package:weltweit/core/utils/validators.dart';
 import 'package:weltweit/features/data/models/response/country/country_model.dart';
 
 import '../../../../core/resources/resources.dart';
-import 'countries.dart';
 
 class PickerDialogStyle {
   final Color? backgroundColor;
@@ -64,7 +63,7 @@ class CountryPickerDialog extends StatefulWidget {
 
 class _CountryPickerDialogState extends State<CountryPickerDialog> {
   late List<CountryModel> _filteredCountries;
-   CountryModel? _selectedCountry;
+  CountryModel? _selectedCountry;
 
   @override
   void initState() {
@@ -78,19 +77,14 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
   Widget build(BuildContext context) {
     final mediaWidth = MediaQuery.of(context).size.width;
     final width = widget.style?.width ?? mediaWidth;
-    final defaultHorizontalPadding = 24.0;
-    final defaultVerticalPadding = 40.0;
+    const defaultHorizontalPadding = 24.0;
+    const defaultVerticalPadding = 40.0;
     return Dialog(
-      insetPadding: EdgeInsets.symmetric(
-          vertical: defaultVerticalPadding,
-          horizontal: mediaWidth > (width + defaultHorizontalPadding * 2)
-              ? (mediaWidth - width) / 2
-              : defaultHorizontalPadding),
+      insetPadding: EdgeInsets.symmetric(vertical: defaultVerticalPadding, horizontal: mediaWidth > (width + defaultHorizontalPadding * 2) ? (mediaWidth - width) / 2 : defaultHorizontalPadding),
       backgroundColor: Colors.transparent,
       child: Container(
         decoration: BoxDecoration(
-          color: widget.style?.backgroundColor ??
-              Theme.of(context).backgroundColor,
+          color: widget.style?.backgroundColor ?? Theme.of(context).colorScheme.background,
           borderRadius: const BorderRadius.all(
             Radius.circular(kFormPaddingAllLarge),
           ),
@@ -99,8 +93,7 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
         child: Column(
           children: <Widget>[
             Padding(
-              padding:
-                  widget.style?.searchFieldPadding ?? const EdgeInsets.all(0),
+              padding: widget.style?.searchFieldPadding ?? const EdgeInsets.all(0),
               child: TextField(
                 cursorColor: widget.style?.searchFieldCursorColor,
                 decoration: widget.style?.searchFieldInputDecoration ??
@@ -110,15 +103,9 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
                     ),
                 onChanged: (value) {
                   _filteredCountries = Validators.isNumeric(value)
-                      ? widget.countryList
-                          .where((country) => country.code!.contains(value))
-                          .toList()
-                      : widget.countryList
-                          .where((country) => country.title!
-                              .toLowerCase()
-                              .contains(value.toLowerCase()))
-                          .toList();
-                  if (this.mounted) setState(() {});
+                      ? widget.countryList.where((country) => country.code!.contains(value)).toList()
+                      : widget.countryList.where((country) => country.title!.toLowerCase().contains(value.toLowerCase())).toList();
+                  if (mounted) setState(() {});
                 },
               ),
             ),
@@ -137,22 +124,21 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
                       contentPadding: widget.style?.listTilePadding,
                       title: Text(
                         _filteredCountries[index].title ?? '',
-                        style: widget.style?.countryNameStyle ??
-                            const TextStyle(fontWeight: FontWeight.w700),
+                        style: widget.style?.countryNameStyle ?? const TextStyle(fontWeight: FontWeight.w700),
                       ),
-                      trailing:_filteredCountries[index].code==null?null: Text(
-                        '+${_filteredCountries[index].code}',
-                        style: widget.style?.countryCodeStyle ??
-                            const TextStyle(fontWeight: FontWeight.w700),
-                      ),
+                      trailing: _filteredCountries[index].code == null
+                          ? null
+                          : Text(
+                              '+${_filteredCountries[index].code}',
+                              style: widget.style?.countryCodeStyle ?? const TextStyle(fontWeight: FontWeight.w700),
+                            ),
                       onTap: () {
                         _selectedCountry = _filteredCountries[index];
                         widget.onCountryChanged(_selectedCountry!);
                         Navigator.of(context).pop();
                       },
                     ),
-                    widget.style?.listTileDivider ??
-                        const Divider(thickness: 1),
+                    widget.style?.listTileDivider ?? const Divider(thickness: 1),
                   ],
                 ),
               ),

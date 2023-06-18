@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/routing/platform_page_route.dart';
 import 'package:weltweit/core/routing/undefined_route_screen.dart';
-import 'package:weltweit/features/logic/provider_profile/profile_cubit.dart';
 import 'package:weltweit/features/screens/provider_docs/document_page.dart';
 import 'package:weltweit/features/screens/provider_layout/layout_page.dart';
 import 'package:weltweit/features/screens/provider_my_addresses/my_addresses_page.dart';
@@ -35,7 +32,7 @@ class RouteProviderGenerator {
         return platformPageRoute(const MyAddressesPage());
       case RoutesProvider.providerOrders:
         return platformPageRoute(const OrdersPage());
-      
+
       case RoutesProvider.providerReservationPage:
         return platformPageRoute(const ReservationPage());
       case RoutesProvider.providerDocuments:
@@ -49,7 +46,7 @@ class RouteProviderGenerator {
       case RoutesProvider.providerProfileUpdateScreen:
         return platformPageRoute(ProfileUpdatePage());
       default:
-        return platformPageRoute( UndefinedRouteScreen(settings.name));
+        return platformPageRoute(UndefinedRouteScreen(settings.name));
       // default:return platformPageRoute(const UndefinedRouteScreen());
     }
   }
