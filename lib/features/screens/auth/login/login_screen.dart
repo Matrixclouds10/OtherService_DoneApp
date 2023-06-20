@@ -9,6 +9,7 @@ import 'package:weltweit/core/resources/values_manager.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
+import 'package:weltweit/core/utils/constants.dart';
 import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/features/core/routing/routes_provider.dart';
@@ -47,11 +48,12 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   late TabController _tabController;
   @override
   void initState() {
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 2, vsync: this,initialIndex: Constants.hideForIos ? 1 : 0);
     _tabController.addListener(() {
       typeIsProvider = _tabController.index == 0;
       logger.d('typeIsProvider $typeIsProvider');
     });
+    typeIsProvider = Constants.hideForIos?false:true;
     if (kDebugMode) {
       _phoneController.text = '1010101040';
       _passwordController.text = '123456';
@@ -178,13 +180,17 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                 style: const TextStyle().titleStyle(fontSize: 18).boldStyle().customColor(primaryColor),
                                 textAlign: TextAlign.center,
                               ),
+
                               //Tabs
-                              TabBar(
-                                controller: _tabController,
-                                tabs: [
-                                  Tab(child: CustomText(LocaleKeys.provider.tr())),
-                                  Tab(child: CustomText(LocaleKeys.user.tr())),
-                                ],
+                              Visibility(
+                                visible: !Constants.hideForIos,
+                                child: TabBar(
+                                  controller: _tabController,
+                                  tabs: [
+                                    Tab(child: CustomText(LocaleKeys.provider.tr())),
+                                    Tab(child: CustomText(LocaleKeys.user.tr())),
+                                  ],
+                                ),
                               ),
 
                               VerticalSpace(kScreenPaddingLarge.h),
@@ -197,7 +203,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                   child: GestureDetector(
                                     onTap: () {
                                       AppDialogs().forgetPassword(
-                                        title:  LocaleKeys.forgetPassword.tr(),
+                                        title: LocaleKeys.forgetPassword.tr(),
                                         context: context,
                                         message: LocaleKeys.enterRegisteredEmailAddress.tr(),
                                         typeIsProvider: typeIsProvider,
