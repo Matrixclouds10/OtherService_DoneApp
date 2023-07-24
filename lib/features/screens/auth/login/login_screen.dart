@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +17,8 @@ import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
-import 'package:weltweit/features/data/models/response/auth/user_model.dart';
-import 'package:weltweit/features/data/models/response/country/country_model.dart';
+import 'package:weltweit/features/data/models/auth/user_model.dart';
+import 'package:weltweit/features/data/models/location/country_model.dart';
 import 'package:weltweit/features/domain/request_body/check_otp_body.dart';
 import 'package:weltweit/features/domain/usecase/auth/sign_in_usecase.dart';
 import 'package:weltweit/features/widgets/app_back_button.dart';
@@ -48,12 +50,12 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   late TabController _tabController;
   @override
   void initState() {
-    _tabController = TabController(length: 2, vsync: this,initialIndex: Constants.hideForIos ? 1 : 0);
+    _tabController = TabController(length: 2, vsync: this, initialIndex: Constants.hideForIos ? 1 : 0);
     _tabController.addListener(() {
       typeIsProvider = _tabController.index == 0;
       logger.d('typeIsProvider $typeIsProvider');
     });
-    typeIsProvider = Constants.hideForIos?false:true;
+    typeIsProvider = Constants.hideForIos ? false : true;
     if (kDebugMode) {
       _phoneController.text = '1010101040';
       _passwordController.text = '123456';
@@ -182,16 +184,14 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                               ),
 
                               //Tabs
-                              Visibility(
-                                visible: !Constants.hideForIos,
-                                child: TabBar(
+                              if (Platform.isAndroid)
+                                TabBar(
                                   controller: _tabController,
                                   tabs: [
                                     Tab(child: CustomText(LocaleKeys.provider.tr())),
                                     Tab(child: CustomText(LocaleKeys.user.tr())),
                                   ],
                                 ),
-                              ),
 
                               VerticalSpace(kScreenPaddingLarge.h),
                               _buildForm(),

@@ -6,7 +6,7 @@ import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/data/models/provider/providers_model.dart';
-import 'package:weltweit/features/data/models/response/auth/user_model.dart';
+import 'package:weltweit/features/data/models/auth/user_model.dart';
 import 'package:weltweit/features/logic/favorite/favorite_cubit.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';

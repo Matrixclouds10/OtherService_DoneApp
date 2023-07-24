@@ -1,6 +1,9 @@
 // DO NOT EDIT. This is code generated via package:easy_localization/generate.dart
 
 abstract class LocaleKeys {
+  static const region = "region";
+  static const city = "city";
+  static const whatsApp = "whatsApp";
   static const byClickingRegisterYouAccept = "byClickingRegisterYouAccept";
   static const enterRegisteredEmailAddress = "enterRegisteredEmailAddress";
   static const activateAccount = "activateAccount";

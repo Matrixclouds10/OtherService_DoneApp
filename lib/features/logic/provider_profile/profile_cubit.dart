@@ -14,7 +14,7 @@ import 'package:weltweit/core/utils/permission_heloper.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
-import 'package:weltweit/features/data/models/response/auth/user_model.dart';
+import 'package:weltweit/features/data/models/auth/user_model.dart';
 import 'package:weltweit/features/domain/usecase/provider_profile/change_password_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_profile/delete_profile_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_profile/profile_read_usecase.dart';
@@ -44,21 +44,25 @@ class ProfileProviderCubit extends Cubit<ProfileProviderState> {
     this.changePasswordUseCase,
     this.updateProfileLocationUseCase,
   ) : super(const ProfileProviderState());
-  Future<void> getProfile() async {
-    emit(state.copyWith(state: BaseState.loading));
+  Future<UserModel> getProfile() async {
+    emit(state.copyWith(state: BaseState.loading, updateState: BaseState.initial, updatePasswordState: BaseState.initial));
     final result = await profileUseCase.call(NoParameters());
-    result.fold(
-      (error) => emit(state.copyWith(state: BaseState.error, error: error)),
+    return result.fold(
+      (error) {
+        emit(state.copyWith(state: BaseState.error, error: error));
+        GlobalParams globalParams = getIt();
+        globalParams = globalParams.copyWith(user: state.data);
+        throw error;
+      },
       (data) {
         emit(state.copyWith(state: BaseState.loaded, data: data));
-        kEcho("countryId ${data.countryModel?.id}");
         AppPrefs prefs = getIt();
         if (data.countryModel?.id != null) prefs.save(PrefKeys.countryId, data.countryModel?.id);
+        GlobalParams globalParams = getIt();
+        globalParams = globalParams.copyWith(user: state.data);
+        return data;
       },
     );
-
-    GlobalParams globalParams = getIt();
-    globalParams = globalParams.copyWith(user: state.data);
   }
 
   Future<UserModel> getProfileNoState() async {

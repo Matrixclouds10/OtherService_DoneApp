@@ -11,7 +11,7 @@ import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/core/widgets/service_provider_item.dart';
-import 'package:weltweit/features/data/models/response/auth/user_model.dart';
+import 'package:weltweit/features/data/models/auth/user_model.dart';
 import 'package:weltweit/features/data/models/portfolio/portfolio_image.dart';
 import 'package:weltweit/features/domain/usecase/provider_portfolio/portfolio_update_usecase.dart';
 import 'package:weltweit/features/logic/provider/provider/provider_cubit.dart';

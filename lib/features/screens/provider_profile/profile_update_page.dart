@@ -7,13 +7,18 @@ import 'package:weltweit/core/extensions/num_extensions.dart';
 import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
-import 'package:weltweit/features/data/models/response/auth/user_model.dart';
-import 'package:weltweit/features/data/models/response/country/country_model.dart';
+import 'package:weltweit/features/data/models/auth/user_model.dart';
+import 'package:weltweit/features/data/models/location/city_model.dart';
+import 'package:weltweit/features/data/models/location/country_model.dart';
+import 'package:weltweit/features/data/models/location/region_model.dart';
 import 'package:weltweit/features/domain/usecase/provider_profile/change_password_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_profile/update_profile_usecase.dart';
+import 'package:weltweit/features/logic/location_city/city_cubit.dart';
+import 'package:weltweit/features/logic/location_region/region_cubit.dart';
 import 'package:weltweit/features/logic/provider_profile/profile_cubit.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
+import 'package:weltweit/features/widgets/picker_dialog.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
 import 'package:weltweit/presentation/component/inputs/phone_country/custom_text_filed_phone_country.dart';
@@ -30,12 +35,15 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
   final TextEditingController _descController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _whatsAppController = TextEditingController();
 
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
   File? image;
   String? nerworkImage;
   CountryModel? selectedCountry;
+  CityModel? selectedCity;
+  RegionModel? selectedRegion;
   bool isMale = true;
 
   final _formKey = GlobalKey<FormState>();
@@ -49,6 +57,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
         String name = _nameController.text;
         String desc = _descController.text;
         String phone = _phoneController.text;
+        String whatsapp = _whatsAppController.text;
         String email = _emailController.text;
 
         if (selectedCountry == null) {
@@ -60,15 +69,19 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
           return;
         }
         UpdateProfileParams updateProfileParams = UpdateProfileParams(
-            name: name,
-            mobileNumber: phone,
-            email: email,
-            image: image,
-            countryCode: selectedCountry?.code ?? "20",
-            countryIso: selectedCountry?.title,
-            genderIsMale: isMale,
-            countryId: selectedCountry?.id ?? 1,
-            description: desc);
+          name: name,
+          mobileNumber: phone,
+          whatsapp: whatsapp,
+          email: email,
+          image: image,
+          countryCode: selectedCountry?.code ?? "20",
+          countryIso: selectedCountry?.title,
+          genderIsMale: isMale,
+          countryId: selectedCountry?.id ?? 1,
+          regionId: selectedRegion?.id,
+          cityId: selectedCity?.id,
+          description: desc,
+        );
         await BlocProvider.of<ProfileProviderCubit>(context, listen: false).updateProfile(updateProfileParams);
       }
     }
@@ -108,8 +121,21 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
 
   @override
   void initState() {
-    BlocProvider.of<ProfileProviderCubit>(context, listen: false).getProfile();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      UserModel userModel = await BlocProvider.of<ProfileProviderCubit>(context, listen: false).getProfile();
+      _nameController.text = userModel.name ?? "";
+      _descController.text = userModel.desc ?? "";
+      _emailController.text = userModel.email ?? "";
+      _phoneController.text = userModel.mobileNumber ?? "";
+      _whatsAppController.text = userModel.whatsAppNumber ?? "";
+      nerworkImage = userModel.image;
+      selectedCountry = userModel.countryModel;
+      selectedCity = userModel.cityModel;
+      selectedRegion = userModel.regionModel;
+      if (context.mounted && selectedCountry?.id != null) BlocProvider.of<CityCubit>(context, listen: false).getCities(selectedCountry!.id!);
+      if (context.mounted && selectedCity?.id != null) BlocProvider.of<RegionCubit>(context, listen: false).getRegions(selectedCity!.id!);
+    });
   }
 
   @override
@@ -164,15 +190,6 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
               case BaseState.loading:
                 return const Center(child: CircularProgressIndicator());
               case BaseState.loaded:
-                _nameController.text = state.data?.name ?? "";
-                _descController.text = state.data?.desc ?? "";
-                _emailController.text = state.data?.email ?? "";
-                _phoneController.text = state.data?.mobileNumber ?? "";
-                nerworkImage = state.data?.image;
-                selectedCountry = state.data?.countryModel;
-                print("selectedCountry: ${state.data?.countryModel}");
-                print("selectedCountry: ${selectedCountry.toString()}");
-
                 return _buildBody(context, state.data);
               case BaseState.error:
                 return ErrorLayout(errorModel: state.error);
@@ -269,6 +286,17 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
               },
             ),
             const VerticalSpace(kScreenPaddingNormal),
+            CustomTextFieldPhone(
+              controller: _whatsAppController,
+              autoValidate: false,
+              hint: tr(LocaleKeys.whatsApp),
+              textInputAction: TextInputAction.next,
+              validateFunc: (value) => null,
+              autofocus: false,
+            ),
+            const VerticalSpace(kScreenPaddingNormal),
+            _cityAndregion(),
+            const VerticalSpace(kScreenPaddingNormal),
             CustomTextFieldEmail(label: tr(LocaleKeys.email), controller: _emailController, textInputAction: TextInputAction.next),
             // const VerticalSpace(kScreenPaddingNormal),
             // Row(
@@ -324,5 +352,115 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
             SizedBox(height: 8)
           ],
         ));
+  }
+
+  _cityAndregion() {
+    return StatefulBuilder(builder: (context, setStateParent) {
+      return Row(
+        children: [
+          Expanded(
+            child: BlocBuilder<CityCubit, CityState>(
+              builder: (context, state) {
+                Widget suffixData = Icon(Icons.arrow_drop_down);
+                if (state.state == BaseState.loading) {
+                  suffixData = SizedBox(width: 16, height: 16, child: CircularProgressIndicator());
+                }
+                if (state.data.isEmpty) suffixData = Container();
+
+                return GestureDetector(
+                  onTap: () async {
+                    if (state.state == BaseState.loading) return;
+                    if (state.data.isEmpty) return;
+                    List<String> citiesAsString = state.data.map((e) => e.name!).toList();
+                    await showDialog(
+                      context: context,
+                      useRootNavigator: false,
+                      builder: (context) => StatefulBuilder(
+                        builder: (ctx, setState) => ItemPickerDialog(
+                          filteredItems: citiesAsString,
+                          searchText: '',
+                          countryList: citiesAsString,
+                          selectedItem: selectedCity?.name,
+                          onItemChanged: (String? item) {
+                            if (item == null) return;
+                            selectedCity = state.data.firstWhere((element) => element.name == item);
+
+                            if (selectedCity?.id != null) {
+                              context.read<RegionCubit>().reset();
+                              selectedRegion = null;
+                              context.read<RegionCubit>().getRegions(selectedCity!.id!);
+                            }
+                            setStateParent(() {});
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                  child: CustomTextFieldNormal(
+                    controller: TextEditingController(text: selectedCity?.name ?? ""),
+                    hint: LocaleKeys.city.tr(),
+                    defaultValue: selectedCity?.name,
+                    textInputAction: TextInputAction.next,
+                    autofocus: false,
+                    enable: false,
+                    isRequired: false,
+                    suffixData: suffixData,
+                    label: LocaleKeys.city.tr(),
+                  ),
+                );
+              },
+            ),
+          ),
+          SizedBox(width: 8),
+          Expanded(
+            child: BlocBuilder<RegionCubit, RegionState>(
+              builder: (context, state) {
+                Widget suffixData = Icon(Icons.arrow_drop_down);
+                if (state.state == BaseState.loading) {
+                  suffixData = SizedBox(width: 16, height: 16, child: CircularProgressIndicator());
+                }
+                if (state.data.isEmpty) suffixData = Container();
+                return GestureDetector(
+                  onTap: () async {
+                    if (state.state == BaseState.loading) return;
+                    if (state.data.isEmpty) return;
+                    List<String> regionsAsString = state.data.map((e) => e.name!).toList();
+                    await showDialog(
+                      context: context,
+                      useRootNavigator: false,
+                      builder: (context) => StatefulBuilder(
+                        builder: (ctx, setState) => ItemPickerDialog(
+                          filteredItems: regionsAsString,
+                          searchText: '',
+                          countryList: regionsAsString,
+                          selectedItem: selectedRegion?.name,
+                          onItemChanged: (String? item) {
+                            if (item == null) return;
+                            selectedRegion = state.data.firstWhere((element) => element.name == item);
+                            setStateParent(() {});
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                  child: CustomTextFieldNormal(
+                    key: Key(selectedRegion?.name ?? ""),
+                    controller: TextEditingController(text: selectedRegion?.name ?? ""),
+                    defaultValue: selectedRegion?.name,
+                    hint: LocaleKeys.region.tr(),
+                    textInputAction: TextInputAction.next,
+                    autofocus: false,
+                    enable: false,
+                    isRequired: false,
+                    suffixData: suffixData,
+                    label: LocaleKeys.region.tr(),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      );
+    });
   }
 }

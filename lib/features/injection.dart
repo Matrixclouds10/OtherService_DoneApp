@@ -1,8 +1,10 @@
 import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/features/data/repository/address_repository_imp.dart';
 import 'package:weltweit/features/data/repository/app_repository_imp.dart';
-import 'package:weltweit/features/domain/usecase/country/countries_usecase.dart';
-import 'package:weltweit/features/domain/usecase/country/country_usecase.dart';
+import 'package:weltweit/features/domain/usecase/location/cities_usecase.dart';
+import 'package:weltweit/features/domain/usecase/location/countries_usecase.dart';
+import 'package:weltweit/features/domain/usecase/location/country_usecase.dart';
+import 'package:weltweit/features/domain/usecase/location/regions_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_accept_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_finish_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_rate_usecase.dart';
@@ -125,6 +127,8 @@ Future<void> init() async {
   getIt.registerLazySingleton(() => ContactUsUseCase(getIt()));
   getIt.registerLazySingleton(() => CountryUseCase(getIt()));
   getIt.registerLazySingleton(() => CountriesUseCase(getIt()));
+  getIt.registerLazySingleton(() => CitiesUseCase(getIt()));
+  getIt.registerLazySingleton(() => RegionsUseCase(getIt()));
   getIt.registerLazySingleton(() => BannerUseCase(getIt()));
 
   //Chat

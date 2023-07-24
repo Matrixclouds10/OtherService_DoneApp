@@ -1,6 +1,6 @@
 class AppURLProvider {
   static const String kAPIKey = "";
-  static const String kBaseURL = "http://don.dev01.matrix-clouds.com/api/service-provider";
+  static const String kBaseURL = "http://newdon.dev01.matrix-clouds.com/api/service-provider";
 
   ///Auth
   static const String loginURI = "$kBaseURL/login";

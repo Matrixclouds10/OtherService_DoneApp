@@ -193,40 +193,43 @@ class _OTPScreenState extends State<OTPScreen> {
   }
 
   _buildForm() {
-    return Center(
-      child: PinCodeTextField(
-        appContext: context,
-        length: 4,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        keyboardType: TextInputType.number,
-        obscureText: false,
-        showCursor: false,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        animationType: AnimationType.fade,
-        pinTheme: PinTheme(
-          shape: PinCodeFieldShape.box,
-          inactiveColor: Colors.transparent,
-          disabledColor: Theme.of(context).cardColor,
-          activeColor: Colors.transparent,
-          selectedColor: Colors.transparent,
-          errorBorderColor: Theme.of(context).colorScheme.error,
-          inactiveFillColor: Colors.grey[50],
-          selectedFillColor: Colors.black.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(kFormRadius),
-          fieldHeight: 48.r,
-          fieldWidth: 48.r,
-          activeFillColor: Theme.of(context).cardColor,
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Center(
+        child: PinCodeTextField(
+          appContext: context,
+          length: 4,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          keyboardType: TextInputType.number,
+          obscureText: false,
+          showCursor: false,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          animationType: AnimationType.fade,
+          pinTheme: PinTheme(
+            shape: PinCodeFieldShape.box,
+            inactiveColor: Colors.transparent,
+            disabledColor: Theme.of(context).cardColor,
+            activeColor: Colors.transparent,
+            selectedColor: Colors.transparent,
+            errorBorderColor: Theme.of(context).colorScheme.error,
+            inactiveFillColor: Colors.grey[50],
+            selectedFillColor: Colors.black.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(kFormRadius),
+            fieldHeight: 48.r,
+            fieldWidth: 48.r,
+            activeFillColor: Theme.of(context).cardColor,
+          ),
+          animationDuration: const Duration(milliseconds: 300),
+          backgroundColor: Colors.transparent,
+          textStyle: const TextStyle().titleStyle(fontSize: 24),
+          enableActiveFill: true,
+          boxShadows: const [BoxShadow(color: grayScaleLiteColor, spreadRadius: 1, blurRadius: 5)],
+          controller: _codeController,
+          beforeTextPaste: (text) {
+            return true;
+          },
+          onChanged: (String value) {},
         ),
-        animationDuration: const Duration(milliseconds: 300),
-        backgroundColor: Colors.transparent,
-        textStyle: const TextStyle().titleStyle(fontSize: 24),
-        enableActiveFill: true,
-        boxShadows: const [BoxShadow(color: grayScaleLiteColor, spreadRadius: 1, blurRadius: 5)],
-        controller: _codeController,
-        beforeTextPaste: (text) {
-          return true;
-        },
-        onChanged: (String value) {},
       ),
     );
   }

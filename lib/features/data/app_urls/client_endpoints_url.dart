@@ -1,6 +1,6 @@
 class AppURL {
   static const String kAPIKey = "";
-  static const String kBaseURL = "http://don.dev01.matrix-clouds.com/api";
+  static const String kBaseURL = "http://newdon.dev01.matrix-clouds.com/api";
   // static const String kBaseURL = "$kBaseURL/https://super-app.dev01.matrix-clouds.com/api/";
 
   //Profile
@@ -85,6 +85,8 @@ class AppURL {
   static const String terms = "$kBaseURL/terms";
   static const String privacy = "$kBaseURL/privacy";
   static const String contactUs = "$kBaseURL/send-contact-message";
+  static const String cities = "$kBaseURL/get-cities";
+  static const String regions = "$kBaseURL/get-regions";
   static const String countries = "$kBaseURL/get-countries";
   static const String country = "$kBaseURL/get-country";
   static const String banners = "$kBaseURL/get-banners";

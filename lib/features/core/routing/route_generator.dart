@@ -8,6 +8,7 @@ import 'package:weltweit/features/screens/auth/otp/otp_screen.dart';
 import 'package:weltweit/features/screens/auth/register/register_screen.dart';
 import 'package:weltweit/features/screens/auth/user_type/user_type.dart';
 import 'package:weltweit/features/screens/layout/layout_page.dart';
+import 'package:weltweit/features/screens/layout_guest/layout_page_guest.dart';
 import 'package:weltweit/features/screens/my_addresses/my_addresses_page.dart';
 import 'package:weltweit/features/screens/notifications/notification_page.dart';
 import 'package:weltweit/features/screens/offers/offers_page.dart';
@@ -29,6 +30,8 @@ class RouteServicesGenerator {
     switch (settings.name) {
       case RoutesServices.servicesLayoutScreen:
         return platformPageRoute(Theme(data: servicesTheme, child: const LayoutPage(currentPage: 0)));
+      case RoutesServices.servicesLayoutScreenGuest:
+        return platformPageRoute(Theme(data: servicesTheme, child: const LayoutPageGuest(currentPage: 0)));
       case RoutesServices.servicesOffers:
         return platformPageRoute(Theme(data: servicesTheme, child: const OffersPage()));
       case RoutesServices.servicesServices:

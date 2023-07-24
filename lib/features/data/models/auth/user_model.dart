@@ -1,4 +1,6 @@
-import 'package:weltweit/features/data/models/response/country/country_model.dart';
+import 'package:weltweit/features/data/models/location/city_model.dart';
+import 'package:weltweit/features/data/models/location/country_model.dart';
+import 'package:weltweit/features/data/models/location/region_model.dart';
 
 class UserModel {
   int? id;
@@ -6,6 +8,7 @@ class UserModel {
   String? isOnline;
   String? email;
   String? mobileNumber;
+  String? whatsAppNumber;
   String? token;
   int? approved;
   int? otpVerified;
@@ -15,6 +18,8 @@ class UserModel {
   String? desc;
   // int? isCompany;
   CountryModel? countryModel;
+  CityModel? cityModel;
+  RegionModel? regionModel;
   String? wallet;
   int? countryId;
   CurrentSubscribtion? currentSubscription;
@@ -25,6 +30,7 @@ class UserModel {
     this.email,
     required this.gender,
     this.mobileNumber,
+    this.whatsAppNumber,
     this.token,
     this.approved,
     this.otpVerified,
@@ -36,6 +42,8 @@ class UserModel {
     this.wallet,
     this.currentSubscription,
     this.countryId,
+    this.cityModel,
+    this.regionModel,
   });
 
   bool isAvailable() {
@@ -58,6 +66,7 @@ class UserModel {
       isOnline: json['is_online'] as String?,
       email: json['email'] as String?,
       mobileNumber: json['mobile_number'] as String?,
+      whatsAppNumber: json['whatsapp_number'] as String?,
       token: json['token'] == null ? null : '${json['token']}',
       approved: json['approved'] as int?,
       otpVerified: json['otp_verified'] as int?,
@@ -68,7 +77,9 @@ class UserModel {
       // isCompany: json['is_company'] as int?,
       countryModel: countryJson != null ? CountryModel.fromJson(countryJson) : null,
       wallet: "${json['wallets']}",
-      countryId: json['country_id'] == null ? null : int.tryParse('${json['country_id']}') ,
+      cityModel: json['city'] != null ? CityModel.fromJson(json['city']) : null,
+      regionModel: json['region'] != null ? RegionModel.fromJson(json['region']) : null,
+      countryId: json['country_id'] == null ? null : int.tryParse('${json['country_id']}'),
       currentSubscription: json['current_subscription'] != null ? CurrentSubscribtion.fromJson(json['current_subscription']) : null,
     );
   }

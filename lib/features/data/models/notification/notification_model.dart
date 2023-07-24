@@ -9,7 +9,7 @@ import 'package:weltweit/features/data/models/order/order.dart';
 //                   "id": 65,
 //                   "date": "2023-05-23 01:29:00",
 //                   "file": [
-//                       "http://don.dev01.matrix-clouds.com/storage/service_orders/images/scaled_3b4b53ab-ec3e-4a15-ba34-73b131fa32b26590831339077893995.jpg"
+//                       "/storage/service_orders/images/scaled_3b4b53ab-ec3e-4a15-ba34-73b131fa32b26590831339077893995.jpg"
 //                   ],
 //                   "price": 500,
 //                   "status_code": "client_done",
@@ -22,7 +22,7 @@ import 'package:weltweit/features/data/models/order/order.dart';
 //                       "otp_verified": 1,
 //                       "country_code": "20",
 //                       "gender": "",
-//                       "image": "http://don.dev01.matrix-clouds.com/assets/media/users/blank.png",
+//                       "image": "/assets/media/users/blank.png",
 //                       "country_id": null,
 //                       "country": null
 //                   },
@@ -36,63 +36,63 @@ import 'package:weltweit/features/data/models/order/order.dart';
 //                       "approved": 1,
 //                       "lat": "30.0600546",
 //                       "lng": "31.3976525",
-//                       "image": "http://don.dev01.matrix-clouds.com/assets/media/users/blank.png",
+//                       "image": "/assets/media/users/blank.png",
 //                       "distance": null,
 //                       "services": [
 //                           {
 //                               "id": 23,
 //                               "title": "كهرباء",
 //                               "breif": "كهرباء",
-//                               "image": "http://don.dev01.matrix-clouds.com/storage/services/images/g6f6JIx2UwIrtgai89TLVIyiFbjTAvlM6roxInqA.png",
+//                               "image": "/storage/services/images/g6f6JIx2UwIrtgai89TLVIyiFbjTAvlM6roxInqA.png",
 //                               "my_service": true
 //                           },
 //                           {
 //                               "id": 24,
 //                               "title": "صيانة مصاعد",
 //                               "breif": "صيانة مصاعد",
-//                               "image": "http://don.dev01.matrix-clouds.com/storage/services/images/l9WL4WHXzyGhsCPdDXVai49ON8E6J48f9SsdKMKG.png",
+//                               "image": "/storage/services/images/l9WL4WHXzyGhsCPdDXVai49ON8E6J48f9SsdKMKG.png",
 //                               "my_service": true
 //                           },
 //                           {
 //                               "id": 67,
 //                               "title": "Transportation",
 //                               "breif": "Delivery",
-//                               "image": "http://don.dev01.matrix-clouds.com/storage/services/images/BVQQgAlRnNlFkymlTTPgoHbbnzBYIz3llMHkeeZn.png",
+//                               "image": "/storage/services/images/BVQQgAlRnNlFkymlTTPgoHbbnzBYIz3llMHkeeZn.png",
 //                               "my_service": true
 //                           },
 //                           {
 //                               "id": 25,
 //                               "title": "كاميرات",
 //                               "breif": "كاميرات",
-//                               "image": "http://don.dev01.matrix-clouds.com/storage/services/images/z4mAJc3A0hutvKyH6p56KjAnGKQjXHIZONlc8fFd.png",
+//                               "image": "/storage/services/images/z4mAJc3A0hutvKyH6p56KjAnGKQjXHIZONlc8fFd.png",
 //                               "my_service": true
 //                           },
 //                           {
 //                               "id": 26,
 //                               "title": "صيانة جوال",
 //                               "breif": "صيانة جوال",
-//                               "image": "http://don.dev01.matrix-clouds.com/storage/services/images/FkWhAc3mzuQGLGc6P9VVh4U85NJDgDqgcmV98BAO.png",
+//                               "image": "/storage/services/images/FkWhAc3mzuQGLGc6P9VVh4U85NJDgDqgcmV98BAO.png",
 //                               "my_service": true
 //                           },
 //                           {
 //                               "id": 27,
 //                               "title": "حفر ودعم",
 //                               "breif": "حفر ودعم",
-//                               "image": "http://don.dev01.matrix-clouds.com/storage/services/images/cBDXJTLQBKqnkKZTDJ0g1FFcPuxiezEB96eYE4e5.png",
+//                               "image": "/storage/services/images/cBDXJTLQBKqnkKZTDJ0g1FFcPuxiezEB96eYE4e5.png",
 //                               "my_service": true
 //                           },
 //                           {
 //                               "id": 28,
 //                               "title": "ستلايت",
 //                               "breif": "ستلايت",
-//                               "image": "http://don.dev01.matrix-clouds.com/storage/services/images/hPgV2jMzocS153j4yYc3OE5QLEtKgGRbhGwFDpe1.png",
+//                               "image": "/storage/services/images/hPgV2jMzocS153j4yYc3OE5QLEtKgGRbhGwFDpe1.png",
 //                               "my_service": true
 //                           },
 //                           {
 //                               "id": 29,
 //                               "title": "تكييف",
 //                               "breif": "تكييف",
-//                               "image": "http://don.dev01.matrix-clouds.com/storage/services/images/9RuvwBZuEd31740DFGM1NW4orrjyX8iWi4X4OLUe.png",
+//                               "image": "/storage/services/images/9RuvwBZuEd31740DFGM1NW4orrjyX8iWi4X4OLUe.png",
 //                               "my_service": true
 //                           }
 //                       ],
@@ -105,7 +105,7 @@ import 'package:weltweit/features/data/models/order/order.dart';
 //                       "id": 67,
 //                       "title": "Transportation",
 //                       "breif": "Delivery",
-//                       "image": "http://don.dev01.matrix-clouds.com/storage/services/images/BVQQgAlRnNlFkymlTTPgoHbbnzBYIz3llMHkeeZn.png",
+//                       "image": "/storage/services/images/BVQQgAlRnNlFkymlTTPgoHbbnzBYIz3llMHkeeZn.png",
 //                       "my_service": true
 //                   },
 //                   "all_status": [

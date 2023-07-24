@@ -9,6 +9,7 @@ class RoutesServices {
   static const String servicesLoginScreen = "/servicesLoginScreen";
   static const String servicesUserTypeScreen = "/servicesUserTypeScreen";
 
+  static const String servicesLayoutScreenGuest = "/servicesLayoutScreenGuest";
   static const String servicesLayoutScreen = "/servicesLayoutScreen";
   static const String servicesOffers = "/servicesOffers";
   static const String servicesServices = "/servicesServices";

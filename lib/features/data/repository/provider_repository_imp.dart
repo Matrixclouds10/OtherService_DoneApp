@@ -10,7 +10,7 @@ import 'package:weltweit/core/services/network/network_client.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
 import 'package:weltweit/features/data/models/notification/notification_model.dart';
-import 'package:weltweit/features/data/models/response/auth/user_model.dart';
+import 'package:weltweit/features/data/models/auth/user_model.dart';
 import 'package:weltweit/features/data/app_urls/provider_endpoints_url.dart';
 import 'package:weltweit/features/data/models/documents/document.dart';
 import 'package:weltweit/features/data/models/portfolio/portfolio_image.dart';

@@ -4,7 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/data/models/notification/notification_model.dart';
-import 'package:weltweit/features/data/models/response/auth/user_model.dart';
+import 'package:weltweit/features/data/models/auth/user_model.dart';
 import 'package:weltweit/features/data/models/documents/document.dart';
 import 'package:weltweit/features/data/models/portfolio/portfolio_image.dart';
 import 'package:weltweit/features/data/models/services/service.dart';

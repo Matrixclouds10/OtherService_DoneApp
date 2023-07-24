@@ -108,10 +108,14 @@ class CustomImage extends StatelessWidget {
         fit: fit,
         imageUrl: imageUrl!,
         errorWidget: (c, url, error) {
-          if (kDebugMode) {
-            return Text('Error $url $error');
-          }
-          return Icon(Icons.error_outline);
+          return Container(
+              width: width ?? deviceWidth,
+              height: height,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: borderRadius ?? BorderRadius.all(Radius.circular(radius)),
+              ).radius(radius: radius),
+              child: Icon(Icons.error_outline, color: Colors.red));
         },
       );
     }

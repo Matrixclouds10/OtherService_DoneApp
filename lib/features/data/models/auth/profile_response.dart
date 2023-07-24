@@ -1,4 +1,4 @@
-import 'package:weltweit/features/data/models/response/auth/user_model.dart';
+import 'package:weltweit/features/data/models/auth/user_model.dart';
 
 class ProfileResponse {
   int? code;

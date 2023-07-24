@@ -1,6 +1,6 @@
 import 'package:logger/logger.dart';
 import 'package:weltweit/features/data/models/base/base_model.dart';
-import 'package:weltweit/features/data/models/response/auth/user_model.dart';
+import 'package:weltweit/features/data/models/auth/user_model.dart';
 import 'package:weltweit/features/domain/request_body/check_otp_body.dart';
 
 import '../../repositoy/auth_repo.dart';

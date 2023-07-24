@@ -13,6 +13,7 @@ class RoutesProvider {
   static const String providerSearch = "/provider/servicesSearch";
   static const String providerReservationPage = "/provider/servicesReservationPage";
   static const String providerSubscribe = "/provider/subscribe";
+  static const String paymentWebview = "/provider/paymentWebview";
   static const String providerDocuments = "/provider/documents";
   static const String providerProfileUpdateScreen = "/provider/profileUpdateScreen";
 }

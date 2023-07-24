@@ -45,7 +45,9 @@ class WelcomeScreen extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: kScreenPaddingLarge.w),
                       child: CustomButton(
                         title: LocaleKeys.joinOurWorld.tr(),
-                        onTap: () => NavigationService.push(RoutesServices.servicesUserTypeScreen),
+                        onTap: () => NavigationService.push(RoutesServices.servicesUserTypeScreen, arguments: {
+                          'typeIsProvider': false,
+                        }),
                       ),
                     ),
                     Padding(
@@ -60,12 +62,12 @@ class WelcomeScreen extends StatelessWidget {
                       ),
                     ),
                     VerticalSpace(kScreenPaddingNormal.h),
-                    // GestureDetector(
-                    //     onTap: () => NavigationService.push(Routes.servicesHomeScreen),
-                    //     child: CustomText(
-                    //       LocaleKeys.loginAsVisitor.tr(),
-                    //       color: Colors.white,
-                    //     )),
+                    GestureDetector(
+                        onTap: () => NavigationService.push(RoutesServices.servicesLayoutScreenGuest),
+                        child: CustomText(
+                          LocaleKeys.loginAsVisitor.tr(),
+                          color: Colors.white,
+                        )),
                     VerticalSpace(kScreenPaddingNormal.h),
                   ],
                 ),

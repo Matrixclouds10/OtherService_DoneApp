@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:weltweit/features/data/models/response/auth/user_model.dart';
+import 'package:weltweit/features/data/models/auth/user_model.dart';
 
 class GlobalParams extends Equatable {
   final UserModel? user;

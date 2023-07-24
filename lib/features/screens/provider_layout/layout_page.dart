@@ -4,7 +4,7 @@ import 'package:weltweit/core/notification/FcmHandler.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
-import 'package:weltweit/features/data/models/response/auth/user_model.dart';
+import 'package:weltweit/features/data/models/auth/user_model.dart';
 import 'package:weltweit/features/logic/provider_profile/profile_cubit.dart';
 import 'package:weltweit/features/screens/provider_home/home_page_pending.dart';
 import 'package:weltweit/generated/assets.dart';

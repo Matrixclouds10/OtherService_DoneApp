@@ -41,50 +41,10 @@ class ProfilePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: MediaQuery.of(context).padding.top),
-              GestureDetector(
-                onTap: () {
-                  NavigationService.push(RoutesServices.servicesProfileEdit);
-                },
-                child: BlocBuilder<ProfileCubit, ProfileState>(
-                  builder: (context, state) {
-                    if (state.data == null) {
-                      return Container();
-                    }
-
-                    return Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CustomImage(
-                            imageUrl: state.data!.image,
-                            width: MediaQuery.of(context).size.width / 7,
-                            height: MediaQuery.of(context).size.width / 7,
-                            fit: BoxFit.fill,
-                            radius: 250,
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 4),
-                                textWithIcon(icon: Icons.person, text: state.data!.name ?? ''),
-                                const SizedBox(height: 4),
-                                textWithIcon(icon: Icons.phone, text: state.data!.mobileNumber ?? ''),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 12),
-              CustomText(LocaleKeys.myInformation.tr(), color: Colors.black, align: TextAlign.start, bold: true, pv: 0, ph: 12).header(),
+              SizedBox(height: 8),
+              _userProfileCard(context),
+              const SizedBox(height: 8),
+              CustomText(LocaleKeys.myInformation.tr(), color: Colors.black, align: TextAlign.start, bold: true, pv: 4, ph: 12).header(),
               Container(
                 color: Colors.white,
                 child: Column(
@@ -152,13 +112,27 @@ class ProfilePage extends StatelessWidget {
                           Navigator.pushNamed(context, Routes.contactUs);
                         }),
                     Divider(height: 2, color: Colors.grey[300]),
-                    singleCustomListTile(
-                        icon: Icons.arrow_forward_ios,
-                        text: LocaleKeys.logOut.tr(),
-                        trailingText: "",
-                        onTap: () {
-                          AppDialogs().logoutDialog(context);
-                        }),
+                    BlocBuilder<ProfileCubit, ProfileState>(
+                      builder: (context, state) {
+                        if (state.data == null) {
+                          return singleCustomListTile(
+                              icon: Icons.arrow_forward_ios,
+                              text: LocaleKeys.login.tr(),
+                              trailingText: "",
+                              onTap: () {
+                                NavigationService.pushNamedAndRemoveUntil(RoutesServices.servicesWelcomeScreen);
+                              });
+                        }
+
+                        return singleCustomListTile(
+                            icon: null,
+                            text: LocaleKeys.logOut.tr(),
+                            trailingText: "",
+                            onTap: () {
+                              AppDialogs().logoutDialog(context);
+                            });
+                      },
+                    )
                   ],
                 ),
               ),
@@ -169,7 +143,7 @@ class ProfilePage extends StatelessWidget {
   }
 
   Widget singleCustomListTile({
-    required IconData icon,
+    required IconData? icon,
     required String text,
     required String? trailingText,
     required Function() onTap,
@@ -184,7 +158,7 @@ class ProfilePage extends StatelessWidget {
               Expanded(child: CustomText(text, color: text.contains("خروج") ? Colors.red : Colors.black, align: TextAlign.start, pv: 0)),
               if (trailingText != null) CustomText(trailingText, color: Colors.grey, align: TextAlign.start, pv: 0),
               const SizedBox(width: 12),
-              Icon(icon, size: 16, color: Colors.grey),
+              if (icon != null) Icon(icon, size: 16, color: Colors.grey),
             ],
           ),
         ));
@@ -197,10 +171,54 @@ class ProfilePage extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Icon(icon, size: 16, color: Colors.black),
+        Icon(icon, size: 18, color: Colors.black87),
         const SizedBox(width: 4),
-        CustomText(text, color: Colors.black, align: TextAlign.start, pv: 0),
+        CustomText(text, color: Colors.black87, align: TextAlign.start, pv: 0),
       ],
+    );
+  }
+
+  _userProfileCard(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        NavigationService.push(RoutesServices.servicesProfileEdit);
+      },
+      child: BlocBuilder<ProfileCubit, ProfileState>(
+        builder: (context, state) {
+          if (state.data == null) {
+            return Container();
+          }
+
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomImage(
+                  imageUrl: state.data!.image,
+                  width: MediaQuery.of(context).size.width / 6,
+                  height: MediaQuery.of(context).size.width / 6,
+                  fit: BoxFit.fill,
+                  radius: 250,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 4),
+                      textWithIcon(icon: Icons.person, text: state.data!.name ?? ''),
+                      const SizedBox(height: 4),
+                      textWithIcon(icon: Icons.phone, text: state.data!.mobileNumber ?? ''),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }

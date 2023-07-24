@@ -15,13 +15,15 @@ import 'package:weltweit/features/core/base/base_usecase.dart';
 import 'package:weltweit/features/data/app_urls/client_endpoints_url.dart';
 import 'package:weltweit/features/data/models/banner/banner_model.dart';
 import 'package:weltweit/features/data/models/chat/chat_model.dart';
+import 'package:weltweit/features/data/models/location/city_model.dart';
+import 'package:weltweit/features/data/models/location/region_model.dart';
 import 'package:weltweit/features/data/models/notification/notification_model.dart';
 import 'package:weltweit/features/data/models/order/order.dart';
 import 'package:weltweit/features/data/models/portfolio/portfolio_image.dart';
 import 'package:weltweit/features/data/models/provider/provider_rates_model.dart';
 import 'package:weltweit/features/data/models/provider/providers_model.dart';
-import 'package:weltweit/features/data/models/response/auth/user_model.dart';
-import 'package:weltweit/features/data/models/response/country/country_model.dart';
+import 'package:weltweit/features/data/models/auth/user_model.dart';
+import 'package:weltweit/features/data/models/location/country_model.dart';
 import 'package:weltweit/features/data/models/services/service.dart';
 import 'package:weltweit/features/data/models/services/services_response.dart';
 import 'package:weltweit/features/domain/repositoy/app_repo.dart';
@@ -30,6 +32,8 @@ import 'package:weltweit/features/domain/usecase/chat_messages/chat_messages_use
 import 'package:weltweit/features/domain/usecase/chat_send_message/chat_send_message_usecase.dart';
 import 'package:weltweit/features/domain/usecase/contact_us/contact_us_usecase.dart';
 import 'package:weltweit/features/domain/usecase/create_order/create_order_usecase.dart';
+import 'package:weltweit/features/domain/usecase/location/cities_usecase.dart';
+import 'package:weltweit/features/domain/usecase/location/regions_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_accept_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_cancel_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_finish_usecase.dart';
@@ -447,6 +451,38 @@ class AppRepositoryImp implements AppRepository {
     return result.fold((l) => Left(l), (r) {
       try {
         List<CountryModel> data = r.data.map<CountryModel>((e) => CountryModel.fromJson(e)).toList();
+        return Right(data);
+      } catch (e) {
+        return Left(ErrorModel(errorMessage: e.toString()));
+      }
+    });
+  }
+
+  @override
+  Future<Either<ErrorModel, List<CityModel>>> getCities({required CitiesParams params}) async {
+    String url = AppURL.cities;
+    NetworkCallType type = NetworkCallType.get;
+    Map<String, dynamic> data = params.toJson();
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+    return result.fold((l) => Left(l), (r) {
+      try {
+        List<CityModel> data = r.data.map<CityModel>((e) => CityModel.fromJson(e)).toList();
+        return Right(data);
+      } catch (e) {
+        return Left(ErrorModel(errorMessage: e.toString()));
+      }
+    });
+  }
+
+  @override
+  Future<Either<ErrorModel, List<RegionModel>>> getRegions({required RegionsParams params}) async {
+    String url = AppURL.regions;
+    NetworkCallType type = NetworkCallType.get;
+    Map<String, dynamic> data = params.toJson();
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+    return result.fold((l) => Left(l), (r) {
+      try {
+        List<RegionModel> data = r.data.map<RegionModel>((e) => RegionModel.fromJson(e)).toList();
         return Right(data);
       } catch (e) {
         return Left(ErrorModel(errorMessage: e.toString()));

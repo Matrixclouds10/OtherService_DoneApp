@@ -45,9 +45,10 @@ class UserTypeScreen extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: kScreenPaddingLarge.w),
                       child: CustomButton(
                         title: LocaleKeys.newClient.tr(),
-                        onTap: () => NavigationService.push(RoutesServices.servicesRegisterScreen, arguments: {
-                          'typeIsProvider': false,
-                        }),
+                        onTap: () => NavigationService.push(
+                          RoutesServices.servicesRegisterScreen,
+                          arguments: {'typeIsProvider': false},
+                        ),
                       ),
                     ),
                     Padding(
@@ -56,9 +57,10 @@ class UserTypeScreen extends StatelessWidget {
                         title: LocaleKeys.serviceProvider.tr(),
                         textColor: Colors.white,
                         color: AppColorLight().kAccentColor,
-                        onTap: () => NavigationService.push(RoutesServices.servicesRegisterScreen, arguments: {
-                          'typeIsProvider': true,
-                        }),
+                        onTap: () => NavigationService.push(
+                          RoutesServices.servicesRegisterScreen,
+                          arguments: {'typeIsProvider': true},
+                        ),
                       ),
                     ),
                     VerticalSpace(kScreenPaddingNormal.h),

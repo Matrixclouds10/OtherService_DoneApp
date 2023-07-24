@@ -30,7 +30,6 @@ class MorePage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: MediaQuery.of(context).padding.top),
               SizedBox(height: 12),
               Container(
                 color: Colors.white,

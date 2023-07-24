@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:weltweit/core/resources/resources.dart';
-import 'package:weltweit/features/data/models/response/country/country_model.dart';
+import 'package:weltweit/features/data/models/location/country_model.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 
 import '../base_form.dart';

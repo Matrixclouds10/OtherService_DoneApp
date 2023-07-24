@@ -7,6 +7,7 @@ import 'package:weltweit/core/resources/decoration.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
+import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/data/models/subscription/subscription_model.dart';
 import 'package:weltweit/features/logic/provider_profile/profile_cubit.dart';
@@ -153,63 +154,65 @@ class _SubscribePageState extends State<SubscribePage> {
     desc += "Period:${e.period}\n";
     desc += "Method:$selectedMethod\n";
     Navigator.pop(context);
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: CustomText(LocaleKeys.confirmSubscribtion.tr()),
-          content: StatefulBuilder(builder: (context, setState) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                CustomText(desc),
-                SizedBox(height: 12),
-                Row(
-                  children: [
-                    ElevatedButton(
-                      onPressed: () async {
-                        Navigator.pop(context);
-                        try {
-                          BaseResponse response = await context.read<SubscribtionCubit>().subscribe(e.id, selectedMethod);
-                          AppSnackbar.show(context: NavigationService.navigationKey.currentContext!, message: response.message ?? "");
-                        } catch (e) {
-                          AppSnackbar.show(context: NavigationService.navigationKey.currentContext!, message: LocaleKeys.somethingWentWrong.tr());
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      ),
-                      child: CustomText(
-                        LocaleKeys.confirm.tr(),
-                        color: Colors.white,
-                      ).headerExtra(),
-                    ),
-                    Spacer(),
-                    ElevatedButton(
-                      onPressed: () async {
-                        Navigator.pop(context);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      ),
-                      child: CustomText(
-                        LocaleKeys.cancel.tr(),
-                        color: Colors.white,
-                      ).headerExtra(),
-                    ),
-                  ],
-                ),
-              ],
-            );
-          }),
-        );
-      },
-    );
+    if (selectedMethod == "credit") {
+      NavigationService.push(RoutesProvider.paymentWebview, arguments: {'id': e.id});
+    }
+    // showDialog(
+    //   context: context,
+    //   builder: (context) {
+    //     return AlertDialog(
+    //       title: CustomText(LocaleKeys.confirmSubscribtion.tr()),
+    //       content: StatefulBuilder(builder: (context, setState) {
+    //         return Column(
+    //           mainAxisSize: MainAxisSize.min,
+    //           children: [
+    //             CustomText(desc),
+    //             SizedBox(height: 12),
+    //             Row(
+    //               children: [
+    //                 ElevatedButton(
+    //                   onPressed: () async {
+    //                     Navigator.pop(context);
+    //                     try {
+    //                       BaseResponse response = await context.read<SubscribtionCubit>().subscribe(e.id, selectedMethod);
+    //                       AppSnackbar.show(context: NavigationService.navigationKey.currentContext!, message: response.message ?? "");
+    //                     } catch (e) {
+    //                       AppSnackbar.show(context: NavigationService.navigationKey.currentContext!, message: LocaleKeys.somethingWentWrong.tr());
+    //                     }
+    //                   },
+    //                   style: ElevatedButton.styleFrom(
+    //                     backgroundColor: Colors.blue,
+    //                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+    //                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    //                   ),
+    //                   child: CustomText(
+    //                     LocaleKeys.confirm.tr(),
+    //                     color: Colors.white,
+    //                   ).headerExtra(),
+    //                 ),
+    //                 Spacer(),
+    //                 ElevatedButton(
+    //                   onPressed: () async {
+    //                     Navigator.pop(context);
+    //                   },
+    //                   style: ElevatedButton.styleFrom(
+    //                     backgroundColor: Colors.red,
+    //                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+    //                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    //                   ),
+    //                   child: CustomText(
+    //                     LocaleKeys.cancel.tr(),
+    //                     color: Colors.white,
+    //                   ).headerExtra(),
+    //                 ),
+    //               ],
+    //             ),
+    //           ],
+    //         );
+    //       }),
+    //     );
+    //   },
+    // );
   }
 
   void actionShowSubscriptionMethods(SubscriptionModel subscriptionModel) {
@@ -238,7 +241,7 @@ class _SubscribePageState extends State<SubscribePage> {
                     ...subscreptionMethods.map((e) {
                       String title = e;
                       if (e.contains("wallet")) title = "wallet (${profileProviderCubit.state.data?.wallet ?? ''})";
-                      bool isEnable = e.contains("credit") ? false : true;
+                      bool isEnable = true;
                       if (isEnable) {
                         if (e.contains("wallet")) {
                           double? wallet = double.tryParse(profileProviderCubit.state.data?.wallet.toString() ?? "") ?? 0;

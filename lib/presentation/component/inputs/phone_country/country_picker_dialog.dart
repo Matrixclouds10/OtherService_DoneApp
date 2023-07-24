@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weltweit/core/utils/validators.dart';
-import 'package:weltweit/features/data/models/response/country/country_model.dart';
+import 'package:weltweit/features/data/models/location/country_model.dart';
 
 import '../../../../core/resources/resources.dart';
 
