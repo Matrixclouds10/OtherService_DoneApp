@@ -66,11 +66,11 @@ class _PaymentWebviewState extends State<PaymentWebview> {
                 InAppWebView(
                   initialUrlRequest: URLRequest(
                     url: Uri.parse(
-                      'https://newdon.dev01.matrix-clouds.com/api/service-provider/paymob-iframe?subscription_id=${widget.packageId}&payment_type=wallet',
+                      'https://newdon.dev01.matrix-clouds.com/api/service-provider/paymob-iframe?subscription_id=${widget.packageId}&payment_type=card',
                     ),
                     headers: {
-                    'Authorization': 'Bearer ${prefs.get(PrefKeys.token)}',
-                  },
+                      'Authorization': 'Bearer ${prefs.get(PrefKeys.token)}',
+                    },
                   ),
                   initialUserScripts: UnmodifiableListView<UserScript>([]),
                   initialOptions: options,

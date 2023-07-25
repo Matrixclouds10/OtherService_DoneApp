@@ -81,29 +81,7 @@ class _SubscribePageState extends State<SubscribePage> {
                     fit: BoxFit.fitHeight,
                   ),
                   ...state.data.map((e) => _buildItem(e)).toList(),
-                  SizedBox(height: 64),
-                  // Container(
-                  //   margin: EdgeInsets.symmetric(horizontal: 24),
-                  //   decoration: BoxDecoration(color: Colors.white).radius(radius: 12),
-                  //   child: Column(
-                  //     children: [
-                  //       CustomText("فعل حسابك واحصل علي تجربة عمل مميزة ", color: primaryColor).header(),
-                  //       CustomText("300 ج", color: AppColorLight().kAccentColor).headerExtra(),
-                  //       CustomText("سنويا", color: Colors.grey[500]!, pv: 0).headerExtra(),
-                  //       Container(
-                  //         margin: EdgeInsets.symmetric(horizontal: 24),
-                  //         child: CustomButton(
-                  //           onTap: () {
-                  //             NavigationService.goBack();
-                  //           },
-                  //           title: "إشترك الان",
-                  //           color: primaryColor,
-                  //         ),
-                  //       ),
-                  //       SizedBox(height: 24),
-                  //     ],
-                  //   ),
-                  // ),
+                  SizedBox(height: 18),
                 ],
               ),
             );
@@ -148,77 +126,79 @@ class _SubscribePageState extends State<SubscribePage> {
     );
   }
 
-  void actionSubscribe(SubscriptionModel e, String selectedMethod) async {
+  void actionSubscribe(SubscriptionModel e, SubscriptionMethods selectedMethod) async {
     String desc = "";
     desc += "Price:${e.price}\$\n";
     desc += "Period:${e.period}\n";
     desc += "Method:$selectedMethod\n";
     Navigator.pop(context);
-    if (selectedMethod == "credit") {
+    if (selectedMethod == SubscriptionMethods.credit) {
       NavigationService.push(RoutesProvider.paymentWebview, arguments: {'id': e.id});
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: CustomText(LocaleKeys.confirmSubscribtion.tr()),
+            content: StatefulBuilder(builder: (context, setState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CustomText(desc),
+                  SizedBox(height: 12),
+                  Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () async {
+                          Navigator.pop(context);
+                          try {
+                            BaseResponse response = await context.read<SubscribtionCubit>().subscribe(e.id, selectedMethod.name);
+                            AppSnackbar.show(context: NavigationService.navigationKey.currentContext!, message: response.message ?? "");
+                          } catch (e) {
+                            AppSnackbar.show(context: NavigationService.navigationKey.currentContext!, message: LocaleKeys.somethingWentWrong.tr());
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        ),
+                        child: CustomText(
+                          LocaleKeys.confirm.tr(),
+                          color: Colors.white,
+                        ).headerExtra(),
+                      ),
+                      Spacer(),
+                      ElevatedButton(
+                        onPressed: () async {
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        ),
+                        child: CustomText(
+                          LocaleKeys.cancel.tr(),
+                          color: Colors.white,
+                        ).headerExtra(),
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            }),
+          );
+        },
+      );
     }
-    // showDialog(
-    //   context: context,
-    //   builder: (context) {
-    //     return AlertDialog(
-    //       title: CustomText(LocaleKeys.confirmSubscribtion.tr()),
-    //       content: StatefulBuilder(builder: (context, setState) {
-    //         return Column(
-    //           mainAxisSize: MainAxisSize.min,
-    //           children: [
-    //             CustomText(desc),
-    //             SizedBox(height: 12),
-    //             Row(
-    //               children: [
-    //                 ElevatedButton(
-    //                   onPressed: () async {
-    //                     Navigator.pop(context);
-    //                     try {
-    //                       BaseResponse response = await context.read<SubscribtionCubit>().subscribe(e.id, selectedMethod);
-    //                       AppSnackbar.show(context: NavigationService.navigationKey.currentContext!, message: response.message ?? "");
-    //                     } catch (e) {
-    //                       AppSnackbar.show(context: NavigationService.navigationKey.currentContext!, message: LocaleKeys.somethingWentWrong.tr());
-    //                     }
-    //                   },
-    //                   style: ElevatedButton.styleFrom(
-    //                     backgroundColor: Colors.blue,
-    //                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-    //                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-    //                   ),
-    //                   child: CustomText(
-    //                     LocaleKeys.confirm.tr(),
-    //                     color: Colors.white,
-    //                   ).headerExtra(),
-    //                 ),
-    //                 Spacer(),
-    //                 ElevatedButton(
-    //                   onPressed: () async {
-    //                     Navigator.pop(context);
-    //                   },
-    //                   style: ElevatedButton.styleFrom(
-    //                     backgroundColor: Colors.red,
-    //                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-    //                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-    //                   ),
-    //                   child: CustomText(
-    //                     LocaleKeys.cancel.tr(),
-    //                     color: Colors.white,
-    //                   ).headerExtra(),
-    //                 ),
-    //               ],
-    //             ),
-    //           ],
-    //         );
-    //       }),
-    //     );
-    //   },
-    // );
   }
 
   void actionShowSubscriptionMethods(SubscriptionModel subscriptionModel) {
     ProfileProviderCubit profileProviderCubit = context.read<ProfileProviderCubit>();
-    List<String> subscreptionMethods = ["request", "wallet", "credit"];
-    var selectedMethod = subscreptionMethods.first;
+
+    SubscriptionMethods selectedMethod = SubscriptionMethods.request;
+    CreditMethods selectedCreditMethod = CreditMethods.card;
     showDialog(
       context: context,
       builder: (context) {
@@ -238,12 +218,12 @@ class _SubscribePageState extends State<SubscribePage> {
                 Column(
                   children: [
                     //radio select Wallet , credit card , cash
-                    ...subscreptionMethods.map((e) {
-                      String title = e;
-                      if (e.contains("wallet")) title = "wallet (${profileProviderCubit.state.data?.wallet ?? ''})";
+                    ...SubscriptionMethods.values.map((e) {
+                      String title = e.name;
+                      if (e.name.contains("wallet")) title = "wallet (${profileProviderCubit.state.data?.wallet ?? ''})";
                       bool isEnable = true;
                       if (isEnable) {
-                        if (e.contains("wallet")) {
+                        if (e.name.contains("wallet")) {
                           double? wallet = double.tryParse(profileProviderCubit.state.data?.wallet.toString() ?? "") ?? 0;
                           isEnable = wallet >= double.parse(subscriptionModel.price.toString());
                         }
@@ -253,7 +233,7 @@ class _SubscribePageState extends State<SubscribePage> {
                         groupValue: selectedMethod,
                         onChanged: (value) {
                           if (isEnable) {
-                            selectedMethod = value.toString();
+                            selectedMethod = value!;
                             setState(() {});
                           }
                         },
@@ -266,7 +246,33 @@ class _SubscribePageState extends State<SubscribePage> {
                         visualDensity: VisualDensity(horizontal: -4, vertical: -4),
                       );
                     }).toList(),
+
+                    if (selectedMethod == SubscriptionMethods.credit)
+                      Container(
+                        decoration: BoxDecoration().radius(radius: 12).customColor(Colors.white),
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Column(
+                          children: [
+                            ...CreditMethods.values.map((e) {
+                              String title = e.name;
+                              return RadioListTile(
+                                  value: e,
+                                  groupValue: selectedCreditMethod,
+                                  onChanged: (value) {
+                                    selectedCreditMethod = value!;
+                                    setState(() {});
+                                  },
+                                  title: CustomText(title, color: Colors.black).start(),
+                                  contentPadding: EdgeInsets.zero,
+                                  dense: true,
+                                  visualDensity: VisualDensity(horizontal: -4, vertical: -4));
+                            }).toList(),
+                          ],
+                        ),
+                      ),
+
                     SizedBox(height: 12),
+
                     ElevatedButton(
                       onPressed: () async {
                         actionSubscribe(subscriptionModel, selectedMethod);
@@ -291,3 +297,7 @@ class _SubscribePageState extends State<SubscribePage> {
     );
   }
 }
+
+enum SubscriptionMethods { request, wallet, credit }
+
+enum CreditMethods { card, wallet, kiosk }

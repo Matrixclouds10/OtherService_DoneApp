@@ -1,4 +1,7 @@
 {
+  "region": "المنطقة",
+  "city": "المدينة",
+  "whatsApp": "واتساب",
   "en": "English",
   "byClickingRegisterYouAccept":   "بالضغط على تسجيل فانت توافق على",
   "enterRegisteredEmailAddress":  "أدخل البريد الإلكتروني المسجل",

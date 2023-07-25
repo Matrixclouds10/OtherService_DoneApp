@@ -1,5 +1,8 @@
 {
   "en": "English",
+  "region":  "Region",
+  "city":  "City",
+  "whatsApp":  "WhatsApp",
   "byClickingRegisterYouAccept":   "By clicking register you accept",
   "enterRegisteredEmailAddress":  "Enter registered email address",
   "orderFinishedWaitingForClientConfirmation":   "Order finished, waiting for client confirmation",
