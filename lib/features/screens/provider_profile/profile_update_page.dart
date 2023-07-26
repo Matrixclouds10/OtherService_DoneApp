@@ -45,6 +45,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
   CityModel? selectedCity;
   RegionModel? selectedRegion;
   bool isMale = true;
+  bool disableCityAndRegion = true;
 
   final _formKey = GlobalKey<FormState>();
   final _formKeyPassword = GlobalKey<FormState>();
@@ -131,10 +132,12 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
       _whatsAppController.text = userModel.whatsAppNumber ?? "";
       nerworkImage = userModel.image;
       selectedCountry = userModel.countryModel;
-      selectedCity = userModel.cityModel;
-      selectedRegion = userModel.regionModel;
       if (context.mounted && selectedCountry?.id != null) BlocProvider.of<CityCubit>(context, listen: false).getCities(selectedCountry!.id!);
-      if (context.mounted && selectedCity?.id != null) BlocProvider.of<RegionCubit>(context, listen: false).getRegions(selectedCity!.id!);
+      if (!disableCityAndRegion) {
+        selectedCity = userModel.cityModel;
+        selectedRegion = userModel.regionModel;
+        if (context.mounted && selectedCity?.id != null) BlocProvider.of<RegionCubit>(context, listen: false).getRegions(selectedCity!.id!);
+      }
     });
   }
 
@@ -294,8 +297,10 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
               validateFunc: (value) => null,
               autofocus: false,
             ),
-            const VerticalSpace(kScreenPaddingNormal),
-            _cityAndregion(),
+            if (!disableCityAndRegion) ...[
+              const VerticalSpace(kScreenPaddingNormal),
+              _cityAndregion(),
+            ],
             const VerticalSpace(kScreenPaddingNormal),
             CustomTextFieldEmail(label: tr(LocaleKeys.email), controller: _emailController, textInputAction: TextInputAction.next),
             // const VerticalSpace(kScreenPaddingNormal),

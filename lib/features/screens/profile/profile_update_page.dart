@@ -44,7 +44,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
   String? nerworkImage;
   bool? isMale;
   File? image;
-
+  bool disableCityAndRegion = true;
   final _formKey = GlobalKey<FormState>();
   final _formKeyPassword = GlobalKey<FormState>();
 
@@ -115,7 +115,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
   }
 
   @override
-  void initState()  {
+  void initState() {
     super.initState();
 
     //perfom this after the build
@@ -128,10 +128,12 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
       _phoneController.text = userModel.mobileNumber ?? "";
       nerworkImage = userModel.image;
       selectedCountry = userModel.countryModel;
-      selectedCity = userModel.cityModel;
-      selectedRegion = userModel.regionModel;
       if (context.mounted && selectedCountry?.id != null) BlocProvider.of<CityCubit>(context, listen: false).getCities(selectedCountry!.id!);
-      if (context.mounted && selectedCity?.id != null) BlocProvider.of<RegionCubit>(context, listen: false).getRegions(selectedCity!.id!);
+      if (!disableCityAndRegion) {
+        selectedCity = userModel.cityModel;
+        selectedRegion = userModel.regionModel;
+        if (context.mounted && selectedCity?.id != null) BlocProvider.of<RegionCubit>(context, listen: false).getRegions(selectedCity!.id!);
+      }
     });
   }
 
@@ -277,8 +279,10 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
                 context.read<CityCubit>().getCities(selectedCountry!.id!);
               },
             ),
-            const VerticalSpace(kScreenPaddingNormal),
-            _cityAndregion(),
+            if (!disableCityAndRegion) ...[
+              const VerticalSpace(kScreenPaddingNormal),
+              _cityAndregion(),
+            ],
             const VerticalSpace(kScreenPaddingNormal),
             CustomTextFieldEmail(label: tr(LocaleKeys.email), controller: _emailController, textInputAction: TextInputAction.next),
             const VerticalSpace(kScreenPaddingNormal),
@@ -439,5 +443,4 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
       );
     });
   }
-
 }

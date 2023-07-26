@@ -1,6 +1,6 @@
 class AppURL {
   static const kAPIKey = "";
-  static const kBaseURL = "http://newdon.dev01.matrix-clouds.com/api";
+  static const kBaseURL = "https://doneapp.org/api";
 
   ///Auth
   static const String kLoginURI = "$kBaseURL/auth/login";
@@ -30,10 +30,7 @@ class AppURL {
   static const String kGetOffersURI = '$kBaseURL/';
   static const String kGetOfferDetailsURI = '$kBaseURL/';
 
-
-
   static const String kLoginProviderURI = "$kBaseURL/service-provider/login";
   static const String kRegisterProviderURI = "$kBaseURL/service-provider/register";
   static const String kCheckOTPProviderURI = "$kBaseURL/service-provider/check-otp";
-
 }

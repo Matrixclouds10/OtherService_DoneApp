@@ -222,6 +222,7 @@ class _SubscribePageState extends State<SubscribePage> {
                       String title = e.name;
                       if (e.name.contains("wallet")) title = "wallet (${profileProviderCubit.state.data?.wallet ?? ''})";
                       bool isEnable = true;
+                      if (e.name.contains('credit')) isEnable = false;
                       if (isEnable) {
                         if (e.name.contains("wallet")) {
                           double? wallet = double.tryParse(profileProviderCubit.state.data?.wallet.toString() ?? "") ?? 0;

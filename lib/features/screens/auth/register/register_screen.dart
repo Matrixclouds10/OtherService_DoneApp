@@ -56,6 +56,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool joinAsIndividual = true;
   bool isConfirmTerms = false;
   File? image;
+  bool disableCityAndRegion = true;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -300,10 +301,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               selectedCountry: selectedCountry,
               onCountryChanged: (value) {
                 selectedCountry = value;
-                context.read<CityCubit>().reset();
-                context.read<RegionCubit>().reset();
+                if (!disableCityAndRegion) {
+                  context.read<CityCubit>().reset();
+                  context.read<RegionCubit>().reset();
 
-                context.read<CityCubit>().getCities(selectedCountry!.id!);
+                  context.read<CityCubit>().getCities(selectedCountry!.id!);
+                }
               },
             ),
             if (widget.typeIsProvider) ...[
@@ -317,8 +320,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 autofocus: false,
               ),
             ],
-            const VerticalSpace(kScreenPaddingNormal),
-            _cityAndregion(),
+            if (!disableCityAndRegion) ...[
+              const VerticalSpace(kScreenPaddingNormal),
+              _cityAndregion(),
+            ],
             const VerticalSpace(kScreenPaddingNormal),
             CustomTextFieldEmail(label: tr(LocaleKeys.email), controller: _emailController, textInputAction: TextInputAction.next),
             const VerticalSpace(kScreenPaddingNormal),
