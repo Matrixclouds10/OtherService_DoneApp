@@ -128,8 +128,8 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
       _phoneController.text = userModel.mobileNumber ?? "";
       nerworkImage = userModel.image;
       selectedCountry = userModel.countryModel;
-      if (context.mounted && selectedCountry?.id != null) BlocProvider.of<CityCubit>(context, listen: false).getCities(selectedCountry!.id!);
       if (!disableCityAndRegion) {
+      if (context.mounted && selectedCountry?.id != null) BlocProvider.of<CityCubit>(context, listen: false).getCities(selectedCountry!.id!);
         selectedCity = userModel.cityModel;
         selectedRegion = userModel.regionModel;
         if (context.mounted && selectedCity?.id != null) BlocProvider.of<RegionCubit>(context, listen: false).getRegions(selectedCity!.id!);

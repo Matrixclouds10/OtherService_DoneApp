@@ -29,13 +29,18 @@ class OrderDetails extends StatefulWidget {
 
 class _OrderDetailsState extends State<OrderDetails> {
   final TextEditingController _amountController = TextEditingController();
+    VideoPlayerController? videoPlayerController;
   @override
   void initState() {
     super.initState();
     OrderCubit orderCubit = context.read<OrderCubit>();
     orderCubit.getOrder(widget.orderModel.id);
   }
-
+@override
+  void dispose() {
+    videoPlayerController!.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     //get argument
@@ -471,26 +476,25 @@ class _OrderDetailsState extends State<OrderDetails> {
         other.add(element);
       }
     }
-    VideoPlayerController? videoPlayerController;
-    if (videos.isNotEmpty) {
+    if (videos.isNotEmpty && videoPlayerController == null) {
       videoPlayerController = VideoPlayerController.network(videos.first);
-      videoPlayerController.initialize();
+      videoPlayerController!.initialize();
     }
     return Column(
       children: [
-        if (videos.isNotEmpty && videoPlayerController != null) _buildVideo(videoPlayerController),
+        if (videos.isNotEmpty && videoPlayerController != null) _buildVideo(),
         _buildImages(images),
         if (other.isNotEmpty) _buildOther(other),
       ],
     );
   }
 
-  _buildVideo(VideoPlayerController videoPlayerController) {
+  _buildVideo( ) {
     return Stack(
       children: [
         GestureDetector(
           onTap: () {
-            videoPlayerController.value.isPlaying ? videoPlayerController.pause() : videoPlayerController.play();
+            videoPlayerController!.value.isPlaying ? videoPlayerController!.pause() : videoPlayerController!.play();
             setState(() {});
           },
           child: Container(
@@ -502,12 +506,12 @@ class _OrderDetailsState extends State<OrderDetails> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(6),
               child: VideoPlayer(
-                videoPlayerController,
+                videoPlayerController!,
               ),
             ),
           ),
         ),
-        if (!videoPlayerController.value.isPlaying)
+        if (!videoPlayerController!.value.isPlaying)
           Positioned(
             top: 0,
             bottom: 0,
@@ -515,7 +519,7 @@ class _OrderDetailsState extends State<OrderDetails> {
             right: 0,
             child: GestureDetector(
               onTap: () {
-                videoPlayerController.value.isPlaying ? videoPlayerController.pause() : videoPlayerController.play();
+                videoPlayerController!.value.isPlaying ? videoPlayerController!.pause() : videoPlayerController!.play();
                 setState(() {});
               },
               child: Icon(Icons.play_arrow, color: Colors.white, size: 50),

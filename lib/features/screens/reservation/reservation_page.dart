@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -276,6 +277,19 @@ class _ReservationPageState extends State<ReservationPage> {
                     ),
                   ),
                   const SizedBox(height: 24),
+
+                  if (kDebugMode)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CustomButton(
+                        title: "Reset",
+                        color: Colors.black,
+                        onTap: () async {
+                           context.read<CreateOrderCubit>().initStates();
+                        },
+                      ),
+                    ),
+
                   CustomButton(
                     title: LocaleKeys.confirmOrder.tr(),
                     loading: state.state == BaseState.loading,

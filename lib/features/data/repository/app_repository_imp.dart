@@ -278,10 +278,12 @@ class AppRepositoryImp implements AppRepository {
 
     List<File>? files = params.files;
     FormData? formData;
+      kEcho("form data files ${files?.length}");
     if (files != null && files.isNotEmpty) {
       formData = FormData.fromMap({
         for (int i = 0; i < files.length; i++) 'file[$i]': await MultipartFile.fromFile(files[i].path, filename: files[i].path.split('/').last),
       });
+      kEcho("form data ${formData.files.first.value}");
     }
 
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type, formData: formData);

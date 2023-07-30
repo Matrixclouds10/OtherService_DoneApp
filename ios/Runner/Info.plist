@@ -29,9 +29,9 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Need to use the camera edit/add profile picture - add/edit service image or video</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>This app need access to your media library to upload service image/video or change profile picture</string>
+	<string>This app need access to your media library to  change profile picture</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This app need access to your media library to upload service image/video or change profile picture</string>
+	<string>This app need access to your media library to change profile picture</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>

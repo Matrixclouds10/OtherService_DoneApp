@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
 import 'package:weltweit/app.dart';
 import 'package:weltweit/base_injection.dart';
+import 'package:weltweit/core/utils/constants.dart';
 
 import '../../../../core/services/local/cache_consumer.dart';
 import '../../../../core/services/local/storage_keys.dart';
@@ -39,8 +40,8 @@ class DioClient {
     dio = dioC ?? Dio();
     dio!
       ..options.baseUrl = baseUrl
-      ..options.connectTimeout = kDebugMode ? 10000 : 120000
-      ..options.receiveTimeout = kDebugMode ? 10000 : 120000
+      ..options.connectTimeout = kDebugMode ? 60000 : Constants.connectTimeout
+      ..options.receiveTimeout = kDebugMode ? 60000 : Constants.connectTimeout
       ..httpClientAdapter
       ..options.headers = {
         'Accept': 'application/json; charset=UTF-8',
@@ -99,11 +100,12 @@ class DioClient {
   }) async {
     options ??= await initOptions();
     try {
-      if (data != null && data.files.isNotEmpty) {
-        for (var element in data.files) {
-          Logger().d(element.value);
-        }
-      }
+      // if (data != null && data.files.isNotEmpty) {
+      //   for (var element in data.files) {
+      //     Logger().d(element.value);
+      //     kEcho("upl
+      //   }
+      // }
 
       // if (!ignorePath) {
       //   data = await _buildFileData(

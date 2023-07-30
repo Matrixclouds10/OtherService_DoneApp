@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/extensions/num_extensions.dart';
@@ -87,10 +88,10 @@ class SingleDocumentItem extends StatelessWidget {
 
   String convertToProperDocumentType(String? type) {
     if (type == null) return '';
-    if (type == 'work_certificate') return LocaleKeys.workCertificate;
-    if (type == 'passport') return LocaleKeys.passport;
-    if (type == 'national_id') return LocaleKeys.nationalId;
-    if (type == 'corona_certificate') return LocaleKeys.coronaCertificate;
+    if (type == 'work_certificate') return LocaleKeys.workCertificate.tr();
+    if (type == 'passport') return LocaleKeys.passport.tr();
+    if (type == 'national_id') return LocaleKeys.nationalId.tr();
+    if (type == 'corona_certificate') return LocaleKeys.coronaCertificate.tr();
     if (type == 'others') return type;
     return '';
   }

@@ -104,10 +104,10 @@ class _SubscribePageState extends State<SubscribePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomText(subscriptionModel.name ?? "", color: primaryColor).headerExtra().start(),
-                  CustomText("Period:${subscriptionModel.period}", color: Colors.grey[500]!, pv: 0).footer().start(),
+                  CustomText("${LocaleKeys.period}:${subscriptionModel.period}", color: Colors.grey[500]!, pv: 0).footer().start(),
                 ],
               ).expanded(),
-              CustomText("${subscriptionModel.price.toString()}\$", color: AppColorLight().kAccentColor).headerExtra(),
+              CustomText("${subscriptionModel.price.toString()} ${getCountryCurrency()}", color: AppColorLight().kAccentColor).headerExtra(),
             ],
           ),
           SizedBox(height: 12),
@@ -128,9 +128,9 @@ class _SubscribePageState extends State<SubscribePage> {
 
   void actionSubscribe(SubscriptionModel e, SubscriptionMethods selectedMethod) async {
     String desc = "";
-    desc += "Price:${e.price}\$\n";
-    desc += "Period:${e.period}\n";
-    desc += "Method:$selectedMethod\n";
+    desc += "${LocaleKeys.price}:${e.price} ${getCountryCurrency()}\n";
+    desc += "${LocaleKeys.period}:${e.period}\n";
+    desc += "${LocaleKeys.paymentMethod}:${selectedMethod.name}\n";
     Navigator.pop(context);
     if (selectedMethod == SubscriptionMethods.credit) {
       NavigationService.push(RoutesProvider.paymentWebview, arguments: {'id': e.id});
@@ -210,8 +210,8 @@ class _SubscribePageState extends State<SubscribePage> {
               children: [
                 Row(
                   children: [
-                    CustomText('Price:${subscriptionModel.price}\$').footer().expanded(),
-                    CustomText('Period:${subscriptionModel.period}').footer().expanded(),
+                    CustomText('${LocaleKeys.price}:${subscriptionModel.price} ${getCountryCurrency()}').footer().expanded(),
+                    CustomText('${LocaleKeys.period}:${subscriptionModel.period}').footer().expanded(),
                   ],
                 ),
                 Divider(),
@@ -297,8 +297,19 @@ class _SubscribePageState extends State<SubscribePage> {
       },
     );
   }
+
+  getCountryCurrency() {
+    ProfileProviderCubit profileProviderCubit = context.read<ProfileProviderCubit>();
+    if(profileProviderCubit.state.data?.countryModel?.title == 'مصر'){
+      return 'جنيه';
+    }else if(profileProviderCubit.state.data?.countryModel?.title == 'السعودية'){
+      return 'ريال';
+    }
+    return ''; 
+  }
 }
 
 enum SubscriptionMethods { request, wallet, credit }
 
 enum CreditMethods { card, wallet, kiosk }
+

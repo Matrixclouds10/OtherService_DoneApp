@@ -114,12 +114,7 @@ class DocumentPage extends StatelessWidget {
                       .map((e) => Padding(
                             padding: EdgeInsets.symmetric(horizontal: 12),
                             child: AppTextTile(
-                              title: CustomText(
-                                e,
-                                size: 16,
-                                pv: 0,
-                                align: TextAlign.start,
-                              ),
+                              title: CustomText(e, size: 16, pv: 0, align: TextAlign.start),
                               isTitleExpanded: true,
                               leading: Icon(Icons.circle, size: 12),
                             ),

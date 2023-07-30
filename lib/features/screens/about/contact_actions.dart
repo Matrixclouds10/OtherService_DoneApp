@@ -63,9 +63,10 @@ class _ContactActionState extends State<ContactAction> {
                     _imageGestureDetector(
                         image: Assets.imagesIcFacebook,
                         onTap: () {
-                          String url = facebook.replaceAll('https://', '');
-                          final Uri facebookLaunchUri = Uri(path: url, scheme: 'https');
-                          launchUrl(facebookLaunchUri);
+                          // String url = facebook.replaceAll('https://', '');
+                          // final Uri facebookLaunchUri = Uri(path: url, scheme: 'https');
+                          // launchUrl(facebookLaunchUri);
+                          launch(facebook);
                         }),
                   if (twitter != null)
                     _imageGestureDetector(

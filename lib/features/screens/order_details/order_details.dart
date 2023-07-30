@@ -27,11 +27,18 @@ class OrderDetails extends StatefulWidget {
 }
 
 class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderStateMixin {
+  VideoPlayerController? videoPlayerController;
   @override
   void initState() {
     super.initState();
     OrderCubit orderCubit = context.read<OrderCubit>();
     orderCubit.getOrder(widget.orderModel.id);
+  }
+
+  @override
+  void dispose() {
+    if (videoPlayerController != null) videoPlayerController!.dispose();
+    super.dispose();
   }
 
   @override
@@ -195,6 +202,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                             ),
                             textWithDot(text: "تم إنشاء الطلب بنجاح وبإنتظار موافقة مزود الخدمة.", color: const Color(0xffE67E23)),
                             textWithDot(text: "تم إلغاء الطلب من قبل طالب الخدمة.", color: Colors.red),
+                            if (state.data?.cancelReason != null && state.data!.cancelReason!.isNotEmpty) textWithDot(text: "${LocaleKeys.cancelReason.tr()}: ${state.data?.cancelReason}", color: Colors.red),
                             const SizedBox(height: 10),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -509,26 +517,25 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
         other.add(element);
       }
     }
-    VideoPlayerController? videoPlayerController;
-    if (videos.isNotEmpty) {
+    if (videos.isNotEmpty && videoPlayerController == null) {
       videoPlayerController = VideoPlayerController.network(videos.first);
-      videoPlayerController.initialize();
+      videoPlayerController!.initialize();
     }
     return Column(
       children: [
-        if (videos.isNotEmpty && videoPlayerController != null) _buildVideo(videoPlayerController),
+        if (videos.isNotEmpty && videoPlayerController != null) _buildVideo(),
         _buildImages(images),
         if (other.isNotEmpty) _buildOther(other),
       ],
     );
   }
 
-  _buildVideo(VideoPlayerController videoPlayerController) {
+  _buildVideo() {
     return Stack(
       children: [
         GestureDetector(
           onTap: () {
-            videoPlayerController.value.isPlaying ? videoPlayerController.pause() : videoPlayerController.play();
+            videoPlayerController!.value.isPlaying ? videoPlayerController!.pause() : videoPlayerController!.play();
             setState(() {});
           },
           child: Container(
@@ -539,13 +546,11 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(6)),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(6),
-              child: VideoPlayer(
-                videoPlayerController,
-              ),
+              child: VideoPlayer(videoPlayerController!),
             ),
           ),
         ),
-        if (!videoPlayerController.value.isPlaying)
+        if (!videoPlayerController!.value.isPlaying)
           Positioned(
             top: 0,
             bottom: 0,
@@ -553,7 +558,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
             right: 0,
             child: GestureDetector(
               onTap: () {
-                videoPlayerController.value.isPlaying ? videoPlayerController.pause() : videoPlayerController.play();
+                videoPlayerController!.value.isPlaying ? videoPlayerController!.pause() : videoPlayerController!.play();
                 setState(() {});
               },
               child: Icon(Icons.play_arrow, color: Colors.white, size: 50),
