@@ -9,6 +9,7 @@ import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/core/services/network/network_client.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
+import 'package:weltweit/features/data/models/documents/hiring_document_model.dart';
 import 'package:weltweit/features/data/models/notification/notification_model.dart';
 import 'package:weltweit/features/data/models/auth/user_model.dart';
 import 'package:weltweit/features/data/app_urls/provider_endpoints_url.dart';
@@ -16,6 +17,7 @@ import 'package:weltweit/features/data/models/documents/document.dart';
 import 'package:weltweit/features/data/models/portfolio/portfolio_image.dart';
 import 'package:weltweit/features/data/models/services/service.dart';
 import 'package:weltweit/features/data/models/subscription/subscription_history_model.dart';
+import 'package:weltweit/features/data/models/subscription/update_subscribtion_response.dart';
 import 'package:weltweit/features/data/models/wallet/wallet_model.dart';
 import 'package:weltweit/features/domain/repositoy/provider_repo.dart';
 import 'package:weltweit/features/domain/usecase/provider_document/document_add_usecase.dart';
@@ -24,6 +26,7 @@ import 'package:weltweit/features/domain/usecase/provider_profile/change_passwor
 import 'package:weltweit/features/domain/usecase/provider_profile/update_profile_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_services/update_services_usecase.dart';
 import 'package:weltweit/features/data/models/subscription/subscription_model.dart';
+import 'package:weltweit/features/domain/usecase/provider_subscription/repay_subscribe_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_subscription/subscribe_usecase.dart';
 
 class ProviderRepositoryImpProvider implements AppRepositoryProvider {
@@ -106,6 +109,21 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
     return result.fold((l) => Left(l), (r) {
       try {
         List<Document> documents = r.data.map<Document>((e) => Document.fromJson(e)).toList();
+        return Right(documents);
+      } catch (e) {
+        return Left(ErrorModel(errorMessage: e.toString()));
+      }
+    });
+  }
+  @override
+  Future<Either<ErrorModel, List<HiringDocumentModel>>> getHiringDocuments() async {
+    String url = AppURLProvider.getDocumentsURI;
+    NetworkCallType type = NetworkCallType.get;
+    Map<String, dynamic> data = {};
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+    return result.fold((l) => Left(l), (r) {
+      try {
+        List<HiringDocumentModel> documents = r.data.map<HiringDocumentModel>((e) => HiringDocumentModel.fromJson(e)).toList();
         return Right(documents);
       } catch (e) {
         return Left(ErrorModel(errorMessage: e.toString()));
@@ -340,12 +358,34 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
   }
 
   @override
-  Future<Either<ErrorModel, BaseResponse>> subscribe({required SubscribeParams params}) async {
+  Future<Either<ErrorModel, UpdateSubscribtionResponse>> subscribe({required SubscribeParams params}) async {
     String url = AppURLProvider.subscribe;
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = params.toJson();
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
-    return result.fold((l) => Left(l), (r) => Right(r));
+    return result.fold((l) => Left(l), (r) {
+      try {
+        UpdateSubscribtionResponse updateSubscribtionResponse = UpdateSubscribtionResponse.fromJson(r.data);
+        return Right(updateSubscribtionResponse);
+      } catch (e) {
+        return Left(ErrorModel(errorMessage: e.toString()));
+      }
+    });
+  }
+  @override
+  Future<Either<ErrorModel, UpdateSubscribtionResponse>> rePaySubscribe({required RePaySubscribeParams params}) async {
+    String url = AppURLProvider.rePaySubscribe;
+    NetworkCallType type = NetworkCallType.post;
+    Map<String, dynamic> data = params.toJson();
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+    return result.fold((l) => Left(l), (r) {
+      try {
+        UpdateSubscribtionResponse updateSubscribtionResponse = UpdateSubscribtionResponse.fromJson(r.data);
+        return Right(updateSubscribtionResponse);
+      } catch (e) {
+        return Left(ErrorModel(errorMessage: e.toString()));
+      }
+    });
   }
 
   @override

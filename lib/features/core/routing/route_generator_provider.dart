@@ -43,7 +43,7 @@ class RouteProviderGenerator {
       case RoutesProvider.providerProviders:
         return platformPageRoute(ServiceProvidersPage(service: arguments!["serviceName"]));
       case RoutesProvider.paymentWebview:
-        return platformPageRoute(PaymentWebview(packageId: arguments!['id']));
+        return platformPageRoute(PaymentWebview(packageId: arguments!['id'], url: arguments['url']));
       case RoutesProvider.providerSubscribe:
         return platformPageRoute(SubscribePage());
       case RoutesProvider.providerProfileUpdateScreen:

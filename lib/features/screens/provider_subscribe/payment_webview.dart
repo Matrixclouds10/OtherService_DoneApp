@@ -1,18 +1,26 @@
 import 'dart:collection';
 import 'dart:io';
 
+import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:weltweit/base_injection.dart';
+import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
+import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
+import 'package:weltweit/features/screens/layout/layout_cubit.dart';
+import 'package:weltweit/features/screens/provider_layout/layout_cubit.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 
 class PaymentWebview extends StatefulWidget {
   final int packageId;
-  const PaymentWebview({required this.packageId, super.key});
+  final String url;
+  const PaymentWebview({required this.packageId, required this.url, super.key});
 
   @override
   State<PaymentWebview> createState() => _PaymentWebviewState();
@@ -61,66 +69,86 @@ class _PaymentWebviewState extends State<PaymentWebview> {
       ),
       body: loading
           ? Center(child: CircularProgressIndicator())
-          : Stack(
+          : Column(
               children: [
-                InAppWebView(
-                  initialUrlRequest: URLRequest(
-                    url: Uri.parse(
-                      'https://newdon.dev01.matrix-clouds.com/api/service-provider/paymob-iframe?subscription_id=${widget.packageId}&payment_type=card',
-                    ),
-                    headers: {
-                      'Authorization': 'Bearer ${prefs.get(PrefKeys.token)}',
-                    },
-                  ),
-                  initialUserScripts: UnmodifiableListView<UserScript>([]),
-                  initialOptions: options,
-                  pullToRefreshController: pullToRefreshController,
-                  onWebViewCreated: (onWebViewController) {
-                    webViewController = onWebViewController;
-                  },
-                  onLoadStart: (ctl, uri) async {
-                    //get url from uri
-                    if (uri.toString().contains('success')) {
-                      loading = false;
-                      setState(() {});
-                      try {
-                        AppSnackbar.show(context: context, message: "Success");
+                // CustomText(widget.url).footer().onTap(() {
+                //   //copy
+                //   Clipboard.setData(ClipboardData(text: widget.url));
+                // }),
+                Expanded(
+                  child: Stack(
+                    children: [
+                      InAppWebView(
+                        initialUrlRequest: URLRequest(
+                          url: Uri.parse(widget.url),
+                          // headers: {
+                          //   'Authorization': 'Bearer ${prefs.get(PrefKeys.token)}',
+                          // },
+                        ),
+                        initialUserScripts: UnmodifiableListView<UserScript>([]),
+                        initialOptions: options,
+                        pullToRefreshController: pullToRefreshController,
+                        onWebViewCreated: (onWebViewController) {
+                          webViewController = onWebViewController;
+                        },
+                        onLoadStart: (ctl, uri) async {
+                          //get url params
+                          String url = uri.toString();
+                          kEcho(url);
+                          if (url.contains('message=')) {
+                            try {
+                              String message = url.split('message=')[1].split('&')[0];
+                              AppSnackbar.show(context: context, message: message);
+                              NavigationService.goBack();
+                            } catch (e) {
+                              kEchoError(e.toString());
+                            }
+                          }
+                          if (url.contains('success=true')) {
+                            context.read<LayoutProviderCubit>().setCurrentIndex(0);
+                            while (NavigationService.canGoBack()) {
+                              NavigationService.goBack();
+                            }
+                          }
 
-                        // }
-                      } catch (status) {
-                        AppSnackbar.show(context: context, message: "$status");
-                      }
-                    } else if (uri.toString().contains('cancel')) {
-                      loading = false;
-                      setState(() {});
-                      AppSnackbar.show(context: context, message: "Cancel");
-                    }
-                  },
-                  androidOnPermissionRequest: (controller, origin, resources) async {
-                    return PermissionRequestResponse(resources: resources, action: PermissionRequestResponseAction.GRANT);
-                  },
-                  shouldOverrideUrlLoading: (controller, navigationAction) async {
-                    return NavigationActionPolicy.ALLOW;
-                  },
-                  onLoadStop: (ctrl, url) async {
-                    pullToRefreshController.endRefreshing();
-                  },
-                  onLoadError: (ctrl, url, code, message) {
-                    pullToRefreshController.endRefreshing();
-                  },
-                  onProgressChanged: (ctrl, prgs) {
-                    if (progress == 100) {
-                      pullToRefreshController.endRefreshing();
-                    }
-                    progress = (prgs / 100).toDouble();
-                    setState(() {});
-                  },
-                  onUpdateVisitedHistory: (controller, url, androidIsReload) {},
-                  onConsoleMessage: (controller, consoleMessage) {
-                    print(consoleMessage);
-                  },
+                          // //get url from uri
+                          // if (uri.toString().contains('success')) {
+                          //   loading = false;
+                          //   setState(() {});
+                          // } else if (uri.toString().contains('cancel')) {
+                          //   loading = false;
+                          //   setState(() {});
+                          //   AppSnackbar.show(context: context, message: "Cancel");
+                          // }
+                        },
+                        androidOnPermissionRequest: (controller, origin, resources) async {
+                          return PermissionRequestResponse(resources: resources, action: PermissionRequestResponseAction.GRANT);
+                        },
+                        shouldOverrideUrlLoading: (controller, navigationAction) async {
+                          return NavigationActionPolicy.ALLOW;
+                        },
+                        onLoadStop: (ctrl, url) async {
+                          pullToRefreshController.endRefreshing();
+                        },
+                        onLoadError: (ctrl, url, code, message) {
+                          pullToRefreshController.endRefreshing();
+                        },
+                        onProgressChanged: (ctrl, prgs) {
+                          if (progress == 100) {
+                            pullToRefreshController.endRefreshing();
+                          }
+                          progress = (prgs / 100).toDouble();
+                          setState(() {});
+                        },
+                        onUpdateVisitedHistory: (controller, url, androidIsReload) {},
+                        onConsoleMessage: (controller, consoleMessage) {
+                          print(consoleMessage);
+                        },
+                      ),
+                      progress < 1.0 ? LinearProgressIndicator(value: progress) : Container(),
+                    ],
+                  ),
                 ),
-                progress < 1.0 ? LinearProgressIndicator(value: progress) : Container(),
               ],
             ),
     );

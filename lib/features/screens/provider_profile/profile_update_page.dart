@@ -45,7 +45,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
   CityModel? selectedCity;
   RegionModel? selectedRegion;
   bool isMale = true;
-  bool disableCityAndRegion = true;
+  bool disableCityAndRegion = false;
 
   final _formKey = GlobalKey<FormState>();
   final _formKeyPassword = GlobalKey<FormState>();

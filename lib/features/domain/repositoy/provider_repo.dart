@@ -3,12 +3,14 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
+import 'package:weltweit/features/data/models/documents/hiring_document_model.dart';
 import 'package:weltweit/features/data/models/notification/notification_model.dart';
 import 'package:weltweit/features/data/models/auth/user_model.dart';
 import 'package:weltweit/features/data/models/documents/document.dart';
 import 'package:weltweit/features/data/models/portfolio/portfolio_image.dart';
 import 'package:weltweit/features/data/models/services/service.dart';
 import 'package:weltweit/features/data/models/subscription/subscription_history_model.dart';
+import 'package:weltweit/features/data/models/subscription/update_subscribtion_response.dart';
 import 'package:weltweit/features/data/models/wallet/wallet_model.dart';
 import 'package:weltweit/features/domain/usecase/provider_document/document_add_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_portfolio/portfolio_update_usecase.dart';
@@ -16,6 +18,7 @@ import 'package:weltweit/features/domain/usecase/provider_profile/change_passwor
 import 'package:weltweit/features/domain/usecase/provider_profile/update_profile_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_services/update_services_usecase.dart';
 import 'package:weltweit/features/data/models/subscription/subscription_model.dart';
+import 'package:weltweit/features/domain/usecase/provider_subscription/repay_subscribe_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_subscription/subscribe_usecase.dart';
 
 abstract class AppRepositoryProvider {
@@ -36,6 +39,7 @@ abstract class AppRepositoryProvider {
 
   //* Documents
   Future<Either<ErrorModel, List<Document>>> getDocuments();
+  Future<Either<ErrorModel, List<HiringDocumentModel>>> getHiringDocuments();
   Future<Either<ErrorModel, BaseResponse>> addDocument({required DocumentParams params});
   Future<Either<ErrorModel, BaseResponse>> updateDocument({required DocumentParams params});
   Future<Either<ErrorModel, BaseResponse>> deleteDocument({required int id});
@@ -49,7 +53,8 @@ abstract class AppRepositoryProvider {
   //* Subscription
   Future<Either<ErrorModel, List<SubscriptionModel>>> getSubscription();
   Future<Either<ErrorModel, List<SubscriptionHistoryModel>>> getSubscriptionHistory();
-  Future<Either<ErrorModel, BaseResponse>> subscribe({required SubscribeParams params});
+  Future<Either<ErrorModel, UpdateSubscribtionResponse>> subscribe({required SubscribeParams params});
+  Future<Either<ErrorModel, UpdateSubscribtionResponse>> rePaySubscribe({required RePaySubscribeParams params});
 
   //* Wallet
   Future<Either<ErrorModel, List<WalletModel>>> getWalletHistory();

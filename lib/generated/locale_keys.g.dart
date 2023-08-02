@@ -2,6 +2,7 @@
 
 abstract class LocaleKeys {
   static const region = "region";
+  static const payNow = "payNow";
   static const price = "price";
   static const period = "period";
   static const paymentMethod = "paymentMethod";

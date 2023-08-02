@@ -36,4 +36,8 @@ class NavigationService {
     Navigator.pushNamedAndRemoveUntil(
         navigationKey.currentContext!, '/', (route) => false);
   }
+
+  static bool canGoBack() {
+   return Navigator.canPop(navigationKey.currentContext!);
+  }
 }

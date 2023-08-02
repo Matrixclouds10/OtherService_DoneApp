@@ -78,7 +78,7 @@ class GenerateMultiBloc extends StatelessWidget {
         
 
         BlocProvider<BannerCubit>(create: (BuildContext context) => BannerCubit(getIt())..getBanner()),
-        BlocProvider<SubscribtionCubit>(create: (BuildContext context) => SubscribtionCubit(getIt(), getIt(), getIt())),
+        BlocProvider<SubscribtionCubit>(create: (BuildContext context) => SubscribtionCubit(getIt(), getIt(), getIt(), getIt())),
         /* -------------------------------------------------------------------------- */
         //*Provider
         BlocProvider<LayoutProviderCubit>(create: (BuildContext context) => LayoutProviderCubit()),

@@ -56,7 +56,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool joinAsIndividual = true;
   bool isConfirmTerms = false;
   File? image;
-  bool disableCityAndRegion = true;
+  bool disableCityAndRegion = false;
 
   final _formKey = GlobalKey<FormState>();
 

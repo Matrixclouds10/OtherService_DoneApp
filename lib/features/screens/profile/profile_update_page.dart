@@ -44,7 +44,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
   String? nerworkImage;
   bool? isMale;
   File? image;
-  bool disableCityAndRegion = true;
+  bool disableCityAndRegion = false;
   final _formKey = GlobalKey<FormState>();
   final _formKeyPassword = GlobalKey<FormState>();
 

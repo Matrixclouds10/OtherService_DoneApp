@@ -4,34 +4,34 @@ import 'package:weltweit/features/core/base/base_usecase.dart';
 import 'package:weltweit/features/data/models/subscription/update_subscribtion_response.dart';
 import 'package:weltweit/features/domain/repositoy/provider_repo.dart';
 
-class SubscribeUseCase extends BaseUseCase<UpdateSubscribtionResponse, SubscribeParams> {
+class RePaySubscribeUseCase extends BaseUseCase<UpdateSubscribtionResponse, RePaySubscribeParams> {
   final AppRepositoryProvider repository;
 
-  SubscribeUseCase(this.repository);
+  RePaySubscribeUseCase(this.repository);
 
   @override
-  Future<Either<ErrorModel, UpdateSubscribtionResponse>> call(SubscribeParams parameters) async {
-    return await repository.subscribe(params: parameters);
+  Future<Either<ErrorModel, UpdateSubscribtionResponse>> call(RePaySubscribeParams parameters) async {
+    return await repository.rePaySubscribe(params: parameters);
   }
 
   @override
-  Future<Either<ErrorModel, UpdateSubscribtionResponse>> callTest(SubscribeParams parameters) {
+  Future<Either<ErrorModel, UpdateSubscribtionResponse>> callTest(RePaySubscribeParams parameters) {
     throw UnimplementedError();
   }
 }
 
-class SubscribeParams {
+class RePaySubscribeParams {
   int id;
   String paymentMethod;
 
-  SubscribeParams({
+  RePaySubscribeParams({
     required this.id,
     required this.paymentMethod,
   });
 
   toJson() {
     return {
-      'subscription_id': id,
+      'provider_subscription_id': id,
       'payment_method': paymentMethod,
     };
   }

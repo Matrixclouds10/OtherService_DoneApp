@@ -5,11 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/resources/decoration.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
-import 'package:weltweit/features/core/base/base_response.dart';
+import 'package:weltweit/core/utils/echo.dart';
+import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/data/models/subscription/subscription_model.dart';
+import 'package:weltweit/features/data/models/subscription/update_subscribtion_response.dart';
 import 'package:weltweit/features/logic/provider_profile/profile_cubit.dart';
 import 'package:weltweit/features/logic/provider_subscription/subscription_cubit.dart';
 import 'package:weltweit/features/screens/provider_subscribe/subscribtion_history_page.dart';
@@ -126,71 +128,34 @@ class _SubscribePageState extends State<SubscribePage> {
     );
   }
 
-  void actionSubscribe(SubscriptionModel e, SubscriptionMethods selectedMethod) async {
+  getCountryCurrency() {
+    ProfileProviderCubit profileProviderCubit = context.read<ProfileProviderCubit>();
+    if (profileProviderCubit.state.data?.countryModel?.title == 'مصر') {
+      return 'جنيه';
+    } else if (profileProviderCubit.state.data?.countryModel?.title == 'السعودية') {
+      return 'ريال';
+    }
+    return '';
+  }
+
+  void actionSubscribe(SubscriptionModel e, String selectedMethod) async {
     String desc = "";
     desc += "${LocaleKeys.price}:${e.price} ${getCountryCurrency()}\n";
     desc += "${LocaleKeys.period}:${e.period}\n";
-    desc += "${LocaleKeys.paymentMethod}:${selectedMethod.name}\n";
+    desc += "${LocaleKeys.paymentMethod}:$selectedMethod\n";
     Navigator.pop(context);
-    if (selectedMethod == SubscriptionMethods.credit) {
-      NavigationService.push(RoutesProvider.paymentWebview, arguments: {'id': e.id});
+
+    bool paymentMethodOnWeb = false;
+    for (var item in CreditMethods.values) {
+      if (selectedMethod == item.name) {
+        paymentMethodOnWeb = true;
+        break;
+      }
+    }
+    if (paymentMethodOnWeb) {
+      _actionPerformSubscribeWebPayment(e, selectedMethod);
     } else {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: CustomText(LocaleKeys.confirmSubscribtion.tr()),
-            content: StatefulBuilder(builder: (context, setState) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CustomText(desc),
-                  SizedBox(height: 12),
-                  Row(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () async {
-                          Navigator.pop(context);
-                          try {
-                            BaseResponse response = await context.read<SubscribtionCubit>().subscribe(e.id, selectedMethod.name);
-                            AppSnackbar.show(context: NavigationService.navigationKey.currentContext!, message: response.message ?? "");
-                          } catch (e) {
-                            AppSnackbar.show(context: NavigationService.navigationKey.currentContext!, message: LocaleKeys.somethingWentWrong.tr());
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        ),
-                        child: CustomText(
-                          LocaleKeys.confirm.tr(),
-                          color: Colors.white,
-                        ).headerExtra(),
-                      ),
-                      Spacer(),
-                      ElevatedButton(
-                        onPressed: () async {
-                          Navigator.pop(context);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        ),
-                        child: CustomText(
-                          LocaleKeys.cancel.tr(),
-                          color: Colors.white,
-                        ).headerExtra(),
-                      ),
-                    ],
-                  ),
-                ],
-              );
-            }),
-          );
-        },
-      );
+      _actionPerformSubscribe(subscriptionModel: e, selectedMethod: selectedMethod, desc: desc);
     }
   }
 
@@ -198,7 +163,7 @@ class _SubscribePageState extends State<SubscribePage> {
     ProfileProviderCubit profileProviderCubit = context.read<ProfileProviderCubit>();
 
     SubscriptionMethods selectedMethod = SubscriptionMethods.request;
-    CreditMethods selectedCreditMethod = CreditMethods.card;
+    CreditMethods selectedCreditMethod = CreditMethods.credit;
     showDialog(
       context: context,
       builder: (context) {
@@ -222,7 +187,7 @@ class _SubscribePageState extends State<SubscribePage> {
                       String title = e.name;
                       if (e.name.contains("wallet")) title = "wallet (${profileProviderCubit.state.data?.wallet ?? ''})";
                       bool isEnable = true;
-                      if (e.name.contains('credit')) isEnable = false;
+                      // if (e.name.contains('credit')) isEnable = false;
                       if (isEnable) {
                         if (e.name.contains("wallet")) {
                           double? wallet = double.tryParse(profileProviderCubit.state.data?.wallet.toString() ?? "") ?? 0;
@@ -263,7 +228,7 @@ class _SubscribePageState extends State<SubscribePage> {
                                     selectedCreditMethod = value!;
                                     setState(() {});
                                   },
-                                  title: CustomText(title, color: Colors.black).start(),
+                                  title: CustomText(title.replaceAll('_', ' '), color: Colors.black).start(),
                                   contentPadding: EdgeInsets.zero,
                                   dense: true,
                                   visualDensity: VisualDensity(horizontal: -4, vertical: -4));
@@ -276,7 +241,11 @@ class _SubscribePageState extends State<SubscribePage> {
 
                     ElevatedButton(
                       onPressed: () async {
-                        actionSubscribe(subscriptionModel, selectedMethod);
+                        if (selectedMethod == SubscriptionMethods.credit) {
+                          actionSubscribe(subscriptionModel, selectedCreditMethod.name);
+                        } else {
+                          actionSubscribe(subscriptionModel, selectedMethod.name);
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
@@ -298,18 +267,115 @@ class _SubscribePageState extends State<SubscribePage> {
     );
   }
 
-  getCountryCurrency() {
-    ProfileProviderCubit profileProviderCubit = context.read<ProfileProviderCubit>();
-    if(profileProviderCubit.state.data?.countryModel?.title == 'مصر'){
-      return 'جنيه';
-    }else if(profileProviderCubit.state.data?.countryModel?.title == 'السعودية'){
-      return 'ريال';
+  void _actionPerformSubscribeWebPayment(SubscriptionModel subscriptionModel, String selectedMethod) async {
+    try {
+      UpdateSubscribtionResponse updateSubscribtionResponse = await context.read<SubscribtionCubit>().subscribe(subscriptionModel.id, selectedMethod);
+
+      kEcho("paymentUrl: ${updateSubscribtionResponse.paymentData?.redirectUrl}");
+
+      if (updateSubscribtionResponse.paymentData != null) {
+        NavigationService.push(RoutesProvider.paymentWebview, arguments: {
+          'id': subscriptionModel.id,
+          'url': updateSubscribtionResponse.paymentData?.redirectUrl,
+        });
+      } else {
+        AppSnackbar.show(
+          context: NavigationService.navigationKey.currentContext!,
+          message: LocaleKeys.somethingWentWrong.tr(),
+        );
+        setState(() {});
+      }
+    } catch (e) {
+      String errorMessge = "";
+      if (e is ErrorModel) {
+        errorMessge = e.errorMessage ?? "";
+      }
+      AppSnackbar.show(
+        context: NavigationService.navigationKey.currentContext!,
+        message: '${LocaleKeys.somethingWentWrong.tr()} \n $errorMessge',
+      );
+
+      setState(() {});
     }
-    return ''; 
+  }
+
+  void _actionPerformSubscribe({
+    required SubscriptionModel subscriptionModel,
+    required String selectedMethod,
+    required String desc,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: CustomText(LocaleKeys.confirmSubscribtion.tr()),
+          content: StatefulBuilder(builder: (context, setState) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CustomText(desc),
+                SizedBox(height: 12),
+                Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        Navigator.pop(context);
+                        try {
+                          UpdateSubscribtionResponse response = await context.read<SubscribtionCubit>().subscribe(
+                                subscriptionModel.id,
+                                selectedMethod,
+                              );
+                          AppSnackbar.show(
+                            context: NavigationService.navigationKey.currentContext!,
+                            message: LocaleKeys.somethingWentWrong.tr(),
+                          );
+
+                          setState(() {});
+                        } catch (e) {
+                          String errorMessge = "";
+                          if (e is ErrorModel) {
+                            errorMessge = e.errorMessage ?? "";
+                          }
+                          AppSnackbar.show(context: NavigationService.navigationKey.currentContext!, message: '${LocaleKeys.somethingWentWrong.tr()} \n $errorMessge');
+                          setState(() {});
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      ),
+                      child: CustomText(
+                        LocaleKeys.confirm.tr(),
+                        color: Colors.white,
+                      ).headerExtra(),
+                    ),
+                    Spacer(),
+                    ElevatedButton(
+                      onPressed: () async {
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      ),
+                      child: CustomText(
+                        LocaleKeys.cancel.tr(),
+                        color: Colors.white,
+                      ).headerExtra(),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          }),
+        );
+      },
+    );
   }
 }
 
 enum SubscriptionMethods { request, wallet, credit }
 
-enum CreditMethods { card, wallet, kiosk }
-
+enum CreditMethods { credit, mobile_wallet, kiosk }
