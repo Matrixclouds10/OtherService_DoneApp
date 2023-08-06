@@ -1,5 +1,6 @@
 {
   "payNow":  "ادفع الآن",
+  "areYouSureToAdd":  "هل أنت متأكد من الإضافة \n لا يمكن تعديل بعد الإضافة",
   "region": "المنطقة",
   "city": "المدينة",
   "whatsApp": "واتساب",
@@ -302,7 +303,7 @@
   "current": "الحالية",
   "confirmDelete": "تأكيد الحذف",
   "logOutNote": "لا تغيب عنا طويلا",
-  "other": "آخر",
+  "other": "اخرى",
   "passport": "جواز السفر",
   "selectImageType": "اختر نوع الصورة",
   "coronaCertificate": "شهادة كورونا",
