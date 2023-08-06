@@ -37,7 +37,7 @@ class SubscriptionHistoryModel {
         paymentMethod: json["payment_method"],
         paymentId: json["payment_id"],
         paymentStatus: json["payment_status"],
-        kioskBillReference: json["kiosk_bill_reference"],
+        kioskBillReference: json["kiosk_bill_reference"]==null?null :'${json["kiosk_bill_reference"]}',
         subscription: json["subscription"] == null ? null : SubscriptionModel.fromJson(json["subscription"]),
       );
 }

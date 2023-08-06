@@ -60,4 +60,6 @@ enum DocumentType {
   corona_certificate,
   passport,
   others,
+  others_2,
+  others_3,
 }

@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,6 +13,7 @@ import 'package:material_dialogs/widgets/buttons/icon_outline_button.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/core/resources/color.dart';
+import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/core/resources/values_manager.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
@@ -26,6 +29,7 @@ import 'package:weltweit/features/domain/usecase/order/order_rate_usecase.dart';
 import 'package:weltweit/features/logic/order/order_cubit.dart';
 import 'package:weltweit/features/screens/auth/otp/otp_cubit.dart';
 import 'package:weltweit/features/screens/layout/layout_cubit.dart';
+import 'package:weltweit/features/screens/provider_subscribe/subscribe_page.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/features/widgets/app_text_tile.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
@@ -454,7 +458,6 @@ class AppDialogs {
   //   );
   // }
 
-
   void forgetPassword({
     required BuildContext context,
     required String title,
@@ -499,7 +502,7 @@ class AppDialogs {
                               );
                             } else {
                               try {
-                                await sendOtp(context, controller.text,typeIsProvider);
+                                await sendOtp(context, controller.text, typeIsProvider);
 
                                 loading = false;
                                 setState(() {});
@@ -530,8 +533,8 @@ class AppDialogs {
     );
   }
 
-  Future<bool> sendOtp(BuildContext context, String email,bool typeIsProvider) async {
-    ResponseModel responseModel = await BlocProvider.of<OtpCubit>(context, listen: false).reSendCodeNoState(email: email,typeIsProvider: typeIsProvider);
+  Future<bool> sendOtp(BuildContext context, String email, bool typeIsProvider) async {
+    ResponseModel responseModel = await BlocProvider.of<OtpCubit>(context, listen: false).reSendCodeNoState(email: email, typeIsProvider: typeIsProvider);
     if (responseModel.message != null && responseModel.message!.isNotEmpty) {
       if (responseModel.isSuccess) {
         return true;
@@ -577,6 +580,138 @@ class AppDialogs {
         ),
       ],
     );
+  }
+
+  void showKioskPaymentDialog(BuildContext context, String s) {
+    Dialogs.materialDialog(title: "${LocaleKeys.payment.tr()} Kiosk", msg: "Kiosk reference number ", color: Colors.white, context: context, actions: [
+      CustomText(s),
+      IconButton(
+          onPressed: () {
+            Clipboard.setData(ClipboardData(text: s));
+            AppSnackbar.show(
+              context: context,
+              message: "Copied successfully",
+              type: SnackbarType.success,
+            );
+          },
+          icon: Icon(Icons.copy)),
+    ]);
+  }
+
+  Future<String> showCreditMethodsDialog(
+    context, {
+    required String price,
+    required String period,
+    required String currency,
+    required String profileWallet,
+  }) async {
+    String selectedMethodToReturn = "";
+    await showDialog(
+      context: context,
+      builder: (context) {
+        SubscriptionMethods selectedMethod = SubscriptionMethods.request;
+        CreditMethods selectedCreditMethod = CreditMethods.credit;
+      
+        return AlertDialog(
+          title: CustomText(LocaleKeys.subscribeNow.tr()),
+          content: StatefulBuilder(builder: (context, setState) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    CustomText('${LocaleKeys.price}:$price $currency').footer().expanded(),
+                    CustomText('${LocaleKeys.period}:$period').footer().expanded(),
+                  ],
+                ),
+                Divider(),
+                Column(
+                  children: [
+                    //radio select Wallet , credit card , cash
+                    ...SubscriptionMethods.values.map((e) {
+                      String title = e.name;
+                      if (e.name.contains("wallet")) title = "wallet (${profileWallet})";
+                      bool isEnable = true;
+                      // if (e.name.contains('credit')) isEnable = false;
+                      if (isEnable) {
+                        if (e.name.contains("wallet")) {
+                          double? wallet = double.tryParse(profileWallet) ?? 0;
+                          isEnable = wallet >= double.parse(price.toString());
+                        }
+                      }
+                      return RadioListTile(
+                        value: e,
+                        groupValue: selectedMethod,
+                        onChanged: (value) {
+                          if (isEnable) {
+                            selectedMethod = value!;
+                            setState(() {});
+                          }
+                        },
+                        title: CustomText(
+                          title,
+                          color: !isEnable ? Colors.grey : Colors.black,
+                        ).start(),
+                        contentPadding: EdgeInsets.zero,
+                        dense: true,
+                        visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                      );
+                    }).toList(),
+
+                    if (selectedMethod == SubscriptionMethods.credit)
+                      Container(
+                        decoration: BoxDecoration().radius(radius: 12).customColor(Colors.white),
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Column(
+                          children: [
+                            ...CreditMethods.values.map((e) {
+                              String title = e.name;
+                              return RadioListTile(
+                                  value: e,
+                                  groupValue: selectedCreditMethod,
+                                  onChanged: (value) {
+                                    selectedCreditMethod = value!;
+                                    setState(() {});
+                                  },
+                                  title: CustomText(title.replaceAll('_', ' '), color: Colors.black).start(),
+                                  contentPadding: EdgeInsets.zero,
+                                  dense: true,
+                                  visualDensity: VisualDensity(horizontal: -4, vertical: -4));
+                            }).toList(),
+                          ],
+                        ),
+                      ),
+
+                    SizedBox(height: 12),
+
+                    ElevatedButton(
+                      onPressed: () async {
+                        NavigationService.goBack();
+                        if (selectedMethod == SubscriptionMethods.credit) {
+                          selectedMethodToReturn = selectedCreditMethod.name;
+                        } else {
+                          selectedMethodToReturn = selectedMethod.name;
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      ),
+                      child: CustomText(
+                        LocaleKeys.subscribeNow.tr(),
+                        color: Colors.white,
+                      ).headerExtra(),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          }),
+        );
+      },
+    );
+    return selectedMethodToReturn;
   }
 
   //

@@ -12,9 +12,12 @@ import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/data/models/subscription/subscription_history_model.dart';
+import 'package:weltweit/features/data/models/subscription/subscription_model.dart';
 import 'package:weltweit/features/data/models/subscription/update_subscribtion_response.dart';
 import 'package:weltweit/features/logic/provider_profile/profile_cubit.dart';
 import 'package:weltweit/features/logic/provider_subscription/subscription_cubit.dart';
+import 'package:weltweit/features/screens/provider_subscribe/subscribe_page.dart';
+import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/features/widgets/empty_widget.dart';
 import 'package:weltweit/generated/assets.dart';
@@ -128,18 +131,30 @@ class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
               builder: (context, state) {
                 return CustomButton(
                   onTap: () async {
+                    String paymentMethod = await context.read<SubscribtionCubit>().actionShowSubscriptionMethods(
+                          context: context,
+                          subscriptionModel: e.subscription!,
+                        );
+                    if (paymentMethod.isEmpty) return;
                     if (state.rePaySubscribeState == BaseState.loading) return;
-                    if (e.id == null || e.paymentMethod == null) return;
+                    if (e.id == null) return;
                     try {
-                      UpdateSubscribtionResponse updateSubscribtionResponse = await context.read<SubscribtionCubit>().reSubscribe(e.id!, e.paymentMethod!);
+                      UpdateSubscribtionResponse updateSubscribtionResponse = await context.read<SubscribtionCubit>().reSubscribe(e.id!, paymentMethod);
 
                       kEcho("payemtUrl: ${updateSubscribtionResponse.paymentData?.redirectUrl}");
 
                       if (updateSubscribtionResponse.paymentData != null) {
-                        NavigationService.push(RoutesProvider.paymentWebview, arguments: {
-                          'id': e.id,
-                          'url': updateSubscribtionResponse.paymentData?.redirectUrl,
-                        });
+                        if (updateSubscribtionResponse.paymentData?.redirectUrl != null) {
+                          NavigationService.push(RoutesProvider.paymentWebview, arguments: {
+                            'id': e.id,
+                            'url': updateSubscribtionResponse.paymentData?.redirectUrl,
+                          });
+                        } else if (updateSubscribtionResponse.paymentData?.kioskBillReference != null) {
+                          AppDialogs().showKioskPaymentDialog(
+                            context,
+                            updateSubscribtionResponse.paymentData?.kioskBillReference ?? "",
+                          );
+                        }
                       } else {
                         AppSnackbar.show(
                           context: NavigationService.navigationKey.currentContext!,
@@ -169,6 +184,116 @@ class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
         ],
       ),
     );
+  }
+
+  Future<String> actionShowSubscriptionMethods(SubscriptionModel subscriptionModel) async {
+    String selectedMethodToReturn = "";
+    ProfileProviderCubit profileProviderCubit = context.read<ProfileProviderCubit>();
+    SubscriptionMethods selectedMethod = SubscriptionMethods.request;
+    CreditMethods selectedCreditMethod = CreditMethods.credit;
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: CustomText(LocaleKeys.subscribeNow.tr()),
+          content: StatefulBuilder(builder: (context, setState) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    CustomText('${LocaleKeys.price}:${subscriptionModel.price} ${getCountryCurrency()}').footer().expanded(),
+                    CustomText('${LocaleKeys.period}:${subscriptionModel.period}').footer().expanded(),
+                  ],
+                ),
+                Divider(),
+                Column(
+                  children: [
+                    //radio select Wallet , credit card , cash
+                    ...SubscriptionMethods.values.map((e) {
+                      String title = e.name;
+                      if (e.name.contains("wallet")) title = "wallet (${profileProviderCubit.state.data?.wallet ?? ''})";
+                      bool isEnable = true;
+                      // if (e.name.contains('credit')) isEnable = false;
+                      if (isEnable) {
+                        if (e.name.contains("wallet")) {
+                          double? wallet = double.tryParse(profileProviderCubit.state.data?.wallet.toString() ?? "") ?? 0;
+                          isEnable = wallet >= double.parse(subscriptionModel.price.toString());
+                        }
+                      }
+                      return RadioListTile(
+                        value: e,
+                        groupValue: selectedMethod,
+                        onChanged: (value) {
+                          if (isEnable) {
+                            selectedMethod = value!;
+                            setState(() {});
+                          }
+                        },
+                        title: CustomText(
+                          title,
+                          color: !isEnable ? Colors.grey : Colors.black,
+                        ).start(),
+                        contentPadding: EdgeInsets.zero,
+                        dense: true,
+                        visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                      );
+                    }).toList(),
+
+                    if (selectedMethod == SubscriptionMethods.credit)
+                      Container(
+                        decoration: BoxDecoration().radius(radius: 12).customColor(Colors.white),
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Column(
+                          children: [
+                            ...CreditMethods.values.map((e) {
+                              String title = e.name;
+                              return RadioListTile(
+                                  value: e,
+                                  groupValue: selectedCreditMethod,
+                                  onChanged: (value) {
+                                    selectedCreditMethod = value!;
+                                    setState(() {});
+                                  },
+                                  title: CustomText(title.replaceAll('_', ' '), color: Colors.black).start(),
+                                  contentPadding: EdgeInsets.zero,
+                                  dense: true,
+                                  visualDensity: VisualDensity(horizontal: -4, vertical: -4));
+                            }).toList(),
+                          ],
+                        ),
+                      ),
+
+                    SizedBox(height: 12),
+
+                    ElevatedButton(
+                      onPressed: () async {
+                        NavigationService.goBack();
+                        if (selectedMethod == SubscriptionMethods.credit) {
+                          selectedMethodToReturn = selectedCreditMethod.name;
+                        } else {
+                          selectedMethodToReturn = selectedMethod.name;
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      ),
+                      child: CustomText(
+                        LocaleKeys.subscribeNow.tr(),
+                        color: Colors.white,
+                      ).headerExtra(),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          }),
+        );
+      },
+    );
+    return selectedMethodToReturn;
   }
 
   getCountryCurrency() {

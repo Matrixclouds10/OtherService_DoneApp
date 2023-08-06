@@ -43,6 +43,7 @@ class SingleDocumentItem extends StatelessWidget {
             ),
 
           //delete action
+          if(false)
           Positioned(
             top: 0,
             left: 0,

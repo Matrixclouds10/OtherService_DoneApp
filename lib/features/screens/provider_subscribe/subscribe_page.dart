@@ -15,6 +15,7 @@ import 'package:weltweit/features/data/models/subscription/update_subscribtion_r
 import 'package:weltweit/features/logic/provider_profile/profile_cubit.dart';
 import 'package:weltweit/features/logic/provider_subscription/subscription_cubit.dart';
 import 'package:weltweit/features/screens/provider_subscribe/subscribtion_history_page.dart';
+import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/features/widgets/empty_widget.dart';
 import 'package:weltweit/generated/assets.dart';
@@ -109,15 +110,20 @@ class _SubscribePageState extends State<SubscribePage> {
                   CustomText("${LocaleKeys.period}:${subscriptionModel.period}", color: Colors.grey[500]!, pv: 0).footer().start(),
                 ],
               ).expanded(),
-              CustomText("${subscriptionModel.price.toString()} ${getCountryCurrency()}", color: AppColorLight().kAccentColor).headerExtra(),
+              CustomText("${subscriptionModel.price.toString()} ${getCountryCurrency(context)}", color: AppColorLight().kAccentColor).headerExtra(),
             ],
           ),
           SizedBox(height: 12),
           Container(
             margin: EdgeInsets.symmetric(horizontal: 24),
             child: CustomButton(
-              onTap: () {
-                actionShowSubscriptionMethods(subscriptionModel);
+              onTap: () async {
+                String paymentMethod = await context.read<SubscribtionCubit>().actionShowSubscriptionMethods(
+                      context: context,
+                      subscriptionModel: subscriptionModel,
+                    );
+                if (paymentMethod.isEmpty) return;
+                actionSubscribe(subscriptionModel, paymentMethod);
               },
               title: LocaleKeys.subscribeNow.tr(),
               fontSize: 16,
@@ -128,22 +134,11 @@ class _SubscribePageState extends State<SubscribePage> {
     );
   }
 
-  getCountryCurrency() {
-    ProfileProviderCubit profileProviderCubit = context.read<ProfileProviderCubit>();
-    if (profileProviderCubit.state.data?.countryModel?.title == 'مصر') {
-      return 'جنيه';
-    } else if (profileProviderCubit.state.data?.countryModel?.title == 'السعودية') {
-      return 'ريال';
-    }
-    return '';
-  }
-
   void actionSubscribe(SubscriptionModel e, String selectedMethod) async {
     String desc = "";
-    desc += "${LocaleKeys.price}:${e.price} ${getCountryCurrency()}\n";
+    desc += "${LocaleKeys.price}:${e.price} ${getCountryCurrency(context)}\n";
     desc += "${LocaleKeys.period}:${e.period}\n";
     desc += "${LocaleKeys.paymentMethod}:$selectedMethod\n";
-    Navigator.pop(context);
 
     bool paymentMethodOnWeb = false;
     for (var item in CreditMethods.values) {
@@ -153,131 +148,30 @@ class _SubscribePageState extends State<SubscribePage> {
       }
     }
     if (paymentMethodOnWeb) {
-      _actionPerformSubscribeWebPayment(e, selectedMethod);
+      actionPerformSubscribeWebPayment(e, selectedMethod);
     } else {
-      _actionPerformSubscribe(subscriptionModel: e, selectedMethod: selectedMethod, desc: desc);
+      actionPerformSubscribe(subscriptionModel: e, selectedMethod: selectedMethod, desc: desc);
     }
   }
 
-  void actionShowSubscriptionMethods(SubscriptionModel subscriptionModel) {
-    ProfileProviderCubit profileProviderCubit = context.read<ProfileProviderCubit>();
-
-    SubscriptionMethods selectedMethod = SubscriptionMethods.request;
-    CreditMethods selectedCreditMethod = CreditMethods.credit;
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: CustomText(LocaleKeys.subscribeNow.tr()),
-          content: StatefulBuilder(builder: (context, setState) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: [
-                    CustomText('${LocaleKeys.price}:${subscriptionModel.price} ${getCountryCurrency()}').footer().expanded(),
-                    CustomText('${LocaleKeys.period}:${subscriptionModel.period}').footer().expanded(),
-                  ],
-                ),
-                Divider(),
-                Column(
-                  children: [
-                    //radio select Wallet , credit card , cash
-                    ...SubscriptionMethods.values.map((e) {
-                      String title = e.name;
-                      if (e.name.contains("wallet")) title = "wallet (${profileProviderCubit.state.data?.wallet ?? ''})";
-                      bool isEnable = true;
-                      // if (e.name.contains('credit')) isEnable = false;
-                      if (isEnable) {
-                        if (e.name.contains("wallet")) {
-                          double? wallet = double.tryParse(profileProviderCubit.state.data?.wallet.toString() ?? "") ?? 0;
-                          isEnable = wallet >= double.parse(subscriptionModel.price.toString());
-                        }
-                      }
-                      return RadioListTile(
-                        value: e,
-                        groupValue: selectedMethod,
-                        onChanged: (value) {
-                          if (isEnable) {
-                            selectedMethod = value!;
-                            setState(() {});
-                          }
-                        },
-                        title: CustomText(
-                          title,
-                          color: !isEnable ? Colors.grey : Colors.black,
-                        ).start(),
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                        visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                      );
-                    }).toList(),
-
-                    if (selectedMethod == SubscriptionMethods.credit)
-                      Container(
-                        decoration: BoxDecoration().radius(radius: 12).customColor(Colors.white),
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: Column(
-                          children: [
-                            ...CreditMethods.values.map((e) {
-                              String title = e.name;
-                              return RadioListTile(
-                                  value: e,
-                                  groupValue: selectedCreditMethod,
-                                  onChanged: (value) {
-                                    selectedCreditMethod = value!;
-                                    setState(() {});
-                                  },
-                                  title: CustomText(title.replaceAll('_', ' '), color: Colors.black).start(),
-                                  contentPadding: EdgeInsets.zero,
-                                  dense: true,
-                                  visualDensity: VisualDensity(horizontal: -4, vertical: -4));
-                            }).toList(),
-                          ],
-                        ),
-                      ),
-
-                    SizedBox(height: 12),
-
-                    ElevatedButton(
-                      onPressed: () async {
-                        if (selectedMethod == SubscriptionMethods.credit) {
-                          actionSubscribe(subscriptionModel, selectedCreditMethod.name);
-                        } else {
-                          actionSubscribe(subscriptionModel, selectedMethod.name);
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      ),
-                      child: CustomText(
-                        LocaleKeys.subscribeNow.tr(),
-                        color: Colors.white,
-                      ).headerExtra(),
-                    ),
-                  ],
-                ),
-              ],
-            );
-          }),
-        );
-      },
-    );
-  }
-
-  void _actionPerformSubscribeWebPayment(SubscriptionModel subscriptionModel, String selectedMethod) async {
+  void actionPerformSubscribeWebPayment(SubscriptionModel subscriptionModel, String selectedMethod) async {
     try {
       UpdateSubscribtionResponse updateSubscribtionResponse = await context.read<SubscribtionCubit>().subscribe(subscriptionModel.id, selectedMethod);
 
       kEcho("paymentUrl: ${updateSubscribtionResponse.paymentData?.redirectUrl}");
 
       if (updateSubscribtionResponse.paymentData != null) {
-        NavigationService.push(RoutesProvider.paymentWebview, arguments: {
-          'id': subscriptionModel.id,
-          'url': updateSubscribtionResponse.paymentData?.redirectUrl,
-        });
+        if (updateSubscribtionResponse.paymentData?.redirectUrl != null) {
+          NavigationService.push(RoutesProvider.paymentWebview, arguments: {
+            'id': subscriptionModel.id,
+            'url': updateSubscribtionResponse.paymentData?.redirectUrl,
+          });
+        } else if (updateSubscribtionResponse.paymentData?.kioskBillReference != null) {
+          AppDialogs().showKioskPaymentDialog(
+            context,
+            updateSubscribtionResponse.paymentData?.kioskBillReference ?? "",
+          );
+        }
       } else {
         AppSnackbar.show(
           context: NavigationService.navigationKey.currentContext!,
@@ -299,7 +193,7 @@ class _SubscribePageState extends State<SubscribePage> {
     }
   }
 
-  void _actionPerformSubscribe({
+  void actionPerformSubscribe({
     required SubscriptionModel subscriptionModel,
     required String selectedMethod,
     required String desc,
@@ -374,6 +268,16 @@ class _SubscribePageState extends State<SubscribePage> {
       },
     );
   }
+}
+
+getCountryCurrency(BuildContext context) {
+  ProfileProviderCubit profileProviderCubit = context.read<ProfileProviderCubit>();
+  if (profileProviderCubit.state.data?.countryModel?.title == 'مصر') {
+    return 'جنيه';
+  } else if (profileProviderCubit.state.data?.countryModel?.title == 'السعودية') {
+    return 'ريال';
+  }
+  return '';
 }
 
 enum SubscriptionMethods { request, wallet, credit }

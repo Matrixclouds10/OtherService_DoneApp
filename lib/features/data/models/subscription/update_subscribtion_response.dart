@@ -61,7 +61,7 @@ class UpdateSubscribtionResponse {
         paymentMethod: json["payment_method"],
         paymentId: json["payment_id"],
         paymentStatus: json["payment_status"],
-        kioskBillReference: json["kiosk_bill_reference"],
+        kioskBillReference: json["kiosk_bill_reference"]==null?null :'${json["kiosk_bill_reference"]}',
         updatedAt: DateTime.tryParse(json["updated_at"]),
         createdAt: DateTime.tryParse(json["created_at"]),
         id: json["id"],
@@ -80,6 +80,6 @@ class PaymentData {
 
   factory PaymentData.fromJson(Map<String, dynamic> json) => PaymentData(
         redirectUrl: json["redirect_url"],
-        kioskBillReference: json["kiosk_bill_reference"],
+        kioskBillReference: json["kiosk_bill_reference"] ==null?null:'${json["kiosk_bill_reference"]}',
       );
 }

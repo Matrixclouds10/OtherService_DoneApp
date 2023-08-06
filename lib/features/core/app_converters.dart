@@ -15,6 +15,10 @@ class AppConverters {
         return LocaleKeys.passport.tr();
       case DocumentType.others:
         return LocaleKeys.other.tr();
+      case DocumentType.others_2:
+        return LocaleKeys.other.tr();
+      case DocumentType.others_3:
+        return LocaleKeys.other.tr();
     }
   }
 

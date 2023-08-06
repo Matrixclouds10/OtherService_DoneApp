@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weltweit/core/extensions/num_extensions.dart';
 import 'package:weltweit/features/core/app_converters.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/core/utils/logger.dart';
+import 'package:weltweit/features/data/models/documents/document.dart';
 import 'package:weltweit/features/domain/usecase/provider_document/document_add_usecase.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
@@ -65,12 +67,11 @@ class DocumentPage extends StatelessWidget {
                       title: LocaleKeys.myFiles.tr(),
                       color: Colors.white,
                       actions: [
-                        IconButton(
-                          icon: Icon(Icons.add),
-                          onPressed: () async {
-                            addDocument(context);
-                          },
-                        )
+                        if (false)
+                          IconButton(
+                            icon: Icon(Icons.add),
+                            onPressed: () => addDocument(context, docType: null),
+                          )
                       ],
                     ),
                   ),
@@ -86,22 +87,66 @@ class DocumentPage extends StatelessWidget {
                       crossAxisSpacing: 10.0,
                       mainAxisSpacing: 10.0,
                     ),
-                    itemCount: state.data!.length + 1,
+                    itemCount: DocumentType.values.length,
                     itemBuilder: (context, index) {
-                      if (index == state.data!.length) {
-                        return Container(
-                          margin: EdgeInsets.symmetric(horizontal: 8),
-                          decoration: BoxDecoration().customColor(AppColorLight().kPrimaryColor.withOpacity(0.2)).radius(radius: 8),
-                          child: IconButton(
-                            icon: Icon(Icons.add),
-                            onPressed: () async {
-                              addDocument(context);
-                            },
-                          ),
-                        );
+                      List<Document>? documents = state.data?.where((element) {
+                        String currentType = DocumentType.values[index].name;
+                        if (currentType == 'others_2' || currentType == 'others_3') {
+                          currentType = 'others';
+                        }
+                        return element.type == currentType;
+                      }).toList();
+                      bool showAddButton = documents == null || documents.isEmpty;
+
+                      Document? document = documents == null
+                          ? null
+                          : documents.isNotEmpty
+                              ? documents[0]
+                              : null;
+
+                      //* In case of other_2 and other_2 check for second other file and third other file
+                      if (DocumentType.values[index] == DocumentType.others_2) {
+                        if (documents != null && documents.length > 1) {
+                          document = documents[1];
+                        } else {
+                          document = null;
+                        }
+                      }
+                      if (DocumentType.values[index] == DocumentType.others_3) {
+                        if (documents != null && documents.length > 2) {
+                          document = documents[2];
+                        } else {
+                          document = null;
+                        }
                       }
 
-                      return SingleDocumentItem(document: state.data![index]);
+                      if (showAddButton || document == null) {
+                        return Stack(
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              height: double.infinity,
+                              decoration: BoxDecoration().customColor(AppColorLight().kPrimaryColor.withOpacity(0.2)).radius(radius: 8),
+                              child: IconButton(
+                                icon: Icon(Icons.add),
+                                onPressed: () async {
+                                  addDocument(context, docType: DocumentType.values[index]);
+                                },
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              left: 0,
+                              child: Container(
+                                decoration: BoxDecoration().chip(color: primaryColor.withOpacity(0.6)).radius(radius: 8.r),
+                                padding: EdgeInsets.zero,
+                                child: CustomText(AppConverters.documentTypeToString(DocumentType.values[index]), ph: 8, pv: 2, size: 12, color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                      return SingleDocumentItem(document: document);
                     },
                   ),
                   ...[
@@ -132,19 +177,34 @@ class DocumentPage extends StatelessWidget {
     );
   }
 
-  void addDocument(BuildContext context) async {
-    DocumentType? type;
+  void addDocument(BuildContext context, {required DocumentType? docType}) async {
+    DocumentType? type = docType;
     File? file;
-    List<String> list = DocumentType.values.map((e) => AppConverters.documentTypeToString(e)).toList();
-    String? result = await AppDialogs().select<String>(context: context, list: list);
-    if (result == null) return;
-    type = AppConverters.stringToDocumentType(result);
-
+    if (type == null) {
+      List<String> list = DocumentType.values.map((e) => AppConverters.documentTypeToString(e)).toList();
+      //remove duplicates
+      list = list.toSet().toList();
+      String? result = await AppDialogs().select<String>(context: context, list: list);
+      if (result == null) return;
+      type = AppConverters.stringToDocumentType(result);
+    }
     // ignore: use_build_context_synchronously
     file = await AppDialogs().pickImage(context);
 
     if (file == null) return;
+
+    if (type == DocumentType.others_2 || type == DocumentType.others_3) {
+      type = DocumentType.others;
+    }
+
     DocumentParams params = DocumentParams(documentType: type, image: file);
-    if (context.mounted) BlocProvider.of<DocumentsCubit>(context).addDocument(params);
+
+    bool status = await AppDialogs().question(
+      context,
+      title: LocaleKeys.notification.tr(),
+      message: LocaleKeys.areYouSureToAdd.tr(),
+    );
+
+    if (status && context.mounted) BlocProvider.of<DocumentsCubit>(context).addDocument(params);
   }
 }

@@ -20,13 +20,9 @@ class Document {
         id: json['id'] as int?,
         providerId: json['provider_id'] as int?,
         image: json['image'] as String?,
-        type: json['type'] as String?,
-        createdAt: json['created_at'] == null
-            ? null
-            : DateTime.parse(json['created_at'] as String),
-        updatedAt: json['updated_at'] == null
-            ? null
-            : DateTime.parse(json['updated_at'] as String),
+        type: json['type'] == null || "${json['type']}".trim().isEmpty  ? 'others' : json['type'] as String,
+        createdAt: json['created_at'] == null ? null : DateTime.parse(json['created_at'] as String),
+        updatedAt: json['updated_at'] == null ? null : DateTime.parse(json['updated_at'] as String),
       );
 
   Map<String, dynamic> toJson() => {

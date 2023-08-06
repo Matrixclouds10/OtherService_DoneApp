@@ -2,6 +2,8 @@ import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/base_injection.dart';
+import 'package:weltweit/core/services/local/cache_consumer.dart';
+import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
@@ -36,14 +38,17 @@ class CountryCubit extends Cubit<CountryState> {
   }
 
   Future<void> getCountry() async {
-    ProfileUseCase profileUseCase = ProfileUseCase(repository: getIt());
-    if (state.countryModel != null) return;
-    Either<ErrorModel, UserModel> profileResult = await profileUseCase(NoParameters());
-    UserModel? userModel = profileResult.fold((l) => null, (r) => r);
+    AppPrefs appPrefs = getIt();
+    int? countryId = appPrefs.get(PrefKeys.countryId, defaultValue: null);
+    // ProfileUseCase profileUseCase = ProfileUseCase(repository: getIt());
+    // if (state.countryModel != null) return;
+    // Either<ErrorModel, UserModel> profileResult = await profileUseCase(NoParameters());
+    // UserModel? userModel = profileResult.fold((l) => null, (r) => r);
 
-    if (userModel == null) return;
-    if (userModel.countryModel?.id == null) return;
-    final result = await countryUseCase(userModel.countryModel!.id!);
+    // if (userModel == null) return;
+    // if (userModel.countryModel?.id == null) return;
+    if (countryId == null) return;
+    final result = await countryUseCase(countryId);
 
     result.fold(
       (error) => null,

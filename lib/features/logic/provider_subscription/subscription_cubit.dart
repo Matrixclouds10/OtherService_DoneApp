@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
@@ -11,6 +12,9 @@ import 'package:weltweit/features/domain/usecase/provider_subscription/repay_sub
 import 'package:weltweit/features/domain/usecase/provider_subscription/subscribe_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_subscription/subscribtions_history_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_subscription/subscribtions_usecase.dart';
+import 'package:weltweit/features/logic/provider_profile/profile_cubit.dart';
+import 'package:weltweit/features/screens/provider_subscribe/subscribe_page.dart';
+import 'package:weltweit/features/widgets/app_dialogs.dart';
 
 part 'subscription_state.dart';
 
@@ -75,6 +79,7 @@ class SubscribtionCubit extends Cubit<SubscribtionState> {
 
     return result.fold(
       (error) {
+        emit(state.copyWith(rePaySubscribeState: BaseState.loaded));
         return Future.error(error);
       },
       (data) {
@@ -87,7 +92,26 @@ class SubscribtionCubit extends Cubit<SubscribtionState> {
   void initStates() {
     emit(state.copyWith(
       state: BaseState.initial,
+      rePaySubscribeState: BaseState.initial,
+      subscribtionHistoryState: BaseState.initial,
+      subscribeState: BaseState.initial,
       error: null,
     ));
+  }
+
+  Future<String> actionShowSubscriptionMethods({
+    required BuildContext context,
+    required SubscriptionModel subscriptionModel,
+  }) async {
+    ProfileProviderCubit profileProviderCubit = context.read<ProfileProviderCubit>();
+
+    String selectedCreditMethodToReturn = await AppDialogs().showCreditMethodsDialog(
+      context,
+      currency: getCountryCurrency(context),
+      period: '${subscriptionModel.period}',
+      price: '${subscriptionModel.price}',
+      profileWallet: '${profileProviderCubit.state.data?.wallet ?? 0}',
+    );
+    return selectedCreditMethodToReturn;
   }
 }
