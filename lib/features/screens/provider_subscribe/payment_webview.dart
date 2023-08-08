@@ -92,20 +92,22 @@ class _PaymentWebviewState extends State<PaymentWebview> {
                           //get url params
                           String url = uri.toString();
                           kEcho(url);
-                          if (url.contains('message=')) {
-                            try {
-                              String message = url.split('message=')[1].split('&')[0];
-                              AppSnackbar.show(context: context, message: message);
-                              NavigationService.goBack();
-                            } catch (e) {
-                              kEchoError(e.toString());
-                            }
-                          }
+
                           if (url.contains('success=true')) {
                             context.read<LayoutProviderCubit>().setCurrentIndex(0);
                             while (NavigationService.canGoBack()) {
                               NavigationService.goBack();
                             }
+                            String message = LocaleKeys.successfullySubscribed.tr();
+                            AppSnackbar.show(context: context, message: message);
+                          }
+                          if (url.contains('success=false')) {
+                            context.read<LayoutProviderCubit>().setCurrentIndex(0);
+                            while (NavigationService.canGoBack()) {
+                              NavigationService.goBack();
+                            }
+                            String message = LocaleKeys.somethingWentWrong.tr();
+                            AppSnackbar.show(context: context, message: message);
                           }
 
                           // //get url from uri
