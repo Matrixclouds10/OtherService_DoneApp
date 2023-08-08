@@ -2,9 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/resources/decoration.dart';
+import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
-import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/features/data/models/address/address_item_model.dart';
 import 'package:weltweit/features/domain/usecase/address/address_create_usecase.dart';
 import 'package:weltweit/features/domain/usecase/address/address_delete_usecase.dart';
@@ -12,7 +12,6 @@ import 'package:weltweit/features/domain/usecase/address/address_update_usecase.
 import 'package:weltweit/features/screens/my_addresses/logic/address_cubit.dart';
 import 'package:weltweit/features/widgets/app_bottomsheet.dart';
 import 'package:weltweit/features/widgets/empty_widget.dart';
-
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
 
@@ -65,18 +64,23 @@ class _MyAddressesPageState extends State<MyAddressesPage> {
                           controller: addController,
                         ),
                         const SizedBox(height: 12),
-                        CustomButton(
-                          title: LocaleKeys.add.tr(),
-                          onTap: () async {
-                            AddressCreateParams params = AddressCreateParams(
-                              name: nameController.text,
-                              address: addController.text,
-                              lat: '0',
-                              lng: '0',
+                        BlocBuilder<AddressCubit, AddressState>(
+                          builder: (context, state) {
+                            return CustomButton(
+                              title: LocaleKeys.add.tr(),
+                              loading: state.createState == BaseState.loading,
+                              onTap: () async {
+                                AddressCreateParams params = AddressCreateParams(
+                                  name: nameController.text,
+                                  address: addController.text,
+                                  lat: '0',
+                                  lng: '0',
+                                );
+                                await context.read<AddressCubit>().createAddress(params);
+                                Navigator.pop(context);
+                                context.read<AddressCubit>().getAddresses();
+                              },
                             );
-                            await context.read<AddressCubit>().createAddress(params);
-                            Navigator.pop(context);
-                            context.read<AddressCubit>().getAddresses();
                           },
                         ),
                       ],
@@ -281,6 +285,5 @@ class _MyAddressesPageState extends State<MyAddressesPage> {
         ],
       ),
     );
-   
   }
 }

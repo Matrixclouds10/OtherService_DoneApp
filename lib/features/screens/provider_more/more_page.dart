@@ -43,6 +43,14 @@ class MorePage extends StatelessWidget {
                           Navigator.pushNamed(context, RoutesProvider.providerDocuments);
                         }),
                     Divider(height: 2, color: Colors.grey[300]),
+                    singleCustomListTile(
+                        image: "assets/images/user.png",
+                        text: LocaleKeys.subscribeAndactivateAccount.tr(),
+                        trailingText: "",
+                        onTap: () {
+                          Navigator.pushNamed(context, RoutesProvider.providerSubscribe);
+                        }),
+                    Divider(height: 2, color: Colors.grey[300]),
                     BlocBuilder<ServicesProviderCubit, ServicesProviderState>(
                       buildWhen: (previous, current) => previous.services != current.services,
                       bloc: BlocProvider.of<ServicesProviderCubit>(context)..getSavedServices(),
@@ -102,14 +110,6 @@ class MorePage extends StatelessWidget {
                         trailingText: LocaleKeys.contactUsNote.tr(),
                         onTap: () {
                           Navigator.pushNamed(context, Routes.contactUs);
-                        }),
-                    Divider(height: 2, color: Colors.grey[300]),
-                    singleCustomListTile(
-                        image: "assets/images/user.png",
-                        text: LocaleKeys.activateAccount.tr(),
-                        trailingText: "",
-                        onTap: () {
-                          Navigator.pushNamed(context, RoutesProvider.providerSubscribe);
                         }),
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(

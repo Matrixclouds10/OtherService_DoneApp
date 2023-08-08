@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/core/extensions/num_extensions.dart';
 import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/resources/values_manager.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
-import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
@@ -40,14 +40,14 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     ));
 
     pageViewModelData.add(PageViewData(
-      titleText:  LocaleKeys.walkThroughTitle2.tr(),
+      titleText: LocaleKeys.walkThroughTitle2.tr(),
       subText: LocaleKeys.walkThroughDesc2.tr(),
       assetsImage: Assets.imagesGps,
     ));
     pageViewModelData.add(PageViewData(
-      titleText:  LocaleKeys.walkThroughTitle3.tr(),
-      subText: LocaleKeys.walkThroughDesc3.tr() ,
-      assetsImage: Assets.imagesWorkers,
+      titleText: LocaleKeys.walkThroughTitle3.tr(),
+      subText: LocaleKeys.walkThroughDesc3.tr(),
+      assetsImage: Assets.imagesMaps,
     ));
 
     sliderTimer = Timer.periodic(Duration(seconds: 4), (timer) {

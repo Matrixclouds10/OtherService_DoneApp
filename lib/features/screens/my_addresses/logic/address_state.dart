@@ -18,7 +18,7 @@ class AddressState extends Equatable {
   });
 
   @override
-  List<Object?> get props => [errorModel, baseState, addresses];
+  List<Object?> get props => [errorModel, baseState, addresses, createState];
 
   copyWith({
     ErrorModel? errorModel,

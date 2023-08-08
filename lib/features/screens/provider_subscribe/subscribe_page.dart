@@ -46,13 +46,14 @@ class _SubscribePageState extends State<SubscribePage> {
         titleWidget: CustomText(LocaleKeys.subscribeNow.tr()).header(),
         isCenterTitle: true,
         actions: [
-          IconButton(
-            onPressed: () {
-              //go to history screen
-              Navigator.push(context, MaterialPageRoute(builder: (context) => SubscribtionHistoryPage()));
-            },
+          TextButton.icon(
+            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SubscribtionHistoryPage())),
             icon: Icon(Icons.history),
-          )
+            label: CustomText(
+              LocaleKeys.subscribtionHistory.tr(),
+              ph: 0,
+            ).footerExtra(),
+          ),
         ],
       ),
       body: Container(
@@ -136,9 +137,16 @@ class _SubscribePageState extends State<SubscribePage> {
 
   void actionSubscribe(SubscriptionModel e, String selectedMethod) async {
     String desc = "";
-    desc += "${LocaleKeys.price}:${e.price} ${getCountryCurrency(context)}\n";
-    desc += "${LocaleKeys.period}:${e.period}\n";
-    desc += "${LocaleKeys.paymentMethod}:$selectedMethod\n";
+    desc += "${LocaleKeys.price.tr()}: ${e.price} ${getCountryCurrency(context)}\n";
+    desc += "${LocaleKeys.period.tr()}: ${e.period}\n";
+    desc += "${LocaleKeys.paymentMethod.tr()}: ${convertToName(selectedMethod)} \n";
+
+    //show dialog to confirm
+    String message = "";
+    message += "${LocaleKeys.confirmSubscribtion.tr()}\n";
+    message += desc;
+    bool status = await AppDialogs().question(context, message: message);
+    if (!status) return;
 
     bool paymentMethodOnWeb = false;
     for (var item in CreditMethods.values) {
@@ -282,4 +290,15 @@ getCountryCurrency(BuildContext context) {
 
 enum SubscriptionMethods { request, wallet, credit }
 
-enum CreditMethods { credit, mobile_wallet, kiosk }
+enum CreditMethods { visa, mobile_wallet, kiosk }
+
+String convertToName(String title) {
+  if (title == CreditMethods.visa.name.trim()) return LocaleKeys.visa.tr();
+  if (title == CreditMethods.mobile_wallet.name.trim()) return LocaleKeys.mobileWalletPayment.tr();
+  if (title == CreditMethods.kiosk.name.trim()) return LocaleKeys.kiosk.tr();
+  if (title == SubscriptionMethods.request.name.trim()) return LocaleKeys.requestPayment.tr();
+  if (title.contains(SubscriptionMethods.wallet.name.trim())) return LocaleKeys.wallet.tr();
+  if (title == SubscriptionMethods.credit.name.trim()) return LocaleKeys.payBy.tr();
+
+  return title;
+}

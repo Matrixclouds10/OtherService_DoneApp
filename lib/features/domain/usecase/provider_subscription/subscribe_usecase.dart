@@ -32,7 +32,7 @@ class SubscribeParams {
   toJson() {
     return {
       'subscription_id': id,
-      'payment_method': paymentMethod,
+      'payment_method': paymentMethod.contains('visa') ? 'credit' : paymentMethod,
     };
   }
 }

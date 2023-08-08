@@ -1,6 +1,13 @@
 // DO NOT EDIT. This is code generated via package:easy_localization/generate.dart
 
 abstract class LocaleKeys {
+  static const visa = "visa";
+  static const mobileWalletPayment = "mobileWalletPayment";
+  static const kiosk = "kiosk";
+  static const requestPayment = "requestPayment";
+  static const payBy = "payBy";
+
+  static const subscribeAndactivateAccount = "subscribeAndactivateAccount";
   static const region = "region";
   static const areYouSureToAdd = "areYouSureToAdd";
   static const payNow = "payNow";

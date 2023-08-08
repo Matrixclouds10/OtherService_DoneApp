@@ -1,5 +1,5 @@
 import 'package:awesome_extensions/awesome_extensions.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization/easy_localization.dart' as easy_localization;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/resources/color.dart';
@@ -105,7 +105,12 @@ class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
           ),
           if (e.startsAt != null && e.endsAt != null)
             ListTile(
-              title: Text("${DateConverter.estimatedDate(e.startsAt!)}-${DateConverter.estimatedDate(e.endsAt!)}"),
+              title: Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: CustomText(
+                    "${DateConverter.estimatedDate(e.startsAt!)} - ${DateConverter.estimatedDate(e.endsAt!)}",
+                    align: TextAlign.start,
+                  )),
               leading: Icon(Icons.date_range_outlined, color: Colors.grey),
               dense: true,
               visualDensity: VisualDensity.compact,
@@ -119,7 +124,7 @@ class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomText(e.subscription!.name ?? "", color: primaryColor).headerExtra().start(),
-                    CustomText("${LocaleKeys.period}: ${e.subscription!.period}", color: Colors.grey[500]!, pv: 0).footer().start(),
+                    CustomText("${LocaleKeys.period.tr()}: ${e.subscription!.period}", color: Colors.grey[500]!, pv: 0).footer().start(),
                   ],
                 ).expanded(),
                 CustomText("${e.subscription!.price.toString()} ${getCountryCurrency()}", color: AppColorLight().kAccentColor).headerExtra(),
@@ -139,6 +144,15 @@ class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
                     if (state.rePaySubscribeState == BaseState.loading) return;
                     if (e.id == null) return;
                     try {
+                      //show dialog to confirm
+                      String message = "";
+                      message += "${LocaleKeys.confirmSubscribtion.tr()}\n";
+                      message += "${LocaleKeys.price.tr()}: ${e.subscription!.price} ${getCountryCurrency()}\n";
+                      message += "${LocaleKeys.period.tr()}: ${e.subscription!.period}\n";
+                      message += "${LocaleKeys.paymentMethod.tr()}: ${convertToName(paymentMethod)}\n";
+                      bool status = await AppDialogs().question(context, message: message);
+                      if (!status) return;
+
                       UpdateSubscribtionResponse updateSubscribtionResponse = await context.read<SubscribtionCubit>().reSubscribe(e.id!, paymentMethod);
 
                       kEcho("payemtUrl: ${updateSubscribtionResponse.paymentData?.redirectUrl}");
@@ -190,7 +204,7 @@ class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
     String selectedMethodToReturn = "";
     ProfileProviderCubit profileProviderCubit = context.read<ProfileProviderCubit>();
     SubscriptionMethods selectedMethod = SubscriptionMethods.request;
-    CreditMethods selectedCreditMethod = CreditMethods.credit;
+    CreditMethods selectedCreditMethod = CreditMethods.visa;
     await showDialog(
       context: context,
       builder: (context) {
@@ -202,8 +216,8 @@ class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
               children: [
                 Row(
                   children: [
-                    CustomText('${LocaleKeys.price}:${subscriptionModel.price} ${getCountryCurrency()}').footer().expanded(),
-                    CustomText('${LocaleKeys.period}:${subscriptionModel.period}').footer().expanded(),
+                    CustomText('${LocaleKeys.price.tr()}:${subscriptionModel.price} ${getCountryCurrency()}').footer().expanded(),
+                    CustomText('${LocaleKeys.period.tr()}:${subscriptionModel.period}').footer().expanded(),
                   ],
                 ),
                 Divider(),
@@ -231,7 +245,7 @@ class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
                           }
                         },
                         title: CustomText(
-                          title,
+                          convertToName(title),
                           color: !isEnable ? Colors.grey : Colors.black,
                         ).start(),
                         contentPadding: EdgeInsets.zero,

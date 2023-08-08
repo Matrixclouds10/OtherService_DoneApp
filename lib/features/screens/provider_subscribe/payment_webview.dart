@@ -1,18 +1,15 @@
 import 'dart:collection';
 import 'dart:io';
 
-import 'package:awesome_extensions/awesome_extensions.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
-import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
-import 'package:weltweit/features/screens/layout/layout_cubit.dart';
 import 'package:weltweit/features/screens/provider_layout/layout_cubit.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
@@ -61,7 +58,7 @@ class _PaymentWebviewState extends State<PaymentWebview> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: CustomText(LocaleKeys.payment, size: 22),
+        title: CustomText(LocaleKeys.payment.tr(), size: 22),
         centerTitle: true,
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.black87),

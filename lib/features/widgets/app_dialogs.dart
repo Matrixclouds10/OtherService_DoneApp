@@ -12,9 +12,7 @@ import 'package:material_dialogs/shared/types.dart';
 import 'package:material_dialogs/widgets/buttons/icon_outline_button.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:weltweit/base_injection.dart';
-import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/resources/resources.dart';
-import 'package:weltweit/core/resources/values_manager.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
@@ -610,8 +608,8 @@ class AppDialogs {
       context: context,
       builder: (context) {
         SubscriptionMethods selectedMethod = SubscriptionMethods.request;
-        CreditMethods selectedCreditMethod = CreditMethods.credit;
-      
+        CreditMethods selectedCreditMethod = CreditMethods.visa;
+
         return AlertDialog(
           title: CustomText(LocaleKeys.subscribeNow.tr()),
           content: StatefulBuilder(builder: (context, setState) {
@@ -630,7 +628,7 @@ class AppDialogs {
                     //radio select Wallet , credit card , cash
                     ...SubscriptionMethods.values.map((e) {
                       String title = e.name;
-                      if (e.name.contains("wallet")) title = "wallet (${profileWallet})";
+                      if (e.name.contains("wallet")) title = "wallet ($profileWallet)";
                       bool isEnable = true;
                       // if (e.name.contains('credit')) isEnable = false;
                       if (isEnable) {
@@ -649,7 +647,7 @@ class AppDialogs {
                           }
                         },
                         title: CustomText(
-                          title,
+                          convertToName(title),
                           color: !isEnable ? Colors.grey : Colors.black,
                         ).start(),
                         contentPadding: EdgeInsets.zero,
@@ -673,7 +671,7 @@ class AppDialogs {
                                     selectedCreditMethod = value!;
                                     setState(() {});
                                   },
-                                  title: CustomText(title.replaceAll('_', ' '), color: Colors.black).start(),
+                                  title: CustomText(convertToName(title), color: Colors.black).start(),
                                   contentPadding: EdgeInsets.zero,
                                   dense: true,
                                   visualDensity: VisualDensity(horizontal: -4, vertical: -4));

@@ -42,7 +42,7 @@ class Assets {
   static const String imagesLogOut = "assets/images/log-out.png";
   static const String imagesLogoJpg = "assets/images/logo_jpg.jpg";
   static const String imagesPending = "assets/images/pending.png";
-
+  static const String imagesMaps = "assets/images/map.png";
 
   static const String fontsMontserratArabicBlack = 'assets/fonts/montserratArabicBlack.otf';
   static const String fontsMontserratArabicBold = 'assets/fonts/montserratArabicBold.otf';
@@ -57,5 +57,4 @@ class Assets {
   static const String fontsMontserratLight = 'assets/fonts/montserratLight.ttf';
   static const String fontsMontserratMedium = 'assets/fonts/montserratMedium.ttf';
   static const String fontsMontserratRegular = 'assets/fonts/montserratRegular.ttf';
-
 }
