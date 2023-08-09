@@ -618,8 +618,8 @@ class AppDialogs {
               children: [
                 Row(
                   children: [
-                    CustomText('${LocaleKeys.price}:$price $currency').footer().expanded(),
-                    CustomText('${LocaleKeys.period}:$period').footer().expanded(),
+                    CustomText('${LocaleKeys.price.tr()}:$price $currency').footer().expanded(),
+                    CustomText('${LocaleKeys.period.tr()}:$period').footer().expanded(),
                   ],
                 ),
                 Divider(),

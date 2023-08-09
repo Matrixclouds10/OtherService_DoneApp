@@ -1,4 +1,9 @@
 {
+  "nationalIdBack":   "National ID Back",
+  "ciminalCertificate":    "Criminal Certificate",
+  "personalImage":    "Personal Image",
+  "taxCard":    "Tax Card",
+  "commercialRegister":    "Commercial Register",
   "successfullySubscribed":  "Successfully Subscribed",
   "visa": "Visa",
   "mobileWalletPayment": "Mobile Wallet",

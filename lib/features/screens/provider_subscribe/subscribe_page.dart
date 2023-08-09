@@ -108,7 +108,7 @@ class _SubscribePageState extends State<SubscribePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomText(subscriptionModel.name ?? "", color: primaryColor).headerExtra().start(),
-                  CustomText("${LocaleKeys.period}:${subscriptionModel.period}", color: Colors.grey[500]!, pv: 0).footer().start(),
+                  CustomText("${LocaleKeys.period.tr()}:${subscriptionModel.period}", color: Colors.grey[500]!, pv: 0).footer().start(),
                 ],
               ).expanded(),
               CustomText("${subscriptionModel.price.toString()} ${getCountryCurrency(context)}", color: AppColorLight().kAccentColor).headerExtra(),

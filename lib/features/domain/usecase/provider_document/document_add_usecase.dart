@@ -15,8 +15,7 @@ class DocumentAddUseCase extends BaseUseCase<BaseResponse, DocumentParams> {
   DocumentAddUseCase({required this.repository});
 
   @override
-  Future<Either<ErrorModel, BaseResponse>> call(
-      DocumentParams parameters) async {
+  Future<Either<ErrorModel, BaseResponse>> call(DocumentParams parameters) async {
     log('DocumentAddUseCase call');
     log('DocumentAddUseCase call ${parameters.toJson()}');
     log('DocumentAddUseCase call ${parameters.image.path}');
@@ -46,8 +45,7 @@ class DocumentParams {
 
   Future<FormData> toFormData() async {
     return FormData.fromMap({
-      'image': await MultipartFile.fromFile(image.path,
-          filename: image.path.split('/').last),
+      'image': await MultipartFile.fromFile(image.path, filename: image.path.split('/').last),
       'type': documentType.name,
       if (id != null) 'id': id,
     });
@@ -56,9 +54,14 @@ class DocumentParams {
 
 enum DocumentType {
   national_id,
+  national_id_back,
   work_certificate,
   corona_certificate,
+  ciminal_certificate,
   passport,
+  personal_image,
+  tax_card,
+  commercial_register,
   others,
   others_2,
   others_3,

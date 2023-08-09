@@ -83,9 +83,9 @@ class DocumentPage extends StatelessWidget {
                     shrinkWrap: true,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
-                      childAspectRatio: 1,
-                      crossAxisSpacing: 10.0,
-                      mainAxisSpacing: 10.0,
+                      childAspectRatio: 1.2,
+                      crossAxisSpacing: 4.0,
+                      mainAxisSpacing: 4.0,
                     ),
                     itemCount: DocumentType.values.length,
                     itemBuilder: (context, index) {
@@ -121,29 +121,40 @@ class DocumentPage extends StatelessWidget {
                       }
 
                       if (showAddButton || document == null) {
-                        return Stack(
-                          children: [
-                            Container(
-                              width: double.infinity,
-                              height: double.infinity,
-                              decoration: BoxDecoration().customColor(AppColorLight().kPrimaryColor.withOpacity(0.2)).radius(radius: 8),
-                              child: IconButton(
-                                icon: Icon(Icons.add),
-                                onPressed: () async {
-                                  addDocument(context, docType: DocumentType.values[index]);
-                                },
+                        return Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Stack(
+                            children: [
+                              Container(
+                        
+                                width: double.infinity,
+                                height: double.infinity,
+                                decoration: BoxDecoration().customColor(AppColorLight().kPrimaryColor.withOpacity(0.2)).radius(radius: 8),
+                                child: IconButton(
+                                  icon: Icon(Icons.add),
+                                  onPressed: () async {
+                                    addDocument(context, docType: DocumentType.values[index]);
+                                  },
+                                ),
                               ),
-                            ),
-                            Positioned(
-                              bottom: 0,
-                              left: 0,
-                              child: Container(
-                                decoration: BoxDecoration().chip(color: primaryColor.withOpacity(0.6)).radius(radius: 8.r),
-                                padding: EdgeInsets.zero,
-                                child: CustomText(AppConverters.documentTypeToString(DocumentType.values[index]), ph: 8, pv: 2, size: 12, color: Colors.white),
+                              Positioned(
+                                bottom: 0,
+                                left: 0,
+                                child: Container(
+                                  decoration: BoxDecoration().chip(color: primaryColor.withOpacity(0.6)).radius(radius: 4.r),
+                                  padding: EdgeInsets.zero,
+                                  child: CustomText(
+                                    AppConverters.documentTypeToString(DocumentType.values[index]),
+                                    ph: 8,
+                                    pv: 2,
+                                    size: 10,
+                                    color: Colors.white,
+                                    maxLines: 2,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         );
                       }
                       return SingleDocumentItem(document: document);

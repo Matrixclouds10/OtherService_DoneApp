@@ -19,7 +19,7 @@ class SingleDocumentItem extends StatelessWidget {
   Widget build(BuildContext context) {
     if (document.image == null) return Container();
     return Container(
-      padding: EdgeInsets.all(8),
+      padding: EdgeInsets.all(4),
       child: Stack(
         children: [
           CustomImage(
@@ -36,52 +36,59 @@ class SingleDocumentItem extends StatelessWidget {
               bottom: 0,
               left: 0,
               child: Container(
-                decoration: BoxDecoration().chip(color: primaryColor.withOpacity(0.6)).radius(radius: 8.r),
+                decoration: BoxDecoration().chip(color: primaryColor.withOpacity(0.6)).radius(radius: 4.r),
                 padding: EdgeInsets.zero,
-                child: CustomText(convertToProperDocumentType(document.type), ph: 8, pv: 2, size: 12, color: Colors.white),
+                child: CustomText(
+                  convertToProperDocumentType(document.type),
+                  ph: 8,
+                  pv: 2,
+                  size: 10,
+                  maxLines: 2,
+                  color: Colors.white,
+                ),
               ),
             ),
 
           //delete action
-          if(false)
-          Positioned(
-            top: 0,
-            left: 0,
-            child: GestureDetector(
-                onTap: () async {
-                  if (document.deleting) return;
-                  bool status = await AppDialogs().confirmDelete(context);
-                  if (status) {
-                    if (document.id != null) {
-                      if (context.mounted) {
-                        context.read<DocumentsCubit>().delete(document);
+          if (false)
+            Positioned(
+              top: 0,
+              left: 0,
+              child: GestureDetector(
+                  onTap: () async {
+                    if (document.deleting) return;
+                    bool status = await AppDialogs().confirmDelete(context);
+                    if (status) {
+                      if (document.id != null) {
+                        if (context.mounted) {
+                          context.read<DocumentsCubit>().delete(document);
+                        }
                       }
                     }
-                  }
-                },
-                child: document.deleting
-                    ? Container(
-                        width: 30,
-                        height: 30,
-                        padding: EdgeInsets.all(8),
-                        child: CircularProgressIndicator(
-                          strokeWidth: 1,
-                        ))
-                    : Container(
-                        padding: EdgeInsets.all(4),
-                        margin: EdgeInsets.all(4),
-                        width: 24,
-                        height: 24,
-                        decoration: BoxDecoration().chip(color: Colors.black.withOpacity(0.3)).radius(radius: 100.r),
-                        child: Center(
-                          child: Icon(
-                            Icons.delete,
-                            color: Colors.red,
-                            size: 10,
+                  },
+                  child: document.deleting
+                      ? Container(
+                          width: 30,
+                          height: 30,
+                          padding: EdgeInsets.all(8),
+                          child: CircularProgressIndicator(
+                            strokeWidth: 1,
+                          ))
+                      : Container(
+                          padding: EdgeInsets.all(4),
+                          margin: EdgeInsets.all(4),
+                          width: 24,
+                          height: 24,
+                          decoration: BoxDecoration().chip(color: Colors.black.withOpacity(0.3)).radius(radius: 100.r),
+                          child: Center(
+                            child: Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                              size: 10,
+                            ),
                           ),
-                        ),
-                      )),
-          ),
+                        )),
+            ),
         ],
       ),
     );
@@ -93,7 +100,12 @@ class SingleDocumentItem extends StatelessWidget {
     if (type == 'passport') return LocaleKeys.passport.tr();
     if (type == 'national_id') return LocaleKeys.nationalId.tr();
     if (type == 'corona_certificate') return LocaleKeys.coronaCertificate.tr();
+    if (type == 'national_id_back') return LocaleKeys.nationalIdBack.tr();
+    if (type == 'ciminal_certificate') return LocaleKeys.ciminalCertificate.tr();
+    if (type == 'personal_image') return LocaleKeys.personalImage.tr();
+    if (type == 'tax_card') return LocaleKeys.taxCard.tr();
+    if (type == 'commercial_register') return LocaleKeys.commercialRegister.tr();
     if (type == 'others') return type;
-    return '';
+    return 'others';
   }
 }
