@@ -6,10 +6,12 @@ import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/data/models/documents/document.dart';
+import 'package:weltweit/features/data/models/documents/hiring_document_model.dart';
 import 'package:weltweit/features/domain/usecase/provider_document/document_add_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_document/document_delete_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_document/document_update_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_document/documents_usecase.dart';
+import 'package:weltweit/features/domain/usecase/provider_document/hiring_documents_usecase.dart';
 
 part 'documents_state.dart';
 
@@ -48,6 +50,17 @@ class DocumentsCubit extends Cubit<DocumentsState> {
       (error) => emit(state.copyWith(state: BaseState.error, error: error)),
       (data) => emit(state.copyWith(state: BaseState.loaded)),
     );
+  }
+  
+  Future<void> getHiringDocuments() async{
+    HiringDocumentsUseCase hiringDocumentsUseCase = getIt();
+    emit(state.copyWith(getHitingDocsState: BaseState.loading));
+    final result = await hiringDocumentsUseCase(NoParameters());
+    result.fold(
+      (error) => emit(state.copyWith(getHitingDocsState: BaseState.error, error: error)),
+      (data) => emit(state.copyWith(getHitingDocsState: BaseState.loaded, hiringDocuments: data)),
+    );
+
   }
 
   void delete(Document document) async {

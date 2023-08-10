@@ -1,6 +1,7 @@
 class AppURLProvider {
   static const String kAPIKey = "";
   static const String kBaseURL = "http://newdon.dev01.matrix-clouds.com/api/service-provider";
+  static const String kBaseURLApi = "http://newdon.dev01.matrix-clouds.com/api";
   // static const String kBaseURL = "https://doneapp.org/api/service-provider";
 
   ///Auth
@@ -31,6 +32,7 @@ class AppURLProvider {
   static const String addDocumentURI = "$kBaseURL/profile/add-paper";
   static const String updateDocumentURI = "$kBaseURL/profile/update-paper";
   static const String deleteDocumentURI = "$kBaseURL/profile/delete-paper";
+  static const String getDocumentsInfoURI = "$kBaseURLApi/get-hiring-documents";
 
   //Portfolio
   static const String getPortfoliosURI = "$kBaseURL/portfolio-images";

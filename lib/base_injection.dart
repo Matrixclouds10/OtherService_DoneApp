@@ -12,6 +12,7 @@ import 'package:weltweit/features/data/repository/provider_repository_imp.dart';
 import 'package:weltweit/features/domain/repositoy/provider_repo.dart';
 import 'package:weltweit/features/domain/usecase/provider/notification/notifications_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider/notification/provider_notifications_usecase.dart';
+import 'package:weltweit/features/domain/usecase/provider_document/hiring_documents_usecase.dart';
 import 'package:weltweit/features/screens/auth/login/login_cubit.dart';
 import 'package:weltweit/features/screens/auth/otp/otp_cubit.dart';
 import 'package:weltweit/features/screens/auth/register/register_cubit.dart';
@@ -83,6 +84,7 @@ Future<void> init() async {
   getIt.registerLazySingleton(() => DocumentUpdateUseCase(repository: getIt()));
   getIt.registerLazySingleton(() => DocumentDeleteUseCase(repository: getIt()));
   getIt.registerLazySingleton(() => DocumentsUseCase(repository: getIt()));
+  getIt.registerLazySingleton(() => HiringDocumentsUseCase(repository: getIt()));
 
   //Portfolio
   getIt.registerLazySingleton(() => PortfolioAddUseCase(repository: getIt()));

@@ -15,5 +15,6 @@ class RoutesProvider {
   static const String providerSubscribe = "/provider/subscribe";
   static const String paymentWebview = "/provider/paymentWebview";
   static const String providerDocuments = "/provider/documents";
+  static const String providerHiringDocuments = "/provider/hiringDocuments";
   static const String providerProfileUpdateScreen = "/provider/profileUpdateScreen";
 }

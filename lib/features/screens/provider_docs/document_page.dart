@@ -25,7 +25,9 @@ class DocumentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => DocumentsCubit()..getDocuments(),
+      create: (context) => DocumentsCubit()
+        ..getDocuments()
+        ..getHiringDocuments(),
       child: Container(
         color: Colors.white,
         child: SafeArea(
@@ -75,7 +77,6 @@ class DocumentPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(height: 10),
                   GridView.builder(
                     key: GlobalKey(),
                     physics: NeverScrollableScrollPhysics(),
@@ -126,7 +127,6 @@ class DocumentPage extends StatelessWidget {
                           child: Stack(
                             children: [
                               Container(
-                        
                                 width: double.infinity,
                                 height: double.infinity,
                                 decoration: BoxDecoration().customColor(AppColorLight().kPrimaryColor.withOpacity(0.2)).radius(radius: 8),
@@ -160,22 +160,22 @@ class DocumentPage extends StatelessWidget {
                       return SingleDocumentItem(document: document);
                     },
                   ),
-                  ...[
-                    LocaleKeys.makeSureToUploadAllFiles.tr(),
-                    LocaleKeys.copyOfId.tr(),
-                    LocaleKeys.copyOfWorkLicense.tr(),
-                    LocaleKeys.copyOfPassport.tr(),
-                    LocaleKeys.anyOthers.tr(),
-                  ]
-                      .map((e) => Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 12),
-                            child: AppTextTile(
-                              title: CustomText(e, size: 16, pv: 0, align: TextAlign.start),
-                              isTitleExpanded: true,
-                              leading: Icon(Icons.circle, size: 12),
-                            ),
-                          ))
-                      .toList(),
+                  // ...[
+                  //   LocaleKeys.makeSureToUploadAllFiles.tr(),
+                  //   LocaleKeys.copyOfId.tr(),
+                  //   LocaleKeys.copyOfWorkLicense.tr(),
+                  //   LocaleKeys.copyOfPassport.tr(),
+                  //   LocaleKeys.anyOthers.tr(),
+                  // ]
+                  //     .map((e) => Padding(
+                  //           padding: EdgeInsets.symmetric(horizontal: 12),
+                  //           child: AppTextTile(
+                  //             title: CustomText(e, size: 16, pv: 0, align: TextAlign.start),
+                  //             isTitleExpanded: true,
+                  //             leading: Icon(Icons.circle, size: 12),
+                  //           ),
+                  //         ))
+                  //     .toList(),
                   SizedBox(height: 20),
                 ],
               ),

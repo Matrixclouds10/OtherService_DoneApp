@@ -37,6 +37,15 @@ class MorePage extends StatelessWidget {
                   children: [
                     singleCustomListTile(
                         image: "assets/images/file.png",
+
+                        text: LocaleKeys.requiredDocuments.tr(),
+                        trailingText: "",
+                        onTap: () {
+                          Navigator.pushNamed(context, RoutesProvider.providerHiringDocuments);
+                        }),
+                    Divider(height: 2, color: Colors.grey[300]),
+                    singleCustomListTile(
+                        image: "assets/images/file.png",
                         text: LocaleKeys.myFiles.tr(),
                         trailingText: "",
                         onTap: () {

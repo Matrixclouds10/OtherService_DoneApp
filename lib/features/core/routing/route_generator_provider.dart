@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:weltweit/core/routing/platform_page_route.dart';
 import 'package:weltweit/core/routing/undefined_route_screen.dart';
 import 'package:weltweit/features/screens/provider_docs/document_page.dart';
+import 'package:weltweit/features/screens/provider_docs/hiring_document_page.dart';
 import 'package:weltweit/features/screens/provider_layout/layout_page.dart';
 import 'package:weltweit/features/screens/provider_my_addresses/my_addresses_page.dart';
 import 'package:weltweit/features/screens/provider_notifications/notification_page.dart';
@@ -38,6 +39,8 @@ class RouteProviderGenerator {
         return platformPageRoute(const ReservationPage());
       case RoutesProvider.providerDocuments:
         return platformPageRoute(const DocumentPage());
+      case RoutesProvider.providerHiringDocuments:
+        return platformPageRoute(const HiringDocumentPage());
       case RoutesProvider.providerOrderDetails:
         return platformPageRoute(OrderDetails(orderModel: arguments!["order"]));
       case RoutesProvider.providerProviders:

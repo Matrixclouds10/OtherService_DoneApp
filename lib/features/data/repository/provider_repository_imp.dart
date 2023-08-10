@@ -117,7 +117,7 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
   }
   @override
   Future<Either<ErrorModel, List<HiringDocumentModel>>> getHiringDocuments() async {
-    String url = AppURLProvider.getDocumentsURI;
+    String url = AppURLProvider.getDocumentsInfoURI;
     NetworkCallType type = NetworkCallType.get;
     Map<String, dynamic> data = {};
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
