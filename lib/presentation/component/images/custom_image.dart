@@ -70,9 +70,10 @@ class CustomImage extends StatelessWidget {
               color: Colors.transparent,
               child: InkWell(
                 onTap: () async {
-                  String? path = await onPickImagesPressed(context);
-                  if (path != null && onAttachImage != null) {
-                    onAttachImage!(path);
+                  File? file = await onPickImagesPressed(context);
+
+                  if (file != null && onAttachImage != null) {
+                    onAttachImage!(file.path);
                   }
                 },
                 borderRadius: BorderRadius.circular(100),

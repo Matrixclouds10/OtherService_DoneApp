@@ -1,31 +1,46 @@
-import 'package:file_picker/file_picker.dart';
+import 'dart:io';
+
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:material_dialogs/material_dialogs.dart';
+import 'package:material_dialogs/widgets/buttons/icon_outline_button.dart';
+import 'package:weltweit/core/routing/navigation_services.dart';
+import 'package:weltweit/generated/locale_keys.g.dart';
 
-Future<String?> onPickImagesPressed(BuildContext context) async {
-  List<PlatformFile>? paths;
-  const multiPick = false;
-  const filesType = FileType.custom;
-  const extensions = 'jpg , png , jpeg';
-  FocusManager.instance.primaryFocus!.unfocus();
+Future<File?> onPickImagesPressed(BuildContext context) async {
+  return pickImage(context);
+}
 
-  try {
-    paths = (await FilePicker.platform.pickFiles(
-      type: filesType,
-      allowMultiple: multiPick,
-      allowedExtensions: extensions.replaceAll(' ', '').split(','),
-    ))
-        ?.files;
-  } on PlatformException {
-    // log(_tag, "Unsupported operation $e");
-  } catch (ex) {
-    // log(_tag, ex.toString());
-  }
-
-  if (paths != null) {
-    // log(_tag, 'onPickImagesPressed ${_paths.map((e) => e.name).toString()}');
-    return paths[0].path ?? '';
-  } else {
-    return null;
-  }
+Future<File?> pickImage(BuildContext context) async {
+  File? file;
+  await Dialogs.materialDialog(msg: LocaleKeys.selectImageSource.tr(), color: Colors.white, context: context, actions: [
+    IconsOutlineButton(
+      onPressed: () async {
+        XFile? pickedFile = await (ImagePicker().pickImage(source: ImageSource.camera, imageQuality: 33));
+        if (pickedFile != null) {
+          file = File(pickedFile.path);
+          NavigationService.goBack();
+        }
+      },
+      text: LocaleKeys.camera.tr(),
+      iconData: Icons.camera_alt,
+      textStyle: TextStyle(color: Theme.of(context).primaryColor),
+      iconColor: Theme.of(context).primaryColor,
+    ),
+    IconsOutlineButton(
+      onPressed: () async {
+        XFile? pickedFile = await (ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 33));
+        if (pickedFile != null) {
+          file = File(pickedFile.path);
+          NavigationService.goBack();
+        }
+      },
+      text: LocaleKeys.gallery.tr(),
+      iconData: Icons.photo_library,
+      textStyle: TextStyle(color: Theme.of(context).primaryColor),
+      iconColor: Theme.of(context).primaryColor,
+    ),
+  ]);
+  return file;
 }
