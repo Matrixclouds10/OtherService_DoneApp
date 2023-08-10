@@ -545,6 +545,7 @@ class AppDialogs {
   }
 
   Future<void> languageDialog(BuildContext context) async {
+    Locale locale = context.locale;
     await Dialogs.materialDialog(
       title: LocaleKeys.language.tr(),
       msg: LocaleKeys.selectLanguage.tr(),
@@ -560,7 +561,7 @@ class AppDialogs {
             NavigationService.goBack();
           },
           text: "English",
-          iconData: Icons.circle_outlined,
+          iconData: locale.languageCode.contains('en')? Icons.circle : Icons.circle_outlined,
           textStyle: TextStyle(color: primaryColor),
           iconColor: primaryColor,
         ),
@@ -572,7 +573,7 @@ class AppDialogs {
             NavigationService.goBack();
           },
           text: "عربي",
-          iconData: Icons.circle_outlined,
+          iconData: locale.languageCode.contains('ar')? Icons.circle : Icons.circle_outlined,
           textStyle: TextStyle(color: primaryColor),
           iconColor: primaryColor,
         ),
