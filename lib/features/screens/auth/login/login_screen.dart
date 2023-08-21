@@ -48,14 +48,19 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   CountryModel? _selectedCountry;
   bool typeIsProvider = true;
   late TabController _tabController;
+  bool showForIos = false;
   @override
   void initState() {
-    _tabController = TabController(length: 2, vsync: this, initialIndex: Constants.hideForIos ? 1 : 0);
+    AppPrefs prefs = getIt();
+    showForIos = prefs.get(PrefKeys.iosStatus, defaultValue: true);
+    if (!Platform.isIOS) showForIos = true;
+
+    _tabController = TabController(length: 2, vsync: this, initialIndex: showForIos ? 0 : 1);
     _tabController.addListener(() {
       typeIsProvider = _tabController.index == 0;
       logger.d('typeIsProvider $typeIsProvider');
     });
-    typeIsProvider = Constants.hideForIos ? false : true;
+    typeIsProvider = !showForIos ? false : true;
     if (kDebugMode) {
       _phoneController.text = '1010101040';
       _passwordController.text = '123456';
@@ -184,7 +189,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                               ),
 
                               //Tabs
-                              if (Platform.isAndroid)
+                              if (showForIos)
                                 TabBar(
                                   controller: _tabController,
                                   tabs: [

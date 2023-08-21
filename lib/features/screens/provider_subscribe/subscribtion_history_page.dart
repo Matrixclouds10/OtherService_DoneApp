@@ -130,7 +130,7 @@ class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
                 CustomText("${e.subscription!.price.toString()} ${getCountryCurrency()}", color: AppColorLight().kAccentColor).headerExtra(),
               ],
             ),
-          if (e.status == 'pending' && e.paymentStatus == 'pending') ...[
+          if (e.paymentStatus!.toLowerCase() == 'pending') ...[
             SizedBox(height: 12),
             BlocBuilder<SubscribtionCubit, SubscribtionState>(
               builder: (context, state) {
