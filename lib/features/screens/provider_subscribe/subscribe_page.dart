@@ -238,7 +238,7 @@ class _SubscribePageState extends State<SubscribePage> {
                           if (e is ErrorModel) {
                             errorMessge = e.errorMessage ?? "";
                           }
-                          AppSnackbar.show(context: NavigationService.navigationKey.currentContext!, message: '${LocaleKeys.somethingWentWrong.tr()} \n $errorMessge');
+                          AppSnackbar.show(context: NavigationService.navigationKey.currentContext!, message: errorMessge);
                           setState(() {});
                         }
                       },
