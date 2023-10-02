@@ -1,7 +1,14 @@
+// ignore_for_file: curly_braces_in_flow_control_structures
+
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/core/routing/platform_page_route.dart';
 import 'package:weltweit/core/routing/undefined_route_screen.dart';
+import 'package:weltweit/core/services/local/cache_consumer.dart';
+import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/screens/auth/login/login_screen.dart';
 import 'package:weltweit/features/screens/auth/otp/otp_screen.dart';
@@ -78,7 +85,15 @@ class RouteServicesGenerator {
         return platformPageRoute(Theme(data: servicesTheme, child: WelcomeScreen()));
 
       case RoutesServices.servicesUserTypeScreen:
-        return platformPageRoute(Theme(data: servicesTheme, child: UserTypeScreen()));
+        {
+          AppPrefs prefs = getIt();
+          bool showForIos = prefs.get(PrefKeys.iosStatus, defaultValue: true);
+          if (!Platform.isIOS) showForIos = true;
+          if (showForIos)
+            return platformPageRoute(Theme(data: servicesTheme, child: UserTypeScreen()));
+          else
+            return platformPageRoute(Theme(data: servicesTheme, child: RegisterScreen(typeIsProvider: false)));
+        }
 
       case RoutesServices.servicesOnBoardingScreen:
         return platformPageRoute(Theme(data: servicesTheme, child: OnBoardingScreen()));
