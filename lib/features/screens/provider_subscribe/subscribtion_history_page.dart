@@ -182,7 +182,7 @@ class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
                       }
                       AppSnackbar.show(
                         context: NavigationService.navigationKey.currentContext!,
-                        message: '${LocaleKeys.somethingWentWrong.tr()} \n $errorMessge',
+                        message: errorMessge,
                       );
 
                       setState(() {});
