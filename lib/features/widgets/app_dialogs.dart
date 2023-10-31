@@ -641,7 +641,7 @@ class AppDialogs {
                   ],
                 ),
                 Divider(),
-                if (isSaudi)
+                // if (isSaudi)
                   ElevatedButton(
                     onPressed: () async {
                       Navigator.of(context).push(MaterialPageRoute(
@@ -659,8 +659,8 @@ class AppDialogs {
                       LocaleKeys.subscribeNow.tr(),
                       color: Colors.white,
                     ).headerExtra(),
-                  )
-                else
+                  ),
+                // else
                   Column(
                     children: [
                       //radio select Wallet , credit card , cash

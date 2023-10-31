@@ -142,7 +142,7 @@ class _SubscribePageState extends State<SubscribePage> {
             ],
           ),
           SizedBox(height: 12),
-          if (isSaudi == true)
+          // if (isSaudi == true)
 
             Container(
               margin: EdgeInsets.symmetric(horizontal: 1),
