@@ -13,17 +13,17 @@ import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
 import 'package:weltweit/features/data/app_urls/client_endpoints_url.dart';
+import 'package:weltweit/features/data/models/auth/user_model.dart';
 import 'package:weltweit/features/data/models/banner/banner_model.dart';
 import 'package:weltweit/features/data/models/chat/chat_model.dart';
 import 'package:weltweit/features/data/models/location/city_model.dart';
+import 'package:weltweit/features/data/models/location/country_model.dart';
 import 'package:weltweit/features/data/models/location/region_model.dart';
 import 'package:weltweit/features/data/models/notification/notification_model.dart';
 import 'package:weltweit/features/data/models/order/order.dart';
 import 'package:weltweit/features/data/models/portfolio/portfolio_image.dart';
 import 'package:weltweit/features/data/models/provider/provider_rates_model.dart';
 import 'package:weltweit/features/data/models/provider/providers_model.dart';
-import 'package:weltweit/features/data/models/auth/user_model.dart';
-import 'package:weltweit/features/data/models/location/country_model.dart';
 import 'package:weltweit/features/data/models/services/service.dart';
 import 'package:weltweit/features/data/models/services/services_response.dart';
 import 'package:weltweit/features/domain/repositoy/app_repo.dart';
@@ -537,13 +537,18 @@ class AppRepositoryImp implements AppRepository {
 
     AppPrefs prefs = getIt.get<AppPrefs>();
     int? countryId = prefs.get(PrefKeys.countryId);
-    Map<String, dynamic> data = {"country_id": countryId};
+    Map<String, dynamic> data = {
+      "country_id": countryId,
+    };
 
-    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+    Either<ErrorModel, BaseResponse> result =
+        await networkClient(url: url, data: data, type: type);
 
     return result.fold((l) => Left(l), (r) {
       try {
-        List<ProvidersModel> providers = r.data.map<ProvidersModel>((e) => ProvidersModel.fromJson(e)).toList();
+        List<ProvidersModel> providers = r.data
+            .map<ProvidersModel>((e) => ProvidersModel.fromJson(e))
+            .toList();
         return Right(providers);
       } catch (e) {
         return Left(ErrorModel(errorMessage: e.toString()));

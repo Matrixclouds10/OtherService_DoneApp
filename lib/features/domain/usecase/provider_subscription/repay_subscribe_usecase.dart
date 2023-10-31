@@ -11,6 +11,8 @@ class RePaySubscribeUseCase extends BaseUseCase<UpdateSubscribtionResponse, RePa
 
   @override
   Future<Either<ErrorModel, UpdateSubscribtionResponse>> call(RePaySubscribeParams parameters) async {
+    print(parameters.id);
+    print(parameters.paymentMethod);
     return await repository.rePaySubscribe(params: parameters);
   }
 
@@ -21,18 +23,27 @@ class RePaySubscribeUseCase extends BaseUseCase<UpdateSubscribtionResponse, RePa
 }
 
 class RePaySubscribeParams {
-  int id;
-  String paymentMethod;
+  dynamic id;
+  dynamic paymentMethod;
 
   RePaySubscribeParams({
     required this.id,
     required this.paymentMethod,
   });
 
-  toJson() {
+  toJsonReSubscribe() {
     return {
       'provider_subscription_id': id,
-      'payment_method': paymentMethod.contains('visa') ? 'credit' : paymentMethod,
+      'payment_method':
+      paymentMethod.contains('visa') ? 'credit' : paymentMethod,
     };
   }
+  toJsonUpdateSubscribe() {
+    return {
+      'subscription_id': id,
+      'payment_method':
+      paymentMethod.contains('visa') ? 'credit' : paymentMethod,
+    };
+  }
+
 }

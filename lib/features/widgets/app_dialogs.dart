@@ -27,6 +27,7 @@ import 'package:weltweit/features/domain/usecase/order/order_rate_usecase.dart';
 import 'package:weltweit/features/logic/order/order_cubit.dart';
 import 'package:weltweit/features/screens/auth/otp/otp_cubit.dart';
 import 'package:weltweit/features/screens/layout/layout_cubit.dart';
+import 'package:weltweit/features/screens/provider_subscribe/payment_webview.dart';
 import 'package:weltweit/features/screens/provider_subscribe/subscribe_page.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/features/widgets/app_text_tile.dart';
@@ -34,16 +35,23 @@ import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/custom_button.dart';
 import 'package:weltweit/presentation/component/inputs/base_form.dart';
 
+import '../../core/routing/routes.dart';
+
 class AppDialogs {
   Future<File?> pickImage(BuildContext context) async {
     File? file;
-    await Dialogs.materialDialog(msg: LocaleKeys.selectImageSource.tr(), color: Colors.white, context: context, actions: [
-      IconsOutlineButton(
-        onPressed: () async {
-          XFile? pickedFile = await (ImagePicker().pickImage(source: ImageSource.camera, imageQuality: 33));
-          if (pickedFile != null) {
-            file = File(pickedFile.path);
-            NavigationService.goBack();
+    await Dialogs.materialDialog(
+        msg: LocaleKeys.selectImageSource.tr(),
+        color: Colors.white,
+        context: context,
+        actions: [
+          IconsOutlineButton(
+            onPressed: () async {
+              XFile? pickedFile = await (ImagePicker()
+                  .pickImage(source: ImageSource.camera, imageQuality: 33));
+              if (pickedFile != null) {
+                file = File(pickedFile.path);
+                NavigationService.goBack();
           }
         },
         text: LocaleKeys.camera.tr(),
@@ -603,7 +611,12 @@ class AppDialogs {
     required String period,
     required String currency,
     required String profileWallet,
+    required String url,
   }) async {
+    bool isSaudi =
+        getIt<AppPrefs>().get(PrefKeys.countryId, defaultValue: false) == 2;
+
+    print(isSaudi);
     String selectedMethodToReturn = "";
     await showDialog(
       context: context,
@@ -619,91 +632,127 @@ class AppDialogs {
               children: [
                 Row(
                   children: [
-                    CustomText('${LocaleKeys.price.tr()}:$price $currency').footer().expanded(),
-                    CustomText('${LocaleKeys.period.tr()}:$period').footer().expanded(),
+                    CustomText('${LocaleKeys.price.tr()}:$price $currency')
+                        .footer()
+                        .expanded(),
+                    CustomText('${LocaleKeys.period.tr()}:$period')
+                        .footer()
+                        .expanded(),
                   ],
                 ),
                 Divider(),
-                Column(
-                  children: [
-                    //radio select Wallet , credit card , cash
-                    ...SubscriptionMethods.values.map((e) {
-                      String title = e.name;
-                      if (e.name.contains("wallet")) title = "wallet ($profileWallet)";
-                      bool isEnable = true;
-                      // if (e.name.contains('credit')) isEnable = false;
-                      if (isEnable) {
+                if (isSaudi)
+                  ElevatedButton(
+                    onPressed: () async {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>
+                              PaymentWebview( url: url)));
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(100)),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                    ),
+                    child: CustomText(
+                      LocaleKeys.subscribeNow.tr(),
+                      color: Colors.white,
+                    ).headerExtra(),
+                  )
+                else
+                  Column(
+                    children: [
+                      //radio select Wallet , credit card , cash
+
+                      ...SubscriptionMethods.values.map((e) {
+                        String title = e.name;
                         if (e.name.contains("wallet")) {
-                          double? wallet = double.tryParse(profileWallet) ?? 0;
-                          isEnable = wallet >= double.parse(price.toString());
+                          title = "wallet ($profileWallet)";
                         }
-                      }
-                      return RadioListTile(
-                        value: e,
-                        groupValue: selectedMethod,
-                        onChanged: (value) {
-                          if (isEnable) {
-                            selectedMethod = value!;
-                            setState(() {});
+                        bool isEnable = true;
+                        // if (e.name.contains('credit')) isEnable = false;
+                        if (isEnable) {
+                          if (e.name.contains("wallet")) {
+                            double? wallet =
+                                double.tryParse(profileWallet) ?? 0;
+                            isEnable = wallet >= double.parse(price.toString());
+                          }
+                        }
+                        return RadioListTile(
+                          value: e,
+                          groupValue: selectedMethod,
+                          onChanged: (value) {
+                            if (isEnable) {
+                              selectedMethod = value!;
+                              setState(() {});
+                            }
+                          },
+                          title: CustomText(
+                            convertToName(title),
+                            color: !isEnable ? Colors.grey : Colors.black,
+                          ).start(),
+                          contentPadding: EdgeInsets.zero,
+                          dense: true,
+                          visualDensity:
+                              VisualDensity(horizontal: -4, vertical: -4),
+                        );
+                      }).toList(),
+
+                      if (selectedMethod == SubscriptionMethods.credit)
+                        Container(
+                          decoration: BoxDecoration()
+                              .radius(radius: 12)
+                              .customColor(Colors.white),
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: Column(
+                            children: [
+                              ...CreditMethods.values.map((e) {
+                                String title = e.name;
+                                return RadioListTile(
+                                    value: e,
+                                    groupValue: selectedCreditMethod,
+                                    onChanged: (value) {
+                                      selectedCreditMethod = value!;
+                                      setState(() {});
+                                    },
+                                    title: CustomText(convertToName(title),
+                                            color: Colors.black)
+                                        .start(),
+                                    contentPadding: EdgeInsets.zero,
+                                    dense: true,
+                                    visualDensity: VisualDensity(
+                                        horizontal: -4, vertical: -4));
+                              }).toList(),
+                            ],
+                          ),
+                        ),
+
+                      SizedBox(height: 12),
+
+                      ElevatedButton(
+                        onPressed: () async {
+                          NavigationService.goBack();
+                          if (selectedMethod == SubscriptionMethods.credit) {
+                            selectedMethodToReturn = selectedCreditMethod.name;
+                          } else {
+                            selectedMethodToReturn = selectedMethod.name;
                           }
                         },
-                        title: CustomText(
-                          convertToName(title),
-                          color: !isEnable ? Colors.grey : Colors.black,
-                        ).start(),
-                        contentPadding: EdgeInsets.zero,
-                        dense: true,
-                        visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-                      );
-                    }).toList(),
-
-                    if (selectedMethod == SubscriptionMethods.credit)
-                      Container(
-                        decoration: BoxDecoration().radius(radius: 12).customColor(Colors.white),
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: Column(
-                          children: [
-                            ...CreditMethods.values.map((e) {
-                              String title = e.name;
-                              return RadioListTile(
-                                  value: e,
-                                  groupValue: selectedCreditMethod,
-                                  onChanged: (value) {
-                                    selectedCreditMethod = value!;
-                                    setState(() {});
-                                  },
-                                  title: CustomText(convertToName(title), color: Colors.black).start(),
-                                  contentPadding: EdgeInsets.zero,
-                                  dense: true,
-                                  visualDensity: VisualDensity(horizontal: -4, vertical: -4));
-                            }).toList(),
-                          ],
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(100)),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
                         ),
+                        child: CustomText(
+                          LocaleKeys.subscribeNow.tr(),
+                          color: Colors.white,
+                        ).headerExtra(),
                       ),
-
-                    SizedBox(height: 12),
-
-                    ElevatedButton(
-                      onPressed: () async {
-                        NavigationService.goBack();
-                        if (selectedMethod == SubscriptionMethods.credit) {
-                          selectedMethodToReturn = selectedCreditMethod.name;
-                        } else {
-                          selectedMethodToReturn = selectedMethod.name;
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      ),
-                      child: CustomText(
-                        LocaleKeys.subscribeNow.tr(),
-                        color: Colors.white,
-                      ).headerExtra(),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
               ],
             );
           }),

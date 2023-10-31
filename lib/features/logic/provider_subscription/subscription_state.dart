@@ -1,6 +1,6 @@
 part of 'subscription_cubit.dart';
 
-class SubscribtionState extends Equatable {
+class SubscriptionState extends Equatable {
   final BaseState state;
   final BaseState subscribeState;
   final BaseState subscribtionHistoryState;
@@ -10,7 +10,7 @@ class SubscribtionState extends Equatable {
   final List<SubscriptionHistoryModel> subscribtionHistoryData;
   final List<SubscriptionHistoryModel> reSubscribtionHistoryData;
   final ErrorModel? error;
-  const SubscribtionState({
+  const SubscriptionState({
     this.state = BaseState.initial,
     this.subscribeState = BaseState.initial,
     this.subscribtionHistoryState = BaseState.initial,
@@ -21,7 +21,7 @@ class SubscribtionState extends Equatable {
     this.error,
   });
 
-  SubscribtionState copyWith({
+  SubscriptionState copyWith({
     BaseState? state,
     BaseState? subscribeState,
     BaseState? subscribtionHistoryState,
@@ -31,7 +31,7 @@ class SubscribtionState extends Equatable {
     List<SubscriptionModel>? data,
     ErrorModel? error,
   }) {
-    return SubscribtionState(
+    return SubscriptionState(
       state: state ?? this.state,
       subscribeState: subscribeState ?? this.subscribeState,
       subscribtionHistoryState: subscribtionHistoryState ?? this.subscribtionHistoryState,

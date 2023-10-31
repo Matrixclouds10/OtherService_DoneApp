@@ -15,9 +15,10 @@ import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 
 class PaymentWebview extends StatefulWidget {
-  final int packageId;
+  final int? packageId;
   final String url;
-  const PaymentWebview({required this.packageId, required this.url, super.key});
+
+  const PaymentWebview({this.packageId, required this.url, super.key});
 
   @override
   State<PaymentWebview> createState() => _PaymentWebviewState();

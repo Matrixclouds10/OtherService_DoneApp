@@ -7,13 +7,14 @@ class SubscriptionModel {
     required this.countryId,
   });
 
-  final int id;
-  final String? name;
-  final String? period;
-  final int? price;
-  final int? countryId;
+  dynamic id;
+  dynamic name;
+  dynamic period;
+  dynamic price;
+  dynamic countryId;
 
-  factory SubscriptionModel.fromJson(Map<String, dynamic> json) => SubscriptionModel(
+  factory SubscriptionModel.fromJson(Map<String, dynamic> json) =>
+      SubscriptionModel(
         id: json["id"],
         name: json["name"],
         period: json["period"],

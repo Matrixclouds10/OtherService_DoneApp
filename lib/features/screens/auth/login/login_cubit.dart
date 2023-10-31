@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/notification/device_token.dart';
+import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/data/models/base/response_model.dart';
-import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/features/domain/usecase/auth/sign_in_usecase.dart';
 
 part 'login_state.dart';
@@ -25,6 +25,7 @@ class LoginCubit extends Cubit<LoginlState> {
     try {
       fcmToken = await getDeviceToken();
       loginBody.deviceToken = fcmToken;
+      // loginBody.countryModel?.code=countryId;
     } catch (e) {
       log('login', ' fcmToken error: $e');
       emit(LoginViewError(error: null));

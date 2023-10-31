@@ -6,7 +6,6 @@ import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/resources/decoration.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/utils/date/date_converter.dart';
-import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/routing/routes_provider.dart';
@@ -32,10 +31,12 @@ class SubscribtionHistoryPage extends StatefulWidget {
 }
 
 class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
+  bool? isSaudi;
+
   @override
   void initState() {
     super.initState();
-    SubscribtionCubit subscriptionCubit = context.read<SubscribtionCubit>();
+    SubscriptionCubit subscriptionCubit = context.read<SubscriptionCubit>();
     subscriptionCubit.getSubscribtionsHistory();
   }
 
@@ -56,22 +57,29 @@ class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
             fit: BoxFit.cover,
           ),
         ),
-        child: BlocBuilder<SubscribtionCubit, SubscribtionState>(
+        child: BlocBuilder<SubscriptionCubit, SubscriptionState>(
           builder: (context, state) {
-            if (state.subscribtionHistoryState == BaseState.loading) return const Center(child: CircularProgressIndicator());
+            if (state.subscribtionHistoryState == BaseState.loading) {
+              return const Center(child: CircularProgressIndicator());
+            }
             if (state.subscribtionHistoryState == BaseState.error) {
               return ErrorLayout(
-                  errorModel: ErrorModel(errorMessage: LocaleKeys.somethingWentWrong.tr()),
+                  errorModel: ErrorModel(
+                      errorMessage: LocaleKeys.somethingWentWrong.tr()),
                   onRetry: () {
-                    context.read<SubscribtionCubit>().getSubscribtionsHistory();
+                    context.read<SubscriptionCubit>().getSubscribtionsHistory();
                   });
             }
-            if (state.data.isEmpty) return const EmptyView(message: "No Subscribtions");
+            if (state.data.isEmpty) {
+              return const EmptyView(message: "No Subscribtions");
+            }
             return SingleChildScrollView(
               child: ListAnimator(
                 children: [
                   SizedBox(height: 24),
-                  ...state.subscribtionHistoryData.map((e) => _buildItem(e)).toList(),
+                  ...state.subscribtionHistoryData
+                      .map((e) => _buildItem(e))
+                      .toList(),
                   SizedBox(height: 64),
                 ],
               ),
@@ -132,46 +140,57 @@ class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
             ),
           if (e.paymentStatus!.toLowerCase() == 'pending') ...[
             SizedBox(height: 12),
-            BlocBuilder<SubscribtionCubit, SubscribtionState>(
+            BlocBuilder<SubscriptionCubit, SubscriptionState>(
               builder: (context, state) {
                 return CustomButton(
                   onTap: () async {
-                    String paymentMethod = await context.read<SubscribtionCubit>().actionShowSubscriptionMethods(
-                          context: context,
-                          subscriptionModel: e.subscription!,
-                        );
-                    if (paymentMethod.isEmpty) return;
                     if (state.rePaySubscribeState == BaseState.loading) return;
                     if (e.id == null) return;
                     try {
                       //show dialog to confirm
                       String message = "";
                       message += "${LocaleKeys.confirmSubscribtion.tr()}\n";
-                      message += "${LocaleKeys.price.tr()}: ${e.subscription!.price} ${getCountryCurrency()}\n";
-                      message += "${LocaleKeys.period.tr()}: ${e.subscription!.period}\n";
-                      message += "${LocaleKeys.paymentMethod.tr()}: ${convertToName(paymentMethod)}\n";
-                      bool status = await AppDialogs().question(context, message: message);
+                      message +=
+                          "${LocaleKeys.price.tr()}: ${e.subscription!.price} ${getCountryCurrency()}\n";
+                      message +=
+                          "${LocaleKeys.period.tr()}: ${e.subscription!.period}\n";
+                      message +=
+                          "${LocaleKeys.paymentMethod.tr()}: ${convertToName('')}\n";
+                      bool status = await AppDialogs()
+                          .question(context, message: message);
                       if (!status) return;
 
-                      UpdateSubscribtionResponse updateSubscribtionResponse = await context.read<SubscribtionCubit>().reSubscribe(e.id!, paymentMethod);
+                      UpdateSubscribtionResponse? updateSubscribtionResponse =
+                          await context
+                              .read<SubscriptionCubit>()
+                              .reSubscribe(e.id!, 'visa');
 
-                      kEcho("payemtUrl: ${updateSubscribtionResponse.paymentData?.redirectUrl}");
-
-                      if (updateSubscribtionResponse.paymentData != null) {
-                        if (updateSubscribtionResponse.paymentData?.redirectUrl != null) {
-                          NavigationService.push(RoutesProvider.paymentWebview, arguments: {
-                            'id': e.id,
-                            'url': updateSubscribtionResponse.paymentData?.redirectUrl,
-                          });
-                        } else if (updateSubscribtionResponse.paymentData?.kioskBillReference != null) {
+                      print('zzzz ${e.id}');
+                      if (updateSubscribtionResponse?.paymentData != null) {
+                        if (updateSubscribtionResponse
+                                ?.paymentData?.redirectUrl !=
+                            null) {
+                          NavigationService.push(RoutesProvider.paymentWebview,
+                              arguments: {
+                                'id': e.id,
+                                'url': updateSubscribtionResponse
+                                    ?.paymentData?.redirectUrl,
+                              });
+                        } else if (updateSubscribtionResponse
+                                    ?.paymentData?.kioskBillReference !=
+                                null &&
+                            mounted) {
                           AppDialogs().showKioskPaymentDialog(
                             context,
-                            updateSubscribtionResponse.paymentData?.kioskBillReference ?? "",
+                            updateSubscribtionResponse
+                                    ?.paymentData?.kioskBillReference ??
+                                "",
                           );
                         }
                       } else {
                         AppSnackbar.show(
-                          context: NavigationService.navigationKey.currentContext!,
+                          context:
+                              NavigationService.navigationKey.currentContext!,
                           message: LocaleKeys.somethingWentWrong.tr(),
                         );
                       }
@@ -184,7 +203,6 @@ class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
                         context: NavigationService.navigationKey.currentContext!,
                         message: errorMessge,
                       );
-
                       setState(() {});
                     }
                   },

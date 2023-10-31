@@ -11,7 +11,6 @@ import 'package:weltweit/core/resources/values_manager.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
-import 'package:weltweit/core/utils/constants.dart';
 import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/features/core/routing/routes_provider.dart';
@@ -266,6 +265,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
               selectedCountry: _selectedCountry,
               onCountryChanged: (value) {
                 _selectedCountry = value;
+                setState(() {});
               },
             ),
             const VerticalSpace(kScreenPaddingNormal),

@@ -9,14 +9,15 @@ import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/core/services/network/network_client.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
+import 'package:weltweit/features/data/app_urls/provider_endpoints_url.dart';
+import 'package:weltweit/features/data/models/auth/user_model.dart';
+import 'package:weltweit/features/data/models/documents/document.dart';
 import 'package:weltweit/features/data/models/documents/hiring_document_model.dart';
 import 'package:weltweit/features/data/models/notification/notification_model.dart';
-import 'package:weltweit/features/data/models/auth/user_model.dart';
-import 'package:weltweit/features/data/app_urls/provider_endpoints_url.dart';
-import 'package:weltweit/features/data/models/documents/document.dart';
 import 'package:weltweit/features/data/models/portfolio/portfolio_image.dart';
 import 'package:weltweit/features/data/models/services/service.dart';
 import 'package:weltweit/features/data/models/subscription/subscription_history_model.dart';
+import 'package:weltweit/features/data/models/subscription/subscription_model.dart';
 import 'package:weltweit/features/data/models/subscription/update_subscribtion_response.dart';
 import 'package:weltweit/features/data/models/wallet/wallet_model.dart';
 import 'package:weltweit/features/domain/repositoy/provider_repo.dart';
@@ -25,7 +26,6 @@ import 'package:weltweit/features/domain/usecase/provider_portfolio/portfolio_up
 import 'package:weltweit/features/domain/usecase/provider_profile/change_password_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_profile/update_profile_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_services/update_services_usecase.dart';
-import 'package:weltweit/features/data/models/subscription/subscription_model.dart';
 import 'package:weltweit/features/domain/usecase/provider_subscription/repay_subscribe_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_subscription/subscribe_usecase.dart';
 
@@ -376,7 +376,7 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
   Future<Either<ErrorModel, UpdateSubscribtionResponse>> rePaySubscribe({required RePaySubscribeParams params}) async {
     String url = AppURLProvider.rePaySubscribe;
     NetworkCallType type = NetworkCallType.post;
-    Map<String, dynamic> data = params.toJson();
+    Map<String, dynamic> data = params.toJsonReSubscribe();
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
     return result.fold((l) => Left(l), (r) {
       try {

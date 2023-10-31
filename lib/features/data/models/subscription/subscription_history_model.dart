@@ -15,16 +15,16 @@ class SubscriptionHistoryModel {
     required this.kioskBillReference,
   });
 
-  final int? id;
-  final int? providerId;
-  final int? subscriptionId;
+  dynamic id;
+  dynamic providerId;
+  dynamic subscriptionId;
   final DateTime? startsAt;
   final DateTime? endsAt;
-  final String? status;
-  final String? paymentMethod;
-  final int? paymentId;
-  final String? paymentStatus;
-  final String? kioskBillReference;
+  dynamic status;
+  dynamic paymentMethod;
+  dynamic paymentId;
+  dynamic paymentStatus;
+  dynamic kioskBillReference;
   final SubscriptionModel? subscription;
 
   factory SubscriptionHistoryModel.fromJson(Map<String, dynamic> json) => SubscriptionHistoryModel(
