@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
@@ -56,13 +57,26 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
     );
   }
 
-  Future<UpdateSubscribtionResponse> subscribe(int id, String method) async {
+  Future<UpdateSubscribtionResponse> subscribe(int id, String method,
+      [context]) async {
     initStates();
     emit(state.copyWith(subscribeState: BaseState.loading));
-    final result = await subscribeUseCase(SubscribeParams(id: id, paymentMethod: method));
+    final result =
+        await subscribeUseCase(SubscribeParams(id: id, paymentMethod: method));
     print('We Are SUBSCRIBE Here');
     return result.fold(
       (error) {
+        Fluttertoast.showToast(
+            msg: "لقد أرسلت الطلب اذهب لسجل الاشتراكات",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0
+        ).then((value) => print('ss')).catchError((e){print(e);});
+        print('we are error here');
+
         return Future.error(error);
       },
       (data) {

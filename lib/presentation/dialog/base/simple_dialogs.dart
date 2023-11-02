@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:weltweit/app.dart';
 import 'package:weltweit/core/resources/text_styles.dart';
 
 void showErrorDialog(
@@ -8,13 +9,12 @@ void showErrorDialog(
   String description,
 ) {
   AwesomeDialog(
-          context: context,
+          context: appContext!,
           dialogType: DialogType.error,
           animType: AnimType.rightSlide,
           headerAnimationLoop: false,
-          title: 'Error',
-          useRootNavigator: true,
-          desc: 'Dialog description here.............................',
+          title:title,
+          desc: description,
           btnOkOnPress: () {},
           btnOkIcon: Icons.cancel,
           btnOkColor: Colors.red)

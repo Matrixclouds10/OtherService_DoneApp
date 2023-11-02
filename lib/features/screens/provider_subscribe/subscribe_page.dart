@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
 
+import '../../../app.dart';
 import '../../../base_injection.dart';
 import '../../../core/services/local/cache_consumer.dart';
 import '../../../core/services/local/storage_keys.dart';
@@ -38,6 +40,8 @@ class _SubscribePageState extends State<SubscribePage> {
   AppPrefs prefs = getIt<AppPrefs>();
   late SubscriptionCubit subscriptionCubit;
 
+  bool isSubscribed = false;
+
   @override
   void initState() {
     super.initState();
@@ -50,7 +54,6 @@ class _SubscribePageState extends State<SubscribePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColorLight().kScaffoldBackgroundColor,
       appBar: CustomAppBar(
         color: Colors.white,
         titleWidget: CustomText(LocaleKeys.subscribeNow.tr()).header(),
@@ -83,6 +86,18 @@ class _SubscribePageState extends State<SubscribePage> {
               return const Center(child: CircularProgressIndicator());
             }
             if (state.state == BaseState.error) {
+              AwesomeDialog(
+                      context: appContext!,
+                      dialogType: DialogType.error,
+                      animType: AnimType.rightSlide,
+                      headerAnimationLoop: false,
+                      title: 'Error',
+                      useRootNavigator: true,
+                      desc: 'desc',
+                      btnOkOnPress: () {},
+                      btnOkIcon: Icons.cancel,
+                      btnOkColor: Colors.red)
+                  .show();
               return ErrorLayout(
                   errorModel: state.error,
                   onRetry: () {
@@ -101,7 +116,7 @@ class _SubscribePageState extends State<SubscribePage> {
                     height: 90,
                     fit: BoxFit.fitHeight,
                   ),
-                  ...state.data.map((e) => _buildItem(e)).toList(),
+                  ...state.data.map((e) => _buildItem(e, context)).toList(),
                   SizedBox(height: 18),
                 ],
               ),
@@ -112,7 +127,7 @@ class _SubscribePageState extends State<SubscribePage> {
     );
   }
 
-  _buildItem(SubscriptionModel subscriptionModel) {
+  _buildItem(SubscriptionModel subscriptionModel, BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -128,9 +143,9 @@ class _SubscribePageState extends State<SubscribePage> {
                       .headerExtra()
                       .start(),
                   CustomText(
-                          "${LocaleKeys.period.tr()}:${subscriptionModel.period}",
-                          color: Colors.grey[500]!,
-                          pv: 0)
+                      "${LocaleKeys.period.tr()}:${subscriptionModel.period}",
+                      color: Colors.grey[500]!,
+                      pv: 0)
                       .footer()
                       .start(),
                 ],
@@ -143,32 +158,32 @@ class _SubscribePageState extends State<SubscribePage> {
           ),
           SizedBox(height: 12),
           // if (isSaudi == true)
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 1),
+            child: CustomButton(
+              onTap: () async {
+                String? paymentMethod;
+                UpdateSubscribtionResponse? updateSubscriptionResponse;
 
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 1),
-              child: CustomButton(
-                onTap: () async {
-                  UpdateSubscribtionResponse ?updateSubscriptionResponse =
-                      await subscriptionCubit.subscribe(
-                          subscriptionModel.id, 'visa');
-                  print('zozo ${updateSubscriptionResponse.paymentData?.redirectUrl}');
-                  String paymentMethod = await context
+                updateSubscriptionResponse = await subscriptionCubit
+                    .subscribe(subscriptionModel.id, 'visa', context)
+                    .then((value) async {
+                  paymentMethod = await context
                       .read<SubscriptionCubit>()
                       .actionShowSubscriptionMethods(
                         context: context,
                         url:
-                            '${updateSubscriptionResponse.paymentData?.redirectUrl}',
+                            '${updateSubscriptionResponse?.paymentData?.redirectUrl}',
                         subscriptionModel: subscriptionModel,
                       );
-                  if (paymentMethod.isEmpty) return;
-                  else {
-                    actionSubscribe(subscriptionModel, paymentMethod);
-                  }
-                },
-                title: LocaleKeys.subscribeNow.tr(),
-                fontSize: 16,
-              ),
+                });
+
+                actionSubscribe(subscriptionModel, paymentMethod ?? '');
+              },
+              title: LocaleKeys.subscribeNow.tr(),
+              fontSize: 16,
             ),
+          ),
         ],
       ),
     );
@@ -273,7 +288,7 @@ class _SubscribePageState extends State<SubscribePage> {
                               .subscribe(subscriptionModel.id, selectedMethod);
                           AppSnackbar.show(
                             context:
-                                NavigationService.navigationKey.currentContext!,
+                            NavigationService.navigationKey.currentContext!,
                             message: LocaleKeys.somethingWentWrong.tr(),
                           );
 
