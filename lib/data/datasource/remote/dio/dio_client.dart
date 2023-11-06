@@ -211,51 +211,6 @@ class DioClient {
   }
 }
 
-Future<FormData?> _buildFileData({
-  required String? filePath,
-  required List<FileModel>? filesPath,
-  required List<String>? filePathList,
-  required String? filePathListName,
-  required String? fileName,
-}) async {
-  FormData? data;
-
-  if (filePath != null) {
-    String fName = filePath.split('/').last;
-    Map<String, dynamic> body = {
-      fileName ?? "image": await MultipartFile.fromFile(filePath, filename: fName),
-    };
-    data = FormData.fromMap(body);
-    log('dio', 'files $body');
-  } else if (filePathList != null) {
-    for (String path in filePathList) {
-      String fileName = path.split('/').last;
-      data = FormData.fromMap({
-        filePathListName ?? "images[]": await MultipartFile.fromFile(path, filename: fileName),
-      });
-    }
-  } else if (filesPath != null) {
-    Map<String, dynamic> body = {};
-    for (FileModel file in filesPath) {
-      if (file.path != null) {
-        log('dio', 'file - name: ${file.name} - path: ${file.path}  ');
-        String fileName = file.path!.split('/').last;
-        body.addAll({file.name: await MultipartFile.fromFile(file.path!, filename: fileName)});
-      } else {
-        for (var i = 0; i <= (file.paths?.length ?? 0) - 1; i++) {
-          String path = file.paths![i];
-          // for(String path in file.paths??[]){
-          log('dio', 'files name: ${file.name}[$i] - path: $path  ');
-          String fileName = path.split('/').last;
-          body.addAll({'${file.name}[$i]': await MultipartFile.fromFile(path, filename: fileName)});
-        }
-      }
-    }
-    log('dio', 'files $body');
-    data = FormData.fromMap(body);
-  }
-  return data;
-}
 
 class FileModel {
   final String name;

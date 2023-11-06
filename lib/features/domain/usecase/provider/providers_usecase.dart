@@ -24,13 +24,13 @@ class ProvidersParams {
   String? name;
   double? lat;
   double? lng;
-  int? service_id;
+  int? serviceId;
 
   ProvidersParams({
     this.name,
     this.lat,
     this.lng,
-     this.service_id,
+     this.serviceId,
   });
 
   toJson() {
@@ -38,7 +38,7 @@ class ProvidersParams {
       'name': name,
       'lat': lat,
       'lng': lng,
-      'service_id': service_id,
+      'service_id': serviceId,
     };
   }
 }

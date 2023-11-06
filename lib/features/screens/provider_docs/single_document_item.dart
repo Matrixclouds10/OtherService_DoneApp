@@ -1,13 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/extensions/num_extensions.dart';
 import 'package:weltweit/core/resources/resources.dart';
-import 'package:weltweit/features/data/models/documents/document.dart';
-import 'package:weltweit/features/widgets/app_dialogs.dart';
-import 'package:weltweit/generated/locale_keys.g.dart';
-import 'package:weltweit/features/logic/provider_documents/documents_cubit.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
+import 'package:weltweit/features/data/models/documents/document.dart';
+import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
 
 class SingleDocumentItem extends StatelessWidget {

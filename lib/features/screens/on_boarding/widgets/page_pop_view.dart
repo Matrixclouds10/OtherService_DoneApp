@@ -21,26 +21,24 @@ class PagePopup extends StatelessWidget {
           width: MediaQuery.of(context).size.width / 1.5,
           height: MediaQuery.of(context).size.width / 1.5,
         ),
-        Container(
-          child: Padding(
-            padding: EdgeInsets.all(kScreenPaddingNormal.r),
-            child: Column(
-              children: [
-                VerticalSpace(kScreenPaddingLarge.h),
-                VerticalSpace(kScreenPaddingLarge.h),
-                Text(
-                  tr(imageData.titleText),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle().titleStyle(fontSize: 28).customColor(Colors.white),
-                ),
-                VerticalSpace(kScreenPaddingLarge.h),
-                Text(
-                  tr(imageData.subText),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle().customColor(Colors.white),
-                )
-              ],
-            ),
+        Padding(
+          padding: EdgeInsets.all(kScreenPaddingNormal.r),
+          child: Column(
+            children: [
+              VerticalSpace(kScreenPaddingLarge.h),
+              VerticalSpace(kScreenPaddingLarge.h),
+              Text(
+                tr(imageData.titleText),
+                textAlign: TextAlign.center,
+                style: const TextStyle().titleStyle(fontSize: 28).customColor(Colors.white),
+              ),
+              VerticalSpace(kScreenPaddingLarge.h),
+              Text(
+                tr(imageData.subText),
+                textAlign: TextAlign.center,
+                style: const TextStyle().customColor(Colors.white),
+              )
+            ],
           ),
         )
       ],

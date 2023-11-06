@@ -77,8 +77,12 @@ class _MyAddressesPageState extends State<MyAddressesPage> {
                                   lng: '0',
                                 );
                                 await context.read<AddressCubit>().createAddress(params);
-                                Navigator.pop(context);
-                                context.read<AddressCubit>().getAddresses();
+                                if(mounted) {
+                                  Navigator.pop(context);
+                                }
+                                if(mounted) {
+                                  context.read<AddressCubit>().getAddresses();
+                                }
                               },
                             );
                           },
@@ -261,7 +265,9 @@ class _MyAddressesPageState extends State<MyAddressesPage> {
                 ),
                 onPressed: () async {
                   await context.read<AddressCubit>().deleteAddress(AddressDeleteParams(id: address.id.toString()));
-                  await context.read<AddressCubit>().getAddresses();
+                  if(mounted) {
+                    await context.read<AddressCubit>().getAddresses();
+                  }
                 },
               ),
             ],
@@ -275,8 +281,17 @@ class _MyAddressesPageState extends State<MyAddressesPage> {
                 value: address.isDefault == 1,
                 fillColor: MaterialStateProperty.all(Colors.orange),
                 onChanged: (value) async {
-                  await context.read<AddressCubit>().setAsDefault(address.id!);
-                  await context.read<AddressCubit>().getAddresses();
+                  {
+                    if(mounted){
+                  await context
+                      .read<AddressCubit>()
+                      .setAsDefault(address.id!);
+                  }
+                      if(context.mounted) {
+                        await context.read<AddressCubit>().getAddresses();
+                      }
+
+                  }
                 },
               ),
               CustomText("تعيين كعنوان افتراضي"),

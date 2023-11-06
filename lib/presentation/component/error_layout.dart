@@ -53,7 +53,7 @@ class ErrorView extends StatelessWidget {
                 ),
                 child: Text(
                   tr(LocaleKeys.retry),
-                  style: Theme.of(context).textTheme.bodyText2,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
           ],

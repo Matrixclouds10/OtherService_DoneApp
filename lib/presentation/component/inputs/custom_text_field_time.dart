@@ -132,14 +132,15 @@ class _CustomTextFieldTimeState extends State<CustomTextFieldTime> {
   }
 
   Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? picked_s = await showTimePicker(
+    final TimeOfDay? pickedS = await showTimePicker(
       context: context,
       initialTime: selectedTime,
     );
-    if (picked_s != null)
+    if (pickedS != null) {
       setState(() {
-        selectedTime = picked_s;
+        selectedTime = pickedS;
         widget.controller.text = selectedTime.format(context);
       });
+    }
   }
 }

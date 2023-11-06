@@ -35,7 +35,6 @@ import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/custom_button.dart';
 import 'package:weltweit/presentation/component/inputs/base_form.dart';
 
-import '../../core/routing/routes.dart';
 
 class AppDialogs {
   Future<File?> pickImage(BuildContext context) async {
@@ -512,7 +511,9 @@ class AppDialogs {
 
                                 loading = false;
                                 setState(() {});
-                                Navigator.pop(context);
+                                if(context.mounted) {
+                                  Navigator.pop(context);
+                                }
                                 NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
                                   'email': controller.text,
                                   'code': '20',
@@ -641,7 +642,6 @@ class AppDialogs {
                   ],
                 ),
                 Divider(),
-                // if (isSaudi)
                   ElevatedButton(
                     onPressed: () async {
                       Navigator.of(context).push(MaterialPageRoute(

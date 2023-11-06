@@ -16,8 +16,8 @@ class _DemoVideoPlayerState extends State<DemoVideoPlayer>
   void initState() {
     // TODO: implement initState
 
-    _controller = VideoPlayerController.network(
-      'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
+    _controller = VideoPlayerController.networkUrl(
+      Uri.parse('https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4'),
       videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
     );
 

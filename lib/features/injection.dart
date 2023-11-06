@@ -16,10 +16,8 @@ import 'package:weltweit/features/domain/usecase/provider_subscription/subscribt
 import 'package:weltweit/features/domain/usecase/provider_subscription/subscribtions_usecase.dart';
 import 'package:weltweit/features/domain/repositoy/address_repository.dart';
 
-import 'package:weltweit/features/domain/usecase/address/address_update_usecase%20copy.dart';
 import 'package:weltweit/features/data/repository/auth_repository_imp.dart';
 import 'package:weltweit/features/domain/usecase/auth/update_fcm_token_usecase.dart';
-import 'package:weltweit/features/domain/usecase/profile/update_profile_location_usecase%20copy.dart';
 import 'package:weltweit/features/domain/repositoy/auth_repo.dart';
 import 'package:weltweit/features/domain/usecase/auth/check_otp_usecase.dart';
 import 'package:weltweit/features/domain/usecase/auth/delete_account_usecase.dart';
@@ -56,10 +54,13 @@ import 'package:weltweit/features/domain/usecase/chat_send_message/chat_send_mes
 import 'package:weltweit/features/domain/usecase/contact_us/contact_us_usecase.dart';
 import 'package:weltweit/features/domain/usecase/policy/policy_usecase.dart';
 
+import 'domain/usecase/address/address_update_usecase_copy.dart';
 import 'domain/usecase/order/order_cancel_usecase.dart';
 import 'package:weltweit/features/domain/usecase/banner/banner_usecase.dart';
 import 'package:weltweit/features/domain/usecase/create_order/create_order_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider/most_requested_providers_usecase.dart';
+
+import 'domain/usecase/profile/update_profile_location_usecase_copy.dart';
 
 Future<void> init() async {
   getIt.registerLazySingleton(() => NetworkClient());

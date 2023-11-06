@@ -3,10 +3,11 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:path_provider/path_provider.dart' as path ;
 
-import 'NotificationType.dart';
 import 'PushNotificationModel.dart';
+import 'notification_type.dart';
+
 
 class NotificationUtils {
   late NotificationDetails _platformChannelSpecifics;
@@ -74,7 +75,7 @@ class NotificationUtils {
 
   static Future<String> _downloadAndSaveFile(
       String url, String fileName) async {
-    final Directory directory = await getApplicationDocumentsDirectory();
+    final Directory directory = await path.getApplicationDocumentsDirectory();
     final String filePath = '${directory.path}/$fileName';
     final Response response = await Dio()
         .get(url, options: Options(responseType: ResponseType.bytes));
@@ -120,7 +121,7 @@ class NotificationUtils {
 
   static Future<String> downloadAndSaveImage(
       String url, String fileName) async {
-    final Directory directory = await getApplicationDocumentsDirectory();
+    final Directory directory = await path.getApplicationDocumentsDirectory();
     final String filePath = '${directory.path}/$fileName';
     final Response response = await Dio()
         .get(url, options: Options(responseType: ResponseType.bytes));

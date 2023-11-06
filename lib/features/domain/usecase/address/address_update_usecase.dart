@@ -36,7 +36,7 @@ class AddressUpdateUsecase
 
   @override
   Future<Either<ErrorModel, BaseResponse>> callTest(
-      AddressUpdateParams body) async {
+      AddressUpdateParams parameters) async {
     return Left(ApiErrorHandler.getMessage("Test error"));
   }
 }

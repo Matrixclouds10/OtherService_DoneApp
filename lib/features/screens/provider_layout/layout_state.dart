@@ -9,7 +9,7 @@ abstract class LayoutProviderState extends Equatable {
 
 class LayoutInitial extends LayoutProviderState {
   final int currentIndex;
-  LayoutInitial({required this.currentIndex});
+  const LayoutInitial({required this.currentIndex});
 
   @override
   List<Object> get props => [currentIndex];

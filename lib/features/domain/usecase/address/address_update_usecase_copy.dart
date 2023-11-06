@@ -32,7 +32,7 @@ class AddressSetAsDefaultUsecase extends BaseUseCase<BaseResponse, int> {
   }
 
   @override
-  Future<Either<ErrorModel, BaseResponse>> callTest(int body) async {
+  Future<Either<ErrorModel, BaseResponse>> callTest(int parameters) async {
     return Left(ApiErrorHandler.getMessage("Test error"));
   }
 }

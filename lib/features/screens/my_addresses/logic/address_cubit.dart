@@ -8,8 +8,9 @@ import 'package:weltweit/features/data/models/address/address_item_model.dart';
 import 'package:weltweit/features/domain/usecase/address/address_create_usecase.dart';
 import 'package:weltweit/features/domain/usecase/address/address_delete_usecase.dart';
 import 'package:weltweit/features/domain/usecase/address/address_read_usecase.dart';
-import 'package:weltweit/features/domain/usecase/address/address_update_usecase%20copy.dart';
 import 'package:weltweit/features/domain/usecase/address/address_update_usecase.dart';
+
+import '../../../domain/usecase/address/address_update_usecase_copy.dart';
 
 part 'address_state.dart';
 

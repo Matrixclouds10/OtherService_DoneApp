@@ -57,7 +57,7 @@ class ApiChecker {
   }
 
   static ResponseModel<T> _handleErrorErrorModel<T>(ErrorModel error) {
-    if (error.code == ErrorEnum.auth) {
+    if (error.code== ErrorEnum.auth) {
       _onLogout();
     }
     return ResponseModel<T>(false, error.errorMessage, error: error);

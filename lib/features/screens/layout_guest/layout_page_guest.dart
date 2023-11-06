@@ -1,17 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weltweit/core/notification/FcmHandler.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
-import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/logic/orders/orders_cubit.dart';
-import 'package:weltweit/features/logic/profile/profile_cubit.dart';
 import 'package:weltweit/features/logic/service/services_cubit.dart';
 import 'package:weltweit/features/screens/layout/layout_cubit.dart';
 import 'package:weltweit/features/screens/layout/widgets/navigation_tabs.dart';
-import 'package:weltweit/presentation/component/component.dart';
 
 class LayoutPageGuest extends StatefulWidget {
   // ignore: unused_field
@@ -28,7 +24,9 @@ class LayoutPageGuest extends StatefulWidget {
 class _LayoutPageGuestState extends State<LayoutPageGuest> {
   @override
   void initState() {
-    NavigationService.navigationKey.currentContext!.read<ServicesCubit>().getHomeServices();
+    NavigationService.navigationKey.currentContext!
+        .read<ServicesCubit>()
+        .getHomeServices();
     super.initState();
   }
 
@@ -58,7 +56,8 @@ class LayoutView extends StatelessWidget {
               backgroundColor: servicesTheme.primaryColorLight,
               child: const Icon(Icons.search),
             ),
-            floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
             body: WillPopScope(
               child: IndexedStack(
                 index: currentIndex,
@@ -80,7 +79,9 @@ class LayoutView extends StatelessWidget {
               onTap: (value) {
                 viewModel.setCurrentIndex(i: value, context: context);
                 if (value == 3) {
-                  context.read<OrdersCubit>().getPendingOrders(typeIsProvider: false);
+                  context
+                      .read<OrdersCubit>()
+                      .getPendingOrders(typeIsProvider: false);
                 }
               },
               currentIndex: currentIndex,
@@ -91,12 +92,17 @@ class LayoutView extends StatelessWidget {
               items: [
                 ...kTabs.map(
                   (e) {
-                    if (e.index == 2) return BottomNavigationBarItem(icon: Container(), label: '');
+                    if (e.index == 2) {
+                      return BottomNavigationBarItem(
+                          icon: Container(), label: '');
+                    }
 
                     return BottomNavigationBarItem(
                       icon: Icon(
                         currentIndex == e.index ? e.selectIcon : e.unSelectIcon,
-                        color: currentIndex == e.index ? Theme.of(context).primaryColor : Theme.of(context).hintColor,
+                        color: currentIndex == e.index
+                            ? Theme.of(context).primaryColor
+                            : Theme.of(context).hintColor,
                       ),
                       label: tr(e.name),
                     );

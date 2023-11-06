@@ -14,7 +14,6 @@ class CustomPersonImage extends StatelessWidget {
   final double _size;
   final bool _canEdit;
   final bool _showShadow;
-  final Function? _onEdit;
   final Function(File path)? _onAttachImage;
 
   const CustomPersonImage({
@@ -33,7 +32,6 @@ class CustomPersonImage extends StatelessWidget {
         _size = size,
         _showShadow = showShadow,
         _canEdit = canEdit,
-        _onEdit = onEdit,
         _onAttachImage = onAttachImage;
 
   @override

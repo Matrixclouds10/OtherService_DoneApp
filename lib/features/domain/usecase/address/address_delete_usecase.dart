@@ -36,7 +36,7 @@ class AddressDeleteUsecase
 
   @override
   Future<Either<ErrorModel, BaseResponse>> callTest(
-      AddressDeleteParams body) async {
+      AddressDeleteParams parameters) async {
     return Left(ApiErrorHandler.getMessage("Test error"));
   }
 }

@@ -4,19 +4,18 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/extensions/num_extensions.dart';
-import 'package:weltweit/features/core/app_converters.dart';
-import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/core/utils/logger.dart';
+import 'package:weltweit/features/core/app_converters.dart';
+import 'package:weltweit/features/core/base/base_states.dart';
+import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/data/models/documents/document.dart';
 import 'package:weltweit/features/domain/usecase/provider_document/document_add_usecase.dart';
+import 'package:weltweit/features/logic/provider_documents/documents_cubit.dart';
+import 'package:weltweit/features/screens/provider_docs/single_document_item.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
-import 'package:weltweit/features/widgets/app_text_tile.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
-import 'package:weltweit/features/logic/provider_documents/documents_cubit.dart';
-import 'package:weltweit/features/core/widgets/custom_text.dart';
-import 'package:weltweit/features/screens/provider_docs/single_document_item.dart';
 import 'package:weltweit/presentation/component/component.dart';
 
 class DocumentPage extends StatelessWidget {
@@ -68,13 +67,13 @@ class DocumentPage extends StatelessWidget {
                     child: CustomAppBar(
                       title: LocaleKeys.myFiles.tr(),
                       color: Colors.white,
-                      actions: [
-                        if (false)
-                          IconButton(
-                            icon: Icon(Icons.add),
-                            onPressed: () => addDocument(context, docType: null),
-                          )
-                      ],
+                      // actions: [
+                      //   if (false)
+                      //     IconButton(
+                      //       icon: Icon(Icons.add),
+                      //       onPressed: () => addDocument(context, docType: null),
+                      //     )
+                      // ],
                     ),
                   ),
                   GridView.builder(
@@ -210,11 +209,14 @@ class DocumentPage extends StatelessWidget {
 
     DocumentParams params = DocumentParams(documentType: type, image: file);
 
-    bool status = await AppDialogs().question(
-      context,
-      title: LocaleKeys.notification.tr(),
-      message: LocaleKeys.areYouSureToAdd.tr(),
-    );
+   late bool status;
+    if(context.mounted) {
+      status = await AppDialogs().question(
+        context,
+        title: LocaleKeys.notification.tr(),
+        message: LocaleKeys.areYouSureToAdd.tr(),
+      );
+    }
 
     if (status && context.mounted) BlocProvider.of<DocumentsCubit>(context).addDocument(params);
   }

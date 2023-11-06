@@ -16,12 +16,12 @@ import 'package:weltweit/features/domain/usecase/auth/update_fcm_token_usecase.d
 import 'package:weltweit/features/domain/usecase/profile/change_password_usecase.dart';
 import 'package:weltweit/features/domain/usecase/profile/delete_profile_usecase.dart';
 import 'package:weltweit/features/domain/usecase/profile/profile_read_usecase.dart';
-import 'package:weltweit/features/domain/usecase/profile/update_profile_location_usecase%20copy.dart';
 import 'package:weltweit/features/domain/usecase/profile/update_profile_usecase.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 
 import '../../../core/utils/logger.dart';
+import '../../domain/usecase/profile/update_profile_location_usecase_copy.dart';
 
 part 'profile_state.dart';
 
@@ -113,7 +113,7 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   void updateLocation(BuildContext context) async {
     bool permissionStatus = await PermissionHelper.checkLocationPermissionStatus();
-    if (!permissionStatus) {
+    if (!permissionStatus && context.mounted) {
       bool dialogStatus = await AppDialogs().question(context, message: LocaleKeys.allowLocationStatusToBeShownForNearbyUsers.tr());
       if (dialogStatus) {
         bool? permissionStatus = await PermissionHelper.requestLocation();

@@ -24,22 +24,20 @@ class HomeOffers extends StatelessWidget {
             ),
           ],
         ),
-        Container(
-          child: ListView(
-            shrinkWrap: true,
-            padding: EdgeInsets.zero,
-            physics: NeverScrollableScrollPhysics(),
-            children: [
-              for (var i = 0; i < 4; i++)
-                OfferItemWidget(
-                  imageUrl: "assets/images/offer_image.png",
-                  title: "عرض الصيف",
-                  description:
-                      "هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة",
-                  isFavorite: false,
-                ),
-            ],
-          ),
+        ListView(
+          shrinkWrap: true,
+          padding: EdgeInsets.zero,
+          physics: NeverScrollableScrollPhysics(),
+          children: [
+            for (var i = 0; i < 4; i++)
+              OfferItemWidget(
+                imageUrl: "assets/images/offer_image.png",
+                title: "عرض الصيف",
+                description:
+                    "هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة",
+                isFavorite: false,
+              ),
+          ],
         )
       ],
     );

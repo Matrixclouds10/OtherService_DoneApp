@@ -8,7 +8,6 @@ import 'package:location/location.dart';
 import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
-import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/core/utils/globals.dart';
 import 'package:weltweit/core/utils/permission_heloper.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';

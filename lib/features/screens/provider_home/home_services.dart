@@ -21,32 +21,30 @@ class HomeServices extends StatelessWidget {
                 onTap: () {
                   Navigator.pushNamed(context, RoutesProvider.providerServices);
                 },
-                child: CustomText("${LocaleKeys.showAll.tr()}", color: Colors.grey).footer()),
+                child: CustomText(LocaleKeys.showAll.tr(), color: Colors.grey).footer()),
           ],
         ),
-        Container(
-          child: GridView.count(
-            crossAxisCount: 4,
-            shrinkWrap: true,
-            padding: EdgeInsets.zero,
-            crossAxisSpacing: 4,
-            mainAxisSpacing: 4,
-            physics: NeverScrollableScrollPhysics(),
-            childAspectRatio: 1,
-            children: [
-              for (var i = 0; i < 8; i++)
-                ServiceItemWidget(
-                  width: double.infinity,
-                  grid: true,
-                  serviceModel: ServiceModel(
-                    id: 1,
-                    breif: "مساعدة في الحصول على الوظيفة",
-                    title: "التوظيف",
-                    myService: false,
-                  ),
+        GridView.count(
+          crossAxisCount: 4,
+          shrinkWrap: true,
+          padding: EdgeInsets.zero,
+          crossAxisSpacing: 4,
+          mainAxisSpacing: 4,
+          physics: NeverScrollableScrollPhysics(),
+          childAspectRatio: 1,
+          children: [
+            for (var i = 0; i < 8; i++)
+              ServiceItemWidget(
+                width: double.infinity,
+                grid: true,
+                serviceModel: ServiceModel(
+                  id: 1,
+                  breif: "مساعدة في الحصول على الوظيفة",
+                  title: "التوظيف",
+                  myService: false,
                 ),
-            ],
-          ),
+              ),
+          ],
         )
       ],
     );

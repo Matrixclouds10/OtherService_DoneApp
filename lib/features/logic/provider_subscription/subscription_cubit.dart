@@ -74,8 +74,8 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
             backgroundColor: Colors.red,
             textColor: Colors.white,
             fontSize: 16.0
-        ).then((value) => print('ss')).catchError((e){print(e);});
-        print('we are error here');
+        );
+        // print('we are error here');
 
         return Future.error(error);
       },

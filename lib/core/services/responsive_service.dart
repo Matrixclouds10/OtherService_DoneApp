@@ -7,7 +7,7 @@ class ResponsiveService {
   static const Size _designSize = Size(360, 716);
   static const bool _splitScreenMode = false;
   static final MediaQueryData _mediaQueryData =
-      MediaQueryData.fromWindow(WidgetsBinding.instance.window);
+      MediaQueryData.fromView(WidgetsBinding.instance.window);
 
   static Size _switchableDesignSize() {
     return _mediaQueryData.orientation == Orientation.portrait

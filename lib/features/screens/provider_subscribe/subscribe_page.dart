@@ -143,9 +143,9 @@ class _SubscribePageState extends State<SubscribePage> {
                       .headerExtra()
                       .start(),
                   CustomText(
-                      "${LocaleKeys.period.tr()}:${subscriptionModel.period}",
-                      color: Colors.grey[500]!,
-                      pv: 0)
+                          "${LocaleKeys.period.tr()}:${subscriptionModel.period}",
+                          color: Colors.grey[500]!,
+                          pv: 0)
                       .footer()
                       .start(),
                 ],
@@ -162,22 +162,22 @@ class _SubscribePageState extends State<SubscribePage> {
             margin: EdgeInsets.symmetric(horizontal: 1),
             child: CustomButton(
               onTap: () async {
-                String? paymentMethod;
-                UpdateSubscribtionResponse? updateSubscriptionResponse;
+                //todo  payment methods here
 
-                updateSubscriptionResponse = await subscriptionCubit
-                    .subscribe(subscriptionModel.id, 'visa', context)
-                    .then((value) async {
+                UpdateSubscribtionResponse? updateSubscriptionResponse =
+                    await subscriptionCubit.subscribe(
+                        subscriptionModel.id, 'visa', context);
+                String? paymentMethod;
+                if (isSaudi == false && mounted) {
                   paymentMethod = await context
                       .read<SubscriptionCubit>()
                       .actionShowSubscriptionMethods(
                         context: context,
-                        url:
-                            '${updateSubscriptionResponse?.paymentData?.redirectUrl}',
+                        url: updateSubscriptionResponse
+                                .paymentData?.redirectUrl??'' ,
                         subscriptionModel: subscriptionModel,
                       );
-                });
-
+                }
                 actionSubscribe(subscriptionModel, paymentMethod ?? '');
               },
               title: LocaleKeys.subscribeNow.tr(),
@@ -283,14 +283,14 @@ class _SubscribePageState extends State<SubscribePage> {
                       onPressed: () async {
                         Navigator.pop(context);
                         try {
-                          UpdateSubscribtionResponse response = await context
-                              .read<SubscriptionCubit>()
-                              .subscribe(subscriptionModel.id, selectedMethod);
-                          AppSnackbar.show(
-                            context:
-                            NavigationService.navigationKey.currentContext!,
-                            message: LocaleKeys.somethingWentWrong.tr(),
-                          );
+                          // UpdateSubscribtionResponse response = await context
+                          //     .read<SubscriptionCubit>()
+                          //     .subscribe(subscriptionModel.id, selectedMethod);
+                          // AppSnackbar.show(
+                          //   context:
+                          //   NavigationService.navigationKey.currentContext!,
+                          //   message: LocaleKeys.somethingWentWrong.tr(),
+                          // );
 
                           setState(() {});
                         } catch (e) {

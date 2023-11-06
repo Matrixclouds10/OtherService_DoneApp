@@ -2,6 +2,7 @@ import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:easy_localization/easy_localization.dart' as easy_localization;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/resources/decoration.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
@@ -23,11 +24,15 @@ import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
 
+import '../../../core/services/local/cache_consumer.dart';
+import '../../../core/services/local/storage_keys.dart';
+
 class SubscribtionHistoryPage extends StatefulWidget {
   const SubscribtionHistoryPage({super.key});
 
   @override
-  State<SubscribtionHistoryPage> createState() => _SubscribtionHistoryPageState();
+  State<SubscribtionHistoryPage> createState() =>
+      _SubscribtionHistoryPageState();
 }
 
 class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
@@ -38,6 +43,8 @@ class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
     super.initState();
     SubscriptionCubit subscriptionCubit = context.read<SubscriptionCubit>();
     subscriptionCubit.getSubscribtionsHistory();
+    isSaudi =
+        getIt<AppPrefs>().get(PrefKeys.countryId, defaultValue: false) == 2;
   }
 
   @override
@@ -50,7 +57,6 @@ class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
         isCenterTitle: true,
       ),
       body: Container(
-        height: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage(Assets.imagesBk2),
@@ -80,7 +86,7 @@ class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
                   ...state.subscribtionHistoryData
                       .map((e) => _buildItem(e))
                       .toList(),
-                  SizedBox(height: 64),
+                  SizedBox(height: 120),
                 ],
               ),
             );
@@ -144,28 +150,47 @@ class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
               builder: (context, state) {
                 return CustomButton(
                   onTap: () async {
-                    if (state.rePaySubscribeState == BaseState.loading) return;
-                    if (e.id == null) return;
+                    print('is saudi $isSaudi');
+
+                    String? selectedPayment;
+
+                    if (state.rePaySubscribeState == BaseState.loading ||
+                        e.id == null) return;
                     try {
+                      if (isSaudi == true) {
+                        selectedPayment = 'visa';
+                      } else {
+                        selectedPayment = await actionShowSubscriptionMethods(
+                            e.subscription!);
+                      }
+
+                      print('HANY SELECTED PAYMENT $selectedPayment');
                       //show dialog to confirm
                       String message = "";
+
                       message += "${LocaleKeys.confirmSubscribtion.tr()}\n";
                       message +=
                           "${LocaleKeys.price.tr()}: ${e.subscription!.price} ${getCountryCurrency()}\n";
                       message +=
                           "${LocaleKeys.period.tr()}: ${e.subscription!.period}\n";
-                      message +=
-                          "${LocaleKeys.paymentMethod.tr()}: ${convertToName('')}\n";
-                      bool status = await AppDialogs()
-                          .question(context, message: message);
-                      if (!status) return;
+                      if (isSaudi != true) {
+                        message +=
+                            "${LocaleKeys.paymentMethod.tr()}: ${convertToName(selectedPayment)}\n";
+                      } else {}
+                      bool? status;
+                      if (mounted && selectedPayment != '') {
+                        status = await AppDialogs()
+                            .question(context, message: message);
+                      }
+                      if (status!=true || !mounted) return;
+
+                      print('Payment method is ${e.paymentMethod} Payment id is ${e.id}');
 
                       UpdateSubscribtionResponse? updateSubscribtionResponse =
                           await context
                               .read<SubscriptionCubit>()
-                              .reSubscribe(e.id!, 'visa');
+                              .reSubscribe(e.id!, selectedPayment);
 
-                      print('zzzz ${e.id}');
                       if (updateSubscribtionResponse?.paymentData != null) {
                         if (updateSubscribtionResponse
                                 ?.paymentData?.redirectUrl !=
@@ -195,13 +220,14 @@ class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
                         );
                       }
                     } catch (e) {
-                      String errorMessge = "";
+                      String errorMessage = "";
                       if (e is ErrorModel) {
-                        errorMessge = e.errorMessage ?? "";
+                        errorMessage = e.errorMessage ?? "";
                       }
                       AppSnackbar.show(
-                        context: NavigationService.navigationKey.currentContext!,
-                        message: errorMessge,
+                        context:
+                            NavigationService.navigationKey.currentContext!,
+                        message: errorMessage,
                       );
                       setState(() {});
                     }
@@ -274,7 +300,9 @@ class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
 
                     if (selectedMethod == SubscriptionMethods.credit)
                       Container(
-                        decoration: BoxDecoration().radius(radius: 12).customColor(Colors.white),
+                        decoration: BoxDecoration()
+                            .radius(radius: 12)
+                            .customColor(Colors.white),
                         padding: const EdgeInsets.symmetric(horizontal: 12),
                         child: Column(
                           children: [

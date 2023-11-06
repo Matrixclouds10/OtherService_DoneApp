@@ -260,7 +260,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
                 return;
               },
               onFieldSubmitted: (String newValue) {
-                if (widget._onSubmit != null) return widget._onSubmit!(newValue);
+                if (widget._onSubmit != null) {
+                  // return widget._onSubmit!(newValue);
+                }
                 return;
               },
               onSaved: (String? newValue) {

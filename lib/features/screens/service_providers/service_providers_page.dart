@@ -26,7 +26,7 @@ class _ServiceProvidersPageState extends State<ServiceProvidersPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      ProvidersParams params = ProvidersParams(service_id: widget.service.id ?? 0);
+      ProvidersParams params = ProvidersParams(serviceId: widget.service.id ?? 0);
       await BlocProvider.of<ProvidersCubit>(context).getProviders(params);
     });
   }
@@ -81,7 +81,7 @@ class _ServiceProvidersPageState extends State<ServiceProvidersPage> {
               return ErrorLayout(
                 errorModel: state.error,
                 onRetry: () {
-                  ProvidersParams params = ProvidersParams(service_id: widget.service.id ?? 0);
+                  ProvidersParams params = ProvidersParams(serviceId: widget.service.id ?? 0);
                   BlocProvider.of<ProvidersCubit>(context).getProviders(params);
                 },
               );

@@ -427,22 +427,6 @@ class _ReservationPageState extends State<ReservationPage> {
     );
   }
 
-  _buildFile(File? pdf) {
-    if (pdf == null) {
-      return Icon(Icons.picture_as_pdf, color: Colors.grey[500], size: 40);
-    } else {
-      return SizedBox(
-        height: 40,
-        child: Center(
-          child: CustomText(
-            pdf.path.split('/').last,
-            size: 12,
-            color: Colors.grey[500]!,
-          ),
-        ),
-      );
-    }
-  }
 
   _submit(BuildContext context) async {
     List<File> files = images.toList();
@@ -481,12 +465,12 @@ class _ReservationPageState extends State<ReservationPage> {
 
   void _actionCamera() async {
     Navigator.pop(context);
-    PickedFile? pickedFile = await (ImagePicker().getImage(source: ImageSource.camera, imageQuality: 25));
+    XFile? pickedFile = await (ImagePicker().pickVideo(source: ImageSource.gallery));
 
     if (pickedFile != null) {
       List<File> files = images;
       File file = File(pickedFile.path);
-      if (files.length >= 5) {
+      if (files.length >= 5 && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(LocaleKeys.cantAddMoreThan5Images.tr())));
         return;
       } else {
@@ -499,13 +483,13 @@ class _ReservationPageState extends State<ReservationPage> {
 
   void _actionGallery() async {
     Navigator.pop(context);
-    List<PickedFile>? pickedFile = await (ImagePicker().getMultiImage(imageQuality: 35));
+    List<XFile> pickedFile = await (ImagePicker().pickMultiImage(imageQuality: 35));
 
-    if (pickedFile != null && pickedFile.isNotEmpty) {
+    if (pickedFile.isNotEmpty) {
       List<File> files = images;
       for (var element in pickedFile) {
         File file = File(element.path);
-        if (files.length >= 5) {
+        if (files.length >= 5 && mounted) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(LocaleKeys.cantAddMoreThan5Images.tr())));
           continue;
         } else {
@@ -522,7 +506,7 @@ class _ReservationPageState extends State<ReservationPage> {
 
   void _actionVideo() async {
     Navigator.pop(context);
-    PickedFile? pickedFile = await (ImagePicker().getVideo(source: ImageSource.gallery));
+    XFile? pickedFile = await (ImagePicker().pickVideo(source: ImageSource.gallery));
 
     if (pickedFile != null) {
       video = File(pickedFile.path);

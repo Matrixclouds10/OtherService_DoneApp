@@ -41,7 +41,7 @@ class ErrorView extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(message ?? ''),
+          Text(message ),
           SizedBox(
             height: 20.h,
           ),
@@ -53,7 +53,7 @@ class ErrorView extends StatelessWidget {
               ),
               child: Text(
                 tr(LocaleKeys.retry),
-                style: Theme.of(context).textTheme.bodyText2,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ),
         ],

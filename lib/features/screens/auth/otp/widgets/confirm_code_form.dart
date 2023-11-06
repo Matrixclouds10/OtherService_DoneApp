@@ -20,7 +20,7 @@ class ConfirmCodeForm extends StatefulWidget {
 }
 
 class _ConfirmCodeFormState extends State<ConfirmCodeForm> {
-  var onTapRecognizer;
+  late TapGestureRecognizer onTapRecognizer;
   TextEditingController textEditingController = TextEditingController();
   late StreamController<ErrorAnimationType> errorController;
   bool hasError = false;

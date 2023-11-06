@@ -32,7 +32,7 @@ class AddressCreateUsecase extends BaseUseCase<BaseResponse, AddressCreateParams
   }
 
   @override
-  Future<Either<ErrorModel, BaseResponse>> callTest(AddressCreateParams body) async {
+  Future<Either<ErrorModel, BaseResponse>> callTest(AddressCreateParams parameters) async {
     return Left(ApiErrorHandler.getMessage("Test error"));
   }
 }

@@ -477,7 +477,7 @@ class _OrderDetailsState extends State<OrderDetails> {
       }
     }
     if (videos.isNotEmpty && videoPlayerController == null) {
-      videoPlayerController = VideoPlayerController.network(videos.first);
+      videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(videos.first));
       videoPlayerController!.initialize();
     }
     return Column(

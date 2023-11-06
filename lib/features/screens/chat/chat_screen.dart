@@ -222,17 +222,23 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                                 if (checkPermission == LocationPermission.whileInUse || checkPermission == LocationPermission.always) {
                                   _getCurrentLocation();
                                 } else if (checkPermission == LocationPermission.deniedForever) {
-                                  AppSnackbar.show(
-                                    context: context,
-                                    message: LocaleKeys.location_permission_denied.tr(),
-                                  );
+                                 if(mounted)
+                                   {
+                                     AppSnackbar.show(
+                                       context: context,
+                                       message: LocaleKeys.location_permission_denied.tr(),
+                                     );
+                                   }
                                 } else {
                                   LocationPermission locationPermission = await Geolocator.requestPermission();
                                   if (locationPermission == LocationPermission.denied || locationPermission == LocationPermission.deniedForever) {
-                                    AppSnackbar.show(
-                                      context: context,
-                                      message: LocaleKeys.location_permission_denied.tr(),
-                                    );
+                                   if(mounted)
+                                     {
+                                       AppSnackbar.show(
+                                         context: context,
+                                         message: LocaleKeys.location_permission_denied.tr(),
+                                       );
+                                     }
                                   } else {
                                     _getCurrentLocation();
                                   }
@@ -291,7 +297,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
   void _actionCamera() async {
     Navigator.pop(context);
-    PickedFile? pickedFile = await (ImagePicker().getImage(source: ImageSource.camera, imageQuality: 25));
+    XFile? pickedFile = await (ImagePicker().pickImage(source: ImageSource.camera, imageQuality: 25));
 
     if (pickedFile != null) {
       if (context.mounted) await context.read<ChatCubit>().sendImage(widget.orderModel.id, pickedFile.path);
@@ -320,7 +326,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
   void _actionGallery() async {
     Navigator.pop(context);
-    PickedFile? pickedFile = await (ImagePicker().getImage(imageQuality: 35, source: ImageSource.gallery));
+    XFile? pickedFile = await (ImagePicker().pickImage(imageQuality: 35, source: ImageSource.gallery));
 
     if (pickedFile != null) {
       if (context.mounted) await context.read<ChatCubit>().sendImage(widget.orderModel.id, pickedFile.path);
@@ -392,7 +398,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           SizedBox(height: 4.0),
           TextButton(
             onPressed: () {
-              launch('https://www.google.com/maps/search/?api=1&query=${message.lat},${message.lng}');
+              launchUrl(Uri.parse('https://www.google.com/maps/search/?api=1&query=${message.lat},${message.lng}'));
             },
             style: TextButton.styleFrom(
               backgroundColor: Colors.black,
@@ -402,34 +408,37 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         ],
       );
     } else {
-      return Container(child: Text(message.message));
+      return Text(message.message);
     }
   }
 
   void _getCurrentLocation() async {
     Position position = await Geolocator.getCurrentPosition();
-    bool status = await context.read<ChatCubit>().sendLocation(widget.orderModel.id, position.latitude, position.longitude);
-    if (status) {
-      setState(() {
-        _messages.add(
-          ChatModel(
-            id: 0,
-            serviceOrderId: 0,
-            providerId: 0,
-            image: null,
-            lat: position.latitude.toString(),
-            lng: position.longitude.toString(),
-            message: 'location',
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-          ),
+    if(mounted){
+      bool status = await context.read<ChatCubit>().sendLocation(
+          widget.orderModel.id, position.latitude, position.longitude);
+      if (status) {
+        setState(() {
+          _messages.add(
+            ChatModel(
+              id: 0,
+              serviceOrderId: 0,
+              providerId: 0,
+              image: null,
+              lat: position.latitude.toString(),
+              lng: position.longitude.toString(),
+              message: 'location',
+              createdAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+            ),
+          );
+        });
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
         );
-      });
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
+      }
     }
   }
 }

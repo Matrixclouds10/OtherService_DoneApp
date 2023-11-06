@@ -66,13 +66,13 @@ class _ContactActionState extends State<ContactAction> {
                           // String url = facebook.replaceAll('https://', '');
                           // final Uri facebookLaunchUri = Uri(path: url, scheme: 'https');
                           // launchUrl(facebookLaunchUri);
-                          launch(facebook);
+                          launchUrl(Uri.parse(facebook));
                         }),
                   if (twitter != null)
                     _imageGestureDetector(
                         image: Assets.imagesIcTwitter,
                         onTap: () {
-                          launch(twitter);
+                          launchUrl(Uri.parse(twitter));
                         }),
                   // _imageGestureDetector(
                   //     image: Assets.imagesIcCall,
@@ -111,14 +111,14 @@ class _ContactActionState extends State<ContactAction> {
     );
   }
 
-  openWhatsApp(String whatsAppnumber, String countryCode) async {
-    bool status = await canLaunch('https://api.whatsapp.com/send?phone=$countryCode$whatsAppnumber');
+  openWhatsApp(String whatsAppNumber, String countryCode) async {
+    bool status = await canLaunchUrl(Uri.parse('https://api.whatsapp.com/send?phone=$countryCode$whatsAppNumber'));
     if (status) {
-      launch('https://api.whatsapp.com/send?phone=$countryCode$whatsAppnumber');
+      launchUrl(Uri.parse('https://api.whatsapp.com/send?phone=$countryCode$whatsAppNumber'));
     } else {
-      bool status2 = await canLaunch('https://wsend.co/$countryCode$whatsAppnumber');
+      bool status2 = await canLaunchUrl(Uri.parse('https://wsend.co/$countryCode$whatsAppNumber'));
 
-      if (status2) launch('https://wsend.co/$countryCode$whatsAppnumber');
+      if (status2) launchUrl(Uri.parse('https://wsend.co/$countryCode$whatsAppNumber'));
     }
   }
 

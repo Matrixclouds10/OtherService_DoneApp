@@ -126,6 +126,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
               'email': _emailController.text,
               'code': selectedCountry?.code ?? '20',
+              'phone':_phoneController.text,
               'checkOTPType': CheckOTPType.register,
               'typeIsProvider': widget.typeIsProvider,
             });

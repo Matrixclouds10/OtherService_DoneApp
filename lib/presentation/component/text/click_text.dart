@@ -25,15 +25,15 @@ class TextClickWidget extends StatelessWidget {
         children: [
           TextSpan(
             text: '${_text ?? ''} ',
-            style: Theme.of(context).textTheme.caption!.copyWith(
+            style: Theme.of(context).textTheme.bodySmall!.copyWith(
                 fontSize: 14,
                 height: 1.4,
                 color:
-                    _textColor ?? Theme.of(context).textTheme.caption!.color),
+                    _textColor ?? Theme.of(context).textTheme.bodySmall!.color),
           ),
           TextSpan(
             text: _subText ?? '',
-            style: Theme.of(context).textTheme.caption!.copyWith(
+            style: Theme.of(context).textTheme.bodySmall!.copyWith(
                 color: Theme.of(context).primaryColorDark,
                 height: 1.4,
                 fontSize: 14,

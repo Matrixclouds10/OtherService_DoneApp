@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 import '../logger.dart';

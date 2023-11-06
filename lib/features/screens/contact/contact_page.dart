@@ -75,10 +75,11 @@ class _ContactPageState extends State<ContactPage> {
                             if (state.state == BaseState.loading) return;
                             if (_nameController.text.isEmpty) return AppSnackbar.show(context: context, message: LocaleKeys.msgNameRequired.tr());
                             if (_emailController.text.isEmpty) return AppSnackbar.show(context: context, message: LocaleKeys.msgEmailRequired.tr());
-                            if (_messageController.text.isEmpty)
+                            if (_messageController.text.isEmpty) {
                               return AppSnackbar.show(
                                   context: context,
                                   message: LocaleKeys.msgMessageRequired.tr());
+                            }
                             AppPrefs prefs = getIt<AppPrefs>();
                             bool isProvider = prefs.get(PrefKeys.isTypeProvider,
                                 defaultValue: false);

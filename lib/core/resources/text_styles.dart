@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weltweit/core/extensions/num_extensions.dart';
 
-import '../resources/color.dart';
 import '../resources/resources.dart';
 
 extension TextCustom on TextStyle {

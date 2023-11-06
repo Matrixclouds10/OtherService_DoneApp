@@ -18,13 +18,18 @@ import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
 import 'package:weltweit/presentation/component/text/click_text.dart';
 
+import '../../../../base_injection.dart';
+import '../../../../core/services/local/cache_consumer.dart';
+import '../../../../core/services/local/storage_keys.dart';
 import 'otp_cubit.dart';
 
 class OTPScreen extends StatefulWidget {
   final String _email;
   final String _code;
+  final String _phoneNumber;
   final CheckOTPType _checkOTPType;
   final bool _typeIsProvider;
+
   @override
   _OTPScreenState createState() => _OTPScreenState();
 
@@ -32,23 +37,35 @@ class OTPScreen extends StatefulWidget {
     super.key,
     required bool typeIsProvider,
     required String code,
+    required String phoneNumber,
     required String email,
     required CheckOTPType checkOTPType,
-  })  : _email = email,
+  })
+      : _email = email,
         _code = code,
+        _phoneNumber = phoneNumber,
         _checkOTPType = checkOTPType,
         _typeIsProvider = typeIsProvider;
 }
 
 class _OTPScreenState extends State<OTPScreen> {
+  bool? isSaudi;
   final TextEditingController _codeController = TextEditingController();
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   void _onResendCode() async {
-    ResponseModel responseModel = await BlocProvider.of<OtpCubit>(context, listen: false).reSendCode(email: widget._email,typeIsProvider: widget._typeIsProvider);
+    ResponseModel responseModel =
+        await BlocProvider.of<OtpCubit>(context, listen: false).reSendCode(
+      //todo
+      phoneNumber: widget._phoneNumber,
+      email: widget._email,
+      typeIsProvider: widget._typeIsProvider,
+    );
     if (responseModel.message != null && responseModel.message!.isNotEmpty) {
-      if (responseModel.isSuccess) {
-        AppSnackbar.show(context: context, message: LocaleKeys.successfullySended.tr());
+      if (responseModel.isSuccess && mounted) {
+        AppSnackbar.show(
+            context: context, message: LocaleKeys.successfullySended.tr());
       } else {
         AppSnackbar.show(context: context, message: responseModel.message!);
       }
@@ -57,7 +74,11 @@ class _OTPScreenState extends State<OTPScreen> {
 
   @override
   void initState() {
-    if(widget._checkOTPType == CheckOTPType.reset){
+    isSaudi =
+        getIt<AppPrefs>().get(PrefKeys.countryId, defaultValue: false) == 2;
+
+    print('is saudi otp $isSaudi');
+    if (widget._checkOTPType == CheckOTPType.reset) {
       _onResendCode();
     }
     super.initState();
@@ -116,30 +137,29 @@ class _OTPScreenState extends State<OTPScreen> {
         key: scaffoldKey,
         resizeToAvoidBottomInset: true,
         body: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
             child: Container(
-              padding: const EdgeInsets.only(left: 24, right: 24, bottom: 8),
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height * .99,
-              child: ListAnimator(
-                children: [
-                  VerticalSpace(50.h),
-
-                  Center(
-                    child: Text(
-                      el.tr(LocaleKeys.otpVerification),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle().titleStyle().boldStyle(),
-                    ),
-                  ),
-                  VerticalSpace(kScreenPaddingNormal.h),
-                  Center(
-                    child: Text(
-                      '${el.tr(LocaleKeys.anAuthenticationCodeHasBeenSentTo)}\n ${widget._email}',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle().descriptionStyle(fontSize: 14),
-                    ),
-                  ),
+          padding: const EdgeInsets.only(left: 24, right: 24, bottom: 8),
+          width: double.infinity,
+          height: MediaQuery.of(context).size.height * .99,
+          child: ListAnimator(
+            children: [
+              VerticalSpace(50.h),
+              Center(
+                child: Text(
+                  el.tr(LocaleKeys.otpVerification),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle().titleStyle().boldStyle(),
+                ),
+              ),
+              VerticalSpace(kScreenPaddingNormal.h),
+              Center(
+                child: Text(
+                  //TODO edit email here
+                  '${el.tr(LocaleKeys.anAuthenticationCodeHasBeenSentTo)}\n ${isSaudi==true?widget._phoneNumber:widget._email}',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle().descriptionStyle(fontSize: 14),
+                ),
+              ),
                   // const ConfirmCodeForm(),
                   VerticalSpace(kScreenPaddingNormal.h),
 

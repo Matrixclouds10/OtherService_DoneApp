@@ -3,15 +3,11 @@ import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:weltweit/base_injection.dart';
-import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
-import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
-import 'package:weltweit/features/screens/provider_layout/layout_cubit.dart';
-import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 
 class PaymentWebview extends StatefulWidget {
@@ -69,10 +65,6 @@ class _PaymentWebviewState extends State<PaymentWebview> {
           ? Center(child: CircularProgressIndicator())
           : Column(
               children: [
-                // CustomText(widget.url).footer().onTap(() {
-                //   //copy
-                //   Clipboard.setData(ClipboardData(text: widget.url));
-                // }),
                 Expanded(
                   child: Stack(
                     children: [
@@ -83,43 +75,43 @@ class _PaymentWebviewState extends State<PaymentWebview> {
                           //   'Authorization': 'Bearer ${prefs.get(PrefKeys.token)}',
                           // },
                         ),
-                        initialUserScripts: UnmodifiableListView<UserScript>([]),
+                        initialUserScripts:
+                            UnmodifiableListView<UserScript>([]),
                         initialOptions: options,
                         pullToRefreshController: pullToRefreshController,
                         onWebViewCreated: (onWebViewController) {
                           webViewController = onWebViewController;
                         },
+                        // onLoadResource: (uri,loadRes){
+                        //   String? url=(loadRes.url).toString();
+                        //   if (url.contains('alrajhi-verify-response')) {
+                        //     if (url.contains('status=1')) {
+                        //       Fluttertoast.showToast(
+                        //           msg: 'تم الدفع بنجاح',
+                        //           backgroundColor: Colors.green);
+                        //     } else if (url.contains('status=2')) {
+                        //       Fluttertoast.showToast(
+                        //           msg: 'لم يتم الدفع حاول مرة أخري',
+                        //           backgroundColor: Colors.red);
+                        //     }
+                        //   }
+                        //
+                        // },
                         onLoadStart: (ctl, uri) async {
                           //get url params
                           String url = uri.toString();
-                          kEcho(url);
-
-                          if (url.contains('success=true')) {
-                            context.read<LayoutProviderCubit>().setCurrentIndex(0);
-                            while (NavigationService.canGoBack()) {
-                              NavigationService.goBack();
+                          if (url.contains('alrajhi-verify-response')) {
+                            if (url.contains('status=1')) {
+                              Fluttertoast.showToast(
+                                  msg: 'تم الدفع بنجاح',
+                                  backgroundColor: Colors.green);
+                            } else if (url.contains('status=2')) {
+                              Navigator.pop(context);
+                              Fluttertoast.showToast(
+                                  msg: 'لم يتم الدفع حاول مرة أخري',
+                                  backgroundColor: Colors.red);
                             }
-                            String message = LocaleKeys.successfullySubscribed.tr();
-                            AppSnackbar.show(context: context, message: message);
-                          }
-                          if (url.contains('success=false')) {
-                            context.read<LayoutProviderCubit>().setCurrentIndex(0);
-                            while (NavigationService.canGoBack()) {
-                              NavigationService.goBack();
-                            }
-                            String message = LocaleKeys.somethingWentWrong.tr();
-                            AppSnackbar.show(context: context, message: message);
-                          }
-
-                          // //get url from uri
-                          // if (uri.toString().contains('success')) {
-                          //   loading = false;
-                          //   setState(() {});
-                          // } else if (uri.toString().contains('cancel')) {
-                          //   loading = false;
-                          //   setState(() {});
-                          //   AppSnackbar.show(context: context, message: "Cancel");
-                          // }
+                          } else if (url.contains('paymobsolutions')) {}
                         },
                         androidOnPermissionRequest: (controller, origin, resources) async {
                           return PermissionRequestResponse(resources: resources, action: PermissionRequestResponseAction.GRANT);

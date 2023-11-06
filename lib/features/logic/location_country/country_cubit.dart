@@ -1,4 +1,3 @@
-import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/base_injection.dart';
@@ -7,11 +6,9 @@ import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
-import 'package:weltweit/features/data/models/auth/user_model.dart';
 import 'package:weltweit/features/data/models/location/country_model.dart';
 import 'package:weltweit/features/domain/usecase/location/countries_usecase.dart';
 import 'package:weltweit/features/domain/usecase/location/country_usecase.dart';
-import 'package:weltweit/features/domain/usecase/profile/profile_read_usecase.dart';
 
 part 'country_state.dart';
 

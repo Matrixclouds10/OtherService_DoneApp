@@ -161,7 +161,7 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
           Row(
             children: [
               SizedBox(width: 24),
-              Icon(FontAwesomeIcons.plusCircle, size: 30, color: primaryColor),
+              Icon(FontAwesomeIcons.circlePlus, size: 30, color: primaryColor),
               SizedBox(width: 12),
               CustomText(LocaleKeys.addNewService.tr(), pv: 0),
               Spacer(),

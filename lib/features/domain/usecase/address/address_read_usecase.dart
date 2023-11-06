@@ -42,7 +42,7 @@ class AddressReadUsecase extends BaseUseCase<List<AddressItemModel>, AddressRead
   }
 
   @override
-  Future<Either<ErrorModel, List<AddressItemModel>>> callTest(AddressReadParams body) async {
+  Future<Either<ErrorModel, List<AddressItemModel>>> callTest(AddressReadParams parameters) async {
     return Left(ApiErrorHandler.getMessage("Test error"));
   }
 }

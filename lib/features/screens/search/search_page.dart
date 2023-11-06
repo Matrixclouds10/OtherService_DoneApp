@@ -100,12 +100,12 @@ class _SearchPageState extends State<SearchPage> {
                                 child: Row(
                                   children: [
                                     AvatarImage(
+                                      size: 26,
+                                      shape: AvatarImageShape.circle,
                                       child: CustomImage(
                                         imageUrl: state.providers[i].image,
                                         radius: 250,
                                       ),
-                                      size: 26,
-                                      shape: AvatarImageShape.circle,
                                     ),
                                     const SizedBox(width: 12),
                                     Expanded(

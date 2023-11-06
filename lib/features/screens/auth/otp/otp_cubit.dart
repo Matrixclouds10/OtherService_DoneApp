@@ -1,12 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/base_injection.dart';
-import 'package:weltweit/core/notification/device_token.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/core/utils/echo.dart';
-import 'package:weltweit/features/data/models/base/response_model.dart';
 import 'package:weltweit/features/data/models/auth/user_model.dart';
+import 'package:weltweit/features/data/models/base/response_model.dart';
 import 'package:weltweit/features/domain/request_body/check_otp_body.dart';
 import 'package:weltweit/features/domain/usecase/auth/check_otp_usecase.dart';
 import 'package:weltweit/features/domain/usecase/auth/forget_password_usecase.dart';
@@ -18,7 +17,6 @@ part 'otp_state.dart';
 class OtpCubit extends Cubit<OtpState> {
   final ForgetPasswordUseCase _forgetPasswordUseCase;
   final CheckOTPUseCase _otpUseCase;
-  final UpdateFCMTokenUseCase _updateFCMTokenUseCase;
 
   OtpCubit({
     required CheckOTPUseCase otpUseCase,
@@ -26,7 +24,6 @@ class OtpCubit extends Cubit<OtpState> {
     required UpdateFCMTokenUseCase updateFCMTokenUseCase,
   })  : _forgetPasswordUseCase = forgetPasswordUseCase,
         _otpUseCase = otpUseCase,
-        _updateFCMTokenUseCase = updateFCMTokenUseCase,
         super(OtpState());
 
   ///variables
@@ -48,13 +45,14 @@ class OtpCubit extends Cubit<OtpState> {
 
   //TODO call API
   //send phone to get code
-  Future<ResponseModel> reSendCode({required String email,required bool typeIsProvider}) async {
+  Future<ResponseModel> reSendCode({required String email,required bool typeIsProvider,required String? phoneNumber}) async {
     if (!_isTimerDone) return ResponseModel(false, tr(LocaleKeys.error));
     _isResendLoading = true;
     emit(OtpState());
     ResponseModel responseModel = await _forgetPasswordUseCase.call(
       email: email,
-      typeIsProvider: typeIsProvider,);
+      typeIsProvider: typeIsProvider,
+    );
 
     if (responseModel.isSuccess) {
       _isTimerDone = false;
@@ -101,12 +99,4 @@ class OtpCubit extends Cubit<OtpState> {
     return responseModel;
   }
 
-  Future<void> _updateFCMToken() async {
-    String? fcmToken = await getDeviceToken();
-    if (fcmToken == null) {
-      return;
-    }
-    await _updateFCMTokenUseCase.call(fcmToken: fcmToken);
-    emit(OtpState());
-  }
 }

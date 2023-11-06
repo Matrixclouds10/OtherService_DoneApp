@@ -1,11 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/routing/routes.dart';
-import 'package:weltweit/core/utils/globals.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/logic/orders/orders_cubit.dart';
@@ -20,7 +18,6 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    GlobalParams globalParams = getIt();
     return Scaffold(
         backgroundColor: servicesTheme.scaffoldBackgroundColor,
         appBar: CustomAppBar(
@@ -32,7 +29,8 @@ class ProfilePage extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.edit_note, color: Colors.black),
               onPressed: () {
-                Navigator.of(context).pushNamed(RoutesServices.servicesProfileEdit);
+                Navigator.of(context)
+                    .pushNamed(RoutesServices.servicesProfileEdit);
               },
             ),
           ],
@@ -44,7 +42,13 @@ class ProfilePage extends StatelessWidget {
               SizedBox(height: 8),
               _userProfileCard(context),
               const SizedBox(height: 8),
-              CustomText(LocaleKeys.myInformation.tr(), color: Colors.black, align: TextAlign.start, bold: true, pv: 4, ph: 12).header(),
+              CustomText(LocaleKeys.myInformation.tr(),
+                      color: Colors.black,
+                      align: TextAlign.start,
+                      bold: true,
+                      pv: 4,
+                      ph: 12)
+                  .header(),
               Container(
                 color: Colors.white,
                 child: Column(
@@ -54,9 +58,12 @@ class ProfilePage extends StatelessWidget {
                         return singleCustomListTile(
                             icon: Icons.arrow_forward_ios,
                             text: LocaleKeys.myAddresses.tr(),
-                            trailingText: state.addresses.isNotEmpty ? "(${state.addresses.length} ${LocaleKeys.address.tr()})" : "",
+                            trailingText: state.addresses.isNotEmpty
+                                ? "(${state.addresses.length} ${LocaleKeys.address.tr()})"
+                                : "",
                             onTap: () {
-                              Navigator.pushNamed(context, RoutesServices.servicesMyAddresses);
+                              Navigator.pushNamed(
+                                  context, RoutesServices.servicesMyAddresses);
                             });
                       },
                     ),
@@ -66,9 +73,12 @@ class ProfilePage extends StatelessWidget {
                         return singleCustomListTile(
                             icon: Icons.arrow_forward_ios,
                             text: LocaleKeys.myOrders.tr(),
-                            trailingText: state.pendingData.isNotEmpty ? "(${state.pendingData.length} طلب)" : "",
+                            trailingText: state.pendingData.isNotEmpty
+                                ? "(${state.pendingData.length} طلب)"
+                                : "",
                             onTap: () {
-                              Navigator.pushNamed(context, RoutesServices.servicesOrders);
+                              Navigator.pushNamed(
+                                  context, RoutesServices.servicesOrders);
                             });
                       },
                     ),
@@ -120,7 +130,8 @@ class ProfilePage extends StatelessWidget {
                               text: LocaleKeys.login.tr(),
                               trailingText: "",
                               onTap: () {
-                                NavigationService.pushNamedAndRemoveUntil(RoutesServices.servicesWelcomeScreen);
+                                NavigationService.pushNamedAndRemoveUntil(
+                                    RoutesServices.servicesWelcomeScreen);
                               });
                         }
 
@@ -155,8 +166,14 @@ class ProfilePage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
           child: Row(
             children: [
-              Expanded(child: CustomText(text, color: text.contains("خروج") ? Colors.red : Colors.black, align: TextAlign.start, pv: 0)),
-              if (trailingText != null) CustomText(trailingText, color: Colors.grey, align: TextAlign.start, pv: 0),
+              Expanded(
+                  child: CustomText(text,
+                      color: text.contains("خروج") ? Colors.red : Colors.black,
+                      align: TextAlign.start,
+                      pv: 0)),
+              if (trailingText != null)
+                CustomText(trailingText,
+                    color: Colors.grey, align: TextAlign.start, pv: 0),
               const SizedBox(width: 12),
               if (icon != null) Icon(icon, size: 16, color: Colors.grey),
             ],
@@ -207,9 +224,12 @@ class ProfilePage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 4),
-                      textWithIcon(icon: Icons.person, text: state.data!.name ?? ''),
+                      textWithIcon(
+                          icon: Icons.person, text: state.data!.name ?? ''),
                       const SizedBox(height: 4),
-                      textWithIcon(icon: Icons.phone, text: state.data!.mobileNumber ?? ''),
+                      textWithIcon(
+                          icon: Icons.phone,
+                          text: state.data!.mobileNumber ?? ''),
                     ],
                   ),
                 ),
