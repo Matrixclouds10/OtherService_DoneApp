@@ -40,8 +40,7 @@ class OTPScreen extends StatefulWidget {
     required String phoneNumber,
     required String email,
     required CheckOTPType checkOTPType,
-  })
-      : _email = email,
+  })  : _email = email,
         _code = code,
         _phoneNumber = phoneNumber,
         _checkOTPType = checkOTPType,
@@ -74,8 +73,6 @@ class _OTPScreenState extends State<OTPScreen> {
 
   @override
   void initState() {
-    isSaudi =
-        getIt<AppPrefs>().get(PrefKeys.countryId, defaultValue: false) == 2;
 
     print('is saudi otp $isSaudi');
     if (widget._checkOTPType == CheckOTPType.reset) {
@@ -122,6 +119,9 @@ class _OTPScreenState extends State<OTPScreen> {
 
   @override
   Widget build(BuildContext context) {
+    isSaudi =
+        getIt<AppPrefs>().get(PrefKeys.countryId, defaultValue: false) == 2;
+
     bool isLoading = context.watch<OtpCubit>().isLoading;
 
     return Container(
@@ -138,28 +138,28 @@ class _OTPScreenState extends State<OTPScreen> {
         resizeToAvoidBottomInset: true,
         body: SingleChildScrollView(
             child: Container(
-          padding: const EdgeInsets.only(left: 24, right: 24, bottom: 8),
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height * .99,
-          child: ListAnimator(
-            children: [
-              VerticalSpace(50.h),
-              Center(
-                child: Text(
-                  el.tr(LocaleKeys.otpVerification),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle().titleStyle().boldStyle(),
-                ),
-              ),
-              VerticalSpace(kScreenPaddingNormal.h),
-              Center(
-                child: Text(
-                  //TODO edit email here
-                  '${el.tr(LocaleKeys.anAuthenticationCodeHasBeenSentTo)}\n ${isSaudi==true?widget._phoneNumber:widget._email}',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle().descriptionStyle(fontSize: 14),
-                ),
-              ),
+              padding: const EdgeInsets.only(left: 24, right: 24, bottom: 8),
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height * .99,
+              child: ListAnimator(
+                children: [
+                  VerticalSpace(50.h),
+                  Center(
+                    child: Text(
+                      el.tr(LocaleKeys.otpVerification),
+                      textAlign: TextAlign.center,
+                      style: const TextStyle().titleStyle().boldStyle(),
+                    ),
+                  ),
+                  VerticalSpace(kScreenPaddingNormal.h),
+                  Center(
+                    child: Text(
+                      //TODO edit email here
+                      '${el.tr(LocaleKeys.anAuthenticationCodeHasBeenSentTo)}\n ${isSaudi==true?widget._phoneNumber:widget._email}',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle().descriptionStyle(fontSize: 14),
+                    ),
+                  ),
                   // const ConfirmCodeForm(),
                   VerticalSpace(kScreenPaddingNormal.h),
 

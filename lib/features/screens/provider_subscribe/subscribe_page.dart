@@ -9,12 +9,12 @@ import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
-import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/data/models/subscription/subscription_model.dart';
 import 'package:weltweit/features/data/models/subscription/update_subscribtion_response.dart';
 import 'package:weltweit/features/logic/provider_profile/profile_cubit.dart';
 import 'package:weltweit/features/logic/provider_subscription/subscription_cubit.dart';
+import 'package:weltweit/features/screens/provider_subscribe/payment_webview.dart';
 import 'package:weltweit/features/screens/provider_subscribe/subscribtion_history_page.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
@@ -226,11 +226,11 @@ class _SubscribePageState extends State<SubscribePage> {
           "paymentUrl: ${updateSubscribtionResponse.paymentData?.redirectUrl}");
 
       if (updateSubscribtionResponse.paymentData != null) {
-        if (updateSubscribtionResponse.paymentData?.redirectUrl != null) {
-          NavigationService.push(RoutesProvider.paymentWebview, arguments: {
-            'id': subscriptionModel.id,
-            'url': updateSubscribtionResponse.paymentData?.redirectUrl,
-          });
+        if (updateSubscribtionResponse.paymentData?.redirectUrl != null &&
+            mounted) {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => PaymentScreen(
+                  url: updateSubscribtionResponse.paymentData?.redirectUrl)));
         } else if (updateSubscribtionResponse.paymentData?.kioskBillReference !=
             null) {
           if (mounted) {

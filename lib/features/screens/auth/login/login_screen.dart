@@ -112,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             }
           } else {
             NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
-              'email': _phoneController.text,
+
               'phone':_phoneController.text,
               'code': _viewModel.params.countryModel?.code ?? '20',
               'checkOTPType': CheckOTPType.register,

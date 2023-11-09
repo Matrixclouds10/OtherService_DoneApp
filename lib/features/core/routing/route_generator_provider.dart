@@ -13,7 +13,6 @@ import 'package:weltweit/features/screens/provider_profile/profile_update_page.d
 import 'package:weltweit/features/screens/provider_reservation/reservation_page.dart';
 import 'package:weltweit/features/screens/provider_service_providers/service_providers_page.dart';
 import 'package:weltweit/features/screens/provider_services/services_page.dart';
-import 'package:weltweit/features/screens/provider_subscribe/payment_webview.dart';
 import 'package:weltweit/features/screens/provider_subscribe/subscribe_page.dart';
 
 import 'routes_provider.dart';
@@ -45,8 +44,6 @@ class RouteProviderGenerator {
         return platformPageRoute(OrderDetails(orderModel: arguments!["order"]));
       case RoutesProvider.providerProviders:
         return platformPageRoute(ServiceProvidersPage(service: arguments!["serviceName"]));
-      case RoutesProvider.paymentWebview:
-        return platformPageRoute(PaymentWebview(packageId: arguments!['id'], url: arguments['url']));
       case RoutesProvider.providerSubscribe:
         return platformPageRoute(SubscribePage());
       case RoutesProvider.providerProfileUpdateScreen:

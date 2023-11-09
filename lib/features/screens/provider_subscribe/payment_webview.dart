@@ -1,148 +1,216 @@
+import 'dart:async';
 import 'dart:collection';
 import 'dart:io';
 
-import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:weltweit/base_injection.dart';
-import 'package:weltweit/core/services/local/cache_consumer.dart';
-import 'package:weltweit/features/core/widgets/custom_text.dart';
-import 'package:weltweit/generated/locale_keys.g.dart';
 
-class PaymentWebview extends StatefulWidget {
-  final int? packageId;
-  final String url;
+import '../../../core/routing/navigation_services.dart';
+import '../../../presentation/component/custom_app_bar.dart';
+import '../../core/routing/routes_provider.dart';
 
-  const PaymentWebview({this.packageId, required this.url, super.key});
+class PaymentScreen extends StatefulWidget {
+  final String? url;
+
+  const PaymentScreen({Key? key, this.url}) : super(key: key);
 
   @override
-  State<PaymentWebview> createState() => _PaymentWebviewState();
+  PaymentScreenState createState() => PaymentScreenState();
 }
 
-class _PaymentWebviewState extends State<PaymentWebview> {
-  double progress = 0.0;
-  bool loading = false;
-  late PullToRefreshController pullToRefreshController;
-  InAppWebViewController? webViewController;
-  AppPrefs prefs = getIt<AppPrefs>();
+class PaymentScreenState extends State<PaymentScreen> {
+  double value = 0.0;
+  PullToRefreshController? pullToRefreshController;
+  MyInAppBrowser browser = MyInAppBrowser();
+
   @override
   void initState() {
+    super.initState();
+
+    _initData();
+  }
+
+  void _initData() async {
+    if (Platform.isAndroid) {
+      await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
+
+      bool swAvailable = await AndroidWebViewFeature.isFeatureSupported(
+          AndroidWebViewFeature.SERVICE_WORKER_BASIC_USAGE);
+      bool swInterceptAvailable =
+          await AndroidWebViewFeature.isFeatureSupported(
+              AndroidWebViewFeature.SERVICE_WORKER_SHOULD_INTERCEPT_REQUEST);
+
+      if (swAvailable && swInterceptAvailable) {
+        AndroidServiceWorkerController serviceWorkerController =
+            AndroidServiceWorkerController.instance();
+        await serviceWorkerController
+            .setServiceWorkerClient(AndroidServiceWorkerClient(
+          shouldInterceptRequest: (request) async {
+            return null;
+          },
+        ));
+      }
+    }
+
     pullToRefreshController = PullToRefreshController(
       options: PullToRefreshOptions(
-        color: Colors.blue,
+        color: Colors.black,
       ),
       onRefresh: () async {
         if (Platform.isAndroid) {
-          webViewController?.reload();
+          browser.webViewController.reload();
         } else if (Platform.isIOS) {
-          webViewController?.loadUrl(urlRequest: URLRequest(url: await webViewController?.getUrl()));
+          browser.webViewController.loadUrl(
+              urlRequest:
+                  URLRequest(url: await browser.webViewController.getUrl()));
         }
       },
     );
-    super.initState();
-  }
+    browser.pullToRefreshController = pullToRefreshController;
 
-  InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
-      crossPlatform: InAppWebViewOptions(
-        useShouldOverrideUrlLoading: true,
-        mediaPlaybackRequiresUserGesture: false,
+    await browser.openUrlRequest(
+      urlRequest: URLRequest(url: Uri.parse(widget.url ?? '')),
+      options: InAppBrowserClassOptions(
+        crossPlatform:
+            InAppBrowserOptions(hideUrlBar: true, hideToolbarTop: true),
+        inAppWebViewGroupOptions: InAppWebViewGroupOptions(
+          crossPlatform: InAppWebViewOptions(
+              useShouldOverrideUrlLoading: true, useOnLoadResource: true),
+        ),
       ),
-      android: AndroidInAppWebViewOptions(useHybridComposition: true),
-      ios: IOSInAppWebViewOptions(allowsInlineMediaPlayback: true));
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: CustomText(LocaleKeys.payment.tr(), size: 22),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(color: Colors.black87),
-        elevation: 1,
+    return WillPopScope(
+      onWillPop: (() => _exitApp().then((value) => value!)),
+      child: Scaffold(
+        appBar: CustomAppBar(title: 'صفحة الدفع'),
       ),
-      body: loading
-          ? Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                Expanded(
-                  child: Stack(
-                    children: [
-                      InAppWebView(
-                        initialUrlRequest: URLRequest(
-                          url: Uri.parse(widget.url),
-                          // headers: {
-                          //   'Authorization': 'Bearer ${prefs.get(PrefKeys.token)}',
-                          // },
-                        ),
-                        initialUserScripts:
-                            UnmodifiableListView<UserScript>([]),
-                        initialOptions: options,
-                        pullToRefreshController: pullToRefreshController,
-                        onWebViewCreated: (onWebViewController) {
-                          webViewController = onWebViewController;
-                        },
-                        // onLoadResource: (uri,loadRes){
-                        //   String? url=(loadRes.url).toString();
-                        //   if (url.contains('alrajhi-verify-response')) {
-                        //     if (url.contains('status=1')) {
-                        //       Fluttertoast.showToast(
-                        //           msg: 'تم الدفع بنجاح',
-                        //           backgroundColor: Colors.green);
-                        //     } else if (url.contains('status=2')) {
-                        //       Fluttertoast.showToast(
-                        //           msg: 'لم يتم الدفع حاول مرة أخري',
-                        //           backgroundColor: Colors.red);
-                        //     }
-                        //   }
-                        //
-                        // },
-                        onLoadStart: (ctl, uri) async {
-                          //get url params
-                          String url = uri.toString();
-                          if (url.contains('alrajhi-verify-response')) {
-                            if (url.contains('status=1')) {
-                              Fluttertoast.showToast(
-                                  msg: 'تم الدفع بنجاح',
-                                  backgroundColor: Colors.green);
-                            } else if (url.contains('status=2')) {
-                              Navigator.pop(context);
-                              Fluttertoast.showToast(
-                                  msg: 'لم يتم الدفع حاول مرة أخري',
-                                  backgroundColor: Colors.red);
-                            }
-                          } else if (url.contains('paymobsolutions')) {}
-                        },
-                        androidOnPermissionRequest: (controller, origin, resources) async {
-                          return PermissionRequestResponse(resources: resources, action: PermissionRequestResponseAction.GRANT);
-                        },
-                        shouldOverrideUrlLoading: (controller, navigationAction) async {
-                          return NavigationActionPolicy.ALLOW;
-                        },
-                        onLoadStop: (ctrl, url) async {
-                          pullToRefreshController.endRefreshing();
-                        },
-                        onLoadError: (ctrl, url, code, message) {
-                          pullToRefreshController.endRefreshing();
-                        },
-                        onProgressChanged: (ctrl, prgs) {
-                          if (progress == 100) {
-                            pullToRefreshController.endRefreshing();
-                          }
-                          progress = (prgs / 100).toDouble();
-                          setState(() {});
-                        },
-                        onUpdateVisitedHistory: (controller, url, androidIsReload) {},
-                        onConsoleMessage: (controller, consoleMessage) {
-                          print(consoleMessage);
-                        },
-                      ),
-                      progress < 1.0 ? LinearProgressIndicator(value: progress) : Container(),
-                    ],
-                  ),
-                ),
-              ],
-            ),
     );
+  }
+
+  Future<bool?> _exitApp() async {
+    return null;
+  }
+}
+
+class MyInAppBrowser extends InAppBrowser {
+  MyInAppBrowser(
+      {int? windowId, UnmodifiableListView<UserScript>? initialUserScripts})
+      : super(windowId: windowId, initialUserScripts: initialUserScripts);
+
+  bool _canRedirect = true;
+
+  @override
+  Future onBrowserCreated() async {
+    if (kDebugMode) {
+      print("\n\nBrowser Created!\n\n");
+    }
+  }
+
+  @override
+  Future onLoadStart(url) async {
+    if (kDebugMode) {
+      print("\n\nmy url is  Started: $url\n\n");
+    }
+    _redirect(url.toString());
+  }
+
+  @override
+  Future onLoadStop(url) async {
+    pullToRefreshController?.endRefreshing();
+    if (kDebugMode) {
+      print("\n\nStopped: $url\n\n");
+    }
+    _redirect(url.toString());
+  }
+
+  @override
+  void onLoadError(url, code, message) {
+    pullToRefreshController?.endRefreshing();
+    if (kDebugMode) {
+      print("Can't load [$url] Error: $message");
+    }
+  }
+
+  @override
+  void onProgressChanged(progress) {
+    if (progress == 100) {
+      pullToRefreshController?.endRefreshing();
+    }
+  }
+
+  @override
+  void onExit() {
+    if (kDebugMode) {
+      print("\n\nBrowser closed!\n\n");
+
+      // NavigationService.goBack();
+      // NavigationService.goBack();
+    }
+  }
+
+  @override
+  Future<NavigationActionPolicy> shouldOverrideUrlLoading(
+      navigationAction) async {
+    if (kDebugMode) {
+      print("\n my url is Override ${navigationAction.request.url}\n");
+    }
+    return NavigationActionPolicy.ALLOW;
+  }
+
+  @override
+  void onLoadResource(resource) {}
+
+  @override
+  void onConsoleMessage(consoleMessage) {
+    if (kDebugMode) {
+      print("""
+    console output:
+      message: ${consoleMessage.message}
+      messageLevel: ${consoleMessage.messageLevel.toValue()}
+   """);
+    }
+  }
+
+  void _redirect(String url) {
+    print('my url is $url');
+    if (_canRedirect) {
+      bool isSuccess =
+          url.contains('alrajhi-verify-response') && url.contains('status=1');
+      bool isFailed = (url.contains('alrajhi-verify-response') &&
+              url.contains('status=2')) ||
+          (url.contains('https://doneapp.org/payment-verify') &&
+              url.contains('success=false'));
+      bool isCancel = url.contains('alrajhi-verify-response') &&
+          url.contains('status=cancel');
+      if (isSuccess || isFailed || isCancel) {
+        _canRedirect = false;
+
+        close();
+
+        NavigationService.goBack();        Future.delayed(Duration(seconds: 2));
+        if (isSuccess) {
+          print('success');
+          NavigationService.push(RoutesProvider.providerHomeScreen);
+          Fluttertoast.showToast(
+              msg: 'تم الدفع بنجاح',
+              backgroundColor: Colors.green,
+              gravity: ToastGravity.BOTTOM);
+        } else if (isFailed) {
+          print('failed');
+          NavigationService.goBack();
+          Fluttertoast.showToast(
+              msg: 'فشل الدفع',
+              backgroundColor: Colors.red,
+              gravity: ToastGravity.BOTTOM,
+              textColor: Colors.black);
+        }
+      }
+    }
   }
 }

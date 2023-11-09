@@ -646,7 +646,7 @@ class AppDialogs {
                     onPressed: () async {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) =>
-                              PaymentWebview( url: url)));
+                              PaymentScreen( url: url)));
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,

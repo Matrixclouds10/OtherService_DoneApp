@@ -68,14 +68,11 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
       (error) {
         Fluttertoast.showToast(
             msg: "لقد أرسلت الطلب اذهب لسجل الاشتراكات",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          textColor: Colors.black,
         );
-        // print('we are error here');
 
         return Future.error(error);
       },
