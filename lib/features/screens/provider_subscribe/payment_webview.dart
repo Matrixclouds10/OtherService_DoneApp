@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:collection';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -28,6 +27,7 @@ class PaymentScreenState extends State<PaymentScreen> {
   @override
   void initState() {
     super.initState();
+    browser.setController(browser.controller);
 
     _initData();
   }
@@ -55,9 +55,7 @@ class PaymentScreenState extends State<PaymentScreen> {
     }
 
     pullToRefreshController = PullToRefreshController(
-      options: PullToRefreshOptions(
-        color: Colors.black,
-      ),
+      options: PullToRefreshOptions(color: Colors.black),
       onRefresh: () async {
         if (Platform.isAndroid) {
           browser.webViewController.reload();
@@ -85,25 +83,23 @@ class PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: (() => _exitApp().then((value) => value!)),
-      child: Scaffold(
-        appBar: CustomAppBar(title: 'صفحة الدفع'),
+    return Scaffold(
+      appBar: CustomAppBar(
+        title: 'صفحة الدفع',
       ),
-    );
-  }
 
-  Future<bool?> _exitApp() async {
-    return null;
+    );
   }
 }
 
 class MyInAppBrowser extends InAppBrowser {
-  MyInAppBrowser(
-      {int? windowId, UnmodifiableListView<UserScript>? initialUserScripts})
-      : super(windowId: windowId, initialUserScripts: initialUserScripts);
 
   bool _canRedirect = true;
+  InAppWebViewController? controller;
+
+  void setController(controller) {
+    this.controller = controller;
+  }
 
   @override
   Future onBrowserCreated() async {
@@ -130,8 +126,11 @@ class MyInAppBrowser extends InAppBrowser {
   }
 
   @override
-  void onLoadError(url, code, message) {
-    pullToRefreshController?.endRefreshing();
+  Future<void> onLoadError(url, code, message) async {
+    if (await webViewController.canGoBack()) {
+      await webViewController.clearCache();
+      await webViewController.goBack();
+    }
     if (kDebugMode) {
       print("Can't load [$url] Error: $message");
     }
@@ -148,9 +147,9 @@ class MyInAppBrowser extends InAppBrowser {
   void onExit() {
     if (kDebugMode) {
       print("\n\nBrowser closed!\n\n");
-
-      // NavigationService.goBack();
-      // NavigationService.goBack();
+      if (NavigationService.canGoBack()) {
+        NavigationService.goBack();
+      }
     }
   }
 
@@ -193,7 +192,10 @@ class MyInAppBrowser extends InAppBrowser {
 
         close();
 
-        NavigationService.goBack();        Future.delayed(Duration(seconds: 2));
+        if (NavigationService.canGoBack()) {
+          NavigationService.goBack();
+        }
+        Future.delayed(Duration(seconds: 2));
         if (isSuccess) {
           print('success');
           NavigationService.push(RoutesProvider.providerHomeScreen);
@@ -210,6 +212,10 @@ class MyInAppBrowser extends InAppBrowser {
               gravity: ToastGravity.BOTTOM,
               textColor: Colors.black);
         }
+      }
+    } else {
+      if (NavigationService.canGoBack()) {
+        NavigationService.goBack();
       }
     }
   }
