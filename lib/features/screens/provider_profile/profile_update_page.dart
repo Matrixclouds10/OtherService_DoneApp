@@ -31,6 +31,9 @@ class ProfileUpdatePage extends StatefulWidget {
 }
 
 class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
+
+  late UserModel userModel;
+
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -124,7 +127,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      UserModel userModel = await BlocProvider.of<ProfileProviderCubit>(context, listen: false).getProfile();
+       userModel= await BlocProvider.of<ProfileProviderCubit>(context, listen: false).getProfile();
       _nameController.text = userModel.name ?? "";
       _descController.text = userModel.desc ?? "";
       _emailController.text = userModel.email ?? "";
@@ -245,8 +248,9 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
           TextButton(
               onPressed: () async {
                 bool? status = await AppDialogs().showDeleteAccountDialog(context);
+                print(status);
                 if (status != null && status) {
-                  if (context.mounted) context.read<ProfileProviderCubit>().deleteAccount();
+                  if (context.mounted) context.read<ProfileProviderCubit>().deleteAccount(userModel.id);
                 }
               },
               child: CustomText(LocaleKeys.deleteAccount.tr(), color: Colors.red).footer()),

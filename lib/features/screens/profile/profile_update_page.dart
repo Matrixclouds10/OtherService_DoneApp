@@ -232,6 +232,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
           TextButton(
               onPressed: () async {
                 bool? status = await AppDialogs().showDeleteAccountDialog(context);
+                print(status);
                 if (status != null && status) {
                   if (context.mounted) context.read<ProfileCubit>().deleteProfile();
                 }

@@ -143,5 +143,7 @@ class ProfileProviderCubit extends Cubit<ProfileProviderState> {
     } catch (e) {}
   }
 
-  void deleteAccount() {}
+  void deleteAccount(id) {
+    deleteProfileUseCase.call(id);
+  }
 }

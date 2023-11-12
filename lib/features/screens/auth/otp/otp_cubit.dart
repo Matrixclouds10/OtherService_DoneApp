@@ -32,10 +32,21 @@ class OtpCubit extends Cubit<OtpState> {
   bool _isTimerDone = false;
   DateTime _endTime = DateTime.now().add(const Duration(minutes: 1));
 
+  String _showedEmailOrPhone = '';
+
+  void setShowedEmailOrPhone({required String userOtp}) {
+    _showedEmailOrPhone = userOtp;
+  }
+
   ///getters
   bool get isLoading => _isLoading;
+
   bool get isResendLoading => _isResendLoading;
+
   bool get isTimerDone => _isTimerDone;
+
+  String get showedEmailOrPhone => _showedEmailOrPhone;
+
   DateTime get endTime => _endTime;
 
   onTimerEnd() {

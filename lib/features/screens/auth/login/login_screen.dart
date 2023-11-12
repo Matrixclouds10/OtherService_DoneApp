@@ -69,6 +69,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   }
 
   void _onSubmit(context) async {
+    print('country code ${_selectedCountry?.id}');
     if (_formKey.currentState != null) {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
@@ -120,20 +121,27 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
             });
           }
         } else {
-          String message = response.error?.errorMessage ?? response.message ?? '';
+          String message =
+              response.error?.errorMessage ?? response.message ?? '';
           AppSnackbar.show(
             context: context,
             title: LocaleKeys.notification,
             message: message,
             type: SnackbarType.error,
           );
-          if (message.contains('active') || message.contains('activate') || message.contains('verify') || message.contains('تفعيل')) {
-            AppDialogs().forgetPassword(
-              title: LocaleKeys.notification.tr(),
-              context: context,
-              message: message,
-              typeIsProvider: typeIsProvider,
-            );
+          if (_selectedCountry?.id != null) {
+            if (message.contains('active') ||
+                message.contains('activate') ||
+                message.contains('verify') ||
+                message.contains('تفعيل')) {
+              AppDialogs().forgetPassword(
+                title: LocaleKeys.notification.tr(),
+                context: context,
+                message: message,
+                countryCode: _selectedCountry!.id!,
+                typeIsProvider: typeIsProvider,
+              );
+            }
           }
         }
       }
@@ -209,8 +217,13 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                     onTap: () {
                                       AppDialogs().forgetPassword(
                                         title: LocaleKeys.forgetPassword.tr(),
+                                        countryCode: _selectedCountry!.id!,
                                         context: context,
-                                        message: LocaleKeys.enterRegisteredEmailAddress.tr(),
+                                        message: _selectedCountry!.id == 1
+                                            ? LocaleKeys
+                                                .enterRegisteredEmailAddress
+                                                .tr()
+                                            : LocaleKeys.phoneVerification.tr(),
                                         typeIsProvider: typeIsProvider,
                                       );
                                     },

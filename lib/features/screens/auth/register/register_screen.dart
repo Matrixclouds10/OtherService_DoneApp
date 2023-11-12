@@ -12,7 +12,6 @@ import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/routing/routes.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
-import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/routing/routes_provider.dart';
@@ -26,6 +25,7 @@ import 'package:weltweit/features/domain/request_body/check_otp_body.dart';
 import 'package:weltweit/features/domain/request_body/register_body.dart';
 import 'package:weltweit/features/logic/location_city/city_cubit.dart';
 import 'package:weltweit/features/logic/location_region/region_cubit.dart';
+import 'package:weltweit/features/screens/auth/otp/otp_cubit.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/features/widgets/picker_dialog.dart';
 import 'package:weltweit/generated/assets.dart';
@@ -109,7 +109,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           UserModel userEntity = UserModel.fromJson(response.data);
           String token = userEntity.token ?? '';
           int id = userEntity.id ?? 0;
-          kEcho("countryId ${userEntity.countryModel?.id}");
+          print("countryId ${userEntity.countryModel?.id}");
           int countryId = userEntity.countryId ?? userEntity.countryModel?.id ?? 0;
           if (token.isNotEmpty) {
             AppPrefs prefs = getIt();
@@ -123,13 +123,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Navigator.pushNamedAndRemoveUntil(context, RoutesServices.servicesLayoutScreen, (route) => false);
             }
           } else {
-            NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
-              'email': _emailController.text,
-              'code': selectedCountry?.code ?? '20',
-              'phone':_phoneController.text,
-              'checkOTPType': CheckOTPType.register,
-              'typeIsProvider': widget.typeIsProvider,
-            });
+            print('country code is ${selectedCountry?.code}');
+            BlocProvider.of<OtpCubit>(context).setShowedEmailOrPhone(
+                userOtp: selectedCountry?.code == '2'
+                    ? _phoneController.text
+                    : _emailController.text);
+            NavigationService.push(RoutesServices.servicesOtpScreen,
+                arguments: {
+                  'email': _emailController.text,
+                  'code': selectedCountry?.code ?? '20',
+                  'phone': _phoneController.text,
+                  'checkOTPType': CheckOTPType.register,
+                  'typeIsProvider': widget.typeIsProvider,
+                }
+
+                );
           }
         } else {
           AppSnackbar.show(
@@ -195,45 +203,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           },
                         ),
                       ),
-                      // if (widget.typeIsProvider) ...[
-                      //   CustomText(LocaleKeys.joinAs.tr(), align: TextAlign.start, pv: 0),
-                      //Row for two radio buttons
-                      // Row(
-                      //   children: [
-                      //     //Radio button for user
-                      //     Flexible(
-                      //       flex: 1,
-                      //       child: RadioListTile(
-                      //         value: joinAsIndividual,
-                      //         dense: true,
-                      //         contentPadding: EdgeInsets.zero,
-                      //         visualDensity: VisualDensity(horizontal: 0, vertical: -4),
-                      //         title: CustomText(LocaleKeys.indvidual.tr(), align: TextAlign.start),
-                      //         groupValue: true,
-                      //         onChanged: (value) {
-                      //           joinAsIndividual = true;
-                      //           setState(() {});
-                      //         },
-                      //       ),
-                      //     ),
-                      //     Flexible(
-                      //       flex: 1,
-                      //       child: RadioListTile(
-                      //         value: joinAsIndividual,
-                      //         dense: true,
-                      //         contentPadding: EdgeInsets.zero,
-                      //         visualDensity: VisualDensity(horizontal: 0, vertical: -4),
-                      //         title: CustomText(LocaleKeys.company.tr(), align: TextAlign.start),
-                      //         groupValue: false,
-                      //         onChanged: (value) {
-                      //           joinAsIndividual = false;
-                      //           setState(() {});
-                      //         },
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
-                      // ],
+
                       _buildForm(),
                       Row(
                         children: [

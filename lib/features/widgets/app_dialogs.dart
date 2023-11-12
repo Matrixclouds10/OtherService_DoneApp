@@ -468,6 +468,7 @@ class AppDialogs {
     required String title,
     required String message,
     required bool typeIsProvider,
+    required int countryCode,
   }) async {
     bool loading = false;
     TextEditingController controller = TextEditingController();
@@ -481,7 +482,10 @@ class AppDialogs {
           builder: (context, setState) {
             return Column(
               children: [
-                CustomTextField(hint: LocaleKeys.email.tr(), controller: controller),
+                CustomTextField(hint: countryCode==1?LocaleKeys.email.tr():LocaleKeys.yourPhoneNumber.tr(), controller: controller,
+                textInputAction: TextInputAction.done,
+                  type: countryCode==2?TextInputType.phone:TextInputType.text,
+                ),
                 SizedBox(height: 10),
                 Row(
                   children: [
@@ -516,7 +520,7 @@ class AppDialogs {
                                 }
                                 NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
                                   'email': controller.text,
-                                  'code': '20',
+                                  'code': countryCode,
                                   'checkOTPType': CheckOTPType.register,
                                   'typeIsProvider': typeIsProvider,
                                 });

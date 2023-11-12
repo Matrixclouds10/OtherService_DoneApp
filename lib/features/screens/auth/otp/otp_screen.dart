@@ -18,9 +18,7 @@ import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
 import 'package:weltweit/presentation/component/text/click_text.dart';
 
-import '../../../../base_injection.dart';
-import '../../../../core/services/local/cache_consumer.dart';
-import '../../../../core/services/local/storage_keys.dart';
+
 import 'otp_cubit.dart';
 
 class OTPScreen extends StatefulWidget {
@@ -48,8 +46,7 @@ class OTPScreen extends StatefulWidget {
 }
 
 class _OTPScreenState extends State<OTPScreen> {
-  bool? isSaudi;
-  final TextEditingController _codeController = TextEditingController();
+   final TextEditingController _codeController = TextEditingController();
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -74,7 +71,6 @@ class _OTPScreenState extends State<OTPScreen> {
   @override
   void initState() {
 
-    print('is saudi otp $isSaudi');
     if (widget._checkOTPType == CheckOTPType.reset) {
       _onResendCode();
     }
@@ -112,18 +108,11 @@ class _OTPScreenState extends State<OTPScreen> {
     }
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
-    isSaudi =
-        getIt<AppPrefs>().get(PrefKeys.countryId, defaultValue: false) == 2;
-
     bool isLoading = context.watch<OtpCubit>().isLoading;
-
+    print('code is ${widget._code}');
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -154,12 +143,12 @@ class _OTPScreenState extends State<OTPScreen> {
                   VerticalSpace(kScreenPaddingNormal.h),
                   Center(
                     child: Text(
-                      //TODO edit email here
-                      '${el.tr(LocaleKeys.anAuthenticationCodeHasBeenSentTo)}\n ${isSaudi==true?widget._phoneNumber:widget._email}',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle().descriptionStyle(fontSize: 14),
-                    ),
-                  ),
+                  //TODO edit email here
+                  '${el.tr(LocaleKeys.anAuthenticationCodeHasBeenSentTo)}\n ${widget._code == '20' ? widget._email : widget._phoneNumber}',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle().descriptionStyle(fontSize: 14),
+                ),
+              ),
                   // const ConfirmCodeForm(),
                   VerticalSpace(kScreenPaddingNormal.h),
 
