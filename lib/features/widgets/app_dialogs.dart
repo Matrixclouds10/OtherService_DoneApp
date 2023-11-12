@@ -616,7 +616,7 @@ class AppDialogs {
     required String period,
     required String currency,
     required String profileWallet,
-    required String url,
+    // required String url,
   }) async {
     bool isSaudi =
         getIt<AppPrefs>().get(PrefKeys.countryId, defaultValue: false) == 2;
@@ -648,9 +648,9 @@ class AppDialogs {
                 Divider(),
                   ElevatedButton(
                     onPressed: () async {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                              PaymentScreen( url: url)));
+                      // Navigator.of(context).push(MaterialPageRoute(
+                      //     builder: (context) =>
+                      //         PaymentScreen( url: url)));
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,

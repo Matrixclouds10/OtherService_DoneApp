@@ -162,23 +162,20 @@ class _SubscribePageState extends State<SubscribePage> {
             margin: EdgeInsets.symmetric(horizontal: 1),
             child: CustomButton(
               onTap: () async {
-                //todo  payment methods here
-
-                UpdateSubscribtionResponse? updateSubscriptionResponse =
-                    await subscriptionCubit.subscribe(
-                        subscriptionModel.id, 'visa', context);
                 String? paymentMethod;
-                if (isSaudi == false && mounted) {
-                  paymentMethod = await context
-                      .read<SubscriptionCubit>()
-                      .actionShowSubscriptionMethods(
-                        context: context,
-                        url: updateSubscriptionResponse
-                                .paymentData?.redirectUrl??'' ,
-                        subscriptionModel: subscriptionModel,
-                      );
+                if(isSaudi==true)
+                  {
+                    paymentMethod='visa';
+                  }
+                else{
+                  paymentMethod  =
+                  await subscriptionCubit.actionShowSubscriptionMethods(
+                      context: context, subscriptionModel: subscriptionModel);
+
                 }
-                actionSubscribe(subscriptionModel, paymentMethod ?? '');
+
+
+                actionSubscribe(subscriptionModel, paymentMethod );
               },
               title: LocaleKeys.subscribeNow.tr(),
               fontSize: 16,
@@ -199,7 +196,7 @@ class _SubscribePageState extends State<SubscribePage> {
     String message = "";
     message += "${LocaleKeys.confirmSubscribtion.tr()}\n";
     message += desc;
-    bool status = await AppDialogs().question(context, message: message);
+    bool status = await   AppDialogs().question(context, message: message);
     if (!status) return;
 
     bool paymentMethodOnWeb = false;
@@ -248,13 +245,13 @@ class _SubscribePageState extends State<SubscribePage> {
         setState(() {});
       }
     } catch (e) {
-      String errorMessge = "";
+      String errorMessage = "";
       if (e is ErrorModel) {
-        errorMessge = e.errorMessage ?? "";
+        errorMessage = e.errorMessage ?? "";
       }
       AppSnackbar.show(
         context: NavigationService.navigationKey.currentContext!,
-        message: '${LocaleKeys.somethingWentWrong.tr()} \n $errorMessge',
+        message: '${LocaleKeys.somethingWentWrong.tr()} \n $errorMessage',
       );
 
       setState(() {});
