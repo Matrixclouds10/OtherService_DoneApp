@@ -215,17 +215,28 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                   padding: const EdgeInsets.symmetric(vertical: kFormPaddingAllSmall),
                                   child: GestureDetector(
                                     onTap: () {
-                                      AppDialogs().forgetPassword(
-                                        title: LocaleKeys.forgetPassword.tr(),
-                                        countryCode: _selectedCountry!.id!,
-                                        context: context,
-                                        message: _selectedCountry!.id == 1
-                                            ? LocaleKeys
-                                                .enterRegisteredEmailAddress
-                                                .tr()
-                                            : LocaleKeys.phoneVerification.tr(),
-                                        typeIsProvider: typeIsProvider,
-                                      );
+                                      if (_selectedCountry?.id == null) {
+                                        AppSnackbar.show(
+                                          context: context,
+                                          title: LocaleKeys.notification,
+                                          message:
+                                              LocaleKeys.selectCountry.tr(),
+                                          type: SnackbarType.error,
+                                        );
+                                      } else {
+                                        AppDialogs().forgetPassword(
+                                          title: LocaleKeys.forgetPassword.tr(),
+                                          countryCode: _selectedCountry!.id!,
+                                          context: context,
+                                          message: _selectedCountry!.id == 1
+                                              ? LocaleKeys
+                                                  .enterRegisteredEmailAddress
+                                                  .tr()
+                                              : LocaleKeys.phoneVerification
+                                                  .tr(),
+                                          typeIsProvider: typeIsProvider,
+                                        );
+                                      }
                                     },
                                     child: CustomText(tr(LocaleKeys.forgetPassword)).footer().start(),
                                   ),

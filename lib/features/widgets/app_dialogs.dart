@@ -27,7 +27,6 @@ import 'package:weltweit/features/domain/usecase/order/order_rate_usecase.dart';
 import 'package:weltweit/features/logic/order/order_cubit.dart';
 import 'package:weltweit/features/screens/auth/otp/otp_cubit.dart';
 import 'package:weltweit/features/screens/layout/layout_cubit.dart';
-import 'package:weltweit/features/screens/provider_subscribe/payment_webview.dart';
 import 'package:weltweit/features/screens/provider_subscribe/subscribe_page.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/features/widgets/app_text_tile.dart';
@@ -497,33 +496,40 @@ class AppDialogs {
                       child: CustomText(LocaleKeys.cancel.tr()),
                     ),
                     Spacer(),
-                    if (loading) CircularProgressIndicator(),
-                    if (!loading)
+                    if (loading)
+                      CircularProgressIndicator()
+                    else
                       TextButton(
                           onPressed: () async {
-                            loading = true;
-                            setState(() {});
                             if (controller.text.isEmpty) {
                               AppSnackbar.show(
                                 context: context,
-                                message: LocaleKeys.msgEmailRequired.tr(),
+                                message: countryCode == 1
+                                    ? LocaleKeys.msgEmailRequired.tr()
+                                    : LocaleKeys.msgPhoneNumberRequired.tr(),
                                 type: SnackbarType.error,
                               );
                             } else {
+                              loading = true;
+                              setState(() {});
                               try {
-                                await sendOtp(context, controller.text, typeIsProvider);
+
+                                await sendOtp(
+                                    context, controller.text, typeIsProvider);
 
                                 loading = false;
                                 setState(() {});
-                                if(context.mounted) {
+                                if (context.mounted) {
                                   Navigator.pop(context);
                                 }
-                                NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
-                                  'email': controller.text,
-                                  'code': countryCode,
-                                  'checkOTPType': CheckOTPType.register,
-                                  'typeIsProvider': typeIsProvider,
-                                });
+                                NavigationService.push(
+                                    RoutesServices.servicesOtpScreen,
+                                    arguments: {
+                                      'email': controller.text,
+                                      'code': countryCode,
+                                      'checkOTPType': CheckOTPType.register,
+                                      'typeIsProvider': typeIsProvider,
+                                    });
                               } catch (e) {
                                 kEcho(e.toString());
                                 loading = false;

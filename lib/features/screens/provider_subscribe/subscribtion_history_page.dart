@@ -160,11 +160,12 @@ class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
                       if (isSaudi == true) {
                         selectedPayment = 'visa';
                       }
-                      selectedPayment =
-                          await actionShowSubscriptionMethods(e.subscription!);
+                      else {
+                        selectedPayment =
+                        await actionShowSubscriptionMethods(e.subscription!);
 
+                      }
                       print('HANY SELECTED PAYMENT $selectedPayment');
-                      //show dialog to confirm
                       String message = "";
 
                       message += "${LocaleKeys.confirmSubscribtion.tr()}\n";
