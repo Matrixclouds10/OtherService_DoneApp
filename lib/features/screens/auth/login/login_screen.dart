@@ -213,8 +213,9 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                 alignment: Alignment.bottomLeft,
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(vertical: kFormPaddingAllSmall),
-                                  child: GestureDetector(
+                                  child: InkWell(
                                     onTap: () {
+                                      print(_selectedCountry?.id);
                                       if (_selectedCountry?.id == null) {
                                         AppSnackbar.show(
                                           context: context,
@@ -255,7 +256,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                                   text: tr(LocaleKeys.questionCreateAccount),
                                   subText: tr(LocaleKeys.signUp),
                                   textColor: Colors.grey,
-                                  onTap: () => NavigationService.push(RoutesServices.servicesUserTypeScreen),
+                                  onTap: () => NavigationService.push(RoutesServices.servicesOnBoardingScreen),
                                 ),
                               ),
                               VerticalSpace(kScreenPaddingNormal.h),

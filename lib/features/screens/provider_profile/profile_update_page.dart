@@ -23,6 +23,9 @@ import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
 import 'package:weltweit/presentation/component/inputs/phone_country/custom_text_filed_phone_country.dart';
 
+import '../../../core/routing/navigation_services.dart';
+import '../../core/routing/routes_user.dart';
+
 class ProfileUpdatePage extends StatefulWidget {
   const ProfileUpdatePage({super.key});
 
@@ -152,6 +155,21 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
         padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
         child: BlocConsumer<ProfileProviderCubit, ProfileProviderState>(
           listener: (context, state) {
+            if (state.deleteProfileState == BaseState.loaded) {
+              NavigationService.pushNamedAndRemoveUntil(
+                  RoutesServices.servicesSplashScreen);
+              AppSnackbar.show(
+                context: context,
+                message: "تم حذف الحساسب بنجاح",
+                type: SnackbarType.success,
+              );
+            } else if (state.deleteProfileState == BaseState.error) {
+              AppSnackbar.show(
+                context: context,
+                message: "حدث خطأ ما",
+                type: SnackbarType.error,
+              );
+            }
             if (state.updateState == BaseState.loaded) {
               AppSnackbar.show(
                 context: context,
@@ -245,15 +263,40 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
             },
           ),
           SizedBox(height: 30),
-          TextButton(
-              onPressed: () async {
-                bool? status = await AppDialogs().showDeleteAccountDialog(context);
-                print(status);
-                if (status != null && status) {
-                  if (context.mounted) context.read<ProfileProviderCubit>().deleteAccount(userModel.id);
+
+          BlocBuilder<ProfileProviderCubit, ProfileProviderState>(
+              builder: (context, state) {
+                if (state.deleteProfileState == BaseState.loading) {
+                  return SizedBox(
+                      width: 16, height: 16, child: CircularProgressIndicator());
+                } else {
+                  return TextButton(
+                      onPressed: () async {
+                        bool? status =
+                        await AppDialogs().showDeleteAccountDialog(context);
+                        print(status);
+                        if (status != null && status) {
+                          if (context.mounted) {
+                            context.read<ProfileProviderCubit>().deleteProfile(userModel.id!);
+                          }
+                        }
+                      },
+                      child: CustomText(LocaleKeys.deleteAccount.tr(),
+                          color: Colors.red)
+                          .footer());
                 }
-              },
-              child: CustomText(LocaleKeys.deleteAccount.tr(), color: Colors.red).footer()),
+              }),
+          //
+          // TextButton(
+          //     onPressed: () async {
+          //       bool? status = await AppDialogs().showDeleteAccountDialog(context);
+          //       print(status);
+          //       if (status != null && status) {
+          //         print(status);
+          //         if (context.mounted) context.read<ProfileProviderCubit>().deleteProfile(userModel.id!);
+          //       }
+          //     },
+          //     child: CustomText(LocaleKeys.deleteAccount.tr(), color: Colors.red).footer()),
           SizedBox(height: 30),
         ],
       ),
@@ -307,27 +350,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
             ],
             const VerticalSpace(kScreenPaddingNormal),
             CustomTextFieldEmail(label: tr(LocaleKeys.email), controller: _emailController, textInputAction: TextInputAction.next),
-            // const VerticalSpace(kScreenPaddingNormal),
-            // Row(
-            //   children: [
-            //     ...[true, false].map(
-            //       (e) {
-            //         return Expanded(
-            //           child: RadioListTile(
-            //             value: e,
-            //             dense: true,
-            //             groupValue: isMale,
-            //             onChanged: (value) {
-            //               isMale = e;
-            //               setState(() {});
-            //             },
-            //             title: CustomText(e ? tr(LocaleKeys.male) : tr(LocaleKeys.female)),
-            //           ),
-            //         );
-            //       },
-            //     ).toList(),
-            //   ],
-            // ),
+
             const VerticalSpace(kScreenPaddingNormal),
             CustomTextFieldArea(
               controller: _descController,

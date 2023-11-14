@@ -76,13 +76,13 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   void deleteProfile() async {
     resetState();
-    if (state.updateState == BaseState.loading) return;
-    if (state.data?.id == null) return;
-    emit(state.copyWith(updateState: BaseState.loading));
+    if (state.deleteProfileState == BaseState.loading) return;
+    emit(state.copyWith(deleteProfileState: BaseState.loading));
     final result = await deleteProfileUseCase(state.data!.id!);
     result.fold(
-      (error) => emit(state.copyWith(updateState: BaseState.error, error: error)),
-      (data) => emit(state.copyWith(updateState: BaseState.loaded)),
+      (error) => emit(
+          state.copyWith(deleteProfileState: BaseState.error, error: error)),
+      (data) => emit(state.copyWith(deleteProfileState: BaseState.loaded)),
     );
   }
 

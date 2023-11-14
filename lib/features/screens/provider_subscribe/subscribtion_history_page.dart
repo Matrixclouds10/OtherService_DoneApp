@@ -197,9 +197,8 @@ class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
                                 null &&
                             mounted) {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => PaymentScreen(
-                                  url: updateSubscribtionResponse
-                                      ?.paymentData?.redirectUrl)));
+
+                              builder: (context) => PaymentScreen(url: updateSubscribtionResponse?.paymentData?.redirectUrl)));
                         } else if (updateSubscribtionResponse
                                     ?.paymentData?.kioskBillReference !=
                                 null &&

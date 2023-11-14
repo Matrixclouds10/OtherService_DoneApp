@@ -6,7 +6,7 @@ enum SnackbarType { success, error, warning, info, other }
 class AppSnackbar {
   static void show({
     required BuildContext context,
-    String? title, //TODO remove this
+    String? title,
     required String message,
     SnackbarType type = SnackbarType.other,
   }) {
@@ -32,9 +32,8 @@ class AppSnackbar {
     AnimatedSnackBar.material(
       message,
       type: snackBarType,
-      duration: Duration(seconds: 6),
       mobileSnackBarPosition:
-          MobileSnackBarPosition.top, // Position of snackbar on mobile devices
+          MobileSnackBarPosition.top,
     ).show(context);
   }
 }

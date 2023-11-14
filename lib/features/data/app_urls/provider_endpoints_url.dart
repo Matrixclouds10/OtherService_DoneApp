@@ -20,7 +20,7 @@ class AppURLProvider {
   static const String profile = "$kBaseURL/profile";
   static const String changeStatus = "$kBaseURL/profile/change_status";
   static const String updateProfile = "$kBaseURL/profile/update";
-  static const String deleteProfile = "$kBaseURL/profile/delete";
+  static const String deleteProfile = "$kBaseURL/delete-account";
   static const String changePasswordProfile = "$kBaseURL/profile/change_password";
 
   //Services

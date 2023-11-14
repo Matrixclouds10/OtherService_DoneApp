@@ -4,13 +4,16 @@ class ProfileProviderState extends Equatable {
   final BaseState state;
   final BaseState availabilityState;
   final BaseState updateState;
+  final BaseState deleteProfileState;
   final BaseState updatePasswordState;
   final UserModel? data;
   final ErrorModel? error;
+
   const ProfileProviderState({
     this.state = BaseState.initial,
     this.data,
     this.error,
+    this.deleteProfileState = BaseState.initial,
     this.updateState = BaseState.initial,
     this.availabilityState = BaseState.initial,
     this.updatePasswordState = BaseState.initial,
@@ -21,6 +24,7 @@ class ProfileProviderState extends Equatable {
     BaseState? availabilityState,
     BaseState? updateState,
     BaseState? updatePasswordState,
+    BaseState? deleteProfileState,
     UserModel? data,
     ErrorModel? error,
   }) {
@@ -31,10 +35,18 @@ class ProfileProviderState extends Equatable {
       error: error ?? this.error,
       updateState: updateState ?? this.updateState,
       updatePasswordState: updatePasswordState ?? this.updatePasswordState,
+      deleteProfileState: deleteProfileState ?? this.deleteProfileState,
     );
   }
 
   @override
-  List<Object?> get props =>
-      [state, data, error, updateState, availabilityState, updatePasswordState];
+  List<Object?> get props => [
+        state,
+        data,
+        error,
+        updateState,
+        availabilityState,
+        updatePasswordState,
+        deleteProfileState
+      ];
 }

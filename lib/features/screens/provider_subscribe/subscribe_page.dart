@@ -163,19 +163,18 @@ class _SubscribePageState extends State<SubscribePage> {
             child: CustomButton(
               onTap: () async {
                 String? paymentMethod;
-                if(isSaudi==true)
-                  {
-                    paymentMethod='visa';
+                if (isSaudi == true) {
+                  paymentMethod = 'visa';
+                  actionSubscribe(subscriptionModel, paymentMethod);
+                } else {
+                  paymentMethod =
+                      await subscriptionCubit.actionShowSubscriptionMethods(
+                          context: context,
+                          subscriptionModel: subscriptionModel);
+                  if (paymentMethod != '') {
+                    actionSubscribe(subscriptionModel, paymentMethod);
                   }
-                else{
-                  paymentMethod  =
-                  await subscriptionCubit.actionShowSubscriptionMethods(
-                      context: context, subscriptionModel: subscriptionModel);
-
                 }
-
-
-                actionSubscribe(subscriptionModel, paymentMethod );
               },
               title: LocaleKeys.subscribeNow.tr(),
               fontSize: 16,

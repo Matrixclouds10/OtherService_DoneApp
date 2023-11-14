@@ -67,15 +67,18 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
 
   @override
   Future<Either<ErrorModel, bool>> deleteProfile({required int id}) async {
-    String url = "${AppURLProvider.deleteProfile}/$id";
+     String url = AppURLProvider.deleteProfile;
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = {};
-    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+    Either<ErrorModel, BaseResponse> result =
+        await networkClient(url: url, data: data, type: type);
+
     return result.fold((l) => Left(l), (r) {
       try {
+        print("delete profile result is $r");
         return Right(true);
       } catch (e) {
-        return Left(ErrorModel(errorMessage: e.toString()));
+        return Left(ErrorModel(errorMessage: 'خطأ في حذف الحساب'));
       }
     });
   }
