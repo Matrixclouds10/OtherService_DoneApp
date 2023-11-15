@@ -1,25 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:weltweit/app.dart';
 import 'package:weltweit/core/resources/text_styles.dart';
-
-void showErrorDialog(
-  BuildContext context,
-  String title,
-  String description,
-) {
-  AwesomeDialog(
-          context: appContext!,
-          dialogType: DialogType.error,
-          animType: AnimType.rightSlide,
-          headerAnimationLoop: false,
-          title:title,
-          desc: description,
-          btnOkOnPress: () {},
-          btnOkIcon: Icons.cancel,
-          btnOkColor: Colors.red)
-      .show();
-}
 
 Future<dynamic> showQuestionDialog(
   BuildContext context, {

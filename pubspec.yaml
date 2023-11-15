@@ -51,8 +51,6 @@ dependencies:
   flutter_bloc: ^8.1.1
   logger: ^1.1.0
   logging: ^1.1.0
-
-
   dartz: ^0.10.1
   material_dialogs: ^1.1.4
   animated_snack_bar: ^0.3.0
@@ -65,8 +63,6 @@ dependencies:
   font_awesome_flutter: ^10.4.0 
   awesome_extensions: ^2.0.7
   full_screen_image: ^2.0.0
-#  sentry_flutter: ^7.6.1
-  # facebook_app_events: ^0.19.0
   flutter_inappwebview: ^5.7.2+3
   cloud_firestore: ^4.8.4
   fluttertoast: ^8.2.2
@@ -90,7 +86,6 @@ flutter:
   assets:
     - assets/images/
     - assets/strings/
-    - assets/images/gif/
     - assets/images/svg/
     - lib/presentation/component/inputs/phone_country/flags/
 

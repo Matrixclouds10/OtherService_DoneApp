@@ -26,7 +26,6 @@ import 'package:weltweit/presentation/component/component.dart';
 import '../../../app.dart';
 import '../../../base_injection.dart';
 import '../../../core/services/local/cache_consumer.dart';
-import '../../../core/services/local/storage_keys.dart';
 
 class SubscribePage extends StatefulWidget {
   const SubscribePage({super.key});
@@ -47,7 +46,7 @@ class _SubscribePageState extends State<SubscribePage> {
     super.initState();
     subscriptionCubit = context.read<SubscriptionCubit>();
     subscriptionCubit.getSubscriptions();
-    isSaudi = prefs.get(PrefKeys.countryId, defaultValue: false) == 2;
+    // isSaudi = prefs.get(PrefKeys.countryId, defaultValue: false) == 2;
     print('is saudi $isSaudi');
   }
 

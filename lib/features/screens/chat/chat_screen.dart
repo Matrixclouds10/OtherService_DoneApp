@@ -291,7 +291,9 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         );
       }
     } catch (e) {
-      AppSnackbar.show(context: context, message: e.toString(), type: SnackbarType.error);
+      if(mounted)
+        {      AppSnackbar.show(context: context, message: e.toString(), type: SnackbarType.error);
+        }
     }
   }
 

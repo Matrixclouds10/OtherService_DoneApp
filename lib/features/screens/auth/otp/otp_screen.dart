@@ -63,7 +63,9 @@ class _OTPScreenState extends State<OTPScreen> {
         AppSnackbar.show(
             context: context, message: LocaleKeys.successfullySended.tr());
       } else {
-        AppSnackbar.show(context: context, message: responseModel.message!);
+        if(mounted) {
+          AppSnackbar.show(context: context, message: responseModel.message!);
+        }
       }
     }
   }

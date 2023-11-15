@@ -182,14 +182,17 @@ class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
                         status = await AppDialogs()
                             .question(context, message: message);
                       }
-                      if (status!=true || !mounted) return;
+                      if (status != true || !mounted) return;
 
-                      print('Payment method is ${e.paymentMethod} Payment id is ${e.id}');
+                      print(
+                          'Payment method is ${e.paymentMethod} Payment id is ${e.id}');
 
-                      UpdateSubscribtionResponse? updateSubscribtionResponse =
-                          await context
-                              .read<SubscriptionCubit>()
-                              .reSubscribe(e.id!, selectedPayment);
+                      UpdateSubscribtionResponse? updateSubscribtionResponse;
+                      if (mounted) {
+                        updateSubscribtionResponse = await context
+                            .read<SubscriptionCubit>()
+                            .reSubscribe(e.id!, selectedPayment);
+                      }
 
                       if (updateSubscribtionResponse?.paymentData != null) {
                         if (updateSubscribtionResponse
@@ -197,8 +200,9 @@ class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
                                 null &&
                             mounted) {
                           Navigator.of(context).push(MaterialPageRoute(
-
-                              builder: (context) => PaymentScreen(url: updateSubscribtionResponse?.paymentData?.redirectUrl)));
+                              builder: (context) => PaymentScreen(
+                                  url: updateSubscribtionResponse
+                                      ?.paymentData?.redirectUrl)));
                         } else if (updateSubscribtionResponse
                                     ?.paymentData?.kioskBillReference !=
                                 null &&

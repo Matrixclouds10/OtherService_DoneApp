@@ -1,17 +1,6 @@
-// To parse this JSON data, do
-//
-//     final pushNotificationModel = pushNotificationModelFromJson(jsonString);
 
-import 'dart:convert';
-
-PushNotificationModel pushNotificationModelFromJson(String str) =>
-    PushNotificationModel.fromJson(json.decode(str));
-
-String pushNotificationModelToJson(PushNotificationModel data) =>
-    json.encode(data.toJson());
-
-class PushNotificationModel {
-  PushNotificationModel({
+class PushFirebaseNotificationModel {
+  PushFirebaseNotificationModel({
     this.notificationForeground,
     this.title,
     this.body,
@@ -27,8 +16,8 @@ class PushNotificationModel {
   String? itemId;
   String? bigPicture;
 
-  factory PushNotificationModel.fromJson(Map<String, dynamic> json) =>
-      PushNotificationModel(
+  factory PushFirebaseNotificationModel.fromJson(Map<String, dynamic> json) =>
+      PushFirebaseNotificationModel(
         notificationForeground: json["notification_foreground"],
         title: json["title"],
         body: json["body"],

@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:path_provider/path_provider.dart' as path ;
 
-import 'PushNotificationModel.dart';
+import 'push_firebase_notification.dart';
 import 'notification_type.dart';
 
 
@@ -107,7 +107,7 @@ class NotificationUtils {
       }
     }
 
-    final payload = jsonEncode(PushNotificationModel(
+    final payload = jsonEncode(PushFirebaseNotificationModel(
         body: path,
         itemId: '0',
         notificationForeground: fileLink,

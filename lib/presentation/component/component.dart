@@ -4,12 +4,8 @@ export '../component/custom_loading_spinner.dart';
 export '../component/no_data.dart';
 export '../component/screen_state_layout.dart';
 export '../component/spaces.dart';
-export '../component/status_bar.dart';
 export '../component/custom_app_bar.dart';
 export '../component/custom_button.dart';
-export '../component/rate_widget.dart';
-export '../component/custom_divider.dart';
-export '../component/svg_icon.dart';
 
 ///images
 export 'images/custom_image.dart';

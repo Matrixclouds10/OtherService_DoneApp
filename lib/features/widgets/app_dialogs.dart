@@ -534,7 +534,12 @@ class AppDialogs {
                                 kEcho(e.toString());
                                 loading = false;
                                 setState(() {});
-                                AppSnackbar.show(context: context, message: e.toString(), type: SnackbarType.error);
+                                if (context.mounted) {
+                                  AppSnackbar.show(
+                                      context: context,
+                                      message: e.toString(),
+                                      type: SnackbarType.error);
+                                }
                               }
                             }
                           },
@@ -624,10 +629,10 @@ class AppDialogs {
     required String profileWallet,
     // required String url,
   }) async {
-    bool isSaudi =
-        getIt<AppPrefs>().get(PrefKeys.countryId, defaultValue: false) == 2;
+    // bool isSaudi =
+    //     getIt<AppPrefs>().get(PrefKeys.countryId, defaultValue: false) == 2;
 
-    print(isSaudi);
+    // print(isSaudi);
     String selectedMethodToReturn = "";
     await showDialog(
       context: context,
@@ -652,37 +657,18 @@ class AppDialogs {
                   ],
                 ),
                 Divider(),
-                  ElevatedButton(
-                    onPressed: () async {
-                      // Navigator.of(context).push(MaterialPageRoute(
-                      //     builder: (context) =>
-                      //         PaymentScreen( url: url)));
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(100)),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                    ),
-                    child: CustomText(
-                      LocaleKeys.subscribeNow.tr(),
-                      color: Colors.white,
-                    ).headerExtra(),
-                  ),
-                // else
-                  Column(
-                    children: [
-                      //radio select Wallet , credit card , cash
+                Column(
+                  children: [
+                    //radio select Wallet , credit card , cash
 
-                      ...SubscriptionMethods.values.map((e) {
-                        String title = e.name;
-                        if (e.name.contains("wallet")) {
-                          title = "wallet ($profileWallet)";
-                        }
-                        bool isEnable = true;
-                        // if (e.name.contains('credit')) isEnable = false;
-                        if (isEnable) {
+                    ...SubscriptionMethods.values.map((e) {
+                      String title = e.name;
+                      if (e.name.contains("wallet")) {
+                        title = "wallet ($profileWallet)";
+                      }
+                      bool isEnable = true;
+                      // if (e.name.contains('credit')) isEnable = false;
+                      if (isEnable) {
                           if (e.name.contains("wallet")) {
                             double? wallet =
                                 double.tryParse(profileWallet) ?? 0;
@@ -718,29 +704,29 @@ class AppDialogs {
                           child: Column(
                             children: [
                               ...CreditMethods.values.map((e) {
-                                String title = e.name;
-                                return RadioListTile(
-                                    value: e,
-                                    groupValue: selectedCreditMethod,
-                                    onChanged: (value) {
-                                      selectedCreditMethod = value!;
-                                      setState(() {});
-                                    },
-                                    title: CustomText(convertToName(title),
-                                            color: Colors.black)
-                                        .start(),
-                                    contentPadding: EdgeInsets.zero,
-                                    dense: true,
-                                    visualDensity: VisualDensity(
-                                        horizontal: -4, vertical: -4));
-                              }).toList(),
-                            ],
-                          ),
+                              String title = e.name;
+                              return RadioListTile(
+                                  value: e,
+                                  groupValue: selectedCreditMethod,
+                                  onChanged: (value) {
+                                    selectedCreditMethod = value!;
+                                    setState(() {});
+                                  },
+                                  title: CustomText(convertToName(title),
+                                          color: Colors.black)
+                                      .start(),
+                                  contentPadding: EdgeInsets.zero,
+                                  dense: true,
+                                  visualDensity: VisualDensity(
+                                      horizontal: -4, vertical: -4));
+                            }).toList(),
+                          ],
                         ),
+                      ),
 
-                      SizedBox(height: 12),
-
-                      ElevatedButton(
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: ElevatedButton(
                         onPressed: () async {
                           NavigationService.goBack();
                           if (selectedMethod == SubscriptionMethods.credit) {
@@ -761,8 +747,9 @@ class AppDialogs {
                           color: Colors.white,
                         ).headerExtra(),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                ),
               ],
             );
           }),
