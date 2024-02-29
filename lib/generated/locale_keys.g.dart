@@ -1,6 +1,7 @@
 // DO NOT EDIT. This is code generated via package:easy_localization/generate.dart
 
 abstract class LocaleKeys {
+  static const apple = "applePay";
   static const requiredDocumentsDesc = "requiredDocumentsDesc";
   static const requiredDocuments = "requiredDocuments";
   static const nationalIdBack = "nationalIdBack";

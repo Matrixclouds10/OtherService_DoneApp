@@ -103,13 +103,13 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
   Future<String> actionShowSubscriptionMethods({
     required BuildContext context,
     required SubscriptionModel subscriptionModel,
-    required String url,
+    // required String url,
   }) async {
     ProfileProviderCubit profileProviderCubit = context.read<ProfileProviderCubit>();
 
     String selectedCreditMethodToReturn = await AppDialogs().showCreditMethodsDialog(
       context,
-      url: url,
+      // url: url,
       currency: getCountryCurrency(context),
       period: '${subscriptionModel.period}',
       price: '${subscriptionModel.price}',

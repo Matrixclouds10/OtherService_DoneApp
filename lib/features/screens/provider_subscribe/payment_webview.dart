@@ -26,12 +26,14 @@ class PaymentWebview extends StatefulWidget {
 
 class _PaymentWebviewState extends State<PaymentWebview> {
   double progress = 0.0;
+  String url ='';
   bool loading = false;
   late PullToRefreshController pullToRefreshController;
   InAppWebViewController? webViewController;
   AppPrefs prefs = getIt<AppPrefs>();
   @override
   void initState() {
+
     pullToRefreshController = PullToRefreshController(
       options: PullToRefreshOptions(
         color: Colors.blue,
@@ -78,7 +80,8 @@ class _PaymentWebviewState extends State<PaymentWebview> {
                     children: [
                       InAppWebView(
                         initialUrlRequest: URLRequest(
-                          url: Uri.parse(widget.url),
+                          // url: Uri.parse('https://newdon.dev01.matrix-clouds.com/apple-payment/07f4654a30f138ff66484bfb7cbb32-h5bnwLx42Re8N7uAYycV-868-7/7'),
+                          url: Uri.parse(widget.url.replaceFirst('http://', 'https://')),
                           // headers: {
                           //   'Authorization': 'Bearer ${prefs.get(PrefKeys.token)}',
                           // },

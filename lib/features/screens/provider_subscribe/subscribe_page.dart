@@ -71,12 +71,7 @@ class _SubscribePageState extends State<SubscribePage> {
       ),
       body: Container(
         height: double.infinity,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(Assets.imagesBk2),
-            fit: BoxFit.cover,
-          ),
-        ),
+        decoration: BoxDecoration(image: DecorationImage(image: AssetImage(Assets.imagesBk2), fit: BoxFit.cover)),
         child: BlocBuilder<SubscriptionCubit, SubscriptionState>(
           builder: (context, state) {
             if (state.state == BaseState.loading) {
@@ -142,28 +137,43 @@ class _SubscribePageState extends State<SubscribePage> {
             ],
           ),
           SizedBox(height: 12),
-          if (isSaudi == true)
+          // if (isSaudi == true)
 
             Container(
               margin: EdgeInsets.symmetric(horizontal: 1),
               child: CustomButton(
                 onTap: () async {
-                  UpdateSubscribtionResponse ?updateSubscriptionResponse =
-                      await subscriptionCubit.subscribe(
-                          subscriptionModel.id, 'visa');
-                  print('zozo ${updateSubscriptionResponse.paymentData?.redirectUrl}');
-                  String paymentMethod = await context
-                      .read<SubscriptionCubit>()
-                      .actionShowSubscriptionMethods(
-                        context: context,
-                        url:
-                            '${updateSubscriptionResponse.paymentData?.redirectUrl}',
-                        subscriptionModel: subscriptionModel,
-                      );
-                  if (paymentMethod.isEmpty) return;
-                  else {
-                    actionSubscribe(subscriptionModel, paymentMethod);
+                  String paymentMethod = await context.read<SubscriptionCubit>().actionShowSubscriptionMethods(context: context, subscriptionModel: subscriptionModel!);
+                  bool status = await _showStatusDialog(subscriptionModel,paymentMethod);
+                  if(!status)return;
+                  UpdateSubscribtionResponse response = await subscriptionCubit.subscribe(subscriptionModel.id, paymentMethod);
+
+
+                  if (paymentMethod.isEmpty){
+                    // NavigationService.push(RoutesProvider.paymentWebview, arguments: {'id': e.id, 'url': updateSubscribtionResponse?.paymentData?.redirectUrl});
+                  }else{
                   }
+
+
+                  if (response.paymentData?.redirectUrl != null) {
+                    NavigationService.push(RoutesProvider.paymentWebview, arguments: {'id': subscriptionModel.id, 'url': response.paymentData?.redirectUrl});
+                  } else if (response.paymentData?.kioskBillReference != null && mounted) {
+                    AppDialogs().showKioskPaymentDialog(context, response.paymentData?.kioskBillReference ?? "");
+                  }
+
+
+
+
+                  // print('zozo ${updateSubscriptionResponse.paymentData?.redirectUrl}');
+                  // String paymentMethod = await context.read<SubscriptionCubit>().actionShowSubscriptionMethods(
+                  //       context: context,
+                  //       // url: '${updateSubscriptionResponse.paymentData?.redirectUrl}',
+                  //       subscriptionModel: subscriptionModel,
+                  //     );
+                  // if (paymentMethod.isEmpty) return;
+                  // else {
+                  //   actionSubscribe(subscriptionModel, paymentMethod);
+                  // }
                 },
                 title: LocaleKeys.subscribeNow.tr(),
                 fontSize: 16,
@@ -188,12 +198,22 @@ class _SubscribePageState extends State<SubscribePage> {
     if (!status) return;
 
     bool paymentMethodOnWeb = false;
-    for (var item in CreditMethods.values) {
-      if (selectedMethod == item.name) {
-        paymentMethodOnWeb = true;
-        break;
+    if(isSaudi==true){
+      for (var item in CreditMethodsSaudi.values) {
+        if (selectedMethod == item.name) {
+          paymentMethodOnWeb = true;
+          break;
+        }
+      }
+    }else{
+      for (var item in CreditMethodsEgypt.values) {
+        if (selectedMethod == item.name) {
+          paymentMethodOnWeb = true;
+          break;
+        }
       }
     }
+
     if (paymentMethodOnWeb) {
       actionPerformSubscribeWebPayment(e, selectedMethod);
     } else {
@@ -268,14 +288,8 @@ class _SubscribePageState extends State<SubscribePage> {
                       onPressed: () async {
                         Navigator.pop(context);
                         try {
-                          UpdateSubscribtionResponse response = await context
-                              .read<SubscriptionCubit>()
-                              .subscribe(subscriptionModel.id, selectedMethod);
-                          AppSnackbar.show(
-                            context:
-                                NavigationService.navigationKey.currentContext!,
-                            message: LocaleKeys.somethingWentWrong.tr(),
-                          );
+                          UpdateSubscribtionResponse response = await context.read<SubscriptionCubit>().subscribe(subscriptionModel.id, selectedMethod);
+                          AppSnackbar.show(context: NavigationService.navigationKey.currentContext!, message: LocaleKeys.somethingWentWrong.tr());
 
                           setState(() {});
                         } catch (e) {
@@ -284,8 +298,7 @@ class _SubscribePageState extends State<SubscribePage> {
                             errorMessage = e.errorMessage ?? "";
                           }
                           AppSnackbar.show(
-                              context: NavigationService
-                                  .navigationKey.currentContext!,
+                              context: NavigationService.navigationKey.currentContext!,
                               message: errorMessage);
                           setState(() {});
                         }
@@ -324,6 +337,16 @@ class _SubscribePageState extends State<SubscribePage> {
       },
     );
   }
+  _showStatusDialog( SubscriptionModel? subscription, String paymentMethod)async{
+    String message = "";
+    message += "${LocaleKeys.confirmSubscribtion.tr()}\n";
+    message += "${LocaleKeys.price.tr()}: ${subscription!.price} ${getCountryCurrency(context)}\n";
+    message += "${LocaleKeys.period.tr()}: ${subscription.period}\n";
+    message += "${LocaleKeys.paymentMethod.tr()}: ${convertToName(paymentMethod)}\n";
+    bool status = await AppDialogs().question(context, message: message);
+    return status ;
+
+  }
 }
 
 getCountryCurrency(BuildContext context) {
@@ -338,12 +361,14 @@ getCountryCurrency(BuildContext context) {
 
 enum SubscriptionMethods { request, wallet, credit }
 
-enum CreditMethods { visa, mobile_wallet, kiosk }
+enum CreditMethodsEgypt { visa, mobile_wallet, kiosk }
+enum CreditMethodsSaudi { visa/*, apple */}
 
 String convertToName(String title) {
-  if (title == CreditMethods.visa.name.trim()) return LocaleKeys.visa.tr();
-  if (title == CreditMethods.mobile_wallet.name.trim()) return LocaleKeys.mobileWalletPayment.tr();
-  if (title == CreditMethods.kiosk.name.trim()) return LocaleKeys.kiosk.tr();
+  // if (title == CreditMethodsSaudi.apple.name.trim()) return LocaleKeys.apple.tr();
+  if (title == CreditMethodsEgypt.visa.name.trim()) return LocaleKeys.visa.tr();
+  if (title == CreditMethodsEgypt.mobile_wallet.name.trim()) return LocaleKeys.mobileWalletPayment.tr();
+  if (title == CreditMethodsEgypt.kiosk.name.trim()) return LocaleKeys.kiosk.tr();
   if (title == SubscriptionMethods.request.name.trim()) return LocaleKeys.requestPayment.tr();
   if (title.contains(SubscriptionMethods.wallet.name.trim())) return LocaleKeys.wallet.tr();
   if (title == SubscriptionMethods.credit.name.trim()) return LocaleKeys.payBy.tr();

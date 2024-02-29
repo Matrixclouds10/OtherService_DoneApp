@@ -28,20 +28,18 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Need to use the camera edit/add profile picture - add/edit service image or video</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Need to use your location to find nearby services providers</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Need to use your location to find nearby services providers</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Need to use your location to find nearby services providers</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>This app need access to your media library to  change profile picture</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app need access to your media library to change profile picture</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Need to use your location to find nearby services providers</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Need to use your location to find nearby services providers</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Need to use your location to find nearby services providers</string>
-
-
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
@@ -54,8 +52,8 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-	    <string>UIInterfaceOrientationPortraitUpsideDown</string>
-</array>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>

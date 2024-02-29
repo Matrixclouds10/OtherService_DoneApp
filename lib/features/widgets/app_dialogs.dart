@@ -611,7 +611,7 @@ class AppDialogs {
     required String period,
     required String currency,
     required String profileWallet,
-    required String url,
+    // required String url,
   }) async {
     bool isSaudi =
         getIt<AppPrefs>().get(PrefKeys.countryId, defaultValue: false) == 2;
@@ -622,7 +622,8 @@ class AppDialogs {
       context: context,
       builder: (context) {
         SubscriptionMethods selectedMethod = SubscriptionMethods.request;
-        CreditMethods selectedCreditMethod = CreditMethods.visa;
+        CreditMethodsEgypt selectedCreditMethodEgypt = CreditMethodsEgypt.visa;
+        CreditMethodsSaudi selectedCreditMethodSaudi = CreditMethodsSaudi.visa;
 
         return AlertDialog(
           title: CustomText(LocaleKeys.subscribeNow.tr()),
@@ -632,35 +633,21 @@ class AppDialogs {
               children: [
                 Row(
                   children: [
-                    CustomText('${LocaleKeys.price.tr()}:$price $currency')
-                        .footer()
-                        .expanded(),
-                    CustomText('${LocaleKeys.period.tr()}:$period')
-                        .footer()
-                        .expanded(),
+                    CustomText('${LocaleKeys.price.tr()}:$price $currency').footer().expanded(),
+                    CustomText('${LocaleKeys.period.tr()}:$period').footer().expanded(),
                   ],
                 ),
                 Divider(),
+                //            ElevatedButton(
+                //                   onPressed: () async => Navigator.of(context).push(MaterialPageRoute(builder: (context) => PaymentWebview( url: url))),
+                //                   style: ElevatedButton.styleFrom(
+                //                     backgroundColor: Colors.blue,
+                //                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                //                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                //                   ),
+                //                   child: CustomText(LocaleKeys.subscribeNow.tr(), color: Colors.white,).headerExtra(),
+                //                 ),
                 if (isSaudi)
-                  ElevatedButton(
-                    onPressed: () async {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                              PaymentWebview( url: url)));
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(100)),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                    ),
-                    child: CustomText(
-                      LocaleKeys.subscribeNow.tr(),
-                      color: Colors.white,
-                    ).headerExtra(),
-                  )
-                else
                   Column(
                     children: [
                       //radio select Wallet , credit card , cash
@@ -674,8 +661,7 @@ class AppDialogs {
                         // if (e.name.contains('credit')) isEnable = false;
                         if (isEnable) {
                           if (e.name.contains("wallet")) {
-                            double? wallet =
-                                double.tryParse(profileWallet) ?? 0;
+                            double? wallet = double.tryParse(profileWallet) ?? 0;
                             isEnable = wallet >= double.parse(price.toString());
                           }
                         }
@@ -694,31 +680,26 @@ class AppDialogs {
                           ).start(),
                           contentPadding: EdgeInsets.zero,
                           dense: true,
-                          visualDensity:
-                              VisualDensity(horizontal: -4, vertical: -4),
+                          visualDensity: VisualDensity(horizontal: -4, vertical: -4),
                         );
                       }).toList(),
 
                       if (selectedMethod == SubscriptionMethods.credit)
                         Container(
-                          decoration: BoxDecoration()
-                              .radius(radius: 12)
-                              .customColor(Colors.white),
+                          decoration: BoxDecoration().radius(radius: 12).customColor(Colors.white),
                           padding: const EdgeInsets.symmetric(horizontal: 12),
                           child: Column(
                             children: [
-                              ...CreditMethods.values.map((e) {
+                              ...CreditMethodsSaudi.values.map((e) {
                                 String title = e.name;
                                 return RadioListTile(
                                     value: e,
-                                    groupValue: selectedCreditMethod,
+                                    groupValue: selectedCreditMethodSaudi,
                                     onChanged: (value) {
-                                      selectedCreditMethod = value!;
+                                      selectedCreditMethodSaudi = value!;
                                       setState(() {});
                                     },
-                                    title: CustomText(convertToName(title),
-                                            color: Colors.black)
-                                        .start(),
+                                    title: CustomText(convertToName(title), color: Colors.black).start(),
                                     contentPadding: EdgeInsets.zero,
                                     dense: true,
                                     visualDensity: VisualDensity(
@@ -734,17 +715,104 @@ class AppDialogs {
                         onPressed: () async {
                           NavigationService.goBack();
                           if (selectedMethod == SubscriptionMethods.credit) {
-                            selectedMethodToReturn = selectedCreditMethod.name;
+                            selectedMethodToReturn = selectedCreditMethodSaudi.name;
                           } else {
                             selectedMethodToReturn = selectedMethod.name;
                           }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(100)),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        ),
+                        child: CustomText(
+                          LocaleKeys.subscribeNow.tr(),
+                          color: Colors.white,
+                        ).headerExtra(),
+                      ),
+                    ],
+                  )
+
+
+
+
+                else
+                  Column(
+                    children: [
+                      //radio select Wallet , credit card , cash
+
+                      ...SubscriptionMethods.values.map((e) {
+                        String title = e.name;
+                        if (e.name.contains("wallet")) {
+                          title = "wallet ($profileWallet)";
+                        }
+                        bool isEnable = true;
+                        // if (e.name.contains('credit')) isEnable = false;
+                        if (isEnable) {
+                          if (e.name.contains("wallet")) {
+                            double? wallet = double.tryParse(profileWallet) ?? 0;
+                            isEnable = wallet >= double.parse(price.toString());
+                          }
+                        }
+                        return RadioListTile(
+                          value: e,
+                          groupValue: selectedMethod,
+                          onChanged: (value) {
+                            if (isEnable) {
+                              selectedMethod = value!;
+                              setState(() {});
+                            }
+                          },
+                          title: CustomText(
+                            convertToName(title),
+                            color: !isEnable ? Colors.grey : Colors.black,
+                          ).start(),
+                          contentPadding: EdgeInsets.zero,
+                          dense: true,
+                          visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+                        );
+                      }).toList(),
+
+                      if (selectedMethod == SubscriptionMethods.credit)
+                        Container(
+                          decoration: BoxDecoration().radius(radius: 12).customColor(Colors.white),
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          child: Column(
+                            children: [
+                              ...CreditMethodsEgypt.values.map((e) {
+                                String title = e.name;
+                                return RadioListTile(
+                                    value: e,
+                                    groupValue: selectedCreditMethodEgypt,
+                                    onChanged: (value) {
+                                      selectedCreditMethodEgypt = value!;
+                                      setState(() {});
+                                    },
+                                    title: CustomText(convertToName(title), color: Colors.black).start(),
+                                    contentPadding: EdgeInsets.zero,
+                                    dense: true,
+                                    visualDensity: VisualDensity(
+                                        horizontal: -4, vertical: -4));
+                              }).toList(),
+                            ],
+                          ),
+                        ),
+
+                      SizedBox(height: 12),
+
+                      ElevatedButton(
+                        onPressed: () async {
+                          NavigationService.goBack();
+                          if (selectedMethod == SubscriptionMethods.credit) {
+                            selectedMethodToReturn = selectedCreditMethodEgypt.name;
+                          } else {
+                            selectedMethodToReturn = selectedMethod.name;
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         ),
                         child: CustomText(
                           LocaleKeys.subscribeNow.tr(),

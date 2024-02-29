@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
+// import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/features/data/models/base/api_response.dart';
 import 'package:weltweit/features/domain/request_body/check_otp_body.dart';
@@ -44,11 +44,11 @@ class AuthRepositoryImp implements AuthRepository {
         // filePath: registerBody.image?.path,
         // ignorePath: true,
       );
-      Sentry.captureMessage("Register response: ${response.data.toString()}");
+      // Sentry.captureMessage("Register response: ${response.data.toString()}");
       return ApiResponse.withSuccess(response);
     } catch (e) {
-      Sentry.captureMessage("Register Error: ${e.toString()}");
-      Sentry.captureException(e);
+      // Sentry.captureMessage("Register Error: ${e.toString()}");
+      // Sentry.captureException(e);
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }
