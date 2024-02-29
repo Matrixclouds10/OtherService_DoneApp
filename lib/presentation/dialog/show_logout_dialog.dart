@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:weltweit/core/utils/logger.dart';
 
@@ -17,4 +18,6 @@ Future<bool?> showLogoutDialog(BuildContext context) async {
   );
 }
 
-_onLogoutPress(BuildContext context) {}
+_onLogoutPress(BuildContext context) async {
+  await FirebaseMessaging.instance.deleteToken();
+}

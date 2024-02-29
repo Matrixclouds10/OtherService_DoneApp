@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:weltweit/core/extensions/num_extensions.dart';
@@ -26,51 +27,28 @@ class CustomImage extends StatelessWidget {
   final bool showPlaceholder;
   final Function(String path)? onAttachImage;
 
-  const CustomImage(
-      {Key? key,
-      this.radius = 16,
-      this.borderRadius,
-      this.border,
-      this.fit = BoxFit.fill,
-      this.canEdit = false,
-      this.showPlaceholder = true,
-      this.height = 140,
-      this.onAttachImage,
-      this.width,
-      required this.imageUrl})
-      : super(key: key);
+  const CustomImage({
+    Key? key,
+    this.radius = 16,
+    this.borderRadius,
+    this.border,
+    this.fit = BoxFit.fill,
+    this.canEdit = false,
+    this.showPlaceholder = true,
+    this.height = 140,
+    this.onAttachImage,
+    this.width,
+    required this.imageUrl,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    Widget image = buildImage(context);
     return Stack(children: [
       ClipRRect(
-        borderRadius:
-            borderRadius ?? BorderRadius.all(Radius.circular(radius.r)),
+        borderRadius: borderRadius ?? BorderRadius.all(Radius.circular(radius.r)),
         child: Container(
-          decoration: const BoxDecoration().customRadius(
-              borderRadius:
-                  borderRadius ?? BorderRadius.all(Radius.circular(radius.r))),
-          child: (imageUrl ?? '').isEmpty
-              ? _buildPlaceholder()
-              : imageUrl!.endsWith('.svg')
-                  ? SvgPicture.network(imageUrl!,
-                      width: width ?? deviceWidth, height: height)
-                  : imageUrl!.contains('assets/') &&
-                          imageUrl!.contains('images')
-                      ? Image.asset(imageUrl!,
-                          width: width ?? deviceWidth, height: height)
-                      : !Validators.isURL(imageUrl)
-                          ? Image.file(File(imageUrl!),
-                              width: width ?? deviceWidth,
-                              height: height,
-                              fit: BoxFit.fill)
-                          : CachedNetworkImage(
-                              placeholder: (ctx, url) => _buildPlaceholder(),
-                              width: width ?? deviceWidth,
-                              height: height,
-                              fit: fit,
-                              imageUrl: imageUrl ?? '',
-                              errorWidget: (c, o, s) => _buildPlaceholder(),
-                            ),
+          decoration: const BoxDecoration().customRadius(borderRadius: borderRadius ?? BorderRadius.all(Radius.circular(radius.r))),
+          child: image,
         ),
       ),
       if (canEdit)
@@ -92,9 +70,10 @@ class CustomImage extends StatelessWidget {
               color: Colors.transparent,
               child: InkWell(
                 onTap: () async {
-                  String? path = await onPickImagesPressed(context);
-                  if (path != null && onAttachImage != null) {
-                    onAttachImage!(path);
+                  File? file = await onPickImagesPressed(context);
+
+                  if (file != null && onAttachImage != null) {
+                    onAttachImage!(file.path);
                   }
                 },
                 borderRadius: BorderRadius.circular(100),
@@ -109,14 +88,39 @@ class CustomImage extends StatelessWidget {
     ]);
   }
 
-  _buildPlaceholder() {
-    /*    return showPlaceholder?Image.asset(Assets.imagesPlaceholder,
+  Widget buildPlaceholder() {
+    return showPlaceholder ? Image.asset(Assets.imagesPlaceholder, width: width ?? deviceWidth, height: height) : const SizedBox();
+  }
+
+  Widget buildImage(BuildContext context) {
+    if (imageUrl == null) return buildPlaceholder();
+    if (imageUrl!.isEmpty) return buildPlaceholder();
+    if (imageUrl!.endsWith('.svg')) {
+      return SvgPicture.network(imageUrl!, width: width ?? deviceWidth, height: height);
+    }
+    if (imageUrl!.contains('assets/') && imageUrl!.contains('images')) {
+      return Image.asset(imageUrl!, width: width ?? deviceWidth, height: height);
+    }
+    if (Validators.isURL(imageUrl)) {
+      return CachedNetworkImage(
+        placeholder: (ctx, url) => buildPlaceholder(),
         width: width ?? deviceWidth,
         height: height,
-        fit: fit):const SizedBox();*/
-    return showPlaceholder
-        ? Image.asset(Assets.imagesPlaceholder,
-            width: width ?? deviceWidth, height: height)
-        : const SizedBox();
+        fit: fit,
+        imageUrl: imageUrl!,
+        errorWidget: (c, url, error) {
+          return Container(
+              width: width ?? deviceWidth,
+              height: height,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: borderRadius ?? BorderRadius.all(Radius.circular(radius)),
+              ).radius(radius: radius),
+              child: Icon(Icons.error_outline, color: Colors.red));
+        },
+      );
+    }
+
+    return Image.file(File(imageUrl!), width: width ?? deviceWidth, height: height, fit: BoxFit.fill);
   }
 }

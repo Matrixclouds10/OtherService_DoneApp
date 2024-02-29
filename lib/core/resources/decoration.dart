@@ -28,8 +28,8 @@ final InputDecorationTheme kInputDecorationTheme = InputDecorationTheme(
   prefixIconColor: primaryColorDark,
   iconColor: primaryColorDark,
   disabledBorder: OutlineInputBorder(
-    borderRadius: BorderRadius.circular(kFormRadiusLarge.r),
-    borderSide: const BorderSide(color: primaryColor, width: 1),
+    borderRadius: BorderRadius.circular(kFormRadiusSmall.r),
+    borderSide: const BorderSide(color: grayScaleDarkColor),
   ),
   contentPadding: EdgeInsets.all(12.w),
   errorMaxLines: 2,

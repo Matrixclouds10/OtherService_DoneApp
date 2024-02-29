@@ -1,6 +1,7 @@
+import 'package:logger/logger.dart';
 import 'package:weltweit/features/data/models/base/base_model.dart';
-import 'package:weltweit/features/data/models/response/auth/user_model.dart';
-import 'package:weltweit/features/services/domain/request_body/check_otp_body.dart';
+import 'package:weltweit/features/data/models/auth/user_model.dart';
+import 'package:weltweit/features/domain/request_body/check_otp_body.dart';
 
 import '../../repositoy/auth_repo.dart';
 import 'package:weltweit/features/domain/usecase/auth/base_usecase/base_use_case_call.dart';
@@ -25,6 +26,8 @@ class CheckOTPUseCase implements BaseUseCase<UserModel> {
         return ResponseModel(true, baseModel.message, data: baseModel.responseData);
       }
     } catch (e) {
+        Logger().e('error:otp ${baseModel.responseData}');
+      
       return ResponseModel(true, baseModel.message, data: baseModel.responseData);
     }
   }

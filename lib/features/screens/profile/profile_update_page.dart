@@ -8,15 +8,21 @@ import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
-import 'package:weltweit/features/logic/profile/profile_cubit.dart';
-import 'package:weltweit/features/data/models/response/auth/user_model.dart';
+import 'package:weltweit/features/data/models/auth/user_model.dart';
+import 'package:weltweit/features/data/models/location/city_model.dart';
+import 'package:weltweit/features/data/models/location/country_model.dart';
+import 'package:weltweit/features/data/models/location/region_model.dart';
 import 'package:weltweit/features/domain/usecase/profile/change_password_usecase.dart';
 import 'package:weltweit/features/domain/usecase/profile/update_profile_usecase.dart';
+import 'package:weltweit/features/logic/location_city/city_cubit.dart';
+import 'package:weltweit/features/logic/location_region/region_cubit.dart';
+import 'package:weltweit/features/logic/profile/profile_cubit.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
+import 'package:weltweit/features/widgets/picker_dialog.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
-import 'package:weltweit/presentation/component/inputs/phone_country/countries.dart';
+import 'package:weltweit/presentation/component/inputs/phone_country/custom_text_filed_phone_country.dart';
 
 class ProfileUpdatePage extends StatefulWidget {
   const ProfileUpdatePage({super.key});
@@ -28,22 +34,17 @@ class ProfileUpdatePage extends StatefulWidget {
 class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
 
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
-  File? image;
+  CountryModel? selectedCountry;
+  CityModel? selectedCity;
+  RegionModel? selectedRegion;
   String? nerworkImage;
-  Country? country = Country(
-    name: "Saudi Arabia",
-    flag: "🇸🇦",
-    code: "SA",
-    dialCode: "966",
-    minLength: 9,
-    maxLength: 9,
-  );
   bool? isMale;
-
+  File? image;
+  bool disableCityAndRegion = false;
   final _formKey = GlobalKey<FormState>();
   final _formKeyPassword = GlobalKey<FormState>();
 
@@ -56,7 +57,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
         String phone = _phoneController.text;
         String email = _emailController.text;
 
-        if (country == null) {
+        if (selectedCountry == null) {
           AppSnackbar.show(
             context: context,
             title: LocaleKeys.notification.tr(),
@@ -69,9 +70,12 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
           mobileNumber: phone,
           email: email,
           image: image,
-          countryCode: country?.dialCode,
-          countryIso: country?.name,
+          countryCode: selectedCountry?.code ?? '20',
+          countryIso: selectedCountry?.code ?? "EG",
           genderIsMale: isMale ?? true,
+          countryId: selectedCountry?.id ?? 1,
+          cityId: selectedCity?.id,
+          regionId: selectedRegion?.id,
         );
         await BlocProvider.of<ProfileCubit>(context, listen: false).updateProfile(updateProfileParams);
       }
@@ -112,8 +116,25 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
 
   @override
   void initState() {
-    BlocProvider.of<ProfileCubit>(context, listen: false).getProfile();
     super.initState();
+
+    //perfom this after the build
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      UserModel userModel = await BlocProvider.of<ProfileCubit>(context, listen: false).getProfile();
+
+      isMale ??= userModel.gender == 'male';
+      _nameController.text = userModel.name ?? "";
+      _emailController.text = userModel.email ?? "";
+      _phoneController.text = userModel.mobileNumber ?? "";
+      nerworkImage = userModel.image;
+      selectedCountry = userModel.countryModel;
+      if (!disableCityAndRegion) {
+      if (context.mounted && selectedCountry?.id != null) BlocProvider.of<CityCubit>(context, listen: false).getCities(selectedCountry!.id!);
+        selectedCity = userModel.cityModel;
+        selectedRegion = userModel.regionModel;
+        if (context.mounted && selectedCity?.id != null) BlocProvider.of<RegionCubit>(context, listen: false).getRegions(selectedCity!.id!);
+      }
+    });
   }
 
   @override
@@ -159,17 +180,6 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
               case BaseState.loading:
                 return const Center(child: CircularProgressIndicator());
               case BaseState.loaded:
-                isMale ??= state.data?.gender == 'male';
-                _nameController.text = state.data?.name ?? "";
-                _emailController.text = state.data?.email ?? "";
-                _phoneController.text = state.data?.mobileNumber ?? "";
-                nerworkImage = state.data?.image;
-                if (countries.where((element) => element.dialCode == state.data?.countryCode).isNotEmpty) {
-                  country = countries.where((element) => element.dialCode == state.data?.countryCode).first;
-                } else {
-                  country = countries.firstWhere((element) => element.name == "Saudi Arabia");
-                }
-
                 return _buildBody(context, state.data);
               case BaseState.error:
                 return ErrorLayout(errorModel: state.error);
@@ -223,7 +233,7 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
               onPressed: () async {
                 bool? status = await AppDialogs().showDeleteAccountDialog(context);
                 if (status != null && status) {
-                  if (context.mounted) context.read<ProfileCubit>().deleteAccount();
+                  if (context.mounted) context.read<ProfileCubit>().deleteProfile();
                 }
               },
               child: CustomText(LocaleKeys.deleteAccount.tr(), color: Colors.red).footer()),
@@ -258,18 +268,21 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
               label: LocaleKeys.name.tr(),
             ),
             const VerticalSpace(kScreenPaddingNormal),
-            CustomTextFieldPhoneCode(
-              label: tr(LocaleKeys.yourPhoneNumber),
+            CustomTextFieldPhoneCountry(
               controller: _phoneController,
-              defaultValue: _phoneController.text,
-              textInputAction: TextInputAction.next,
-              disableLengthCheck: true,
-              countries: const ["SA"],
-              initialCountryCode: country?.dialCode,
+              selectedCountry: selectedCountry,
               onCountryChanged: (value) {
-                country = value;
+                selectedCountry = value;
+                context.read<CityCubit>().reset();
+                context.read<RegionCubit>().reset();
+
+                context.read<CityCubit>().getCities(selectedCountry!.id!);
               },
             ),
+            if (!disableCityAndRegion) ...[
+              const VerticalSpace(kScreenPaddingNormal),
+              _cityAndregion(),
+            ],
             const VerticalSpace(kScreenPaddingNormal),
             CustomTextFieldEmail(label: tr(LocaleKeys.email), controller: _emailController, textInputAction: TextInputAction.next),
             const VerticalSpace(kScreenPaddingNormal),
@@ -319,5 +332,115 @@ class _ProfileUpdatePageState extends State<ProfileUpdatePage> {
             SizedBox(height: 8)
           ],
         ));
+  }
+
+  _cityAndregion() {
+    return StatefulBuilder(builder: (context, setStateParent) {
+      return Row(
+        children: [
+          Expanded(
+            child: BlocBuilder<CityCubit, CityState>(
+              builder: (context, state) {
+                Widget suffixData = Icon(Icons.arrow_drop_down);
+                if (state.state == BaseState.loading) {
+                  suffixData = SizedBox(width: 16, height: 16, child: CircularProgressIndicator());
+                }
+                if (state.data.isEmpty) suffixData = Container();
+
+                return GestureDetector(
+                  onTap: () async {
+                    if (state.state == BaseState.loading) return;
+                    if (state.data.isEmpty) return;
+                    List<String> citiesAsString = state.data.map((e) => e.name!).toList();
+                    await showDialog(
+                      context: context,
+                      useRootNavigator: false,
+                      builder: (context) => StatefulBuilder(
+                        builder: (ctx, setState) => ItemPickerDialog(
+                          filteredItems: citiesAsString,
+                          searchText: '',
+                          countryList: citiesAsString,
+                          selectedItem: selectedCity?.name,
+                          onItemChanged: (String? item) {
+                            if (item == null) return;
+                            selectedCity = state.data.firstWhere((element) => element.name == item);
+
+                            if (selectedCity?.id != null) {
+                              context.read<RegionCubit>().reset();
+                              selectedRegion = null;
+                              context.read<RegionCubit>().getRegions(selectedCity!.id!);
+                            }
+                            setStateParent(() {});
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                  child: CustomTextFieldNormal(
+                    controller: TextEditingController(text: selectedCity?.name ?? ""),
+                    hint: LocaleKeys.city.tr(),
+                    defaultValue: selectedCity?.name,
+                    textInputAction: TextInputAction.next,
+                    autofocus: false,
+                    enable: false,
+                    isRequired: false,
+                    suffixData: suffixData,
+                    label: LocaleKeys.city.tr(),
+                  ),
+                );
+              },
+            ),
+          ),
+          SizedBox(width: 8),
+          Expanded(
+            child: BlocBuilder<RegionCubit, RegionState>(
+              builder: (context, state) {
+                Widget suffixData = Icon(Icons.arrow_drop_down);
+                if (state.state == BaseState.loading) {
+                  suffixData = SizedBox(width: 16, height: 16, child: CircularProgressIndicator());
+                }
+                if (state.data.isEmpty) suffixData = Container();
+                return GestureDetector(
+                  onTap: () async {
+                    if (state.state == BaseState.loading) return;
+                    if (state.data.isEmpty) return;
+                    List<String> regionsAsString = state.data.map((e) => e.name!).toList();
+                    await showDialog(
+                      context: context,
+                      useRootNavigator: false,
+                      builder: (context) => StatefulBuilder(
+                        builder: (ctx, setState) => ItemPickerDialog(
+                          filteredItems: regionsAsString,
+                          searchText: '',
+                          countryList: regionsAsString,
+                          selectedItem: selectedRegion?.name,
+                          onItemChanged: (String? item) {
+                            if (item == null) return;
+                            selectedRegion = state.data.firstWhere((element) => element.name == item);
+                            setStateParent(() {});
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                  child: CustomTextFieldNormal(
+                    key: Key(selectedRegion?.name ?? ""),
+                    controller: TextEditingController(text: selectedRegion?.name ?? ""),
+                    defaultValue: selectedRegion?.name,
+                    hint: LocaleKeys.region.tr(),
+                    textInputAction: TextInputAction.next,
+                    autofocus: false,
+                    enable: false,
+                    isRequired: false,
+                    suffixData: suffixData,
+                    label: LocaleKeys.region.tr(),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      );
+    });
   }
 }

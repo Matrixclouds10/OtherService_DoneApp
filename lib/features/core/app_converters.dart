@@ -1,5 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:weltweit/features/provider/domain/usecase/document/document_add_usecase.dart';
+import 'package:weltweit/features/domain/usecase/provider_document/document_add_usecase.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 
 class AppConverters {
@@ -15,6 +15,20 @@ class AppConverters {
         return LocaleKeys.passport.tr();
       case DocumentType.others:
         return LocaleKeys.other.tr();
+      case DocumentType.others_2:
+        return LocaleKeys.other.tr();
+      case DocumentType.others_3:
+        return LocaleKeys.other.tr();
+      case DocumentType.national_id_back:
+        return LocaleKeys.nationalIdBack.tr();
+      case DocumentType.ciminal_certificate:
+        return LocaleKeys.ciminalCertificate.tr();
+      case DocumentType.personal_image:
+        return LocaleKeys.personalImage.tr();
+      case DocumentType.tax_card:
+        return LocaleKeys.taxCard.tr();
+      case DocumentType.commercial_register:
+        return LocaleKeys.commercialRegister.tr();
     }
   }
 
@@ -27,8 +41,16 @@ class AppConverters {
       return DocumentType.corona_certificate;
     } else if (documentType == LocaleKeys.passport.tr()) {
       return DocumentType.passport;
-    } else if (documentType == LocaleKeys.other.tr()) {
-      return DocumentType.others;
+    } else if (documentType == LocaleKeys.nationalIdBack.tr()) {
+      return DocumentType.national_id_back;
+    } else if (documentType == LocaleKeys.ciminalCertificate.tr()) {
+      return DocumentType.ciminal_certificate;
+    } else if (documentType == LocaleKeys.personalImage.tr()) {
+      return DocumentType.personal_image;
+    } else if (documentType == LocaleKeys.taxCard.tr()) {
+      return DocumentType.tax_card;
+    } else if (documentType == LocaleKeys.commercialRegister.tr()) {
+      return DocumentType.commercial_register;
     } else {
       return DocumentType.others;
     }

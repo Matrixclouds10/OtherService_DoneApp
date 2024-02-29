@@ -19,6 +19,20 @@ class BaseResponse<T> {
       meta: (json['data'] != null && json['data'] is Map && json['data']['meta'] != null) ? Meta.fromJson(json['data']['meta']) : null,
     );
   }
+
+  copyWith({
+    int? code,
+    String? message,
+    T? data,
+    Meta? meta,
+  }) {
+    return BaseResponse(
+      code: code ?? this.code,
+      message: message ?? this.message,
+      data: data ?? this.data,
+      meta: meta ?? this.meta,
+    );
+  }
 }
 
 class Meta {

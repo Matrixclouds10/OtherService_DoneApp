@@ -1,11 +1,14 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/resources/decoration.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
-import 'package:weltweit/features/core/routing/routes.dart';
+import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
-import 'package:weltweit/features/services/data/models/response/provider/providers_model.dart';
-import 'package:weltweit/features/services/logic/favorite/favorite_cubit.dart';
+import 'package:weltweit/features/data/models/provider/providers_model.dart';
+import 'package:weltweit/features/data/models/auth/user_model.dart';
+import 'package:weltweit/features/logic/favorite/favorite_cubit.dart';
+import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
 
 class ServiceProviderItemWidget extends StatelessWidget {
@@ -13,6 +16,7 @@ class ServiceProviderItemWidget extends StatelessWidget {
   final bool? canMakeAppointment;
   final bool? moreInfoButton;
   final bool showFavoriteButton;
+  final UserModel? userModel;
 
   const ServiceProviderItemWidget({
     required this.providersModel,
@@ -20,6 +24,7 @@ class ServiceProviderItemWidget extends StatelessWidget {
     this.moreInfoButton,
     required this.showFavoriteButton,
     super.key,
+    this.userModel,
   });
 
   @override
@@ -63,14 +68,14 @@ class ServiceProviderItemWidget extends StatelessWidget {
                                 child: Container(
                                   margin: const EdgeInsets.only(bottom: 6),
                                   decoration: BoxDecoration(color: servicesTheme.colorScheme.secondary).radius(radius: 4),
-                                  child: const CustomText(
-                                    "حجز موعد",
+                                  child:  CustomText(
+                                    LocaleKeys.makeAppointment.tr(),
                                     color: Colors.white,
                                     pv: 6,
                                   ),
                                 ),
                               ),
-                            if (providersModel.rateAvg != null && canMakeAppointment == null) ratesAsStars(double.parse(providersModel.rateAvg!)),
+                            if (providersModel.rateAvg != null && canMakeAppointment == null) ratesAsStars(double.parse(providersModel.rateAvg!), providersModel.rateCount ?? 0),
                             if (showFavoriteButton)
                               IconButton(
                                 icon: Icon(
@@ -101,8 +106,7 @@ class ServiceProviderItemWidget extends StatelessWidget {
                         ],
                       ),
                     // CustomText('no profession', color: Colors.grey, align: TextAlign.start, pv: 0),
-                    // if (description != null)
-                    // CustomText('description', maxLines: 2, color: Colors.grey, align: TextAlign.start, pv: 4).footer(),
+                    if (providersModel.description != null && providersModel.description!.isNotEmpty) CustomText(providersModel.description ?? "", maxLines: 2, color: Colors.grey, align: TextAlign.start, pv: 4).footer(),
                     SizedBox(height: 4),
                     // if (address != null)
                     // textWithIcon(
@@ -119,16 +123,30 @@ class ServiceProviderItemWidget extends StatelessWidget {
                         if (providersModel.isOnline)
                           Container(
                             decoration: const BoxDecoration(color: Color(0xff00A35E)).radius(radius: 4),
-                            child: const CustomText(
-                              "غير متوفر",
+                            child: CustomText(
+                              LocaleKeys.available.tr(),
                               color: Colors.white,
                               pv: 2,
                               ph: 8,
                               size: 14,
                             ),
                           ),
+                        SizedBox(width: 4),
                       ],
                     ),
+                    if (userModel != null && userModel!.currentSubscription != null) ...[
+                      SizedBox(height: 4),
+                      Container(
+                        decoration: const BoxDecoration(color: Color.fromARGB(255, 33, 136, 255)).radius(radius: 4),
+                        child: CustomText(
+                          "${LocaleKeys.subscribtionStatus.tr()} ${userModel!.currentSubscription!.status}",
+                          color: Colors.white,
+                          pv: 2,
+                          ph: 8,
+                          size: 14,
+                        ),
+                      ),
+                    ]
                   ],
                 ),
               ),
@@ -139,8 +157,8 @@ class ServiceProviderItemWidget extends StatelessWidget {
             Container(
               margin: const EdgeInsets.only(top: 6),
               decoration: BoxDecoration(color: servicesTheme.colorScheme.secondary).radius(radius: 45),
-              child: const CustomText(
-                "المزيد من المعلومات",
+              child:  CustomText(
+                LocaleKeys.moreInfo.tr(),
                 color: Colors.white,
                 pv: 6,
                 ph: 40,
@@ -151,12 +169,12 @@ class ServiceProviderItemWidget extends StatelessWidget {
     );
   }
 
-  Widget ratesAsStars(double d) {
+  Widget ratesAsStars(double rate, int rateCount) {
     return Row(
       children: [
-        for (var i = 0; i < d; i++) const Icon(Icons.star, size: 12, color: Colors.yellow),
-        for (var i = 0; i < 5 - d; i++) const Icon(Icons.star, size: 12, color: Colors.grey),
-        CustomText(' ($d)', color: Colors.grey, align: TextAlign.start, pv: 0).footer(),
+        for (var i = 0; i < rate; i++) const Icon(Icons.star, size: 12, color: Colors.yellow),
+        for (var i = 0; i < 5 - rate; i++) const Icon(Icons.star, size: 12, color: Colors.grey),
+        CustomText(' ($rateCount)', color: Colors.grey, align: TextAlign.start, pv: 0).footer(),
       ],
     );
   }

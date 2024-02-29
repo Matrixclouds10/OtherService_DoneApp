@@ -1,23 +1,37 @@
 import 'dart:io';
 
+import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/core/extensions/num_extensions.dart';
-import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
+import 'package:weltweit/core/routing/routes.dart';
+import 'package:weltweit/core/services/local/cache_consumer.dart';
+import 'package:weltweit/core/services/local/storage_keys.dart';
+import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/core/utils/logger.dart';
-import 'package:weltweit/features/core/routing/routes.dart';
+import 'package:weltweit/features/core/base/base_states.dart';
+import 'package:weltweit/features/core/routing/routes_provider.dart';
+import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
-import 'package:weltweit/features/services/domain/request_body/check_otp_body.dart';
-import 'package:weltweit/features/services/domain/request_body/register_body.dart';
+import 'package:weltweit/features/data/models/auth/user_model.dart';
+import 'package:weltweit/features/data/models/location/city_model.dart';
+import 'package:weltweit/features/data/models/location/country_model.dart';
+import 'package:weltweit/features/data/models/location/region_model.dart';
+import 'package:weltweit/features/domain/request_body/check_otp_body.dart';
+import 'package:weltweit/features/domain/request_body/register_body.dart';
+import 'package:weltweit/features/logic/location_city/city_cubit.dart';
+import 'package:weltweit/features/logic/location_region/region_cubit.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
+import 'package:weltweit/features/widgets/picker_dialog.dart';
 import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
-import 'package:weltweit/presentation/component/inputs/phone_country/countries.dart';
+import 'package:weltweit/presentation/component/inputs/phone_country/custom_text_filed_phone_country.dart';
 
 import 'register_cubit.dart';
 
@@ -33,19 +47,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _whatsAppController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
+  CountryModel? selectedCountry;
+  CityModel? selectedCity;
+  RegionModel? selectedRegion;
   bool joinAsIndividual = true;
-  bool isConfirmTerms = true;
+  bool isConfirmTerms = false;
   File? image;
-  Country? country = Country(
-    name: "Saudi Arabia",
-    flag: "🇸🇦",
-    code: "SA",
-    dialCode: "966",
-    minLength: 9,
-    maxLength: 9,
-  );
+  bool disableCityAndRegion = false;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -56,6 +67,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
         String name = _nameController.text;
         String phone = _phoneController.text;
+        String whatsappNumber = _whatsAppController.text;
         String email = _emailController.text;
         String password = _passwordController.text;
         String confirmPassword = _confirmPasswordController.text;
@@ -68,7 +80,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           );
           return;
         }
-        if (country == null) {
+        if (selectedCountry == null) {
           AppSnackbar.show(
             context: context,
             title: LocaleKeys.notification.tr(),
@@ -83,20 +95,41 @@ class _RegisterScreenState extends State<RegisterScreen> {
           name: name,
           password: password,
           mobile: phone,
-          country: country!,
+          whatsappNumber: whatsappNumber,
+          country: selectedCountry!,
           isConfirmTerms: isConfirmTerms,
           typeIsProvider: widget.typeIsProvider,
           isIndividual: joinAsIndividual,
+          cityModel: selectedCity,
+          regionModel: selectedRegion,
         );
 
         var response = await BlocProvider.of<RegisterCubit>(context, listen: false).register(registerBody);
-        if (response.isSuccess) {
-          NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
-            'phone': _phoneController.text,
-            'code': country?.code,
-            'checkOTPType': CheckOTPType.register,
-            'typeIsProvider': widget.typeIsProvider,
-          });
+        if (response.error == null) {
+          UserModel userEntity = UserModel.fromJson(response.data);
+          String token = userEntity.token ?? '';
+          int id = userEntity.id ?? 0;
+          kEcho("countryId ${userEntity.countryModel?.id}");
+          int countryId = userEntity.countryId ?? userEntity.countryModel?.id ?? 0;
+          if (token.isNotEmpty) {
+            AppPrefs prefs = getIt();
+            prefs.save(PrefKeys.token, token);
+            if (countryId != 0) prefs.save(PrefKeys.countryId, countryId);
+            prefs.save(PrefKeys.id, id);
+            prefs.save(PrefKeys.isTypeProvider, widget.typeIsProvider);
+            if (widget.typeIsProvider) {
+              Navigator.pushNamedAndRemoveUntil(context, RoutesProvider.providerLayoutScreen, (route) => false);
+            } else {
+              Navigator.pushNamedAndRemoveUntil(context, RoutesServices.servicesLayoutScreen, (route) => false);
+            }
+          } else {
+            NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
+              'email': _emailController.text,
+              'code': selectedCountry?.code ?? '20',
+              'checkOTPType': CheckOTPType.register,
+              'typeIsProvider': widget.typeIsProvider,
+            });
+          }
         } else {
           AppSnackbar.show(
             context: context,
@@ -114,6 +147,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _nameController.text = 'Mr.Test';
       _emailController.text = 'test@test.com';
       _phoneController.text = '1010101010';
+      _whatsAppController.text = '2020202020';
       _passwordController.text = '123456';
       _confirmPasswordController.text = '123456';
     }
@@ -150,7 +184,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     children: [
                       Center(
                         child: CustomPersonImage(
-                          size: 90.r,
+                          size: 110.r,
                           imageUrl: image?.path,
                           canEdit: true,
                           onAttachImage: (File file) {
@@ -160,62 +194,75 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           },
                         ),
                       ),
-                      if (widget.typeIsProvider) ...[
-                        CustomText(LocaleKeys.joinAs.tr(), align: TextAlign.start, pv: 0),
-                        //Row for two radio buttons
-                        Row(
-                          children: [
-                            //Radio button for user
-                            Flexible(
-                              flex: 1,
-                              child: RadioListTile(
-                                value: joinAsIndividual,
-                                dense: true,
-                                contentPadding: EdgeInsets.zero,
-                                visualDensity: VisualDensity(horizontal: 0, vertical: -4),
-                                title: CustomText(LocaleKeys.indvidual.tr(), align: TextAlign.start),
-                                groupValue: true,
-                                onChanged: (value) {
-                                  joinAsIndividual = true;
-                                  setState(() {});
-                                },
-                              ),
-                            ),
-                            Flexible(
-                              flex: 1,
-                              child: RadioListTile(
-                                value: joinAsIndividual,
-                                dense: true,
-                                contentPadding: EdgeInsets.zero,
-                                visualDensity: VisualDensity(horizontal: 0, vertical: -4),
-                                title: CustomText(LocaleKeys.company.tr(), align: TextAlign.start),
-                                groupValue: false,
-                                onChanged: (value) {
-                                  joinAsIndividual = false;
-                                  setState(() {});
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+                      // if (widget.typeIsProvider) ...[
+                      //   CustomText(LocaleKeys.joinAs.tr(), align: TextAlign.start, pv: 0),
+                      //Row for two radio buttons
+                      // Row(
+                      //   children: [
+                      //     //Radio button for user
+                      //     Flexible(
+                      //       flex: 1,
+                      //       child: RadioListTile(
+                      //         value: joinAsIndividual,
+                      //         dense: true,
+                      //         contentPadding: EdgeInsets.zero,
+                      //         visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+                      //         title: CustomText(LocaleKeys.indvidual.tr(), align: TextAlign.start),
+                      //         groupValue: true,
+                      //         onChanged: (value) {
+                      //           joinAsIndividual = true;
+                      //           setState(() {});
+                      //         },
+                      //       ),
+                      //     ),
+                      //     Flexible(
+                      //       flex: 1,
+                      //       child: RadioListTile(
+                      //         value: joinAsIndividual,
+                      //         dense: true,
+                      //         contentPadding: EdgeInsets.zero,
+                      //         visualDensity: VisualDensity(horizontal: 0, vertical: -4),
+                      //         title: CustomText(LocaleKeys.company.tr(), align: TextAlign.start),
+                      //         groupValue: false,
+                      //         onChanged: (value) {
+                      //           joinAsIndividual = false;
+                      //           setState(() {});
+                      //         },
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+                      // ],
                       _buildForm(),
-                      CheckboxListTile(
-                        checkboxShape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0.r),
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0.r),
-                        ),
-                        side: MaterialStateBorderSide.resolveWith(
-                          (states) => BorderSide(width: 1.w, color: Colors.black12),
-                        ),
-                        value: isConfirmTerms,
-                        title: CustomText(tr(LocaleKeys.registerPrivacyMassage)).footer().start(),
-                        onChanged: (value) {
-                          isConfirmTerms = !isConfirmTerms;
-                          setState(() {});
-                        },
+                      Row(
+                        children: [
+                          Expanded(
+                              child: Row(
+                            children: [
+                              CustomText(tr(LocaleKeys.byClickingRegisterYouAccept)).footer().start(),
+                              Text(
+                                tr(LocaleKeys.termsAndConditions),
+                                style: TextStyle(
+                                  color: primaryColor,
+                                  fontSize: 12,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ).onTap(() {
+                                Navigator.pushNamed(context, Routes.policy);
+                              }),
+                            ],
+                          )),
+                          Checkbox(
+                            value: isConfirmTerms,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0.r),
+                            ),
+                            onChanged: (value) {
+                              isConfirmTerms = !isConfirmTerms;
+                              setState(() {});
+                            },
+                          ),
+                        ],
                       ),
                       VerticalSpace(kScreenPaddingNormal.h),
                       CustomButton(
@@ -249,16 +296,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
               autofocus: false,
             ),
             const VerticalSpace(kScreenPaddingNormal),
-            CustomTextFieldPhoneCode(
-              label: tr(LocaleKeys.yourPhoneNumber),
+            CustomTextFieldPhoneCountry(
               controller: _phoneController,
-              textInputAction: TextInputAction.next,
-              countries: const ["SA"],
-              onCountryChanged: (countryVal) {
-                country = countryVal;
+              selectedCountry: selectedCountry,
+              onCountryChanged: (value) {
+                selectedCountry = value;
+                if (!disableCityAndRegion) {
+                  context.read<CityCubit>().reset();
+                  context.read<RegionCubit>().reset();
+
+                  context.read<CityCubit>().getCities(selectedCountry!.id!);
+                }
               },
-              disableLengthCheck: true,
             ),
+            if (widget.typeIsProvider) ...[
+              const VerticalSpace(kScreenPaddingNormal),
+              CustomTextFieldPhone(
+                controller: _whatsAppController,
+                autoValidate: false,
+                hint: tr(LocaleKeys.whatsApp),
+                textInputAction: TextInputAction.next,
+                validateFunc: (value) => null,
+                autofocus: false,
+              ),
+            ],
+            if (!disableCityAndRegion) ...[
+              const VerticalSpace(kScreenPaddingNormal),
+              _cityAndregion(),
+            ],
             const VerticalSpace(kScreenPaddingNormal),
             CustomTextFieldEmail(label: tr(LocaleKeys.email), controller: _emailController, textInputAction: TextInputAction.next),
             const VerticalSpace(kScreenPaddingNormal),
@@ -277,5 +342,115 @@ class _RegisterScreenState extends State<RegisterScreen> {
             SizedBox(height: 8)
           ],
         ));
+  }
+
+  _cityAndregion() {
+    return StatefulBuilder(builder: (context, setStateParent) {
+      return Row(
+        children: [
+          Expanded(
+            child: BlocBuilder<CityCubit, CityState>(
+              builder: (context, state) {
+                Widget suffixData = Icon(Icons.arrow_drop_down);
+                if (state.state == BaseState.loading) {
+                  suffixData = SizedBox(width: 16, height: 16, child: CircularProgressIndicator());
+                }
+                if (state.data.isEmpty) suffixData = Container();
+
+                return GestureDetector(
+                  onTap: () async {
+                    if (state.state == BaseState.loading) return;
+                    if (state.data.isEmpty) return;
+                    List<String> citiesAsString = state.data.map((e) => e.name!).toList();
+                    await showDialog(
+                      context: context,
+                      useRootNavigator: false,
+                      builder: (context) => StatefulBuilder(
+                        builder: (ctx, setState) => ItemPickerDialog(
+                          filteredItems: citiesAsString,
+                          searchText: '',
+                          countryList: citiesAsString,
+                          selectedItem: selectedCity?.name,
+                          onItemChanged: (String? item) {
+                            if (item == null) return;
+                            selectedCity = state.data.firstWhere((element) => element.name == item);
+
+                            if (selectedCity?.id != null) {
+                              context.read<RegionCubit>().reset();
+                              selectedRegion = null;
+                              context.read<RegionCubit>().getRegions(selectedCity!.id!);
+                            }
+                            setStateParent(() {});
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                  child: CustomTextFieldNormal(
+                    controller: TextEditingController(text: selectedCity?.name ?? ""),
+                    hint: LocaleKeys.city.tr(),
+                    defaultValue: selectedCity?.name,
+                    textInputAction: TextInputAction.next,
+                    autofocus: false,
+                    enable: false,
+                    isRequired: false,
+                    suffixData: suffixData,
+                    label: LocaleKeys.city.tr(),
+                  ),
+                );
+              },
+            ),
+          ),
+          SizedBox(width: 8),
+          Expanded(
+            child: BlocBuilder<RegionCubit, RegionState>(
+              builder: (context, state) {
+                Widget suffixData = Icon(Icons.arrow_drop_down);
+                if (state.state == BaseState.loading) {
+                  suffixData = SizedBox(width: 16, height: 16, child: CircularProgressIndicator());
+                }
+                if (state.data.isEmpty) suffixData = Container();
+                return GestureDetector(
+                  onTap: () async {
+                    if (state.state == BaseState.loading) return;
+                    if (state.data.isEmpty) return;
+                    List<String> regionsAsString = state.data.map((e) => e.name!).toList();
+                    await showDialog(
+                      context: context,
+                      useRootNavigator: false,
+                      builder: (context) => StatefulBuilder(
+                        builder: (ctx, setState) => ItemPickerDialog(
+                          filteredItems: regionsAsString,
+                          searchText: '',
+                          countryList: regionsAsString,
+                          selectedItem: selectedRegion?.name,
+                          onItemChanged: (String? item) {
+                            if (item == null) return;
+                            selectedRegion = state.data.firstWhere((element) => element.name == item);
+                            setStateParent(() {});
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                  child: CustomTextFieldNormal(
+                    key: Key(selectedRegion?.name ?? ""),
+                    controller: TextEditingController(text: selectedRegion?.name ?? ""),
+                    defaultValue: selectedRegion?.name,
+                    hint: LocaleKeys.region.tr(),
+                    textInputAction: TextInputAction.next,
+                    autofocus: false,
+                    enable: false,
+                    isRequired: false,
+                    suffixData: suffixData,
+                    label: LocaleKeys.region.tr(),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      );
+    });
   }
 }

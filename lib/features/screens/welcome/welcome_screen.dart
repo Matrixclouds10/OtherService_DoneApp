@@ -4,7 +4,7 @@ import 'package:weltweit/core/extensions/num_extensions.dart';
 import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/resources/values_manager.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
-import 'package:weltweit/features/core/routing/routes.dart';
+import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
@@ -45,7 +45,9 @@ class WelcomeScreen extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: kScreenPaddingLarge.w),
                       child: CustomButton(
                         title: LocaleKeys.joinOurWorld.tr(),
-                        onTap: () => NavigationService.push(RoutesServices.servicesUserTypeScreen),
+                        onTap: () => NavigationService.push(RoutesServices.servicesUserTypeScreen, arguments: {
+                          'typeIsProvider': false,
+                        }),
                       ),
                     ),
                     Padding(
@@ -60,12 +62,12 @@ class WelcomeScreen extends StatelessWidget {
                       ),
                     ),
                     VerticalSpace(kScreenPaddingNormal.h),
-                    // GestureDetector(
-                    //     onTap: () => NavigationService.push(Routes.servicesHomeScreen),
-                    //     child: CustomText(
-                    //       LocaleKeys.loginAsVisitor.tr(),
-                    //       color: Colors.white,
-                    //     )),
+                    GestureDetector(
+                        onTap: () => NavigationService.push(RoutesServices.servicesLayoutScreenGuest),
+                        child: CustomText(
+                          LocaleKeys.loginAsVisitor.tr(),
+                          color: Colors.white,
+                        )),
                     VerticalSpace(kScreenPaddingNormal.h),
                   ],
                 ),

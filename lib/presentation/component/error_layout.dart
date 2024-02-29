@@ -16,8 +16,7 @@ class ErrorLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ErrorView(
-        message: _errorModel?.errorMessage ?? 'Error', onRetry: _onRetry);
+    return ErrorView(message: _errorModel?.errorMessage ?? 'Error', onRetry: _onRetry);
   }
 }
 
@@ -30,35 +29,35 @@ class ErrorView extends StatelessWidget {
         _onRetry = onRetry,
         super(key: key);
 
-  final retryShape = RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(8.0),
-      side: const BorderSide(color: Colors.grey));
+  final retryShape = RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0), side: const BorderSide(color: Colors.grey));
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Padding(
-      padding: const EdgeInsets.all(50.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(_message ?? ''),
-          SizedBox(
-            height: 20.h,
-          ),
-          if (_onRetry != null)
-            TextButton(
-              onPressed: _onRetry,
-              style: TextButton.styleFrom(
-                shape: retryShape,
-              ),
-              child: Text(
-                tr(LocaleKeys.retry),
-                style: Theme.of(context).textTheme.bodyText2,
-              ),
+    String message = _message ?? '';
+    if (message.toLowerCase().contains("unauthorized")) message = "Login/Register to continue";
+      return Center(
+          child: Padding(
+        padding: const EdgeInsets.all(50.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(message),
+            SizedBox(
+              height: 20.h,
             ),
-        ],
-      ),
-    ));
+            if (_onRetry != null)
+              TextButton(
+                onPressed: _onRetry,
+                style: TextButton.styleFrom(
+                  shape: retryShape,
+                ),
+                child: Text(
+                  tr(LocaleKeys.retry),
+                  style: Theme.of(context).textTheme.bodyText2,
+                ),
+              ),
+          ],
+        ),
+      ));
   }
 }

@@ -44,15 +44,7 @@ class CustomText extends StatelessWidget {
     );
   }
 
-  copyWith(String message,
-      {double? size,
-      TextAlign? align,
-      double? pv,
-      double? ph,
-      bool? bold,
-      int? maxLines,
-      bool? white,
-      Color? color}) {
+  copyWith(String message, {double? size, TextAlign? align, double? pv, double? ph, bool? bold, int? maxLines, bool? white, Color? color}) {
     return CustomText(
       message,
       size: size ?? this.size,
@@ -69,14 +61,10 @@ class CustomText extends StatelessWidget {
 
 extension TextCustom on CustomText {
   CustomText start() => (this).copyWith(message, align: TextAlign.start);
-  CustomText headerExtra() => (this).copyWith(message,
-      size: this.size + (4), bold: bold, white: white, color: color);
-  CustomText header() => (this).copyWith(message,
-      size: this.size + (2), bold: bold, white: white, color: color);
-  CustomText footer() => (this).copyWith(message,
-      size: this.size - (2), bold: bold, white: white, color: color);
-  CustomText footerExtra() => (this).copyWith(message,
-      size: this.size - (4), bold: bold, white: white, color: color);
+  CustomText headerExtra() => (this).copyWith(message, size: size + (4), bold: bold, white: white, color: color);
+  CustomText header() => (this).copyWith(message, size: size + (2), bold: bold, white: white, color: color);
+  CustomText footer() => (this).copyWith(message, size: size - (2), bold: bold, white: white, color: color);
+  CustomText footerExtra() => (this).copyWith(message, size: size - (4), bold: bold, white: white, color: color);
 }
 
 extension TextCustomStyle on TextStyle {
@@ -85,16 +73,7 @@ extension TextCustomStyle on TextStyle {
   TextStyle errorStyle() => (this).copyWith(color: errorColor);
   TextStyle hintStyle() => (this).copyWith(color: textSecondary);
   TextStyle boldStyle() => (this).copyWith(fontWeight: FontWeight.bold);
-  TextStyle underLineStyle() =>
-      (this).copyWith(decoration: TextDecoration.underline);
-  TextStyle titleStyle({double fontSize = 16}) => (this).copyWith(
-      fontSize: fontSize.sp,
-      color: textPrimary,
-      fontWeight: FontWeight.w700,
-      fontFamily: FontConstants.fontFamily);
-  TextStyle descriptionStyle({double fontSize = 12}) => (this).copyWith(
-      fontSize: fontSize.sp,
-      color: textSecondary,
-      fontWeight: FontWeight.w300,
-      fontFamily: FontConstants.fontFamily);
+  TextStyle underLineStyle() => (this).copyWith(decoration: TextDecoration.underline);
+  TextStyle titleStyle({double fontSize = 16}) => (this).copyWith(fontSize: fontSize.sp, color: textPrimary, fontWeight: FontWeight.w700, fontFamily: FontConstants.fontFamily);
+  TextStyle descriptionStyle({double fontSize = 12}) => (this).copyWith(fontSize: fontSize.sp, color: textSecondary, fontWeight: FontWeight.w300, fontFamily: FontConstants.fontFamily);
 }

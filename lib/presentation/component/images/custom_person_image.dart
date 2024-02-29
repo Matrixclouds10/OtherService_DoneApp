@@ -45,9 +45,7 @@ class CustomPersonImage extends StatelessWidget {
             width: _size.r,
             height: _size.r,
             decoration: BoxDecoration(
-              border: Border.all(
-                  width: _borderSize,
-                  color: Theme.of(context).scaffoldBackgroundColor),
+              border: Border.all(width: _borderSize, color: Theme.of(context).scaffoldBackgroundColor),
               boxShadow: _showShadow
                   ? [
                       BoxShadow(
@@ -73,22 +71,16 @@ class CustomPersonImage extends StatelessWidget {
                       ),
                     )
                   : !Validators.isURL(_imageUrl)
-                      ? Image.file(File(_imageUrl!),
-                          width: _size.r, height: _size.r, fit: BoxFit.fill)
+                      ? Image.file(File(_imageUrl!), width: _size.r, height: _size.r, fit: BoxFit.fill)
                       : ClipRRect(
                           borderRadius: BorderRadius.circular(100),
                           child: FadeInImage.assetNetwork(
-                            placeholder:
-                                _avatar ?? Assets.imagesImgAvatarPlaceholder,
+                            placeholder: _avatar ?? Assets.imagesImgAvatarPlaceholder,
                             width: _size.r,
                             height: _size.r,
                             fit: BoxFit.cover,
                             image: _imageUrl!,
-                            imageErrorBuilder: (c, o, s) => Image.asset(
-                                _avatar ?? Assets.imagesImgAvatarPlaceholder,
-                                width: _size.r,
-                                height: _size.r,
-                                fit: BoxFit.cover),
+                            imageErrorBuilder: (c, o, s) => Image.asset(_avatar ?? Assets.imagesImgAvatarPlaceholder, width: _size.r, height: _size.r, fit: BoxFit.cover),
                           ),
                         ),
             ),
@@ -98,8 +90,8 @@ class CustomPersonImage extends StatelessWidget {
               bottom: 0,
               right: 0,
               child: Container(
-                height: 40,
-                width: 40,
+                height: 35,
+                width: 35,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
@@ -112,9 +104,8 @@ class CustomPersonImage extends StatelessWidget {
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: () async {
-                      String? path = await onPickImagesPressed(context);
-                      if (path != null && _onAttachImage != null) {
-                        File file = File(path);
+                      File? file = await onPickImagesPressed(context);
+                      if (file != null && _onAttachImage != null) {
                         _onAttachImage!(file);
                       }
                     },
@@ -122,6 +113,7 @@ class CustomPersonImage extends StatelessWidget {
                     child: const Icon(
                       Icons.edit,
                       color: Colors.white,
+                      size: 18,
                     ),
                   ),
                 ),

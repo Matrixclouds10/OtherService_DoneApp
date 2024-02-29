@@ -1,12 +1,14 @@
 class AppURL {
   static const kAPIKey = "";
-  static const kBaseURL = "http://superapp.weltweithg.com/api";
+  // static const kBaseURL = "https://doneapp.org/api";
+  static const kBaseURL = "http://newdon.dev01.matrix-clouds.com/api";
 
   ///Auth
   static const String kLoginURI = "$kBaseURL/auth/login";
   static const String kRegisterURI = "$kBaseURL/auth/register";
   static const String kLogoutURI = "$kBaseURL/auth/logout";
   static const String kForgetPasswordURI = "$kBaseURL/auth/otp";
+  static const String kForgetPasswordProviderURI = "$kBaseURL/service-provider/otp";
   static const String kCheckOTPURI = "$kBaseURL/auth/check-otp";
   static const String kResetPasswordURI = "$kBaseURL/";
   static const String kDeleteAccountURI = "$kBaseURL/";
@@ -29,10 +31,7 @@ class AppURL {
   static const String kGetOffersURI = '$kBaseURL/';
   static const String kGetOfferDetailsURI = '$kBaseURL/';
 
-
-
   static const String kLoginProviderURI = "$kBaseURL/service-provider/login";
   static const String kRegisterProviderURI = "$kBaseURL/service-provider/register";
   static const String kCheckOTPProviderURI = "$kBaseURL/service-provider/check-otp";
-
 }

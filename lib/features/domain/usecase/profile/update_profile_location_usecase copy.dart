@@ -3,7 +3,7 @@ import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 
 import 'package:weltweit/features/core/base/base_response.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
-import 'package:weltweit/features/provider/domain/repository/app_repo.dart';
+import 'package:weltweit/features/domain/repositoy/provider_repo.dart';
 
 class UpdateProfileLocationUseCase implements BaseUseCase<BaseResponse, UpdateProfileLocationParams> {
   final AppRepositoryProvider repository;

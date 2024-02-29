@@ -3,16 +3,19 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:location/location.dart';
+import 'package:weltweit/base_injection.dart';
+import 'package:weltweit/core/services/local/cache_consumer.dart';
+import 'package:weltweit/core/services/local/storage_keys.dart';
+import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/core/utils/permission_heloper.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
-import 'package:weltweit/features/domain/usecase/auth/update_fcm_token_usecase.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
-import 'package:weltweit/features/data/models/response/auth/user_model.dart';
+import 'package:weltweit/features/data/models/auth/user_model.dart';
+import 'package:weltweit/features/domain/usecase/auth/update_fcm_token_usecase.dart';
 import 'package:weltweit/features/domain/usecase/profile/change_password_usecase.dart';
 import 'package:weltweit/features/domain/usecase/profile/delete_profile_usecase.dart';
 import 'package:weltweit/features/domain/usecase/profile/profile_read_usecase.dart';
-import 'package:weltweit/features/domain/usecase/profile/update_profile_availablity_usecase.dart';
 import 'package:weltweit/features/domain/usecase/profile/update_profile_location_usecase%20copy.dart';
 import 'package:weltweit/features/domain/usecase/profile/update_profile_usecase.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
@@ -38,13 +41,25 @@ class ProfileCubit extends Cubit<ProfileState> {
     this.changePasswordUseCase,
     this.updateProfileLocationUseCase,
   ) : super(const ProfileState());
-  Future<void> getProfile() async {
+  Future<UserModel> getProfile({bool returnSaved = false}) async {
+    if (returnSaved) {
+      if (state.data != null) return state.data!;
+    }
     resetState();
     emit(state.copyWith(state: BaseState.loading));
     final result = await profileUseCase.call(NoParameters());
-    result.fold(
-      (error) => emit(state.copyWith(state: BaseState.error, error: error)),
-      (data) => emit(state.copyWith(state: BaseState.loaded, data: data)),
+    return result.fold(
+      (error) {
+        emit(state.copyWith(state: BaseState.error, error: error));
+        return Future.error(error);
+      },
+      (data) {
+        emit(state.copyWith(state: BaseState.loaded, data: data));
+        kEcho("countryId ${data.countryModel?.id}");
+        AppPrefs prefs = getIt();
+        if (data.countryModel?.id != null) prefs.save(PrefKeys.countryId, data.countryModel?.id);
+        return data;
+      },
     );
   }
 
@@ -59,7 +74,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
   }
 
-  void deleteProfile(int deleteId) async {
+  void deleteProfile() async {
     resetState();
     if (state.updateState == BaseState.loading) return;
     if (state.data?.id == null) return;
@@ -96,8 +111,6 @@ class ProfileCubit extends Cubit<ProfileState> {
     ));
   }
 
-  void deleteAccount() {}
-
   void updateLocation(BuildContext context) async {
     bool permissionStatus = await PermissionHelper.checkLocationPermissionStatus();
     if (!permissionStatus) {
@@ -117,6 +130,4 @@ class ProfileCubit extends Cubit<ProfileState> {
       log('Location Error', e.toString());
     }
   }
-
-  
 }

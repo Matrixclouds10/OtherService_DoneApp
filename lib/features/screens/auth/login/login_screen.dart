@@ -1,27 +1,32 @@
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/core/extensions/num_extensions.dart';
 import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/resources/values_manager.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
+import 'package:weltweit/core/utils/echo.dart';
 import 'package:weltweit/core/utils/logger.dart';
-import 'package:weltweit/data/injection.dart';
 import 'package:weltweit/features/core/routing/routes_provider.dart';
-import 'package:weltweit/features/data/models/base/response_model.dart';
-import 'package:weltweit/features/data/models/response/auth/user_model.dart';
-import 'package:weltweit/features/core/routing/routes.dart';
+import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
-import 'package:weltweit/features/services/domain/request_body/check_otp_body.dart';
-import 'package:weltweit/features/services/domain/request_body/login_body.dart';
+import 'package:weltweit/features/data/models/auth/user_model.dart';
+import 'package:weltweit/features/data/models/location/country_model.dart';
+import 'package:weltweit/features/domain/request_body/check_otp_body.dart';
+import 'package:weltweit/features/domain/usecase/auth/sign_in_usecase.dart';
 import 'package:weltweit/features/widgets/app_back_button.dart';
+import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
+import 'package:weltweit/presentation/component/inputs/phone_country/custom_text_filed_phone_country.dart';
 import 'package:weltweit/presentation/component/text/click_text.dart';
 
 import 'login_cubit.dart';
@@ -39,18 +44,25 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
 
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool typeIsProvider = false;
+  CountryModel? _selectedCountry;
+  bool typeIsProvider = true;
   late TabController _tabController;
+  bool showForIos = false;
   @override
   void initState() {
-    _tabController = TabController(length: 2, vsync: this);
+    AppPrefs prefs = getIt();
+    showForIos = prefs.get(PrefKeys.iosStatus, defaultValue: true);
+    if (!Platform.isIOS) showForIos = true;
+
+    _tabController = TabController(length: 2, vsync: this, initialIndex: showForIos ? 0 : 1);
     _tabController.addListener(() {
       typeIsProvider = _tabController.index == 0;
       logger.d('typeIsProvider $typeIsProvider');
     });
+    typeIsProvider = !showForIos ? false : true;
     if (kDebugMode) {
-      _phoneController.text = '1006896871';
-      _passwordController.text = '123456';
+      _phoneController.text = '667788994';
+      _passwordController.text = '112233';
     }
     super.initState();
     _viewModel = BlocProvider.of<LoginCubit>(context, listen: false);
@@ -63,40 +75,63 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
 
         String phone = _phoneController.text;
         String password = _passwordController.text;
-        var response = await BlocProvider.of<LoginCubit>(context, listen: false).login(
-          phone,
-          password,
-          typeIsProvider,
+
+        LoginParams loginBody = LoginParams(
+          phone: phone,
+          password: password,
+          countryModel: _selectedCountry,
         );
+        if (_selectedCountry == null) {
+          AppSnackbar.show(
+            context: context,
+            title: LocaleKeys.notification,
+            message: LocaleKeys.selectCountry.tr(),
+            type: SnackbarType.error,
+          );
+          return;
+        }
+        var response = await BlocProvider.of<LoginCubit>(context, listen: false).login(loginBody, typeIsProvider);
 
         if (response.isSuccess) {
           UserModel userEntity = response.data;
           String token = userEntity.token ?? '';
+          int id = userEntity.id ?? 0;
+          kEcho("countryId ${userEntity.countryModel?.id}");
+          int countryId = userEntity.countryId ?? userEntity.countryModel?.id ?? 0;
           if (token.isNotEmpty) {
             AppPrefs prefs = getIt();
             prefs.save(PrefKeys.token, token);
+            prefs.save(PrefKeys.id, id);
+            if (countryId != 0) prefs.save(PrefKeys.countryId, countryId);
             prefs.save(PrefKeys.isTypeProvider, typeIsProvider);
-          }
-          if (typeIsProvider) {
-            Navigator.pushNamedAndRemoveUntil(context, RoutesProvider.providerLayoutScreen, (route) => false);
+
+            if (typeIsProvider) {
+              Navigator.pushNamedAndRemoveUntil(context, RoutesProvider.providerLayoutScreen, (route) => false);
+            } else {
+              Navigator.pushNamedAndRemoveUntil(context, RoutesServices.servicesLayoutScreen, (route) => false);
+            }
           } else {
-            Navigator.pushNamedAndRemoveUntil(context, RoutesServices.servicesLayoutScreen, (route) => false);
+            NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
+              'email': _phoneController.text,
+              'code': _viewModel.params.countryModel?.code ?? '20',
+              'checkOTPType': CheckOTPType.register,
+              'typeIsProvider': typeIsProvider,
+            });
           }
-        } else if (response.error?.code == 301) {
-          NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
-            'phone': _phoneController.text,
-            'code': _viewModel.body.code,
-            'checkOTPType': CheckOTPType.register,
-            'typeIsProvider': typeIsProvider,
-          });
         } else {
-          if (response is ResponseModel) {
-            String message = response.error?.errorMessage ?? response.message ?? '';
-            AppSnackbar.show(
+          String message = response.error?.errorMessage ?? response.message ?? '';
+          AppSnackbar.show(
+            context: context,
+            title: LocaleKeys.notification,
+            message: message,
+            type: SnackbarType.error,
+          );
+          if (message.contains('active') || message.contains('activate') || message.contains('verify') || message.contains('تفعيل')) {
+            AppDialogs().forgetPassword(
+              title: LocaleKeys.notification.tr(),
               context: context,
-              title: LocaleKeys.notification,
               message: message,
-              type: SnackbarType.error,
+              typeIsProvider: typeIsProvider,
             );
           }
         }
@@ -113,7 +148,6 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     LoginlState state = context.watch<LoginCubit>().state;
-    LoginBody body = context.watch<LoginCubit>().body;
 
     return SafeArea(
       child: Scaffold(
@@ -148,29 +182,37 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                             children: [
                               SizedBox(height: 8),
                               Text(
-                                "مرحبا بك \n سجل دخولك للإستمرار",
+                                LocaleKeys.loginMessage.tr(),
                                 style: const TextStyle().titleStyle(fontSize: 18).boldStyle().customColor(primaryColor),
                                 textAlign: TextAlign.center,
                               ),
+
                               //Tabs
-                              TabBar(
-                                controller: _tabController,
-                                
-                                tabs: const [
-                                  Tab(child: CustomText("مزود خدمة")),
-                                  Tab(child: CustomText("مستخدم")),
-                                ],
-                              ),
+                              if (showForIos)
+                                TabBar(
+                                  controller: _tabController,
+                                  tabs: [
+                                    Tab(child: CustomText(LocaleKeys.provider.tr())),
+                                    Tab(child: CustomText(LocaleKeys.user.tr())),
+                                  ],
+                                ),
 
                               VerticalSpace(kScreenPaddingLarge.h),
-                              _buildForm(body),
+                              _buildForm(),
                               VerticalSpace(kScreenPaddingNormal.h),
                               Align(
                                 alignment: Alignment.bottomLeft,
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(vertical: kFormPaddingAllSmall),
                                   child: GestureDetector(
-                                    onTap: () {},
+                                    onTap: () {
+                                      AppDialogs().forgetPassword(
+                                        title: LocaleKeys.forgetPassword.tr(),
+                                        context: context,
+                                        message: LocaleKeys.enterRegisteredEmailAddress.tr(),
+                                        typeIsProvider: typeIsProvider,
+                                      );
+                                    },
                                     child: CustomText(tr(LocaleKeys.forgetPassword)).footer().start(),
                                   ),
                                 ),
@@ -213,18 +255,18 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     );
   }
 
-  _buildForm(LoginBody body) {
+  _buildForm() {
     return Form(
         key: _formKey,
         child: Column(
           children: [
-            CustomTextFieldPhoneCode(
-              label: tr(LocaleKeys.yourPhoneNumber),
+            CustomTextFieldPhoneCountry(
               controller: _phoneController,
-              onCountryChanged: _viewModel.onCountryCode,
-              disableLengthCheck: true,
-              textInputAction: TextInputAction.next,
-              countries: const ["SA"],
+              selectedCountry: _selectedCountry,
+              onCountryChanged: (value) {
+                _selectedCountry = value;
+                setState(() {});
+              },
             ),
             const VerticalSpace(kScreenPaddingNormal),
             CustomTextFieldPassword(hint: tr(LocaleKeys.password), controller: _passwordController),

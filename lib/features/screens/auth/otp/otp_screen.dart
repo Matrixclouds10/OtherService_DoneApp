@@ -7,10 +7,12 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:weltweit/core/extensions/num_extensions.dart';
 import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/resources/values_manager.dart';
-import 'package:weltweit/features/core/routing/routes.dart';
 import 'package:weltweit/features/core/routing/routes_provider.dart';
+import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
-import 'package:weltweit/features/services/domain/request_body/check_otp_body.dart';
+import 'package:weltweit/features/data/models/base/response_model.dart';
+import 'package:weltweit/features/domain/request_body/check_otp_body.dart';
+import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
@@ -19,7 +21,7 @@ import 'package:weltweit/presentation/component/text/click_text.dart';
 import 'otp_cubit.dart';
 
 class OTPScreen extends StatefulWidget {
-  final String _phone;
+  final String _email;
   final String _code;
   final CheckOTPType _checkOTPType;
   final bool _typeIsProvider;
@@ -30,9 +32,9 @@ class OTPScreen extends StatefulWidget {
     super.key,
     required bool typeIsProvider,
     required String code,
-    required String phone,
+    required String email,
     required CheckOTPType checkOTPType,
-  })  : _phone = phone,
+  })  : _email = email,
         _code = code,
         _checkOTPType = checkOTPType,
         _typeIsProvider = typeIsProvider;
@@ -43,14 +45,29 @@ class _OTPScreenState extends State<OTPScreen> {
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   void _onResendCode() async {
-    await BlocProvider.of<OtpCubit>(context, listen: false).reSendCode(phone: widget._phone);
+    ResponseModel responseModel = await BlocProvider.of<OtpCubit>(context, listen: false).reSendCode(email: widget._email,typeIsProvider: widget._typeIsProvider);
+    if (responseModel.message != null && responseModel.message!.isNotEmpty) {
+      if (responseModel.isSuccess) {
+        AppSnackbar.show(context: context, message: LocaleKeys.successfullySended.tr());
+      } else {
+        AppSnackbar.show(context: context, message: responseModel.message!);
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    if(widget._checkOTPType == CheckOTPType.reset){
+      _onResendCode();
+    }
+    super.initState();
   }
 
   void _onSubmit(context) async {
     String otp = _codeController.text;
     if (otp.length == 4) {
       var response = await BlocProvider.of<OtpCubit>(context, listen: false).otpCode(
-        phone: widget._phone,
+        email: widget._email,
         otp: otp,
         code: widget._code,
         type: widget._checkOTPType,
@@ -60,13 +77,19 @@ class _OTPScreenState extends State<OTPScreen> {
       if (response.isSuccess) {
         if (widget._checkOTPType == CheckOTPType.register && !widget._typeIsProvider) {
           Navigator.pushNamedAndRemoveUntil(context, RoutesServices.servicesLayoutScreen, (route) => false);
-        }else if (widget._checkOTPType == CheckOTPType.register && widget._typeIsProvider) {
+        } else if (widget._checkOTPType == CheckOTPType.register && widget._typeIsProvider) {
           Navigator.pushNamedAndRemoveUntil(context, RoutesProvider.providerLayoutScreen, (route) => false);
         } else {
-          // NavigationService.push(Routes.resetPasswordScreen, arguments: {'phone': widget._phone});
+          // NavigationService.push(Routes.resetPasswordScreen, arguments: {'phone': widget._email});
         }
       } else {
         _codeController.clear();
+        AppSnackbar.show(
+          context: context,
+          title: LocaleKeys.notification.tr(),
+          message: response.message ?? LocaleKeys.somethingWentWrong.tr(),
+          type: SnackbarType.error,
+        );
       }
     }
   }
@@ -89,7 +112,7 @@ class _OTPScreenState extends State<OTPScreen> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: CustomAppBar(title: el.tr(LocaleKeys.phoneVerification)),
+        appBar: CustomAppBar(title: ""),
         key: scaffoldKey,
         resizeToAvoidBottomInset: true,
         body: SingleChildScrollView(
@@ -112,7 +135,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   VerticalSpace(kScreenPaddingNormal.h),
                   Center(
                     child: Text(
-                      '${el.tr(LocaleKeys.anAuthenticationCodeHasBeenSentTo)}\n (${widget._code}) ${widget._phone}',
+                      '${el.tr(LocaleKeys.anAuthenticationCodeHasBeenSentTo)}\n ${widget._email}',
                       textAlign: TextAlign.center,
                       style: const TextStyle().descriptionStyle(fontSize: 14),
                     ),
@@ -170,40 +193,43 @@ class _OTPScreenState extends State<OTPScreen> {
   }
 
   _buildForm() {
-    return Center(
-      child: PinCodeTextField(
-        appContext: context,
-        length: 4,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        keyboardType: TextInputType.number,
-        obscureText: false,
-        showCursor: false,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        animationType: AnimationType.fade,
-        pinTheme: PinTheme(
-          shape: PinCodeFieldShape.box,
-          inactiveColor: Colors.transparent,
-          disabledColor: Theme.of(context).cardColor,
-          activeColor: Colors.transparent,
-          selectedColor: Colors.transparent,
-          errorBorderColor: Theme.of(context).colorScheme.error,
-          inactiveFillColor: Colors.grey[50],
-          selectedFillColor: Colors.black.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(kFormRadius),
-          fieldHeight: 48.r,
-          fieldWidth: 48.r,
-          activeFillColor: Theme.of(context).cardColor,
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Center(
+        child: PinCodeTextField(
+          appContext: context,
+          length: 4,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          keyboardType: TextInputType.number,
+          obscureText: false,
+          showCursor: false,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          animationType: AnimationType.fade,
+          pinTheme: PinTheme(
+            shape: PinCodeFieldShape.box,
+            inactiveColor: Colors.transparent,
+            disabledColor: Theme.of(context).cardColor,
+            activeColor: Colors.transparent,
+            selectedColor: Colors.transparent,
+            errorBorderColor: Theme.of(context).colorScheme.error,
+            inactiveFillColor: Colors.grey[50],
+            selectedFillColor: Colors.black.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(kFormRadius),
+            fieldHeight: 48.r,
+            fieldWidth: 48.r,
+            activeFillColor: Theme.of(context).cardColor,
+          ),
+          animationDuration: const Duration(milliseconds: 300),
+          backgroundColor: Colors.transparent,
+          textStyle: const TextStyle().titleStyle(fontSize: 24),
+          enableActiveFill: true,
+          boxShadows: const [BoxShadow(color: grayScaleLiteColor, spreadRadius: 1, blurRadius: 5)],
+          controller: _codeController,
+          beforeTextPaste: (text) {
+            return true;
+          },
+          onChanged: (String value) {},
         ),
-        animationDuration: const Duration(milliseconds: 300),
-        backgroundColor: Colors.transparent,
-        textStyle: const TextStyle().titleStyle(fontSize: 24),
-        enableActiveFill: true,
-        boxShadows: const [BoxShadow(color: grayScaleLiteColor, spreadRadius: 1, blurRadius: 5)],
-        controller: _codeController,
-        beforeTextPaste: (text) {
-          return true;
-        },
-        onChanged: (String value) {},
       ),
     );
   }

@@ -1,5 +1,5 @@
 import 'package:weltweit/features/data/models/base/base_model.dart';
-import 'package:weltweit/features/services/domain/request_body/register_body.dart';
+import 'package:weltweit/features/domain/request_body/register_body.dart';
 
 import '../../../data/models/base/response_model.dart';
 import '../../repositoy/auth_repo.dart';

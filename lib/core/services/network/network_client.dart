@@ -5,7 +5,7 @@ import 'package:weltweit/core/services/local/storage_keys.dart';
 import 'package:weltweit/data/datasource/remote/dio/dio_client.dart';
 import 'package:weltweit/data/datasource/remote/exception/api_error_handler.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
-import 'package:weltweit/data/injection.dart';
+import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
 
@@ -18,15 +18,17 @@ class NetworkClient {
   }) async {
     DioClient dioClient = getIt<DioClient>();
     late Response response;
+    AppPrefs prefs = getIt();
+    String lang = await prefs.get(PrefKeys.lang, defaultValue: "ar");
+
     Options options = Options(
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Accept-Language': 'ar', //TODO change this
+        'Accept-Language': lang,
         'User-Agents': 'android', //TODO change this
       },
     );
-    AppPrefs prefs = getIt();
     String? token = await prefs.getSecuredData(PrefKeys.token);
     token ??= await prefs.get(PrefKeys.token);
     if (token != null) {
@@ -43,15 +45,10 @@ class NetworkClient {
     try {
       switch (type) {
         case NetworkCallType.get:
-          response =
-              await dioClient.get(url, queryParameters: data, options: options);
+          response = await dioClient.get(url, queryParameters: data, options: options);
           break;
         case NetworkCallType.post:
-          response = await dioClient.post(url,
-              queryParameters: data,
-              data: formData,
-              ignorePath: true,
-              options: options);
+          response = await dioClient.post(url, queryParameters: data, data: formData, ignorePath: true, options: options);
           break;
         case NetworkCallType.put:
           response = await dioClient.put(url, data: data, options: options);
@@ -60,6 +57,7 @@ class NetworkClient {
           response = await dioClient.delete(url, data: data, options: options);
           break;
       }
+      logger.i('response ${response.data}');
 
       BaseResponse baseResponse = BaseResponse.fromJson(response.data);
       if (baseResponse.code != 200 || baseResponse.code != 201) {

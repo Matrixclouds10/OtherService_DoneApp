@@ -1,8 +1,8 @@
-import 'package:weltweit/core/utils/validators.dart';
 import 'package:flutter/material.dart';
+import 'package:weltweit/core/utils/validators.dart';
+import 'package:weltweit/features/data/models/location/country_model.dart';
 
 import '../../../../core/resources/resources.dart';
-import 'countries.dart';
 
 class PickerDialogStyle {
   final Color? backgroundColor;
@@ -40,11 +40,11 @@ class PickerDialogStyle {
 }
 
 class CountryPickerDialog extends StatefulWidget {
-  final List<Country> countryList;
-  final Country selectedCountry;
-  final ValueChanged<Country> onCountryChanged;
+  final List<CountryModel> countryList;
+  final CountryModel? selectedCountry;
+  final ValueChanged<CountryModel> onCountryChanged;
   final String searchText;
-  final List<Country> filteredCountries;
+  final List<CountryModel> filteredCountries;
   final PickerDialogStyle? style;
 
   const CountryPickerDialog({
@@ -62,8 +62,8 @@ class CountryPickerDialog extends StatefulWidget {
 }
 
 class _CountryPickerDialogState extends State<CountryPickerDialog> {
-  late List<Country> _filteredCountries;
-  late Country _selectedCountry;
+  late List<CountryModel> _filteredCountries;
+  CountryModel? _selectedCountry;
 
   @override
   void initState() {
@@ -77,19 +77,14 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
   Widget build(BuildContext context) {
     final mediaWidth = MediaQuery.of(context).size.width;
     final width = widget.style?.width ?? mediaWidth;
-    final defaultHorizontalPadding = 24.0;
-    final defaultVerticalPadding = 40.0;
+    const defaultHorizontalPadding = 24.0;
+    const defaultVerticalPadding = 40.0;
     return Dialog(
-      insetPadding: EdgeInsets.symmetric(
-          vertical: defaultVerticalPadding,
-          horizontal: mediaWidth > (width + defaultHorizontalPadding * 2)
-              ? (mediaWidth - width) / 2
-              : defaultHorizontalPadding),
+      insetPadding: EdgeInsets.symmetric(vertical: defaultVerticalPadding, horizontal: mediaWidth > (width + defaultHorizontalPadding * 2) ? (mediaWidth - width) / 2 : defaultHorizontalPadding),
       backgroundColor: Colors.transparent,
       child: Container(
         decoration: BoxDecoration(
-          color: widget.style?.backgroundColor ??
-              Theme.of(context).backgroundColor,
+          color: widget.style?.backgroundColor ?? Theme.of(context).colorScheme.background,
           borderRadius: const BorderRadius.all(
             Radius.circular(kFormPaddingAllLarge),
           ),
@@ -98,8 +93,7 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
         child: Column(
           children: <Widget>[
             Padding(
-              padding:
-                  widget.style?.searchFieldPadding ?? const EdgeInsets.all(0),
+              padding: widget.style?.searchFieldPadding ?? const EdgeInsets.all(0),
               child: TextField(
                 cursorColor: widget.style?.searchFieldCursorColor,
                 decoration: widget.style?.searchFieldInputDecoration ??
@@ -109,15 +103,9 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
                     ),
                 onChanged: (value) {
                   _filteredCountries = Validators.isNumeric(value)
-                      ? widget.countryList
-                          .where((country) => country.dialCode.contains(value))
-                          .toList()
-                      : widget.countryList
-                          .where((country) => country.name
-                              .toLowerCase()
-                              .contains(value.toLowerCase()))
-                          .toList();
-                  if (this.mounted) setState(() {});
+                      ? widget.countryList.where((country) => country.code!.contains(value)).toList()
+                      : widget.countryList.where((country) => country.title!.toLowerCase().contains(value.toLowerCase())).toList();
+                  if (mounted) setState(() {});
                 },
               ),
             ),
@@ -129,29 +117,28 @@ class _CountryPickerDialogState extends State<CountryPickerDialog> {
                 itemBuilder: (ctx, index) => Column(
                   children: <Widget>[
                     ListTile(
-                      leading: Image.asset(
-                        'lib/presentation/component/inputs/phone_country/flags/${_filteredCountries[index].code.toLowerCase()}.png',
-                        width: 32,
-                      ),
+                      // leading: Image.asset(
+                      //   'lib/presentation/component/inputs/phone_country/flags/${_filteredCountries[index].code?.toLowerCase()}.png',
+                      //   width: 32,
+                      // ),
                       contentPadding: widget.style?.listTilePadding,
                       title: Text(
-                        _filteredCountries[index].name,
-                        style: widget.style?.countryNameStyle ??
-                            const TextStyle(fontWeight: FontWeight.w700),
+                        _filteredCountries[index].title ?? '',
+                        style: widget.style?.countryNameStyle ?? const TextStyle(fontWeight: FontWeight.w700),
                       ),
-                      trailing: Text(
-                        '+${_filteredCountries[index].dialCode}',
-                        style: widget.style?.countryCodeStyle ??
-                            const TextStyle(fontWeight: FontWeight.w700),
-                      ),
+                      trailing: _filteredCountries[index].code == null
+                          ? null
+                          : Text(
+                              '+${_filteredCountries[index].code}',
+                              style: widget.style?.countryCodeStyle ?? const TextStyle(fontWeight: FontWeight.w700),
+                            ),
                       onTap: () {
                         _selectedCountry = _filteredCountries[index];
-                        widget.onCountryChanged(_selectedCountry);
+                        widget.onCountryChanged(_selectedCountry!);
                         Navigator.of(context).pop();
                       },
                     ),
-                    widget.style?.listTileDivider ??
-                        const Divider(thickness: 1),
+                    widget.style?.listTileDivider ?? const Divider(thickness: 1),
                   ],
                 ),
               ),

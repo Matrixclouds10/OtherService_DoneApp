@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
-
 import 'package:weltweit/app.dart';
-import 'package:weltweit/data/injection.dart';
+import 'package:weltweit/base_injection.dart';
+import 'package:weltweit/core/utils/constants.dart';
+
 import '../../../../core/services/local/cache_consumer.dart';
 import '../../../../core/services/local/storage_keys.dart';
 import '../../../../core/utils/logger.dart';
@@ -38,8 +40,8 @@ class DioClient {
     dio = dioC ?? Dio();
     dio!
       ..options.baseUrl = baseUrl
-      ..options.connectTimeout = 30000
-      ..options.receiveTimeout = 30000
+      ..options.connectTimeout = kDebugMode ? 60000 : Constants.connectTimeout
+      ..options.receiveTimeout = kDebugMode ? 60000 : Constants.connectTimeout
       ..httpClientAdapter
       ..options.headers = {
         'Accept': 'application/json; charset=UTF-8',
@@ -69,7 +71,6 @@ class DioClient {
         onReceiveProgress: onReceiveProgress,
       );
 
-      Logger().d(response.data);
       return response;
     } on SocketException catch (e) {
       throw SocketException(e.toString());
@@ -99,10 +100,12 @@ class DioClient {
   }) async {
     options ??= await initOptions();
     try {
-      if (data != null && data.files.isNotEmpty)
-        data.files.forEach((element) {
-          Logger().d(element.value);
-        });
+      // if (data != null && data.files.isNotEmpty) {
+      //   for (var element in data.files) {
+      //     Logger().d(element.value);
+      //     kEcho("upl
+      //   }
+      // }
 
       // if (!ignorePath) {
       //   data = await _buildFileData(

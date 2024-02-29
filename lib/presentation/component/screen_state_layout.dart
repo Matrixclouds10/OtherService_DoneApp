@@ -2,7 +2,6 @@ import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:flutter/material.dart';
 
 import 'component.dart';
-import 'custom_loading_spinner.dart';
 
 class ScreenStateLayout extends StatelessWidget {
   final bool _isEmpty;
@@ -41,9 +40,7 @@ class ScreenStateLayout extends StatelessWidget {
 
   Widget _buildView(BuildContext context) {
     if (_isLoading) {
-      return _loadingBuilder != null
-          ? _loadingBuilder!(context)
-          : const Center(child: CustomLoadingSpinner());
+      return _loadingBuilder != null ? _loadingBuilder!(context) : const Center(child: CustomLoadingSpinner());
     } else if (_error != null) {
       return _errorBuilder != null
           ? _errorBuilder!(context)
@@ -52,9 +49,7 @@ class ScreenStateLayout extends StatelessWidget {
               onRetry: _onRetry,
             );
     } else if (_isEmpty) {
-      return _emptyBuilder != null
-          ? _emptyBuilder!(context)
-          : const NoDataScreen();
+      return _emptyBuilder != null ? _emptyBuilder!(context) : const NoDataScreen();
     } else {
       return _builder(context);
     }

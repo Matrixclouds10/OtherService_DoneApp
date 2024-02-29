@@ -7,14 +7,14 @@ class RoutesProvider {
   static const String providerProviders = "/provider/servicesProviders";
   static const String providerProvider = "/provider/servicesProvider";
   static const String providerNotifications = "/provider/servicesNotifications";
-  static const String providerContactUs = "/provider/servicesContactUs";
-  static const String providerAboutUs = "/provider/servicesAboutUs";
   static const String providerMyAddresses = "/provider/servicesMyAddresses";
   static const String providerOrders = "/provider/servicesOrders";
   static const String providerOrderDetails = "/provider/servicesOrderDetails";
   static const String providerSearch = "/provider/servicesSearch";
   static const String providerReservationPage = "/provider/servicesReservationPage";
   static const String providerSubscribe = "/provider/subscribe";
+  static const String paymentWebview = "/provider/paymentWebview";
   static const String providerDocuments = "/provider/documents";
+  static const String providerHiringDocuments = "/provider/hiringDocuments";
   static const String providerProfileUpdateScreen = "/provider/profileUpdateScreen";
 }

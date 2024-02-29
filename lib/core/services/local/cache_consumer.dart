@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -39,5 +40,8 @@ class AppPrefs {
 
   Future<void> saveSecuredData(String key, String value) async => await _secureStorage.write(key: key, value: value);
 
-  Future<void> deleteSecuredData() async => await _secureStorage.deleteAll();
+  Future<void> deleteSecuredData() async {
+    await _secureStorage.deleteAll();
+    await FirebaseMessaging.instance.deleteToken();
+  }
 }

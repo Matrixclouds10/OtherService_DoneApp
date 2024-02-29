@@ -1,221 +1,136 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:weltweit/base_injection.dart';
+import 'package:weltweit/core/routing/navigation_services.dart';
+import 'package:weltweit/core/services/local/cache_consumer.dart';
+import 'package:weltweit/core/services/local/storage_keys.dart';
+import 'package:weltweit/core/services/network/network_client.dart';
+import 'package:weltweit/core/utils/echo.dart';
+import 'package:weltweit/data/app_urls/app_url.dart';
+import 'package:weltweit/features/core/routing/routes_provider.dart';
+import 'package:weltweit/features/core/routing/routes_user.dart';
+import 'package:weltweit/features/data/app_urls/provider_endpoints_url.dart';
 
-import '../utils/logger.dart';
-import 'NotificationType.dart';
-import 'NotificationUtils.dart';
-import 'push_notification_model.dart';
+class NotificationsFCM {
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
-const AndroidNotificationChannel channel = AndroidNotificationChannel(
-  'high_importance_channel', // id
-  'High Importance Notifications', // title
-  importance: Importance.high,
-);
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {}
-
-class FcmHandler extends StatefulWidget {
-  final Widget _child;
-  final GlobalKey<NavigatorState> _navigatorKey;
-
-  @override
-  _FcmHandlerState createState() => _FcmHandlerState();
-
-  const FcmHandler({
-    Key? key,
-    required Widget child,
-    required GlobalKey<NavigatorState> navigatorKey,
-  })  : _child = child,
-        _navigatorKey = navigatorKey,
-        super(key: key);
-}
-
-class _FcmHandlerState extends State<FcmHandler> {
-  static const _tag = 'FcmHandler';
-
-  static bool initialized = false;
-
-  static const IOSNotificationDetails iosLiquidChannel = IOSNotificationDetails(
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true,
-      sound: "default");
-
-  Future selectNotification(String? payload) async {
-    if (payload != null) {
-      log(_tag, 'notification payload android: $payload');
-      setupNotificationClickAction(payload, widget._navigatorKey);
-    }
+  NotificationsFCM() {
+    configLocalNotification();
+    registerNotification();
+    _createNotificationChannel("682", "Done", "Done");
   }
 
-  Future onDidReceiveLocalNotification(
-      int id, String? title, String? body, String? payload) async {
-    if (payload != null) {
-      log(_tag, 'notification payload android: $payload');
-      setupNotificationClickAction(payload, widget._navigatorKey);
-    }
-  }
+  void registerNotification() async {
+    kEcho('FCM registerNotification');
+    await firebaseMessaging.requestPermission();
 
-  @override
-  void initState() {
-    super.initState();
-
-    if (!initialized) initializeFcm();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return widget._child;
-  }
-
-  Future<void> initializeFcm() async {
-    if (!initialized) {
-      // initialize Firebase
-      FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-      // initialize Firebase
-      await Firebase.initializeApp();
-
-      const AndroidInitializationSettings initializationSettingsAndroid =
-          AndroidInitializationSettings('@mipmap/ic_launcher');
-      final IOSInitializationSettings initializationSettingsIOS =
-          IOSInitializationSettings(
-              onDidReceiveLocalNotification: onDidReceiveLocalNotification);
-      final InitializationSettings initializationSettings =
-          InitializationSettings(
-        android: initializationSettingsAndroid,
-        iOS: initializationSettingsIOS,
-      );
-      await flutterLocalNotificationsPlugin.initialize(
-        initializationSettings,
-        onSelectNotification: selectNotification,
-      );
-      await FirebaseMessaging.instance
-          .setForegroundNotificationPresentationOptions(
-              alert: true, badge: true, sound: true);
-
-      /// NEW
-      // assign channel (required after android 8)
-      await flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()
-          ?.createNotificationChannel(channel);
-
-      ///init FirebaseMessaging
-      final RemoteMessage? remoteMessage =
-          await FirebaseMessaging.instance.getInitialMessage();
-      if (remoteMessage != null) {
-        setupNotificationClickAction(
-            json.encode(remoteMessage.data), widget._navigatorKey);
-      }
-
-      log(_tag, "Requesting FCM token...");
-
-      _getToken();
-
-      /// onMessage
-      FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-        log(_tag,
-            'FCM foreground message: ${message.data}\n notification - ${message.notification?.title ?? ''}');
-        log(_tag,
-            'FCM foreground message: ${message.data}\n <notification - ${message.notification?.body}>');
-        log(_tag,
-            'FCM foreground message: ${message.data}\n <notification image- ${message.notification?.android?.imageUrl}>');
-        log(_tag,
-            'FCM foreground message: ${message.data}\n <notification image- ${message.notification?.apple?.imageUrl}>');
-
-        StyleInformation? styleInformation;
-        if (message.notification?.android?.imageUrl != null) {
-          final bigPicturePath = await NotificationUtils.downloadAndSaveImage(
-              message.notification!.android!.imageUrl!, "fileName");
-          styleInformation =
-              BigPictureStyleInformation(FilePathAndroidBitmap(bigPicturePath));
-        } else if (message.notification?.apple?.imageUrl != null) {
-          final bigPicturePath = await NotificationUtils.downloadAndSaveImage(
-              message.notification!.apple!.imageUrl!, "fileName");
-          styleInformation =
-              BigPictureStyleInformation(FilePathAndroidBitmap(bigPicturePath));
-        }
-
-        if (Platform.isAndroid) {
-          flutterLocalNotificationsPlugin.show(
-            0,
-            message.notification?.title,
-            message.notification?.body,
-
-            // message.data['title'],
-            // message.data['body'],
-            NotificationUtils(styleInformation: styleInformation)
-                .getNotificationSpecifics(),
-            payload: json.encode(message.data),
-          );
-        } else if (Platform.isIOS) {
-          flutterLocalNotificationsPlugin.show(
-            0,
-            // message.data['title'],
-            // message.data['body'],
-            message.notification?.title,
-            message.notification?.body,
-            const NotificationDetails(iOS: iosLiquidChannel),
-            payload: json.encode(message.data),
-          );
-        }
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      message.data.forEach((key, value) {
+        kEcho('fcm message $key -> $value');
       });
+      RemoteNotification notification = message.notification!;
+      Map<String, dynamic> data = message.data;
+      // AndroidNotification android = message.notification!.android!;
 
-      ///onMessageOpenedApp
-      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-        log(_tag, 'onMessageOpenedApp Data:${message.data}');
-        setupNotificationClickAction(
-            json.encode(message.data), widget._navigatorKey);
-      });
-    }
+      showNotification('${notification.title}', '${notification.body}', data);
+    });
+    firebaseMessaging.subscribeToTopic("682");
+    firebaseMessaging.getToken().then((token) {
+      kEcho('FCM registerNotification token $token');
+      saveFCM(token!);
+    });
   }
 
-  _getToken() async {
-    try {
-      String? token = await FirebaseMessaging.instance.getToken();
-      log(_tag, "FCM token: $token");
+  // void _handleMessage(RemoteMessage message) {
+  //   kEcho('_handleMessage');
+  //   String? navigator = message.data['navigator'];
+  //   String? id = message.data['id'];
+  //   if (navigator == 'product' && id != null) {
+  //     try {
+  //       int idAsInt = int.parse(id);
+  //       ProductModel productModel = ProductModel(productId: idAsInt, price: 0);
 
-      // GlobalService().setFcmToken(token);
+  //       Get.toNamed(
+  //         Routes.PRODUCT,
+  //         arguments: productModel,
+  //         parameters: {"wholesalerId": '1'},
+  //       );
+  //     } catch (e) {
+  //       if (kDebugMode) showSnackBar(title: Strings().notification, message: '$e');
+  //     }
+  //   }
+  // }
 
-      initialized = true;
+  void configLocalNotification() async {
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-      // post token to server
-      // var response = await SettingsRepository().postFcmToken(token);
-      // log("FCM Token sent to server: ${response.toJson().toString()}");
-    } catch (e) {
-      log(_tag, "FCM token error: $e");
-    }
+    var initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettingsIOS = IOSInitializationSettings();
+    var initializationSettings = InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onSelectNotification: selectNotification,
+    );
   }
 
-  static void setupNotificationClickAction(
-      String payload, GlobalKey<NavigatorState>? navigatorKey) {
-    // handle firebase and local notification clicks here
-    log(_tag, 'NOTIFICATIONS, ${payload.toString()}');
-
-    FCMNotificationModel model = notificationModelFromJson(payload);
-
-    // log(_tag,'NOTIFICATIONS, ${data.toString()}');
-    // String? itemType = data.type;
-    // int? itemId = data.referenceId;
-
-    if (model != null) {
-      NotificationHelper.notificationNav(model, navigatorKey: navigatorKey);
-    }
+  Future<void> _createNotificationChannel(String id, String name, String description) async {
+    kEcho('create channel');
+    final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    var androidNotificationChannel = AndroidNotificationChannel(
+      id,
+      name,
+    );
+    await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(androidNotificationChannel);
   }
 
-  void openDownloadedFile(String path) async {
-    // final _result = await OpenFile.open(path);
-    // print('${_result.message} >> ${_result.type.index}');
+  void showNotification(String title, String message, Map<String, dynamic> payLoad) async {
+    kEcho('FCM showNotification message $message');
+    kEcho('FCM showNotification payLoad $payLoad');
+    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      '682',
+      'Done',
+      playSound: true,
+      enableVibration: false,
+      importance: Importance.max,
+      priority: Priority.high,
+    );
 
-    // if (_result.type.index != 0) {
-    //   showCustomSnackBar( _result.message,context);
-    // }
+    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+    var platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+      iOS: iOSPlatformChannelSpecifics,
+    );
+
+    await flutterLocalNotificationsPlugin.show(
+      1,
+      title,
+      message,
+      platformChannelSpecifics,
+      payload: payLoad.toString(),
+    );
+  }
+
+  void saveFCM(String fcm) async {
+    AppPrefs prefs = getIt<AppPrefs>();
+    bool isTypeProduct = prefs.get(PrefKeys.isTypeProvider, defaultValue: false);
+    String url = isTypeProduct ? AppURLProvider.updateFcm : AppURL.kUpdateFCMTokenURI;
+    NetworkCallType type = NetworkCallType.post;
+    Map<String, dynamic> data = {
+      'fcm_token': fcm,
+    };
+    NetworkClient networkClient = getIt<NetworkClient>();
+    await networkClient(url: url, data: data, type: type);
+  }
+
+  void selectNotification(String? payload) async {
+    AppPrefs prefs = getIt<AppPrefs>();
+    bool isTypeProduct = prefs.get(PrefKeys.isTypeProvider, defaultValue: false);
+    if (isTypeProduct) {
+      NavigationService.push(RoutesProvider.providerNotifications);
+    } else {
+      NavigationService.push(RoutesServices.servicesNotifications);
+    }
   }
 }

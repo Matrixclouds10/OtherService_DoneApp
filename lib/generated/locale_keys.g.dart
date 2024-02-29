@@ -1,11 +1,129 @@
 // DO NOT EDIT. This is code generated via package:easy_localization/generate.dart
 
 abstract class LocaleKeys {
-  
+  static const apple = "applePay";
+  static const requiredDocumentsDesc = "requiredDocumentsDesc";
+  static const requiredDocuments = "requiredDocuments";
+  static const nationalIdBack = "nationalIdBack";
+  static const ciminalCertificate = "ciminalCertificate";
+  static const personalImage = "personalImage";
+  static const taxCard = "taxCard";
+  static const commercialRegister = "commercialRegister";
+
+  static const successfullySubscribed = "successfullySubscribed";
+  static const visa = "visa";
+  static const mobileWalletPayment = "mobileWalletPayment";
+  static const kiosk = "kiosk";
+  static const requestPayment = "requestPayment";
+  static const payBy = "payBy";
+
+  static const subscribeAndactivateAccount = "subscribeAndactivateAccount";
+  static const region = "region";
+  static const areYouSureToAdd = "areYouSureToAdd";
+  static const payNow = "payNow";
+  static const price = "price";
+  static const period = "period";
+  static const paymentMethod = "paymentMethod";
+  static const city = "city";
+  static const whatsApp = "whatsApp";
+  static const byClickingRegisterYouAccept = "byClickingRegisterYouAccept";
+  static const enterRegisteredEmailAddress = "enterRegisteredEmailAddress";
+  static const activateAccount = "activateAccount";
+  static const orderFinishedWaitingForClientConfirmation = "orderFinishedWaitingForClientConfirmation";
+  static const activate = "activate";
+  static const emptyWallet = "emptyWallet";
+  static const noServicesFound = "noServicesFound";
+  static const successfullySended = "successfullySended";
+  static const noSubscribtions = "noSubscribtions";
+  static const moreInfo = "moreInfo";
+  static const exit = "exit";
+  static const youRated = "youRated";
+  static const youNeedToSubscribe = "youNeedToSubscribe";
+  static const no_notifications = "no_notifications";
+  static const makeAppointment = "makeAppointment";
+  static const loginMessage = "loginMessage";
+  static const provider = "provider";
+  static const user = "user";
+  static const ordersHistory = "ordersHistory";
+  static const aboutUsNote = "aboutUsNote";
+  static const contactUsNote = "contactUsNote";
+
+  static const noOrdersFound = "noOrdersFound";
+  static const copyOfId = "copyOfId";
+  static const copyOfWorkLicense = "copyOfWorkLicense";
+  static const copyOfPassport = "copyOfPassport";
+  static const anyOthers = "anyOthers";
+
+  static const confirmSubscribtion = "confirmSubscribtion";
+  static const walkThroughTitle1 = "walkThroughTitle1";
+  static const walkThroughTitle2 = "walkThroughTitle2";
+  static const walkThroughTitle3 = "walkThroughTitle3";
+  static const walkThroughDesc1 = "walkThroughDesc1";
+  static const walkThroughDesc2 = "walkThroughDesc2";
+  static const walkThroughDesc3 = "walkThroughDesc3";
+  static const selectLanguage = "noFavoriteItems";
+  static const noFavoriteItems = "noFavoriteItems";
+  static const myInformation = "myInformation";
+  static const pleaseAddImageOrVideo = "pleaseAddImageOrVideo";
+  static const deployImageOrVideoIssue = "deployImageOrVideoIssue";
+  static const selectDateAndTime = "selectDateAndTime";
+  static const subscribtionStatus = "subscribtionStatus";
+  static const rate = "rate";
+  static const subscribtionHistory = "subscribtionHistory";
+  static const back = "back";
+  static const selectRate = "selectRate";
+  static const rateSuccess = "rateSuccess";
+  static const comment = "comment";
+  static const rateOrder = "rateOrder";
+  static const reservation = "reservation";
+  static const successfullySendOrder = "successfullySendOrder";
+  static const somethingWentWrong = "somethingWentWrong";
+  static const camera = "camera";
+  static const gallery = "gallery";
+  static const video = "video";
+  static const whenDoYouNeedThisService = "whenDoYouNeedThisService";
+  static const accordingToSpecifiedTime = "accordingToSpecifiedTime";
+  static const rightNow = "rightNow";
+  static const date = "date";
+  static const time = "time";
+  static const selectService = "selectService";
+  static const cantAddMoreThan5Images = "cantAddMoreThan5Images";
+  static const waitingForApproval = "waitingForApproval";
+  static const approved = "approved";
+  static const inProgress = "inProgress";
+  static const giverate = "giverate";
+  static const subscribeNow = "subscribeNow";
+  static const successfullyFinishOrder = "successfullyFinishOrder";
+  static const enterAmount = "enterAmount";
+  static const finishOrder = "finishOrder";
+  static const finished = "finished";
+  static const canceled = "canceled";
+  static const successfullyAcceptOrder = "successfullyAcceptOrder";
+  static const cancelOrder = "cancelOrder";
+  static const cancelReason = "cancelReason";
+  static const reasonRequired = "reasonRequired";
+  static const successfullyCanceledOrder = "successfullyCanceledOrder";
+  static const myWallet = "myWallet";
+  static const acceptOrder = "acceptOrder";
+  static const primaryAmount = "primaryAmount";
+  static const totalCost = "totalCost";
+  static const orderStatus = "orderStatus";
+  static const waitingForYourResponse = "waitingForYourResponse";
+  static const addNewService = "addNewService";
+  static const totalAmount = "totalAmount";
+  static const most_requested_providers = "most_requested_providers";
+  static const or = "or";
+  static const msgMessageRequired = "msgMessageRequired";
+  static const share_location = "share_location";
+  static const location_permission_denied = "location_permission_denied";
+  static const selectCountry = "selectCountry";
+  static const descrption = "descrption";
+  static const editAddress = "editAddress";
+  static const orderDetails = "orderDetails";
   static const confirmOrder = "confirmOrder";
+  static const searchByProviderName = "searchByProviderName";
   static const confirmLogout = "confirmLogout";
   static const address = "address";
-  static const video = "video";
   static const add = "add";
   static const addNewAddressDescription = "addNewAddressDescription";
   static const addNewAddress = "addNewAddress";
@@ -25,19 +143,15 @@ abstract class LocaleKeys {
   static const ar = 'ar';
   static const error = 'error';
   static const cantGetNewOrders = 'cantGetNewOrders';
-  static const makeSureToSelectServicesYouProvide =
-      'makeSureToSelectServicesYouProvide';
+  static const makeSureToSelectServicesYouProvide = 'makeSureToSelectServicesYouProvide';
   static const makeSureToUploadAllFiles = 'makeSureToUploadAllFiles';
   static const makeSureToBeOnline = 'makeSureToBeOnline';
   static const mustAcceptTerms = 'mustAcceptTerms';
   static const mustSelectCountry = 'mustSelectCountry';
-  static const somethingWentWrong = 'somethingWentWrong';
   static const notification = 'notification';
   static const indvidual = 'indvidual';
   static const company = 'company';
   static const selectImageSource = 'selectImageSource';
-  static const camera = 'camera';
-  static const gallery = 'gallery';
   static const welcomToOurWorld = 'welcomToOurWorld';
   static const alreadyHaveAccount = 'alreadyHaveAccount';
   static const joinOurWorld = 'joinOurWorld';
@@ -107,8 +221,7 @@ abstract class LocaleKeys {
   static const deleteAccount = 'deleteAccount';
   static const subject = 'subject';
   static const message = 'message';
-  static const theRequestHasBeenSentSuccessfully =
-      'theRequestHasBeenSentSuccessfully';
+  static const theRequestHasBeenSentSuccessfully = 'theRequestHasBeenSentSuccessfully';
   static const theMalfunctionImages = 'theMalfunctionImages';
   static const theMalfunctionDesc = 'theMalfunctionDesc';
   static const voiceRecording = 'voiceRecording';
@@ -135,8 +248,7 @@ abstract class LocaleKeys {
   static const registerPrivacyMassage = 'registerPrivacyMassage';
   static const otpVerification = 'otpVerification';
   static const phoneVerification = 'phoneVerification';
-  static const anAuthenticationCodeHasBeenSentTo =
-      'anAuthenticationCodeHasBeenSentTo';
+  static const anAuthenticationCodeHasBeenSentTo = 'anAuthenticationCodeHasBeenSentTo';
   static const iDidNotReceiveCode = 'iDidNotReceiveCode';
   static const secLeft = 'secLeft';
   static const verifyNow = 'verifyNow';
@@ -158,8 +270,7 @@ abstract class LocaleKeys {
   static const payment = 'payment';
   static const chooseYourPaymentMethod = 'chooseYourPaymentMethod';
   static const promoCode = 'promoCode';
-  static const saveTimeByAddingYourFavoritePlacesHear =
-      'saveTimeByAddingYourFavoritePlacesHear';
+  static const saveTimeByAddingYourFavoritePlacesHear = 'saveTimeByAddingYourFavoritePlacesHear';
   static const allServices = 'allServices';
   static const showAll = 'showAll';
   static const favorite = 'favorite';
@@ -192,7 +303,7 @@ abstract class LocaleKeys {
   static const stopReceiveRequest = 'stopReceiveRequest';
   static const goodMorningDesc = 'goodMorningDesc';
   static const goodMorning = 'goodMorning';
-  static const newWord = 'newWord';
+  static const newOrders = 'newOrders';
   static const confirmDelete = 'confirmDelete';
   static const logOutNote = 'logOutNote';
   static const passport = 'passport';
@@ -204,10 +315,9 @@ abstract class LocaleKeys {
   static const toContactUs = 'toContactUs';
   static const yourAccountInReview = 'yourAccountInReview';
   static const goToMyFiles = 'goToMyFiles';
-   static const allowLocationStatusToBeShownForNearbyUsers= 'السماح للموقع ليتم عرضه للمستخدمين القريبين';
+  static const allowLocationStatusToBeShownForNearbyUsers = 'السماح للموقع ليتم عرضه للمستخدمين القريبين';
   static const selectAction = 'اختر العملية';
   static const other = 'other';
   static const letsStart = 'letsStart';
   static const loginAsVisitor = 'loginAsVisitor';
-
 }

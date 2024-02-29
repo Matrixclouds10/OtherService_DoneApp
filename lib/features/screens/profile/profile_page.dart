@@ -1,30 +1,33 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weltweit/core/routing/navigation_services.dart';
-import 'package:weltweit/features/core/routing/routes.dart';
+import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
-
+import 'package:weltweit/core/routing/navigation_services.dart';
+import 'package:weltweit/core/routing/routes.dart';
+import 'package:weltweit/core/utils/globals.dart';
+import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
+import 'package:weltweit/features/logic/orders/orders_cubit.dart';
 import 'package:weltweit/features/logic/profile/profile_cubit.dart';
-import 'package:weltweit/features/services/logic/orders/orders_cubit.dart';
-import 'package:weltweit/features/services/modules/layout/layout_cubit.dart';
-import 'package:weltweit/features/services/modules/my_addresses/logic/address_cubit.dart';
+import 'package:weltweit/features/screens/my_addresses/logic/address_cubit.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
+import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
-import 'package:weltweit/presentation/dialog/base/simple_dialogs.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    GlobalParams globalParams = getIt();
     return Scaffold(
         backgroundColor: servicesTheme.scaffoldBackgroundColor,
         appBar: CustomAppBar(
           isBackButtonExist: false,
           isCenterTitle: true,
           color: Colors.white,
-          titleWidget: const CustomText("حسابي").header(),
+          titleWidget: CustomText(LocaleKeys.myProfile.tr()).header(),
           actions: [
             IconButton(
               icon: const Icon(Icons.edit_note, color: Colors.black),
@@ -32,60 +35,16 @@ class ProfilePage extends StatelessWidget {
                 Navigator.of(context).pushNamed(RoutesServices.servicesProfileEdit);
               },
             ),
-            IconButton(
-              icon: const Icon(Icons.more_vert, color: Colors.black),
-              onPressed: () {},
-            ),
           ],
         ),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: MediaQuery.of(context).padding.top),
-              const SizedBox(height: 12),
-              GestureDetector(
-                onTap: () {
-                  NavigationService.push(RoutesServices.servicesProfileEdit);
-                },
-                child: BlocBuilder<ProfileCubit, ProfileState>(
-                  builder: (context, state) {
-                    if (state.data == null) {
-                      return Container();
-                    }
-                    return Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CustomImage(
-                            imageUrl: state.data!.image,
-                            width: MediaQuery.of(context).size.width / 7,
-                            height: MediaQuery.of(context).size.width / 7,
-                            fit: BoxFit.fill,
-                            radius: 250,
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 4),
-                                textWithIcon(icon: Icons.person, text: state.data!.name ?? ''),
-                                const SizedBox(height: 4),
-                                textWithIcon(icon: Icons.phone, text: state.data!.mobileNumber ?? ''),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 12),
-              const CustomText("معلوماتي", color: Colors.black, align: TextAlign.start, bold: true, pv: 0, ph: 12).header(),
+              SizedBox(height: 8),
+              _userProfileCard(context),
+              const SizedBox(height: 8),
+              CustomText(LocaleKeys.myInformation.tr(), color: Colors.black, align: TextAlign.start, bold: true, pv: 4, ph: 12).header(),
               Container(
                 color: Colors.white,
                 child: Column(
@@ -94,8 +53,8 @@ class ProfilePage extends StatelessWidget {
                       builder: (context, state) {
                         return singleCustomListTile(
                             icon: Icons.arrow_forward_ios,
-                            text: 'عناويني',
-                            trailingText: state.addresses.isNotEmpty ? "(${state.addresses.length} عنوان)" : "",
+                            text: LocaleKeys.myAddresses.tr(),
+                            trailingText: state.addresses.isNotEmpty ? "(${state.addresses.length} ${LocaleKeys.address.tr()})" : "",
                             onTap: () {
                               Navigator.pushNamed(context, RoutesServices.servicesMyAddresses);
                             });
@@ -106,49 +65,85 @@ class ProfilePage extends StatelessWidget {
                       builder: (context, state) {
                         return singleCustomListTile(
                             icon: Icons.arrow_forward_ios,
-                            text: 'طلباتي',
-                            trailingText: state.data.isNotEmpty ? "(${state.data.length} طلب)" : "",
+                            text: LocaleKeys.myOrders.tr(),
+                            trailingText: state.pendingData.isNotEmpty ? "(${state.pendingData.length} طلب)" : "",
                             onTap: () {
                               Navigator.pushNamed(context, RoutesServices.servicesOrders);
                             });
                       },
                     ),
                     Divider(height: 2, color: Colors.grey[300]),
-                    singleCustomListTile(icon: Icons.arrow_forward_ios, text: 'اللغة', trailingText: "العربية", onTap: () {}),
-                    Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
                         icon: Icons.arrow_forward_ios,
-                        text: 'من نحن',
-                        trailingText: "",
-                        onTap: () {
-                          Navigator.pushNamed(context, RoutesServices.servicesAboutUs);
+                        text: LocaleKeys.language.tr(),
+                        trailingText: (() {
+                          Locale locale = EasyLocalization.of(context)!.locale;
+                          if (locale.languageCode == "ar") {
+                            return "العربية";
+                          } else {
+                            return "English";
+                          }
+                        }()),
+                        onTap: () async {
+                          await AppDialogs().languageDialog(context);
                         }),
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
                         icon: Icons.arrow_forward_ios,
-                        text: 'تواصل معنا',
+                        text: LocaleKeys.aboutUs.tr(),
                         trailingText: "",
                         onTap: () {
-                          Navigator.pushNamed(context, RoutesServices.servicesContactUs);
+                          Navigator.pushNamed(context, Routes.about);
                         }),
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
                         icon: Icons.arrow_forward_ios,
-                        text: 'تسجيل خروج',
+                        text: LocaleKeys.privacyPolicy.tr(),
                         trailingText: "",
                         onTap: () {
-                          AppDialogs().logoutDialog(context);
+                          Navigator.pushNamed(context, Routes.policy);
                         }),
+                    Divider(height: 2, color: Colors.grey[300]),
+                    singleCustomListTile(
+                        icon: Icons.arrow_forward_ios,
+                        text: LocaleKeys.contactUs.tr(),
+                        trailingText: "",
+                        onTap: () {
+                          Navigator.pushNamed(context, Routes.contactUs);
+                        }),
+                    Divider(height: 2, color: Colors.grey[300]),
+                    BlocBuilder<ProfileCubit, ProfileState>(
+                      builder: (context, state) {
+                        if (state.data == null) {
+                          return singleCustomListTile(
+                              icon: Icons.arrow_forward_ios,
+                              text: LocaleKeys.login.tr(),
+                              trailingText: "",
+                              onTap: () {
+                                NavigationService.pushNamedAndRemoveUntil(RoutesServices.servicesWelcomeScreen);
+                              });
+                        }
+
+                        return singleCustomListTile(
+                            icon: null,
+                            text: LocaleKeys.logOut.tr(),
+                            trailingText: "",
+                            onTap: () {
+                              AppDialogs().logoutDialog(context);
+                            });
+                      },
+                    )
                   ],
                 ),
-              )
+              ),
+              SizedBox(height: 90),
             ],
           ),
         ));
   }
 
   Widget singleCustomListTile({
-    required IconData icon,
+    required IconData? icon,
     required String text,
     required String? trailingText,
     required Function() onTap,
@@ -163,7 +158,7 @@ class ProfilePage extends StatelessWidget {
               Expanded(child: CustomText(text, color: text.contains("خروج") ? Colors.red : Colors.black, align: TextAlign.start, pv: 0)),
               if (trailingText != null) CustomText(trailingText, color: Colors.grey, align: TextAlign.start, pv: 0),
               const SizedBox(width: 12),
-              Icon(icon, size: 16, color: Colors.grey),
+              if (icon != null) Icon(icon, size: 16, color: Colors.grey),
             ],
           ),
         ));
@@ -176,10 +171,54 @@ class ProfilePage extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Icon(icon, size: 16, color: Colors.black),
+        Icon(icon, size: 18, color: Colors.black87),
         const SizedBox(width: 4),
-        CustomText(text, color: Colors.black, align: TextAlign.start, pv: 0),
+        CustomText(text, color: Colors.black87, align: TextAlign.start, pv: 0),
       ],
+    );
+  }
+
+  _userProfileCard(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        NavigationService.push(RoutesServices.servicesProfileEdit);
+      },
+      child: BlocBuilder<ProfileCubit, ProfileState>(
+        builder: (context, state) {
+          if (state.data == null) {
+            return Container();
+          }
+
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomImage(
+                  imageUrl: state.data!.image,
+                  width: MediaQuery.of(context).size.width / 6,
+                  height: MediaQuery.of(context).size.width / 6,
+                  fit: BoxFit.fill,
+                  radius: 250,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 4),
+                      textWithIcon(icon: Icons.person, text: state.data!.name ?? ''),
+                      const SizedBox(height: 4),
+                      textWithIcon(icon: Icons.phone, text: state.data!.mobileNumber ?? ''),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }

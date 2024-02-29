@@ -1,10 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
-
 import 'package:weltweit/app.dart';
 
 class DateConverter {
   static String formatDate(DateTime dateTime) {
-    return DateFormat('yyyy-MM-dd hh:mm:our_clients').format(dateTime);
+    return DateFormat('yyyy-MM-dd hh:mm').format(dateTime);
   }
 
   static String estimatedDate(DateTime dateTime) {
@@ -41,9 +40,7 @@ class DateConverter {
       return DateTime.now();
     }
     try {
-      return DateFormat('yyyy-mm-ddThh:mm:our_clients')
-          .parse(dateTime)
-          .toLocal();
+      return DateFormat('yyyy-mm-ddThh:mm:our_clients').parse(dateTime).toLocal();
     } catch (e) {
       return DateTime.now();
     }
@@ -56,10 +53,7 @@ class DateConverter {
     }
     String date = '';
     try {
-      date = DateFormat('yyyy-MM-dd').format(
-          DateFormat('yyyy-mm-ddThh:mm:our_clients')
-              .parse(dateTime, true)
-              .toLocal());
+      date = DateFormat('yyyy-MM-dd').format(DateFormat('yyyy-mm-ddThh:mm:our_clients').parse(dateTime, true).toLocal());
     } catch (e) {
       date = '';
     }
@@ -67,8 +61,7 @@ class DateConverter {
   }
 
   static String isoStringToLocalTimeTimeOnly(String dateTime) {
-    return DateFormat('HH:mm a')
-        .format(DateFormat('HH:mm').parse(dateTime, true).toLocal());
+    return DateFormat('HH:mm a').format(DateFormat('HH:mm').parse(dateTime, true).toLocal());
   }
 
   static String isoStringToLocalTimeOnly(String dateTime) {
@@ -104,32 +97,28 @@ class DateConverter {
     if (dateTime == null) {
       return '';
     }
-    return DateFormat('dd MMM hh aa', appContext?.locale.languageCode ?? 'ar')
-        .format(dateTime);
+    return DateFormat('dd MMM hh aa', appContext?.locale.languageCode ?? 'ar').format(dateTime);
   }
 
   static String localDateFromToIsoString(String? dateTime) {
     if (dateTime == null) {
       return '';
     }
-    return DateFormat('dd MMM hh aa', appContext?.locale.languageCode ?? 'ar')
-        .format(isoStringToLocalDate(dateTime));
+    return DateFormat('dd MMM hh aa', appContext?.locale.languageCode ?? 'ar').format(isoStringToLocalDate(dateTime));
   }
 
   static String localDateToIsoString(DateTime dateTime) {
-    return DateFormat('yyyy-MM-ddTHH:mm:our_clients.SSS')
-        .format(dateTime.toUtc());
+    return DateFormat('yyyy-MM-ddTHH:mm:our_clients.SSS').format(dateTime.toUtc());
   }
 
   static String isoDayWithDateString(String dateTime) {
-    return DateFormat('EEE, MMM d, yyyy')
-        .format(isoStringToLocalDate(dateTime));
+    return DateFormat('EEE, MMM d, yyyy').format(isoStringToLocalDate(dateTime));
   }
 
   static String convertTimeRange(String start, String end) {
-    DateTime _startTime = DateFormat('HH:mm:our_clients').parse(start);
-    DateTime _endTime = DateFormat('HH:mm:our_clients').parse(end);
-    return '${DateFormat('hh:mm aa').format(_startTime)} - ${DateFormat('hh:mm aa').format(_endTime)}';
+    DateTime startTime = DateFormat('HH:mm:our_clients').parse(start);
+    DateTime endTime = DateFormat('HH:mm:our_clients').parse(end);
+    return '${DateFormat('hh:mm aa').format(startTime)} - ${DateFormat('hh:mm aa').format(endTime)}';
   }
 
   static DateTime stringTimeToDateTime(String time) {

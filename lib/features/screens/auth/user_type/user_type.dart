@@ -4,7 +4,7 @@ import 'package:weltweit/core/extensions/num_extensions.dart';
 import 'package:weltweit/core/resources/color.dart';
 import 'package:weltweit/core/resources/values_manager.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
-import 'package:weltweit/features/core/routing/routes.dart';
+import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
@@ -45,9 +45,10 @@ class UserTypeScreen extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: kScreenPaddingLarge.w),
                       child: CustomButton(
                         title: LocaleKeys.newClient.tr(),
-                        onTap: () => NavigationService.push(RoutesServices.servicesRegisterScreen, arguments: {
-                          'typeIsProvider': false,
-                        }),
+                        onTap: () => NavigationService.push(
+                          RoutesServices.servicesRegisterScreen,
+                          arguments: {'typeIsProvider': false},
+                        ),
                       ),
                     ),
                     Padding(
@@ -56,9 +57,10 @@ class UserTypeScreen extends StatelessWidget {
                         title: LocaleKeys.serviceProvider.tr(),
                         textColor: Colors.white,
                         color: AppColorLight().kAccentColor,
-                        onTap: () => NavigationService.push(RoutesServices.servicesRegisterScreen, arguments: {
-                          'typeIsProvider': true,
-                        }),
+                        onTap: () => NavigationService.push(
+                          RoutesServices.servicesRegisterScreen,
+                          arguments: {'typeIsProvider': true},
+                        ),
                       ),
                     ),
                     VerticalSpace(kScreenPaddingNormal.h),

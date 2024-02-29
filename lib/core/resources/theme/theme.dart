@@ -5,7 +5,6 @@ import 'package:weltweit/core/resources/font_manager.dart';
 import '../color.dart';
 import '../decoration.dart';
 import 'app_bar.dart';
-import 'bottom_bar.dart';
 import 'button.dart';
 import 'text.dart';
 
@@ -130,21 +129,7 @@ final ThemeData darkTheme = ThemeData(
 );
 
 ThemeData get servicesTheme {
-  Color primaryColor = Colors.orange;
-  Color primaryColorDark = Colors.orange[700]!;
-  Color primaryColorLight = Colors.orangeAccent;
-
-  Color accentColor = const Color(0xff57A4C3);
-
-  Color scaffoldBackgroundColor = const Color(0xffFDF2E9);
-  // Color backgroundColor = Color(0xFF1E1E1E);
-  // Color cardColor = Color(0xFF1E1E1E);
-  // Color dividerColor = Color(0xFF1E1E1E);
-  // Color errorColor = Color(0xFF1E1E1E);
-  // Color highlightColor = Color(0xFF1E1E1E);
-  // Color hoverColor = Color(0xFF1E1E1E);
-  // Color unselectedWidgetColor = Color(0xFF1E1E1E);
-  // Color textSecondary = Color(0xFF1E1E1E);
+ 
 
   return ThemeData(
     useMaterial3: true,
