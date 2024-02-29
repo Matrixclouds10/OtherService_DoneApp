@@ -84,9 +84,21 @@ class ProfileProviderCubit extends Cubit<ProfileProviderState> {
     if (state.updateState == BaseState.loading) return;
     emit(state.copyWith(updateState: BaseState.loading));
     final result = await updateProfileUseCase(params);
-    result.fold(
+    // result.fold(
+    //   (error) => emit(state.copyWith(updateState: BaseState.error, error: error)),
+    //   (data) => emit(state.copyWith(updateState: BaseState.loaded, data: data)),
+    //
+    // );
+
+    return result.fold(
       (error) => emit(state.copyWith(updateState: BaseState.error, error: error)),
-      (data) => emit(state.copyWith(updateState: BaseState.loaded, data: data)),
+      (data) {
+        emit(state.copyWith(updateState: BaseState.loaded, data: data));
+        AppPrefs prefs = getIt();
+        if (data.countryModel?.id != null) prefs.save(PrefKeys.countryId, data.countryModel?.id);
+        GlobalParams globalParams = getIt();
+        globalParams = globalParams.copyWith(user: state.data);
+      },
     );
   }
 
