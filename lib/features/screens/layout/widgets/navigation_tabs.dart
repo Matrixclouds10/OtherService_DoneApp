@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:weltweit/core/tabs/tab.dart';
 import 'package:weltweit/features/screens/favorite/favorite_page.dart';
 import 'package:weltweit/features/screens/home/home_page.dart';
@@ -23,16 +24,21 @@ List<NavigationTab> kTabs = <NavigationTab>[
   const NavigationTab(
     name: LocaleKeys.home,
     image: Assets.svgMoreNotificationIcon,
-    unSelectIcon: CupertinoIcons.house_fill,
-    selectIcon: CupertinoIcons.house,
+    unSelectIcon: FontAwesomeIcons.house,
+    selectIcon: FontAwesomeIcons.house,
+
+    // unSelectIcon: CupertinoIcons.house_fill,
+    // selectIcon: CupertinoIcons.house,
     initialRoute: HomePage(),
     index: NavigationTabs.home,
   ),
   const NavigationTab(
     name: LocaleKeys.favorite,
     image: '',
-    selectIcon: CupertinoIcons.heart,
-    unSelectIcon: CupertinoIcons.heart_fill,
+    unSelectIcon: FontAwesomeIcons.heart,
+    selectIcon: FontAwesomeIcons.heart,
+    // selectIcon: CupertinoIcons.heart,
+    // unSelectIcon: CupertinoIcons.heart_fill,
     initialRoute: FavoritePage(),
     index: NavigationTabs.favorite,
   ),
