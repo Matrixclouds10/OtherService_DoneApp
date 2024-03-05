@@ -6,7 +6,7 @@ version: 1.1.0+105
 environment:
   sdk: '>=2.18.2 <3.0.0'
 
-
+#flutter build apk --no-tree-shake-icons  --dart-define=FLAVOR=development --target lib/main.dart
 dependencies:
   flutter:
     sdk: flutter
