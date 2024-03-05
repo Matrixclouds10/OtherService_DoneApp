@@ -1,7 +1,7 @@
 class AppURL {
   static const kAPIKey = "";
   // static const kBaseURL = "https://doneapp.org/api";
-  static const kBaseURL = "http://newdon.dev01.matrix-clouds.com/api";
+  static const kBaseURL = "https://doneapp.org/api";
 
   ///Auth
   static const String kLoginURI = "$kBaseURL/auth/login";
