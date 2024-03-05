@@ -1,7 +1,7 @@
 class AppURLProvider {
   static const String kAPIKey = "";
-   static const String kBaseURL = "http://newdon.dev01.matrix-clouds.com/api/service-provider";
-   static const String kBaseURLApi = "http://newdon.dev01.matrix-clouds.com/api";
+   static const String kBaseURL = "https://doneapp.org/api/service-provider";
+   static const String kBaseURLApi = "https://doneapp.org/api";
   // static const String kBaseURL = "https://doneapp.org/api/service-provider";
   // static const String kBaseURLApi = "https://doneapp.org/api";
 

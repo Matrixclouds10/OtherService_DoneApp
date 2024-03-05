@@ -13,6 +13,8 @@ import 'package:weltweit/features/screens/layout/layout_cubit.dart';
 import 'package:weltweit/features/screens/layout/widgets/navigation_tabs.dart';
 import 'package:weltweit/presentation/component/component.dart';
 
+import '../../../core/tabs/tab.dart';
+
 class LayoutPage extends StatefulWidget {
   // ignore: unused_field
   final int? _currentPage;
@@ -120,19 +122,26 @@ class LayoutView extends StatelessWidget {
               selectedItemColor: Theme.of(context).primaryColor,
               selectedLabelStyle: TextStyle(fontSize: 12),
               items: [
-                ...kTabs.map(
-                  (e) {
-                    if (e.index == 2) return BottomNavigationBarItem(icon: Container(), label: '');
+                ...kTabs.map((e) {
+                  if (e.index == 2) return BottomNavigationBarItem(icon: Container(), label: '');
+                  // if (e.index == 2) return BottomNavigationBarItem(icon: Container(), label: '');
 
-                    return BottomNavigationBarItem(
-                      icon: Icon(
-                        currentIndex == e.index ? e.selectIcon : e.unSelectIcon,
-                        color: currentIndex == e.index ? Theme.of(context).primaryColor : Theme.of(context).hintColor,
-                      ),
-                      label: tr(e.name),
-                    );
-                  },
-                ),
+                 return _buildItem(context, currentIndex, () { }, e);
+
+                })
+                // ...kTabs.map(
+                //   (e) {
+                //     if (e.index == 2) return BottomNavigationBarItem(icon: Container(), label: '');
+                //
+                //     return BottomNavigationBarItem(
+                //       icon: Icon(
+                //         currentIndex == e.index ? e.selectIcon : e.unSelectIcon,
+                //         color: currentIndex == e.index ? Theme.of(context).primaryColor : Theme.of(context).hintColor,
+                //       ),
+                //       label: tr(e.name),
+                //     );
+                //   },
+                // ),
               ],
             ),
           );
@@ -140,6 +149,21 @@ class LayoutView extends StatelessWidget {
           return Container();
         }
       },
+    );
+  }
+  _buildItem(BuildContext context,int currentIndex,  VoidCallback? onClick,NavigationTab tab) {
+    return BottomNavigationBarItem(
+      label: tr(tab.name),
+      icon: TapEffect(
+        onClick: () {},
+        child: Icon(
+            currentIndex == tab.index ? tab.selectIcon : tab.unSelectIcon,
+            color: currentIndex == tab.index
+                ? Colors.orange
+                : Theme.of(context).hintColor),
+        // child: SvgPicture.asset(tab.image,
+        //     height: 28.r, width: 28.r, color: Colors.orange),
+      ),
     );
   }
 }
