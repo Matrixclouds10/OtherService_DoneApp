@@ -24,7 +24,7 @@ class SignInUseCase implements BaseUseCase<UserModel> {
 
   @override
   ResponseModel<UserModel> onConvert(BaseModel baseModel) {
-    try {
+    // try {
       String? token = baseModel.responseData['token'];
       if (token != null) {
         UserModel user = UserModel.fromJson(baseModel.responseData);
@@ -32,9 +32,9 @@ class SignInUseCase implements BaseUseCase<UserModel> {
       } else {
         return ResponseModel(true, baseModel.message, data: baseModel.responseData);
       }
-    } catch (e) {
-      return ResponseModel(true, baseModel.message, data: baseModel.responseData);
-    }
+    // } catch (e) {
+    //   return ResponseModel(false, baseModel.message);
+    // }
   }
 }
 

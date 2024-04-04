@@ -8,8 +8,7 @@ class AppSnackbar {
     required BuildContext context,
     String? title, //TODO remove this
     required String message,
-    SnackbarType type = SnackbarType.other,
-  }) {
+    SnackbarType type = SnackbarType.other}) {
     AnimatedSnackBarType snackBarType = AnimatedSnackBarType.info;
     switch (type) {
       case SnackbarType.success:
@@ -33,8 +32,7 @@ class AppSnackbar {
       message,
       type: snackBarType,
       duration: Duration(seconds: 6),
-      mobileSnackBarPosition:
-          MobileSnackBarPosition.top, // Position of snackbar on mobile devices
+      mobileSnackBarPosition: MobileSnackBarPosition.top, // Position of snackbar on mobile devices
     ).show(context);
   }
 }

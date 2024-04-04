@@ -18,8 +18,8 @@ class CityModel {
   factory CityModel.fromJson(Map<String, dynamic> json) {
     return CityModel(
       id: json['id'] as int?,
+      countryId: json['id'] as int?,
       name: json['name'] as String?,
-      countryId: json['country_id'] as int?,
     );
   }
 }

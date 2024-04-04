@@ -22,7 +22,7 @@ class CountryModel {
   CountryModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
-    code = json['code'];
+    code = json['code'].toString();
     logo = json['logo'];
     facebook = json['facebook'];
     twitter = json['twitter'];

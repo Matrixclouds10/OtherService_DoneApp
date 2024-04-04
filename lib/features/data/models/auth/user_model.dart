@@ -1,3 +1,4 @@
+import 'package:weltweit/core/utils/logger.dart';
 import 'package:weltweit/features/data/models/location/city_model.dart';
 import 'package:weltweit/features/data/models/location/country_model.dart';
 import 'package:weltweit/features/data/models/location/region_model.dart';
@@ -11,7 +12,7 @@ class UserModel {
   String? whatsAppNumber;
   String? token;
   int? approved;
-  int? otpVerified;
+  String? otpVerified;
   String? countryCode;
   String? image;
   String gender;
@@ -59,7 +60,7 @@ class UserModel {
         countryJson = json['country'];
       }
     }
-
+    log('otp_verified', '${json['otp_verified']??0} ${json['otp_verified'] is int}');
     return UserModel(
       id: json['id'] as int?,
       name: json['name'] as String?,
@@ -69,18 +70,19 @@ class UserModel {
       whatsAppNumber: json['whatsapp_number'] as String?,
       token: json['token'] == null ? null : '${json['token']}',
       approved: json['approved'] as int?,
-      otpVerified: json['otp_verified'] as int?,
+      // otpVerified:  json['otp_verified']?. json['otp_verified'].toString() ,
+      otpVerified:  json['otp_verified']==null?null: json['otp_verified'].toString() ,
       countryCode: json['country_code'] as String?,
       image: json['image'] as String?,
       gender: json['gender'] ?? "male",
       desc: json['description'] ?? "",
       // isCompany: json['is_company'] as int?,
-      countryModel: countryJson != null ? CountryModel.fromJson(countryJson) : null,
+      countryModel:countryJson != null ? CountryModel.fromJson(countryJson) : null,
       wallet: "${json['wallets']}",
       cityModel: json['city'] != null ? CityModel.fromJson(json['city']) : null,
       regionModel: json['region'] != null ? RegionModel.fromJson(json['region']) : null,
       countryId: json['country_id'] == null ? null : int.tryParse('${json['country_id']}'),
-      currentSubscription: json['current_subscription'] != null ? CurrentSubscribtion.fromJson(json['current_subscription']) : null,
+      currentSubscription:json['current_subscription'] != null ? CurrentSubscribtion.fromJson(json['current_subscription']) : null,
     );
   }
 }

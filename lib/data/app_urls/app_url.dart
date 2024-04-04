@@ -1,7 +1,9 @@
+import 'domain.dart';
+
 class AppURL {
   static const kAPIKey = "";
-  // static const kBaseURL = "https://doneapp.org/api";
-  static const kBaseURL = "https://doneapp.org/api";
+  // static const kBaseURL = "https://propertiesapk.net/api";
+  // static const kBaseURL = "https://propertiesapk.net/api";
 
   ///Auth
   static const String kLoginURI = "$kBaseURL/auth/login";

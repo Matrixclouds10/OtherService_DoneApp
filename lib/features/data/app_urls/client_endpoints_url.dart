@@ -1,7 +1,9 @@
+import 'package:weltweit/data/app_urls/domain.dart';
+
 class AppURL {
   static const String kAPIKey = "";
-  // static const String kBaseURL = "https://doneapp.org/api";
-   static const String kBaseURL = "https://doneapp.org/api";
+  // static const String kBaseURL = "https://propertiesapk.net/api";
+  //  static const String kBaseURL = "https://propertiesapk.net/api";
   // static const String kBaseURL = "$kBaseURL/https://super-app.dev01.matrix-clouds.com/api/";
 
   //Profile
