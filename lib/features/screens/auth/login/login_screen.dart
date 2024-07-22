@@ -148,6 +148,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     LoginlState state = context.watch<LoginCubit>().state;
+    _phoneController.text = '553387712';
+    _passwordController.text = '12345678';
 
     return SafeArea(
       child: Scaffold(

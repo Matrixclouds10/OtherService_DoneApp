@@ -63,6 +63,8 @@ class DioClient {
   }) async {
     options ??= await initOptions();
     try {
+      dio!.options.headers.addAll({'Content-Language':  appContext?.locale.languageCode ?? 'ar'});
+
       var response = await dio!.get(
         uri,
         queryParameters: queryParameters,
@@ -116,6 +118,7 @@ class DioClient {
       //     fileName: fileName,
       //   );
       // }
+      dio!.options.headers.addAll({'Content-Language':  appContext?.locale.languageCode ?? 'ar'});
 
       var response = await dio!.post(
         uri,
@@ -147,8 +150,11 @@ class DioClient {
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
+
     options ??= await initOptions();
     try {
+      dio!.options.headers.addAll({'Content-Language':  appContext?.locale.languageCode ?? 'ar'});
+
       var response = await dio!.put(
         uri,
         data: data,
@@ -176,6 +182,8 @@ class DioClient {
   }) async {
     options ??= await initOptions();
     try {
+      dio!.options.headers.addAll({'Content-Language':  appContext?.locale.languageCode ?? 'ar'});
+
       var response = await dio!.delete(
         uri,
         data: data,
@@ -193,11 +201,14 @@ class DioClient {
   }
 
   Future<Options> initOptions() async {
+    dio!.options.headers.addAll({'Content-Language':  appContext?.locale.languageCode ?? 'ar'});
+
     Options options = Options(
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Accept-Language': 'ar',
+        'Accept-Language':  appContext?.locale.languageCode ?? 'ar',
+        'Content-Language':  appContext?.locale.languageCode ?? 'ar',
         'User-Agents': 'android',
       },
     );
