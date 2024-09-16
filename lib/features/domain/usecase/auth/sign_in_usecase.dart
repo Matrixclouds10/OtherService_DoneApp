@@ -24,10 +24,11 @@ class SignInUseCase implements BaseUseCase<UserModel> {
 
   @override
   ResponseModel<UserModel> onConvert(BaseModel baseModel) {
+    UserModel user = UserModel.fromJson(baseModel.responseData);
+
     try {
       String? token = baseModel.responseData['token'];
       if (token != null) {
-        UserModel user = UserModel.fromJson(baseModel.responseData);
         return ResponseModel(true, baseModel.message, data: user);
       } else {
         return ResponseModel(true, baseModel.message, data: baseModel.responseData);

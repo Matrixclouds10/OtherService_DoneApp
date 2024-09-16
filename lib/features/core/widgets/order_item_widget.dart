@@ -9,6 +9,8 @@ import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/images/custom_image.dart';
 
+import '../../screens/orders/invoice_screen.dart';
+
 class OrderItemWidget extends StatelessWidget {
   final OrderModel orderModel;
 
@@ -20,7 +22,8 @@ class OrderItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     String date = DateFormat('yyyy-MM-dd').format(orderModel.date);
     String time = DateFormat('HH:mm').format(orderModel.date);
-    return Container(
+    return
+      Container(
         margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -90,7 +93,7 @@ class OrderItemWidget extends StatelessWidget {
                 padding: EdgeInsets.all(4),
                 child: CustomText(LocaleKeys.giverate.tr(), color: Colors.blueAccent, pv: 0).footer(),
               ).onTap(() {
-                AppDialogs().rateOrderDialog(context, orderModel);
+                AppDialogs().rateOrderDialog(context, orderModel,'user');
               }),
             if (orderModel.rate != null)
               Container(
@@ -109,8 +112,21 @@ class OrderItemWidget extends StatelessWidget {
                   ],
                 ),
               ).onTap(() {
-                AppDialogs().rateOrderDialog(context, orderModel);
+                AppDialogs().rateOrderDialog(context, orderModel,'user');
               }),
+            const SizedBox(height: 4),
+
+            InkWell(
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => InvoiceScreen(orderModel: orderModel)));
+              },
+              child:  Row(
+                children: [
+                  CustomText(LocaleKeys.bill.tr(), color: servicesTheme.primaryColor, pv: 0).footer(),
+                  Icon(Icons.remove_red_eye, color: servicesTheme.primaryColor, size: 16),
+                ],
+              ),
+            )
           ]
         ],
       );

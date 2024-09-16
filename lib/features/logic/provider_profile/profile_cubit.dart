@@ -25,6 +25,9 @@ import 'package:weltweit/features/domain/usecase/provider_profile/update_profile
 import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 
+import '../../data/models/chat/chat_user.dart';
+import '../chat/chat_cubit.dart';
+
 part 'profile_state.dart';
 
 class ProfileProviderCubit extends Cubit<ProfileProviderState> {
@@ -55,6 +58,20 @@ class ProfileProviderCubit extends Cubit<ProfileProviderState> {
         throw error;
       },
       (data) {
+        ChatCubit cubit =ChatCubit.get();
+        ChatUser user=ChatUser(
+            image: data.image??'',
+            about: '',
+            name: data.name??'',
+            createdAt: '',
+            isOnline: true,
+            id: data.id.toString()??'0',
+            lastActive: '',
+            phone: data.mobileNumber??'',
+            pushToken: '');
+        cubit.getSelfInfo(user);
+        print('data.currentSubscription.status ${data.currentSubscription?.status}');
+        userModel = data;
         emit(state.copyWith(state: BaseState.loaded, data: data));
         AppPrefs prefs = getIt();
         if (data.countryModel?.id != null) prefs.save(PrefKeys.countryId, data.countryModel?.id);
@@ -64,10 +81,13 @@ class ProfileProviderCubit extends Cubit<ProfileProviderState> {
       },
     );
   }
-
+  UserModel? userModel;
   Future<UserModel> getProfileNoState() async {
     final result = await profileUseCase.call(NoParameters());
-    return result.fold((error) => throw error, (data) => data);
+    return result.fold((error) => throw error, (data) {
+      userModel = data;
+      print('sadsadsad ${data.toMap()}');return data;
+    });
   }
 
   void updateAvailability() async {

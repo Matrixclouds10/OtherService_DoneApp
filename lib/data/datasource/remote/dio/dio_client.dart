@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:logger/logger.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:weltweit/app.dart';
 import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/core/utils/constants.dart';
@@ -51,7 +52,15 @@ class DioClient {
         // 'Authorization': 'Bearer $token',
       };
     _getToken();
+
     dio!.interceptors.add(loggingInterceptor);
+    dio?.interceptors.add(
+      PrettyDioLogger(
+        requestBody: true,
+        requestHeader: true,
+        responseHeader: true,
+      ),
+    );
   }
 
   Future<Response> get(
@@ -126,13 +135,13 @@ class DioClient {
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
       );
-      Logger().d(response.data);
+      // Logger().d(response.data??'');
       return response;
     } on FormatException catch (_) {
-      log('post', 'Unable to process the data');
+      // log('post', 'Unable to process the data');
       throw const FormatException("Unable to process the data");
     } catch (e) {
-      // log('post::', e.toString());
+      // log('post::', e.toString());We Are SUBSCRIBE Her
 
       rethrow;
     }
@@ -158,7 +167,7 @@ class DioClient {
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
       );
-      Logger().d(response.data);
+      // Logger().d(response.data);
       return response;
     } on FormatException catch (_) {
       throw const FormatException("Unable to process the data");
@@ -183,7 +192,7 @@ class DioClient {
         options: options,
         cancelToken: cancelToken,
       );
-      Logger().d(response.data);
+      // Logger().d(response.data);
       return response;
     } on FormatException catch (_) {
       throw const FormatException("Unable to process the data");
@@ -226,7 +235,7 @@ Future<FormData?> _buildFileData({
       fileName ?? "image": await MultipartFile.fromFile(filePath, filename: fName),
     };
     data = FormData.fromMap(body);
-    log('dio', 'files $body');
+    // log('dio', 'files $body');
   } else if (filePathList != null) {
     for (String path in filePathList) {
       String fileName = path.split('/').last;
@@ -251,7 +260,7 @@ Future<FormData?> _buildFileData({
         }
       }
     }
-    log('dio', 'files $body');
+    // log('dio', 'files $body');
     data = FormData.fromMap(body);
   }
   return data;

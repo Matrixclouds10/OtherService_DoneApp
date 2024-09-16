@@ -20,18 +20,21 @@ class ServicesProviderCubit extends Cubit<ServicesProviderState> {
     this.updateServicesUseCase,
   ) : super(const ServicesProviderState());
 
+
   Future<void> getAllServices() async {
     initStates();
-    emit(state.copyWith(state: BaseState.loading));
+    emit(state.copyWith(state: BaseState.loading,));
     final result = await allServicesUseCase(NoParameters());
 
     result.fold(
-      (error) => emit(state.copyWith(state: BaseState.error, error: error)),
-      (data) => emit(state.copyWith(
-        state: BaseState.loaded,
-        services: data,
-        myServices: data.where((element) => element.myService == true).toList(),
-      )),
+      (error) => emit(state.copyWith(state: BaseState.error,  error: error)),
+      (data) {
+        emit(state.copyWith(
+          state: BaseState.loaded,
+          services: data,
+          myServices: data.where((element) => element.myService == true).toList(),
+        ));
+      }
     );
   }
 
@@ -63,29 +66,37 @@ class ServicesProviderCubit extends Cubit<ServicesProviderState> {
   // }
 
   Future<void> updateServices(List<ServiceModel> services) async {
-    emit(state.copyWith(updateState: BaseState.loading));
+    emit(state.copyWith(updateState: BaseState.loading ,state: BaseState.loading));
     final result = await updateServicesUseCase(UpdateServicesParams(services: services));
     result.fold(
       (error) => emit(state.copyWith(updateState: BaseState.error, error: error)),
-      (data) => emit(state.copyWith(
-        updateState: BaseState.loaded,
-        services: data,
-        myServices: data.where((element) => element.myService == true).toList(),
-      )),
+      (data) {
+        emit(state.copyWith(
+          updateState: BaseState.loaded,
+          services: data,
+          myServices: data.where((element) => element.myService == true).toList(),
+        ));
+        getAllServices();
+
+      },
     );
   }
 
   void initStates() {
     emit(state.copyWith(updateState: BaseState.initial));
   }
-
+  ServiceModel? selectedService;
   void updateSelectedServices(ServiceModel service, bool? val) {
-    List<ServiceModel> services = List.of(state.services);
+    List<ServiceModel>? services = List.of(state.services);
+
+    services = services.map((e) => e.copyWith(myService: false)).toList().cast<ServiceModel>();
+
     final index = services.indexWhere((element) => element.id == service.id);
-    services[index] = service.copyWith(myService: val);
-
-    logger.i('updateSelectedServices: ${services.where((element) => element.myService == true).toList().length})');
-
+    if (index != -1) {
+      services[index] = service.copyWith(myService: val);
+    }
+    logger.i('updateSelectedServices: ${services.where((element) => element.myService == true).first.id}');
+    selectedService=services.where((element) => element.myService == true).first;
     emit(state.copyWith(services: services));
   }
 }

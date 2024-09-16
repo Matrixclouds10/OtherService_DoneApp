@@ -66,3 +66,17 @@ enum DocumentType {
   others_2,
   others_3,
 }
+// enum DocumentType {
+//   national_id,
+//   national_id_back,
+//   work_certificate,
+//   corona_certificate,
+//   ciminal_certificate,
+//   passport,
+//   personal_image,
+//   tax_card,
+//   commercial_register,
+//   others,
+//   others_2,
+//   others_3,
+// }

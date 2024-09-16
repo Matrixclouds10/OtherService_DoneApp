@@ -39,7 +39,7 @@ class ServicesCubit extends Cubit<ServicesState> {
   }
 
   Future<void> getHomeServices() async {
-    if (state.homeServices.isNotEmpty) return;
+    // if (state.homeServices.isNotEmpty) return;
     initStates();
     emit(state.copyWith(state: BaseState.loading));
     final result = await allServicesUseCase(1);

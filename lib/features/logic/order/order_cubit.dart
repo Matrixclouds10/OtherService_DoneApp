@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
@@ -11,18 +12,25 @@ import 'package:weltweit/features/domain/usecase/order/order_rate_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_usecase.dart';
 import 'package:weltweit/features/data/models/order/order.dart';
 
+import '../../../core/routing/navigation_services.dart';
+import '../../../generated/locale_keys.g.dart';
+import '../../domain/usecase/order/start_go_to_client_usecase.dart';
+import '../../widgets/app_snackbar.dart';
+
 part 'order_state.dart';
 
 class OrderCubit extends Cubit<OrderState> {
   final OrderUseCase orderUseCase;
   final OrderCancelUseCase orderCancelUseCase;
   final OrderAcceptUseCase acceptUseCase;
+  final StartGoToClientUseCase startGoToClientUseCase;
   final OrderRateUseCase rateUseCase;
   final OrderFinishUseCase finishUseCase;
   OrderCubit(
     this.orderUseCase,
     this.orderCancelUseCase,
     this.acceptUseCase,
+    this.startGoToClientUseCase,
     this.rateUseCase,
     this.finishUseCase,
   ) : super(const OrderState());
@@ -97,11 +105,30 @@ class OrderCubit extends Cubit<OrderState> {
       },
     );
   }
+  Future<bool> startGotoWay({required int id, }) async {
+    emit(state.copyWith(startGotoWayState: BaseState.loading));
+    Either<ErrorModel, BaseResponse> result = await startGoToClientUseCase(StartGoToClientParams(id: id,));
+
+    return result.fold(
+      (error) {
+        emit(state.copyWith(startGotoWayState: BaseState.error, error: error));
+        return false;
+      },
+      (data) {
+        emit(state.copyWith(startGotoWayState: BaseState.loaded));
+        return true;
+      },
+    );
+  }
 
   Future<bool> rateOrder({required OrderRateParams params}) async {
     Either<ErrorModel, BaseResponse> result = await rateUseCase(params);
     return result.fold(
-      (error) => false,
+      (error) {
+        AppSnackbar.show(context: NavigationService.navigationKey.currentContext!, message: error.errorMessage ?? LocaleKeys.somethingWentWrong.tr(),type: SnackbarType.error);
+
+        return false;
+      },
       (data) => true,
     );
   }

@@ -6,6 +6,8 @@ class ServiceModel extends Equatable {
   final String? breif;
   final String? image;
   final bool? myService;
+  final int? countryId;
+  final String? subPercentage;
 
   const ServiceModel({
     this.id,
@@ -13,6 +15,8 @@ class ServiceModel extends Equatable {
     this.breif,
     this.image,
     this.myService,
+    this.subPercentage,
+    this.countryId,
   });
 
   factory ServiceModel.fromJson(Map<String, dynamic> json) => ServiceModel(
@@ -20,6 +24,8 @@ class ServiceModel extends Equatable {
         title: json['title'] as String?,
         breif: json['breif'] as String?,
         image: json['image'] as String?,
+        countryId: json['country_id'] as int?,
+        subPercentage: json['sub_percentage'] as String?,
         myService: json['my_service'] as bool?,
       );
 

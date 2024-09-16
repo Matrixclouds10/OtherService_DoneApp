@@ -61,8 +61,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
     });
     typeIsProvider = !showForIos ? false : true;
     if (kDebugMode) {
-      _phoneController.text = '667788994';
-      _passwordController.text = '112233';
+      _phoneController.text = '555566630';
+      _passwordController.text = '123456789';
     }
     super.initState();
     _viewModel = BlocProvider.of<LoginCubit>(context, listen: false);

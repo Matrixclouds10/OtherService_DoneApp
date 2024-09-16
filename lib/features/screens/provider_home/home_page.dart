@@ -30,6 +30,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   @override
   void initState() {
     super.initState();
+
     _tabController = TabController(length: 2, vsync: this);
     context.read<OrdersCubit>().getPendingOrders(typeIsProvider: true);
     context.read<OrdersCubit>().getCompletedOrders(typeIsProvider: true);
@@ -40,7 +41,11 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: BlocBuilder<ProfileProviderCubit, ProfileProviderState>(
+      body: BlocConsumer<ProfileProviderCubit, ProfileProviderState>(
+        listener: (context, state) {
+
+        },
+        bloc:context.read<ProfileProviderCubit>()..getProfileNoState(),
         builder: (context, state) {
           return Column(children: [
             SizedBox(height: MediaQuery.of(context).padding.top),
@@ -105,7 +110,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             Expanded(
               child: TabBarView(
                 controller: _tabController,
-                physics: NeverScrollableScrollPhysics(),
+               physics: NeverScrollableScrollPhysics(),
                 children: [
                   Container(
                     color: AppColorLight().kScaffoldBackgroundColor,
@@ -129,26 +134,38 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                               Row(
                                 children: [
                                   Spacer(),
-                                  BlocBuilder<ProfileProviderCubit, ProfileProviderState>(
-                                    buildWhen: (previous, current) => previous.availabilityState != current.availabilityState,
+                                  BlocConsumer<ProfileProviderCubit, ProfileProviderState>(
+                                    listener: (context, state) {
+
+                                    },
+                                    // buildWhen: (previous, current) => previous.availabilityState != current.availabilityState,
                                     builder: (context, state) {
+                                      final data = context.read<ProfileProviderCubit>().userModel;
+
                                       return CustomButton(
                                         onTap: () {
-                                          if (state.data?.currentSubscription != null) {
-                                            context.read<ProfileProviderCubit>().updateAvailability();
-                                            if (state.data?.isAvailable() ?? false) {
-                                              context.read<ProfileProviderCubit>().updateLocation(context);
+
+                                          if (data?.currentSubscription != null || data?.percentage != false) {
+                                            if ((data?.currentSubscription?.isExpired ?? false ) ) {
+                                                AppSnackbar.show(context: context, message: LocaleKeys.subscriptionExpired.tr());
+                                            }else{
+                                              context.read<ProfileProviderCubit>().updateAvailability();
+                                              if (data?.isAvailable() ?? false) {
+                                                context.read<ProfileProviderCubit>().updateLocation(context);
+                                              }
+
                                             }
+
                                           } else {
                                             AppSnackbar.show(context: context, message: LocaleKeys.youNeedToSubscribe.tr());
                                           }
                                         },
-                                        title: state.data?.isAvailable() ?? false ? LocaleKeys.available.tr() : LocaleKeys.unavailable.tr(),
+                                        title: data?.isAvailable() ?? false ? LocaleKeys.available.tr() : LocaleKeys.unavailable.tr(),
                                         radius: 4,
                                         height: 40,
                                         loading: state.availabilityState == BaseState.loading,
                                         expanded: false,
-                                        color: state.data?.isAvailable() ?? false ? Color(0xff20CA6E) : Color(0xffEF2027),
+                                        color: data?.isAvailable() ?? false ? Color(0xff20CA6E) : Color(0xffEF2027),
                                       );
                                     },
                                   ),
@@ -310,19 +327,23 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             ],
           );
         }
-        return Column(
-          children: [
-            ...state.pendingData
-                .where((element) => element.statusCode?.toLowerCase() == 'pending')
-                .map((e) => GestureDetector(
-                      onTap: () {},
-                      child: OrderItemWidgetClient(
-                        orderModel: e,
-                      ),
-                    ))
-                .toList(),
-          ],
-        );
+        return
+
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                ...state.pendingData
+                    .where((element) => element.statusCode?.toLowerCase() == 'pending')
+                    .map((e) => GestureDetector(
+                  onTap: () {},
+                  child: OrderItemWidgetClient(
+                    orderModel: e,
+                  ),
+                ))
+                    .toList(),
+              ],
+            ),
+          );
       },
     );
   }

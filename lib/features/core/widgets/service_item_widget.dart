@@ -1,8 +1,13 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/data/models/services/service.dart';
 import 'package:weltweit/presentation/component/component.dart';
+
+import '../../../generated/locale_keys.g.dart';
+import '../../data/models/provider/providers_model.dart';
+import '../../widgets/app_dialogs.dart';
 
 class ServiceItemWidget extends StatelessWidget {
   final double width;
@@ -21,19 +26,30 @@ class ServiceItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     if (grid) {
       return GestureDetector(
-        onTap: () {
-          Navigator.pushNamed(context, RoutesServices.servicesProviders, arguments: {
-            "service": serviceModel,
-          });
+        onTap: () async{
+          bool isOk = await  AppDialogs().question(context, message: '${LocaleKeys.areSureToSubscribe.tr()}\n\n${serviceModel.title}');
+          if(isOk){
+             ProvidersModel providersModel=ProvidersModel(name: serviceModel.title,
+                 distance:0, id: serviceModel.id, image: serviceModel.image, services: [serviceModel],);
+            Navigator.pushNamed(context, RoutesServices.servicesReservationPage, arguments: {
+              "providersModel": providersModel,
+            });
+          }
+          // Navigator.pushNamed(context, RoutesServices.servicesProviders, arguments: {
+          //   "service": serviceModel,
+          // });
         },
         child: Stack(
           children: [
-            CustomImage(
-              imageUrl: serviceModel.image ?? '',
-              width: width,
-              height: height ?? width,
-              fit: BoxFit.fill,
-            ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(50),
+              child: CustomImage(
+                imageUrl: serviceModel.image ?? '',
+                width: width,
+                height: height ?? width,
+                fit: BoxFit.fill,
+              ),
+            )
             // Positioned(
             //   bottom: 4,
             //   left: 4,
@@ -45,10 +61,19 @@ class ServiceItemWidget extends StatelessWidget {
       );
     } else {
       return GestureDetector(
-        onTap: () {
-          Navigator.pushNamed(context, RoutesServices.servicesProviders, arguments: {
-            "service": serviceModel,
-          });
+        onTap: () async{
+          bool isOk = await  AppDialogs().question(context, message: '${LocaleKeys.areSureToSubscribe.tr()}\n\n${serviceModel.title}');
+          if(isOk){
+            ProvidersModel providersModel=ProvidersModel(name: serviceModel.title,
+              distance:0, id: serviceModel.id, image: serviceModel.image, services: [serviceModel],);
+
+            Navigator.pushNamed(context, RoutesServices.servicesReservationPage, arguments: {
+              "providersModel": providersModel,
+            });
+          }
+          // Navigator.pushNamed(context, RoutesServices.servicesProviders, arguments: {
+          //   "service": serviceModel,
+          // });
         },
         child: Container(
           margin: const EdgeInsets.only(bottom: 8),

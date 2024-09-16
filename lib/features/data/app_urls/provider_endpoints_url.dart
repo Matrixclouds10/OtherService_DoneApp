@@ -1,7 +1,7 @@
 class AppURLProvider {
   static const String kAPIKey = "";
-   static const String kBaseURL = "https://doneapp.org/api/service-provider";
-   static const String kBaseURLApi = "https://doneapp.org/api";
+   static const String kBaseURL = "https://dev05.matrix-clouds.com/Done/public/api/service-provider";
+   static const String kBaseURLApi = "https://dev05.matrix-clouds.com/Done/public/api";
   // static const String kBaseURL = "https://doneapp.org/api/service-provider";
   // static const String kBaseURLApi = "https://doneapp.org/api";
 
@@ -51,6 +51,7 @@ class AppURLProvider {
 
   //*Wallet
   static const String getWalletHistory = "$kBaseURL/wallet/history";
+  static const String convertPoints = "$kBaseURL/changePoints";
 
 //*Notifications
   static const String getNotifications = "$kBaseURL/get-notifications";

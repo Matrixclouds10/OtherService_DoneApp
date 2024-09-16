@@ -29,7 +29,7 @@ class ServicesProviderState extends Equatable {
       updateState: updateState ?? this.updateState,
     );
   }
-
   @override
   List<Object?> get props => [state, services, myServices, error, updateState];
 }
+

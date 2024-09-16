@@ -15,6 +15,9 @@ import 'package:weltweit/features/logic/provider_profile/profile_cubit.dart';
 import 'package:weltweit/features/screens/provider_subscribe/subscribe_page.dart';
 import 'package:weltweit/features/widgets/app_dialogs.dart';
 
+import '../../../core/routing/navigation_services.dart';
+import '../../../core/utils/alerts.dart';
+
 part 'subscription_state.dart';
 
 class SubscriptionCubit extends Cubit<SubscriptionState> {
@@ -56,16 +59,20 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
     );
   }
 
-  Future<UpdateSubscribtionResponse> subscribe(int id, String method) async {
+  Future<UpdateSubscribtionResponse> subscribe({int? id, String? method, required BuildContext context}) async {
     initStates();
     emit(state.copyWith(subscribeState: BaseState.loading));
     final result = await subscribeUseCase(SubscribeParams(id: id, paymentMethod: method));
-    print('We Are SUBSCRIBE Here');
     return result.fold(
       (error) {
-        return Future.error(error);
+        Alerts.showSnackBar(error.errorMessage.toString());
+        return Future.error(error.errorMessage.toString());
       },
       (data) {
+        Alerts.showSnackBar(data.status.toString(), alertsType: AlertsType.success);
+        context.read<ProfileProviderCubit>().getProfile();
+
+        Navigator.pop(NavigationService.navigationKey.currentContext!);
         emit(state.copyWith(subscribeState: BaseState.loaded));
         return data;
       },

@@ -29,6 +29,9 @@ import 'package:weltweit/features/domain/usecase/provider_services/update_servic
 import 'package:weltweit/features/domain/usecase/provider_subscription/repay_subscribe_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider_subscription/subscribe_usecase.dart';
 
+import '../../../core/utils/alerts.dart';
+import '../../../core/utils/toast_states/enums.dart';
+
 class ProviderRepositoryImpProvider implements AppRepositoryProvider {
   final NetworkClient networkClient;
   ProviderRepositoryImpProvider({required this.networkClient});
@@ -363,9 +366,29 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
     NetworkCallType type = NetworkCallType.post;
     Map<String, dynamic> data = params.toJson();
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
-    return result.fold((l) => Left(l), (r) {
+    return result.fold((l) {
+      print('subscribe error: ${l.errorMessage}');
+      //We Are SUBSCRIBE Here Lef
+      return Left(l);
+    }, (r) {
+      print('subscribe data: ${r.message}');
+      // UpdateSubscribtionResponse updateSubscribtionResponse = UpdateSubscribtionResponse.fromJson(r.data);
+
       try {
-        UpdateSubscribtionResponse updateSubscribtionResponse = UpdateSubscribtionResponse.fromJson(r.data);
+        // Alerts.showSnackBar(r.message.toString(), alertsType: AlertsType.success);
+        UpdateSubscribtionResponse updateSubscribtionResponse;
+        // if(r.data['status']==200){
+        if(r.data!=null &&r.data.isNotEmpty){
+          updateSubscribtionResponse = UpdateSubscribtionResponse.fromJson(r.data);
+
+        }else{
+          updateSubscribtionResponse = UpdateSubscribtionResponse(providerId: '', subscriptionId: '', startsAt: DateTime.now(), endsAt: DateTime.now(), status: '${r.message}', paymentMethod: 'paymentMethod', paymentId: 'paymentId', paymentStatus: 'paymentStatus', kioskBillReference: 'kioskBillReference', updatedAt: DateTime.now(), createdAt:DateTime.now(), id: 4, paymentData: PaymentData(redirectUrl: '', kioskBillReference: ''));
+
+        }
+        // }else{
+        //   updateSubscribtionResponse = UpdateSubscribtionResponse(providerId: '', subscriptionId: '', startsAt: DateTime.now(), endsAt: DateTime.now(), status: 'status', paymentMethod: 'paymentMethod', paymentId: 'paymentId', paymentStatus: 'paymentStatus', kioskBillReference: 'kioskBillReference', updatedAt: DateTime.now(), createdAt:DateTime.now(), id: 4, paymentData: PaymentData(redirectUrl: '', kioskBillReference: ''));
+        // }
+
         return Right(updateSubscribtionResponse);
       } catch (e) {
         return Left(ErrorModel(errorMessage: e.toString()));
@@ -398,10 +421,35 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
     Map<String, dynamic> data = {};
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
     return result.fold((l) => Left(l), (r) {
+
+      List data = r.data["data"] as List;
+      print('sssddfdfd ${data}');
+
+
+      final res =  data.map((e) => NotificationModel.fromJson(e)).toList();
+
+      // BaseResponse<List<NotificationModel>> baseResponse = BaseResponse<List<NotificationModel>>(data: data, meta: r.meta);
       try {
         List<NotificationModel> data = r.data["data"].map<NotificationModel>((e) => NotificationModel.fromJson(e)).toList();
         BaseResponse<List<NotificationModel>> baseResponse = BaseResponse<List<NotificationModel>>(data: data, meta: r.meta);
         return Right(baseResponse);
+      } catch (e) {
+        return Left(ErrorModel(errorMessage: e.toString()));
+      }
+    });
+  }
+
+  @override
+  Future<Either<ErrorModel, BaseResponse>> convertPoints()async {
+    String url = AppURLProvider.convertPoints;
+
+    NetworkCallType type = NetworkCallType.post;
+    Map<String, dynamic> data = {};
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+    return result.fold((l) => Left(l), (r) {
+      try {
+        showToast(text: r.message??'');
+        return Right(r);
       } catch (e) {
         return Left(ErrorModel(errorMessage: e.toString()));
       }

@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
@@ -22,6 +23,9 @@ import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 
 import '../../../core/utils/logger.dart';
+import '../../data/models/chat/chat_user.dart';
+import '../../domain/usecase/profile/update_user_location_usecase.dart';
+import '../chat/chat_cubit.dart';
 
 part 'profile_state.dart';
 
@@ -32,6 +36,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   final UpdateFCMTokenUseCase updateFCMTokenUseCase;
   final ChangePasswordUseCase changePasswordUseCase;
   final UpdateProfileLocationUseCase updateProfileLocationUseCase;
+  final UpdateUserLocationUseCase updateUserLocationUseCase;
 
   ProfileCubit(
     this.profileUseCase,
@@ -39,10 +44,12 @@ class ProfileCubit extends Cubit<ProfileState> {
     this.deleteProfileUseCase,
     this.updateFCMTokenUseCase,
     this.changePasswordUseCase,
+    this.updateUserLocationUseCase,
     this.updateProfileLocationUseCase,
   ) : super(const ProfileState());
   Future<UserModel> getProfile({bool returnSaved = false}) async {
     if (returnSaved) {
+
       if (state.data != null) return state.data!;
     }
     resetState();
@@ -54,9 +61,23 @@ class ProfileCubit extends Cubit<ProfileState> {
         return Future.error(error);
       },
       (data) {
+        ChatCubit cubit =ChatCubit.get();
+        ChatUser user=ChatUser(
+            image: data.image??'',
+            about: '',
+            name: data.name??'',
+            createdAt: '',
+            isOnline: true,
+            id: data.id.toString()??'0',
+            lastActive: '',
+            phone: data.mobileNumber??'',
+            pushToken: '');
+        cubit.getSelfInfo(user);
+
         emit(state.copyWith(state: BaseState.loaded, data: data));
         kEcho("countryId ${data.countryModel?.id}");
         AppPrefs prefs = getIt();
+        print("tesssssss");
         if (data.countryModel?.id != null) prefs.save(PrefKeys.countryId, data.countryModel?.id);
         return data;
       },
@@ -125,6 +146,25 @@ class ProfileCubit extends Cubit<ProfileState> {
       LocationData locationData = await location.getLocation();
       if (locationData.latitude != null && locationData.longitude != null) {
         updateProfileLocationUseCase(UpdateProfileLocationParams(lat: locationData.latitude.toString(), lng: locationData.longitude.toString()));
+      }
+    } catch (e) {
+      log('Location Error', e.toString());
+    }
+  }
+  void updateUserLocation(BuildContext context) async {
+    bool permissionStatus = await PermissionHelper.checkLocationPermissionStatus();
+    if (!permissionStatus) {
+      bool dialogStatus = await AppDialogs().question(context, message: LocaleKeys.allowLocationStatusToBeShownForNearbyUsers.tr());
+      if (dialogStatus) {
+        bool? permissionStatus = await PermissionHelper.requestLocation();
+        if (permissionStatus == null || !permissionStatus) return;
+      }
+    }
+    try {
+      Location location = Location();
+      LocationData locationData = await location.getLocation();
+      if (locationData.latitude != null && locationData.longitude != null) {
+        updateUserLocationUseCase(LatLng(locationData.latitude??0, locationData.longitude ?? 0));
       }
     } catch (e) {
       log('Location Error', e.toString());

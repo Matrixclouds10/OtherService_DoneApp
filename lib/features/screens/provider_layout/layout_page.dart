@@ -5,11 +5,13 @@ import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/data/models/auth/user_model.dart';
+import 'package:weltweit/features/logic/chat/chat_cubit.dart';
 import 'package:weltweit/features/logic/provider_profile/profile_cubit.dart';
 import 'package:weltweit/features/screens/provider_home/home_page_pending.dart';
 import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/presentation/component/component.dart';
 
+import '../../logic/profile/profile_cubit.dart';
 import 'layout_cubit.dart';
 import 'widgets/bottom_navigation_bar_widget.dart';
 import 'widgets/navigation_tabs.dart';
@@ -73,6 +75,7 @@ class LayoutWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return BlocBuilder<LayoutProviderCubit, LayoutProviderState>(
       builder: (context, state) {
         if (state is LayoutInitial) {
@@ -91,6 +94,7 @@ class LayoutWidget extends StatelessWidget {
                   return true;
                 }
               },
+              //الحجز
             ),
             bottomNavigationBar: BottomNavigationBarWidget(
               onTap: viewModel.setCurrentIndex,

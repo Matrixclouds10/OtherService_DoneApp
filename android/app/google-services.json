@@ -30,6 +30,13 @@
             {
               "client_id": "377126115910-stqcc6se5gfg953ebe94s28olo9qpvcf.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "377126115910-35in3njj87i2ct36ppbm1esg3fvvf9eg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.matrixclouds.done"
+              }
             }
           ]
         }
@@ -59,6 +66,13 @@
             {
               "client_id": "377126115910-stqcc6se5gfg953ebe94s28olo9qpvcf.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "377126115910-35in3njj87i2ct36ppbm1esg3fvvf9eg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.matrixclouds.done"
+              }
             }
           ]
         }

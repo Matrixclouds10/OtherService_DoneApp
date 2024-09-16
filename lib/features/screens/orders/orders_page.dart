@@ -152,6 +152,7 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
                   NavigationService.push(RoutesServices.servicesOrderDetails, arguments: {
                     "orderModel": state.pendingData[i],
                   });
+
                 },
                 child: OrderItemWidget(
                   orderModel: state.pendingData[i],
@@ -172,7 +173,8 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
   }
 
   completedOrders() {
-    return BlocBuilder<OrdersCubit, OrdersState>(
+    return
+      BlocBuilder<OrdersCubit, OrdersState>(
       builder: (context, state) {
         if (state.completedState == BaseState.error) {
           return ErrorView(

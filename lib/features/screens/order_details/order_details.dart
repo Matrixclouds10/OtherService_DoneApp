@@ -19,6 +19,11 @@ import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
 
+import '../../data/models/chat/chat_user.dart';
+import '../../data/models/provider/providers_model.dart';
+import '../service_provider/service_provider_page.dart';
+import 'order_status.dart';
+
 class OrderDetails extends StatefulWidget {
   final OrderModel orderModel;
   const OrderDetails({required this.orderModel, super.key});
@@ -50,7 +55,6 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
         titleWidget: CustomText(LocaleKeys.orderDetails.tr()).header(),
         isCenterTitle: true,
         actions: [
-          //chat
           IconButton(
             padding: EdgeInsets.symmetric(horizontal: 4),
             iconSize: 22,
@@ -62,6 +66,17 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
             onPressed: () {
               NavigationService.push(Routes.chatScreen, arguments: {
                 'orderModel': widget.orderModel,
+                'isUser':true,
+                'chatUser': ChatUser(
+                    image: widget.orderModel.provider?.image??'',
+                    about: '',
+                    name: widget.orderModel.provider?.name??'',
+                    createdAt: '',
+                    isOnline: true,
+                    id:widget.orderModel.provider?.id.toString()??'0',
+                    lastActive: '',
+                    phone: widget.orderModel.provider?.mobileNumber??'',
+                    pushToken: '')
               });
             },
           ),
@@ -91,15 +106,19 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                     Container(
                       padding: const EdgeInsets.all(4),
                       decoration: const BoxDecoration(color: Colors.white),
-                      child: OrderItemWidget(
-                        orderModel: state.data!,
-                      ),
+                      child: InkWell(
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceProviderPage(provider: state.data?.provider??ProvidersModel())));
+                        },
+                        child: OrderItemWidget(
+                          orderModel: state.data!,
+                        ),),
                     ),
-                    if (state.data!.file.isNotEmpty)
+                    if (state.data!.file!=null && state.data!.file!.isNotEmpty)
                       Container(
                         padding: const EdgeInsets.all(4),
                         decoration: const BoxDecoration(color: Colors.white),
-                        child: _orderFiles(state.data!.file),
+                        child: _orderFiles(state.data!.file??[]),
                       ),
                     if (orderStatus.toLowerCase().contains("pending")) ...[
                       Container(
@@ -107,21 +126,27 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                         child: Column(
                           children: [
                             const SizedBox(height: 10),
-                            Row(
-                              children: [
-                                const SizedBox(width: 10),
-                                CustomText(LocaleKeys.orderStatus.tr(), bold: true).headerExtra(),
-                                const Spacer(),
-                                // CustomText("300 ج", color: Color.fromARGB(255, 230, 35, 35), bold: true).headerExtra(),
-                                // Chip(
-                                //   label: const CustomText("Pending", color: Colors.white).header(),
-                                //   backgroundColor: const Color(0xffE67E23),
-                                //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                // ),
-                                const SizedBox(width: 10),
-                              ],
-                            ),
-                            textWithDot(text: "تم إنشاء الطلب بنجاح وبإنتظار موافقة مزود الخدمة.", color: const Color(0xffE67E23)),
+                           InkWell(
+                            onTap: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderStatusScreen(orderModel: widget.orderModel,)));
+
+                            },
+                           child:  Row(
+                             children: [
+                               const SizedBox(width: 10),
+                               CustomText(LocaleKeys.orderStatus.tr(), bold: true).headerExtra(),
+                               const Spacer(),
+                               // CustomText("300 ج", color: Color.fromARGB(255, 230, 35, 35), bold: true).headerExtra(),
+                               // Chip(
+                               //   label: const CustomText("Pending", color: Colors.white).header(),
+                               //   backgroundColor: const Color(0xffE67E23),
+                               //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                               // ),
+                               const SizedBox(width: 10),
+                             ],
+                           ),
+                           ),
+                            // textWithDot(text: "تم إنشاء الطلب بنجاح وبإنتظار موافقة مزود الخدمة.", color: const Color(0xffE67E23)),
                             const SizedBox(height: 16),
                             ElevatedButton(
                               onPressed: () async {
@@ -134,6 +159,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                       content: Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
+                                          CustomText(LocaleKeys.cancelOrderMessage.tr()),
                                           CustomTextFieldArea(onChange: (value) => cancelReason = value, hint: LocaleKeys.cancelReason.tr()),
                                           const SizedBox(height: 10),
                                           Row(
@@ -200,22 +226,22 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                 const SizedBox(width: 10),
                               ],
                             ),
-                            textWithDot(text: "تم إنشاء الطلب بنجاح وبإنتظار موافقة مزود الخدمة.", color: const Color(0xffE67E23)),
-                            textWithDot(text: "تم إلغاء الطلب من قبل طالب الخدمة.", color: Colors.red),
+                            // textWithDot(text: "تم إنشاء الطلب بنجاح وبإنتظار موافقة مزود الخدمة.", color: const Color(0xffE67E23)),
+                            // textWithDot(text: "تم إلغاء الطلب من قبل طالب الخدمة.", color: Colors.red),
                             if (state.data?.cancelReason != null && state.data!.cancelReason!.isNotEmpty) textWithDot(text: "${LocaleKeys.cancelReason.tr()}: ${state.data?.cancelReason}", color: Colors.red),
                             const SizedBox(height: 10),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 12),
-                              child: CustomButton(
-                                onTap: () {
-                                  NavigationService.goBack();
-                                },
-                                title: "عودة",
-                                fontSize: 18,
-                                color: const Color(0xffE67E23),
-                                textColor: Colors.white,
-                              ),
-                            ),
+                            // Padding(
+                            //   padding: const EdgeInsets.symmetric(horizontal: 12),
+                            //   child: CustomButton(
+                            //     onTap: () {
+                            //       NavigationService.goBack();
+                            //     },
+                            //     title: "عودة",
+                            //     fontSize: 18,
+                            //     color: const Color(0xffE67E23),
+                            //     textColor: Colors.white,
+                            //   ),
+                            // ),
                             const SizedBox(height: 16),
                           ],
                         ),
@@ -227,24 +253,30 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                         child: Column(
                           children: [
                             const SizedBox(height: 10),
-                            Row(
-                              children: [
-                                const SizedBox(width: 10),
-                                CustomText(LocaleKeys.orderStatus.tr(), bold: true).headerExtra(),
-                                const Spacer(),
-                                // CustomText("300 ج", color: Color.fromARGB(255, 230, 35, 35), bold: true).headerExtra(),
-                                Chip(
-                                  label: const CustomText("مكتمل", color: Colors.white).header(),
-                                  backgroundColor: const Color(0xffE67E23),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                ),
-                                const SizedBox(width: 10),
-                              ],
+                            InkWell(
+                              onTap: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => OrderStatusScreen(orderModel: widget.orderModel)));
+
+                              },
+                              child:  Row(
+                                children: [
+                                  const SizedBox(width: 10),
+                                  CustomText(LocaleKeys.orderStatus.tr(), bold: true).headerExtra(),
+                                  const Spacer(),
+                                  // CustomText("300 ج", color: Color.fromARGB(255, 230, 35, 35), bold: true).headerExtra(),
+                                  Chip(
+                                    label: const CustomText("مكتمل", color: Colors.white).header(),
+                                    backgroundColor: const Color(0xffE67E23),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                  ),
+                                  const SizedBox(width: 10),
+                                ],
+                              ),
                             ),
-                            textWithDot(text: "تم إنشاء الطلب بنجاح وبإنتظار موافقة مزود الخدمة.", color: const Color(0xffE67E23)),
-                            textWithDot(text: "وافق مزود الخدمة علي طلبك وبإنتظار ردك بالموافقة علي السعر الأساسي.", color: servicesTheme.colorScheme.secondary),
-                            textWithDot(text: "تم الإنتهاء من الطلب من مزود الخدمة وبإنتظار تأكيدك.", color: Colors.black),
-                            textWithDot(text: "تم الانتهاء من الطلب.", color: Colors.black),
+                            // textWithDot(text: "تم إنشاء الطلب بنجاح وبإنتظار موافقة مزود الخدمة.", color: const Color(0xffE67E23)),
+                            // textWithDot(text: "وافق مزود الخدمة علي طلبك وبإنتظار ردك بالموافقة علي السعر الأساسي.", color: servicesTheme.colorScheme.secondary),
+                            // textWithDot(text: "تم الإنتهاء من الطلب من مزود الخدمة وبإنتظار تأكيدك.", color: Colors.black),
+                            // textWithDot(text: "تم الانتهاء من الطلب.", color: Colors.black),
                             const SizedBox(height: 16),
                           ],
                         ),
@@ -258,7 +290,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                             Row(
                               children: [
                                 const SizedBox(width: 10),
-                                CustomText("إجمالى البلغ", bold: true, color: servicesTheme.colorScheme.secondary).headerExtra(),
+                                CustomText("إجمالى المبلغ", bold: true, color: servicesTheme.colorScheme.secondary).headerExtra(),
                                 const Spacer(),
                                 CustomText("300 ج", color: servicesTheme.colorScheme.secondary, bold: true).headerExtra(),
                                 const SizedBox(width: 10),
@@ -305,7 +337,12 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                         child: Column(
                           children: [
                             const SizedBox(height: 10),
-                            Row(
+                            InkWell(
+                              onTap: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => OrderStatusScreen(orderModel: widget.orderModel)));
+
+                              },
+                              child: Row(
                               children: [
                                 const SizedBox(width: 10),
                                 CustomText(LocaleKeys.orderStatus.tr(), bold: true).headerExtra(),
@@ -318,9 +355,59 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                 // ),
                                 const SizedBox(width: 10),
                               ],
+                            ),),
+                            // textWithDot(text: "تم إنشاء الطلب بنجاح وبإنتظار موافقة مزود الخدمة.", color: const Color(0xffE67E23)),
+                            // textWithDot(text: "وافق مزود الخدمة علي طلبك.", color: servicesTheme.colorScheme.secondary),
+                            const SizedBox(height: 16),
+                          ],
+                        ),
+                      ),
+                    ],
+                    if (orderStatus.contains("in_way")) ...[
+                      Container(
+                        margin: const EdgeInsets.all(10),
+                        decoration:  BoxDecoration(color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              spreadRadius: 5,
+                              blurRadius: 3,
+                              offset: const Offset(0, 3), // changes position of shadow
                             ),
-                            textWithDot(text: "تم إنشاء الطلب بنجاح وبإنتظار موافقة مزود الخدمة.", color: const Color(0xffE67E23)),
-                            textWithDot(text: "وافق مزود الخدمة علي طلبك.", color: servicesTheme.colorScheme.secondary),
+                          ],
+
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 10),
+                            InkWell(
+                              onTap: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => OrderStatusScreen(orderModel: widget.orderModel)));
+                              },
+                              child:
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                                  child:  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(width: 10),
+                                      CustomText(LocaleKeys.orderStatus.tr(), bold: true).headerExtra(),
+                                      CustomText(" موعد الوصول بعد  ${widget.orderModel.estimatedTime.toString()??''} ", color: Colors.black,size: 10,).header(),
+                                      CustomText(" المسافة  ${widget.orderModel.distance.toString()??''} ", color: Colors.black,size: 10,).header(),
+                                      // Chip(
+                                      //   label: const CustomText("Pending", color: Colors.white).header(),
+                                      //   backgroundColor: const Color(0xffE67E23),
+                                      //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                      // ),
+                                      const SizedBox(width: 10),
+                                    ],
+                                  ),
+                                )
+                             ),
+                            // textWithDot(text: "تم إنشاء الطلب بنجاح وبإنتظار موافقة مزود الخدمة.", color: const Color(0xffE67E23)),
+                            // textWithDot(text: "وافق مزود الخدمة علي طلبك.", color: servicesTheme.colorScheme.secondary),
                             const SizedBox(height: 16),
                           ],
                         ),
@@ -332,7 +419,12 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                         child: Column(
                           children: [
                             const SizedBox(height: 10),
-                            Row(
+                            InkWell(
+                              onTap: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => OrderStatusScreen(orderModel: widget.orderModel)));
+
+                              },
+                            child: Row(
                               children: [
                                 const SizedBox(width: 10),
                                 CustomText(LocaleKeys.orderStatus.tr(), bold: true).headerExtra(),
@@ -345,11 +437,12 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                                 ),
                                 const SizedBox(width: 10),
                               ],
-                            ),
-                            textWithDot(text: "تم إنشاء الطلب بنجاح وبإنتظار موافقة مزود الخدمة.", color: const Color(0xffE67E23)),
-                            textWithDot(text: "وافق مزود الخدمة علي طلبك .", color: servicesTheme.colorScheme.secondary),
-                            // textWithDot(text: "تم التأكيد والطلب قيد التنفيذ.", color: Colors.black),
-                            textWithDot(text: "تم الإنتهاء من الطلب من مزود الخدمة وبإنتظار موافقتك.", color: Colors.black),
+                            ),),
+                                  // CustomText("300 ج", color: Color.fromARGB(255, 230, 35, 35), bold: true).headerExtra(),
+                            // textWithDot(text: "تم إنشاء الطلب بنجاح وبإنتظار موافقة مزود الخدمة.", color: const Color(0xffE67E23)),
+                            // textWithDot(text: "وافق مزود الخدمة علي طلبك .", color: servicesTheme.colorScheme.secondary),
+                            // // textWithDot(text: "تم التأكيد والطلب قيد التنفيذ.", color: Colors.black),
+                            // textWithDot(text: "تم الإنتهاء من الطلب من مزود الخدمة وبإنتظار موافقتك.", color: Colors.black),
                           ],
                         ),
                       ),
@@ -361,7 +454,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                             Row(
                               children: [
                                 const SizedBox(width: 10),
-                                CustomText("إجمالى البلغ", bold: true, color: servicesTheme.colorScheme.secondary).headerExtra(),
+                                CustomText("إجمالى المبلغ", bold: true, color: servicesTheme.colorScheme.secondary).headerExtra(),
                                 const Spacer(),
                                 CustomText("${state.data!.price} ج", color: servicesTheme.colorScheme.secondary, bold: true).headerExtra(),
                                 const SizedBox(width: 10),
@@ -458,7 +551,7 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
             decoration: BoxDecoration(color: color, shape: BoxShape.circle),
           ),
           const SizedBox(width: 5),
-          Expanded(child: CustomText(text, color: color, align: TextAlign.start, size: 15)),
+          Expanded(child: CustomText(text, color: color, align: TextAlign.start, size: 15,)),
         ],
       ),
     );

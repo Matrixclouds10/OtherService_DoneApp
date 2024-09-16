@@ -9,7 +9,8 @@ class AppSnackbar {
     String? title, //TODO remove this
     required String message,
     SnackbarType type = SnackbarType.other,
-  }) {
+  })
+  {
     AnimatedSnackBarType snackBarType = AnimatedSnackBarType.info;
     switch (type) {
       case SnackbarType.success:

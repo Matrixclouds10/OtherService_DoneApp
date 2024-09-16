@@ -9,4 +9,5 @@ class LayoutProviderCubit extends Cubit<LayoutProviderState> {
   void setCurrentIndex(int i) {
     emit(LayoutInitial(currentIndex: i));
   }
+  //cancelReason
 }

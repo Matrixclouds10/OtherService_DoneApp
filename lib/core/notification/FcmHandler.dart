@@ -11,6 +11,8 @@ import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
 import 'package:weltweit/features/data/app_urls/provider_endpoints_url.dart';
 
+import '../../features/logic/chat/chat_cubit.dart';
+
 class NotificationsFCM {
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
@@ -20,11 +22,20 @@ class NotificationsFCM {
     configLocalNotification();
     registerNotification();
     _createNotificationChannel("682", "Done", "Done");
+    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    //   if(ChatCubit.get().chatRoom!=message.notification!.title){
+    //     showNotification(message.notification!.title!,message.notification!.body!,message.data);
+    //   }
+    // });
   }
 
   void registerNotification() async {
     kEcho('FCM registerNotification');
-    await firebaseMessaging.requestPermission();
+    await firebaseMessaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       message.data.forEach((key, value) {
@@ -32,9 +43,12 @@ class NotificationsFCM {
       });
       RemoteNotification notification = message.notification!;
       Map<String, dynamic> data = message.data;
+      print('chatRoom ${ChatCubit.get().chatRoom}');
+        if(ChatCubit.get().chatRoom!=message.notification!.title){
+          showNotification(message.notification!.title!,message.notification!.body!,message.data);
+        }
       // AndroidNotification android = message.notification!.android!;
 
-      showNotification('${notification.title}', '${notification.body}', data);
     });
     firebaseMessaging.subscribeToTopic("682");
     firebaseMessaging.getToken().then((token) {
@@ -86,8 +100,7 @@ class NotificationsFCM {
   }
 
   void showNotification(String title, String message, Map<String, dynamic> payLoad) async {
-    kEcho('FCM showNotification message $message');
-    kEcho('FCM showNotification payLoad $payLoad');
+
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       '682',
       'Done',

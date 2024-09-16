@@ -29,17 +29,19 @@ class NetworkClient {
         'User-Agents': 'android', //TODO change this
       },
     );
+
     String? token = await prefs.getSecuredData(PrefKeys.token);
     token ??= await prefs.get(PrefKeys.token);
     if (token != null) {
       options.headers?.addAll({'Authorization': 'Bearer $token'});
     }
+
     data.forEach((key, value) {
-      log('data $key', '$value');
+      // log('data $key', '$value');
     });
     if (formData != null) {
       for (var element in formData.files) {
-        log('form data ${element.key}', element.value.filename ?? 'null');
+        // log('form data ${element.key}', element.value.filename ?? 'null');
       }
     }
     try {
@@ -69,7 +71,7 @@ class NetworkClient {
 
       return Right(baseResponse);
     } catch (e) {
-      log('network client error', e.toString());
+      // log('network client error', e.toString());
       if (e is ErrorModel) return Left(e);
       return Left(ApiErrorHandler.getMessage(e));
     }

@@ -18,6 +18,12 @@ String base64String(Uint8List data) {
   return base64Encode(data);
 }
 
+bool isBeforeExpireDate(String expireDate) {
+  DateTime expiration = DateTime.parse(expireDate);
+  DateTime today = DateTime.now();
+
+  return today.isBefore(expiration);
+}
 // Future<String> fileFromBase64String(String base64String) async {
 //   final fileBase64String = base64String.split('base64,').last;
 //   Uint8List bytes = base64Decode(fileBase64String);

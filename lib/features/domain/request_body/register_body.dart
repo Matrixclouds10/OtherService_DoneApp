@@ -8,6 +8,7 @@ class RegisterBody {
   final String name;
   final String mobile;
   final String? whatsappNumber;
+  final String? promoCode;
   final String email;
   final String password;
   final String confirmPassword;
@@ -25,6 +26,7 @@ class RegisterBody {
     this.mobile = '',
     this.whatsappNumber,
     this.email = '',
+    this.promoCode = '',
     this.password = '',
     this.confirmPassword = '',
     this.isConfirmTerms = false,
@@ -40,6 +42,7 @@ class RegisterBody {
     String? mobile,
     String? whatsappNumber,
     String? email,
+    String? promoCode,
     String? password,
     String? confirmPassword,
     CountryModel? country,
@@ -55,6 +58,7 @@ class RegisterBody {
       whatsappNumber: whatsappNumber ?? this.whatsappNumber,
       mobile: mobile ?? this.mobile,
       email: email ?? this.email,
+      promoCode: promoCode ?? this.promoCode,
       password: password ?? this.password,
       confirmPassword: confirmPassword ?? this.confirmPassword,
       country: country ?? this.country,
@@ -72,6 +76,7 @@ class RegisterBody {
     data['name'] = name;
     data['mobile_number'] = mobile;
     data['email'] = email;
+    data['promo_code'] = promoCode;
     data['password'] = password;
     data['country_code'] = country.code ?? '20';
     data['country_iso'] = country.code ?? 'EG';

@@ -68,7 +68,8 @@ class ContactHelper {
       } else {
         Alerts.showSnackBar("whatsapp no installed");
       }
-    } else {
+    }
+    else {
       // android , web
       if (await canLaunchUrl(Uri.parse(whatsappURlAndroid))) {
         await launchUrl(Uri.parse((whatsappURlAndroid)));

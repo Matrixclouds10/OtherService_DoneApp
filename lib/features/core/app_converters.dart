@@ -6,6 +6,37 @@ class AppConverters {
   static String documentTypeToString(DocumentType documentType) {
     switch (documentType) {
       case DocumentType.national_id:
+        return LocaleKeys.personalImage.tr();
+      case DocumentType.national_id_back:
+        return LocaleKeys.residenceImage.tr();
+      case DocumentType.work_certificate:
+        return LocaleKeys.residenceBackgroundImage.tr();
+
+      case DocumentType.corona_certificate:
+        return LocaleKeys.saudiTechnicianId.tr();
+      case DocumentType.ciminal_certificate:
+        return LocaleKeys.saudiIdBackground.tr();
+      case DocumentType.passport:
+        return LocaleKeys.workPermitImage.tr();
+      case DocumentType.personal_image:
+        return LocaleKeys.passportImage.tr();
+      case DocumentType.tax_card:
+        return LocaleKeys.institutionRecordImage.tr();
+      case DocumentType.commercial_register:
+        return LocaleKeys.institutionOwnerIdImage.tr();
+
+      case DocumentType.others:
+        return LocaleKeys.taxCardImage.tr();
+      case DocumentType.others_2:
+        return LocaleKeys.nationalAddressCertificate.tr();
+      case DocumentType.others_3:
+        return LocaleKeys.other.tr();
+
+
+    }
+    /*
+     switch (documentType) {
+      case DocumentType.national_id:
         return LocaleKeys.nationalId.tr();
       case DocumentType.work_certificate:
         return LocaleKeys.workCertificate.tr();
@@ -30,6 +61,7 @@ class AppConverters {
       case DocumentType.commercial_register:
         return LocaleKeys.commercialRegister.tr();
     }
+     */
   }
 
   static DocumentType stringToDocumentType(String documentType) {
