@@ -36,6 +36,7 @@ import 'package:weltweit/presentation/component/custom_button.dart';
 import 'package:weltweit/presentation/component/inputs/base_form.dart';
 
 import '../../core/routing/routes.dart';
+import '../logic/service/services_cubit.dart';
 
 class AppDialogs {
   Future<File?> pickImage(BuildContext context) async {
@@ -279,11 +280,14 @@ class AppDialogs {
   Future<bool> question(
     BuildContext context, {
     String? title,
+    String? buttonTitle1,
+    String? buttonTitle2,
     required String message,
   }) async {
     bool? result;
     await Dialogs.materialDialog(
       title: title ?? LocaleKeys.notification.tr(),
+      msgAlign: TextAlign.center,
       msg: message,
       color: Colors.white,
       context: context,
@@ -293,7 +297,7 @@ class AppDialogs {
             result = true;
             NavigationService.goBack();
           },
-          text: LocaleKeys.yes.tr(),
+          text:buttonTitle1?? LocaleKeys.yes.tr(),
           iconData: Icons.check,
           textStyle: TextStyle(color: primaryColor),
           iconColor: primaryColor,
@@ -303,7 +307,7 @@ class AppDialogs {
             result = false;
             NavigationService.goBack();
           },
-          text: LocaleKeys.no.tr(),
+          text: buttonTitle2?? LocaleKeys.no.tr(),
           iconData: Icons.close,
           textStyle: TextStyle(color: primaryColor),
           iconColor: primaryColor,
@@ -313,7 +317,7 @@ class AppDialogs {
     return result ?? false;
   }
 
-  void rateOrderDialog(BuildContext context, OrderModel orderModel) async {
+  void rateOrderDialog(BuildContext context, OrderModel orderModel,String type) async {
     double rate = 0;
     bool loading = false;
     TextEditingController controller = TextEditingController();
@@ -355,6 +359,7 @@ class AppDialogs {
                 ),
                 CustomButton(
                   onTap: () async {
+                    print(rate);
                     if (rate == 0) {
                       AppSnackbar.show(
                         context: context,
@@ -367,6 +372,8 @@ class AppDialogs {
                         rate: rate.ceil(),
                         orderId: orderModel.id,
                         providerId: orderModel.provider!.id!,
+                        clientId: orderModel.client!.id,
+                        fromType:type,
                       );
                       loading = true;
                       setState(() {});
@@ -383,13 +390,14 @@ class AppDialogs {
                           );
                         }
                       } else {
-                        if (context.mounted) {
-                          AppSnackbar.show(
-                            context: context,
-                            message: LocaleKeys.selectRate.tr(),
-                            type: SnackbarType.error,
-                          );
-                        }
+                        Navigator.pop(context);
+                        // if (context.mounted) {
+                        //   AppSnackbar.show(
+                        //     context: context,
+                        //     message: LocaleKeys.selectRate.tr(),
+                        //     type: SnackbarType.error,
+                        //   );
+                        // }
                       }
                     }
                   },
@@ -565,8 +573,10 @@ class AppDialogs {
             context.setLocale(Locale('en'));
             AppPrefs prefs = getIt<AppPrefs>();
             prefs.save(PrefKeys.lang, "en");
+            NavigationService.navigationKey.currentContext!.read<ServicesCubit>().getHomeServices();
 
             NavigationService.goBack();
+            // NavigationService.pushNamedAndRemoveUntil(RoutesServices.servicesSplashScreen);
           },
           text: "English",
           iconData: locale.languageCode.contains('en')? Icons.circle : Icons.circle_outlined,
@@ -578,7 +588,10 @@ class AppDialogs {
             context.setLocale(Locale('ar'));
             AppPrefs prefs = getIt<AppPrefs>();
             prefs.save(PrefKeys.lang, "ar");
+            NavigationService.navigationKey.currentContext!.read<ServicesCubit>().getHomeServices();
+
             NavigationService.goBack();
+
           },
           text: "عربي",
           iconData: locale.languageCode.contains('ar')? Icons.circle : Icons.circle_outlined,
@@ -626,7 +639,7 @@ class AppDialogs {
         CreditMethodsSaudi selectedCreditMethodSaudi = CreditMethodsSaudi.visa;
 
         return AlertDialog(
-          title: CustomText(LocaleKeys.subscribeNow.tr()),
+          title: CustomText(LocaleKeys.subscribeNow2.tr()),
           content: StatefulBuilder(builder: (context, setState) {
             return Column(
               mainAxisSize: MainAxisSize.min,
@@ -726,7 +739,7 @@ class AppDialogs {
                           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         ),
                         child: CustomText(
-                          LocaleKeys.subscribeNow.tr(),
+                          LocaleKeys.subscribeNow2.tr(),
                           color: Colors.white,
                         ).headerExtra(),
                       ),
@@ -815,7 +828,7 @@ class AppDialogs {
                           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         ),
                         child: CustomText(
-                          LocaleKeys.subscribeNow.tr(),
+                          LocaleKeys.subscribeNow2.tr(),
                           color: Colors.white,
                         ).headerExtra(),
                       ),

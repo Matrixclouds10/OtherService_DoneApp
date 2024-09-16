@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:weltweit/data/datasource/remote/exception/error_widget.dart';
 import 'package:weltweit/features/core/base/base_response.dart';
 import 'package:weltweit/features/core/base/base_usecase.dart';
@@ -32,12 +33,21 @@ import 'package:weltweit/features/domain/usecase/create_order/create_order_useca
 import 'package:weltweit/features/domain/usecase/provider/providers_usecase.dart';
 import 'package:weltweit/features/domain/usecase/services/update_services_usecase.dart';
 
+import '../../data/models/order/invoice.dart';
+import '../../data/models/wallet/wallet_model.dart';
+import '../usecase/order/start_go_to_client_usecase.dart';
+
 abstract class AppRepository {
   //* Auth
   Future<Either<ErrorModel, UserModel>> getProfile();
+  Future<Either<ErrorModel, bool>> updateUserLocation(LatLng latLng);
   Future<Either<ErrorModel, bool>> deleteProfile({required int id});
   Future<Either<ErrorModel, UserModel>> updateProfile({required UpdateProfileParams params});
   Future<Either<ErrorModel, BaseResponse>> changePassword({required ChangePasswordParams params});
+
+  //Wallet
+  Future<Either<ErrorModel, List<WalletModel>>> getWalletUser();
+  Future<Either<ErrorModel, BaseResponse>> convertPoints();
 
   //* Settings
   Future<Either<ErrorModel, BaseResponse>> updateFcm({required String fcmToken});
@@ -58,11 +68,13 @@ abstract class AppRepository {
   Future<Either<ErrorModel, List<ProvidersModel>>> getFavorites();
 
   Future<Either<ErrorModel, List<OrderModel>>> getOrders({required OrdersParams params});
+  Future<Either<ErrorModel, InvoiceModel>> getInvoiceOrder({required int id});
   Future<Either<ErrorModel, OrderModel>> getOrder({required int params});
   Future<Either<ErrorModel, OrderModel>> createOrder({required CreateOrderParams params});
   Future<Either<ErrorModel, BaseResponse>> cancelOrder({required OrderCancelParams params});
   Future<Either<ErrorModel, BaseResponse>> acceptOrder({required OrderAcceptParams params});
   Future<Either<ErrorModel, BaseResponse>> finishOrder({required OrderFinishParams params});
+  Future<Either<ErrorModel, BaseResponse>> startGoToClient({required StartGoToClientParams params});
 
   Future<Either<ErrorModel, String>> getAbout();
   Future<Either<ErrorModel, String>> getPolicy();

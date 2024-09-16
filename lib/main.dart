@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:device_preview/device_preview.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -11,10 +12,12 @@ import 'package:weltweit/features/injection.dart' as services_injection;
 
 import 'app.dart';
 import 'base_injection.dart' as injection;
+import 'core/notification/FcmHandler.dart';
+import 'core/notification/notification_service.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   Logger.root.level = Level.ALL; // defaults to Level.INFO
   Logger.root.onRecord.listen((record) {
     // print('${record.level.name}: ${record.time}: ${record.message}');
@@ -24,11 +27,13 @@ void main() async {
   await EasyLocalization.ensureInitialized();
 
   // initialize Firebase
-  await Firebase.initializeApp();
-
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   await injection.init();
   await services_injection.init();
-
+  // NotificationService d =NotificationService();
+  // d.init();
   //done.app2023@gmail.com
   // await SentryFlutter.init(
   //   (options) {
@@ -46,9 +51,13 @@ void main() async {
               saveLocale: true,
               useOnlyLangCode: true,
               startLocale: supportedLocales[0],
-              child: const MyApp()),
-        ),
-      );
+              child:
+              DevicePreview(
+                  enabled: false,
+                  builder: (context) => const MyApp()
+              // const MyApp()
+          ),
+        )));
     // }, (error, stack) {
     //   if (!kDebugMode) Sentry.captureException(error, stackTrace: stack);
     // }),

@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:full_screen_image/full_screen_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
+import 'package:weltweit/core/extensions/num_extensions.dart';
 import 'package:weltweit/core/resources/resources.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
 import 'package:weltweit/core/routing/routes.dart';
@@ -13,11 +14,15 @@ import 'package:weltweit/core/utils/date/date_converter.dart';
 import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/logic/order/order_cubit.dart';
 import 'package:weltweit/features/data/models/order/order.dart';
+import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/features/widgets/app_snackbar.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 
 import 'package:weltweit/presentation/component/component.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
+
+import '../../../core/utils/contact_helper.dart';
+import '../../data/models/chat/chat_user.dart';
 
 class OrderDetails extends StatefulWidget {
   final OrderModel orderModel; // "completed" or "accepted" or "cancelled"
@@ -38,7 +43,7 @@ class _OrderDetailsState extends State<OrderDetails> {
   }
 @override
   void dispose() {
-    videoPlayerController!.dispose();
+    videoPlayerController?.dispose();
     super.dispose();
   }
   @override
@@ -60,18 +65,31 @@ class _OrderDetailsState extends State<OrderDetails> {
             ),
             icon: Icon(FontAwesomeIcons.message),
             onPressed: () {
-              NavigationService.push(Routes.chatScreen, arguments: {'orderModel': widget.orderModel});
+              NavigationService.push(Routes.chatScreen, arguments: {
+                'orderModel': widget.orderModel,
+               'isUser':false,
+                'chatUser': ChatUser(
+                    image: widget.orderModel.client?.image??'',
+                    about: '',
+                    name: widget.orderModel.client?.name??'',
+                    createdAt: '',
+                    isOnline: true,
+                    id:widget.orderModel.client?.id.toString()??'0',
+                    lastActive: '',
+                    phone: widget.orderModel.client?.mobileNumber??'',
+                    pushToken: '')
+              });
             },
           ),
 
-          //more
-          IconButton(
-            padding: EdgeInsets.symmetric(horizontal: 8),
-            iconSize: 22,
-            constraints: BoxConstraints(),
-            icon: Icon(FontAwesomeIcons.ellipsisVertical),
-            onPressed: () {},
-          ),
+          //more الملفاة
+          // IconButton(
+          //   padding: EdgeInsets.symmetric(horizontal: 8),
+          //   iconSize: 22,
+          //   constraints: BoxConstraints(),
+          //   icon: Icon(FontAwesomeIcons.ellipsisVertical),
+          //   onPressed: () {},
+          // ),
         ],
       ),
       backgroundColor: AppColorLight().kScaffoldBackgroundColor,
@@ -102,30 +120,32 @@ class _OrderDetailsState extends State<OrderDetails> {
                     scrollDirection: Axis.vertical,
                     children: [
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Icon(FontAwesomeIcons.calendar, size: 16),
                           SizedBox(width: 4),
                           Directionality(textDirection: material.TextDirection.ltr, child: CustomText(DateConverter.formatDate(state.data!.date), pv: 0).footer()),
-                          Spacer(),
                           if (state.data?.service?.title != null)
-                            Container(
-                              margin: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
-                              padding: EdgeInsets.all(6),
-                              decoration: BoxDecoration(color: Color(0xff57A4C3), borderRadius: BorderRadius.circular(4)),
-                              child: CustomText(state.data!.service!.title!, color: Colors.white, size: 14, ph: 8, pv: 0).footer(),
-                            )
+                           Expanded(child:  Container(
+                             margin: EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+                             padding: EdgeInsets.all(6),
+                             decoration: BoxDecoration(color: Color(0xff57A4C3), borderRadius: BorderRadius.circular(4)),
+                             child: CustomText(state.data!.service!.title!, color: Colors.white, size: 14, ph: 8, pv: 0).footer(),
+                           ))
+                          //sub_percentage
                         ],
                       ),
-                      if (state.data!.file.isNotEmpty)
+                      if (state.data!.file!=null && state.data!.file!.isNotEmpty)
                         Container(
                           padding: const EdgeInsets.all(4),
                           decoration: const BoxDecoration(color: Colors.white),
-                          child: _orderFiles(state.data!.file),
+                          child: _orderFiles(state.data!.file??[]),
                         ),
                       if (state.data!.statusCode!.toLowerCase().contains("pending")) pendingView(state.data!),
                       if (state.data!.statusCode!.toLowerCase().contains("provider_cancel")) cacncelledView(state.data!),
                       if (state.data!.statusCode!.toLowerCase().contains("provider_finish")) finishedView(state.data!, false),
-                      if (state.data!.statusCode!.toLowerCase().contains("provider_accept")) inProgressView(state.data!),
+                      if (state.data!.statusCode!.toLowerCase().contains(("provider_accept"))) inProgressView(state.data!),
+                      if (state.data!.statusCode!.toLowerCase().contains(("in_way"))) inProgressView(state.data!),
                       if (state.data!.statusCode!.toLowerCase().contains("client_done")) finishedView(state.data!, true),
                     ],
                   ),
@@ -259,23 +279,83 @@ class _OrderDetailsState extends State<OrderDetails> {
   inProgressView(OrderModel orderModel) {
     return Column(
       children: [
-        Container(
-          padding: EdgeInsets.all(12),
-          decoration: BoxDecoration(color: Colors.white),
-          child: Row(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomText(LocaleKeys.orderStatus.tr(), pv: 0).header(),
-                  CustomText(LocaleKeys.inProgress.tr(), pv: 0, color: AppColorLight().kAccentColor).footer(),
-                ],
-              ),
-              Spacer(),
-              Transform.rotate(angle: 0.4, child: Icon(Icons.timer, size: 32, color: Colors.grey[500])),
-            ],
-          ),
-        ),
+       InkWell(
+         onTap: (){
+           showDialog(
+             context: context,
+             builder: (context) {
+               return AlertDialog(
+                 backgroundColor: Colors.white,
+                 content: Column(
+                   mainAxisSize: MainAxisSize.min,
+                   children: [
+                     const SizedBox(height: 10),
+
+                     Icon(Icons.info, size: 80, color: Colors.blue),
+                     const SizedBox(height: 10),
+                     CustomText(LocaleKeys.trackingOrder2.tr()),
+                     CustomText('# ${orderModel.id??''} '),
+                     CustomText('Distance: ${orderModel.distance.toString()??'0'} km'),
+                     CustomText('Arrived in ${orderModel.estimatedTime.toString()??'0'} min'),
+                     const SizedBox(height: 30),
+                     Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceAround,
+                       children:  [
+                         SizedBox(width: 10),
+                         InkWell(
+                           onTap: (){
+                             ContactHelper.launchCall(orderModel.client?.mobileNumber??'');
+                           },
+                           child: CircleAvatar(
+                             backgroundColor: Colors.blue,
+                             child: Icon(Icons.call, color: Colors.white),
+                           ),   ),
+                         InkWell(
+                           onTap: (){
+                             ContactHelper.openWhatsApp(context,orderModel.client?.mobileNumber??'');
+                           },
+                           child: CircleAvatar(
+                             backgroundColor: Colors.blue,
+                             child: Icon(Icons.message, color: Colors.white),
+                           ),   ),
+                         SizedBox(width: 10),
+
+                       ],
+                     ),
+                   ],
+                 ),
+               );
+             },
+           );
+           },
+         child:    Container(
+             padding: EdgeInsets.all(12),
+             decoration: BoxDecoration(color: Colors.white,
+               borderRadius: BorderRadius.circular(10),
+               boxShadow: [
+                 BoxShadow(
+                   color: Colors.grey.withOpacity(0.2),
+                   spreadRadius: 5,
+                   blurRadius: 2,
+                   offset: const Offset(0, 3), // changes position of shadow
+                 ),
+               ],
+             ),
+             child: Row(
+               children: [
+                 Column(
+                   crossAxisAlignment: CrossAxisAlignment.start,
+                   children: [
+                     CustomText(LocaleKeys.orderStatus.tr(), pv: 0).header(),
+                     CustomText(orderModel.statusCode=='in_way'?LocaleKeys.onWay.tr():LocaleKeys.inProgress.tr(), pv: 0, color: AppColorLight().kAccentColor).footer(),
+                   ],
+                 ),
+                 Spacer(),
+                 Transform.rotate(angle: 0.4, child: Icon(Icons.timer, size: 32, color: Colors.grey[500])),
+               ],
+             ),
+         ),
+       ),
         SizedBox(height: 12),
         Row(
           children: [
@@ -286,52 +366,87 @@ class _OrderDetailsState extends State<OrderDetails> {
             ).header(),
           ],
         ),
+        SizedBox(height: 5),
         CustomTextFieldNumber(
           hint: LocaleKeys.primaryAmount.tr(),
           radius: 0,
           controller: _amountController,
         ),
+        //all_status
         SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(width: 16),
-            // ElevatedButton(
-            //   onPressed: () async {
-            //     actionCancelOrder(context, id: orderModel.id);
-            //   },
-            //   style: ElevatedButton.styleFrom(
-            //     backgroundColor: Colors.red,
-            //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-            //     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            //   ),
-            //   child: CustomText(LocaleKeys.cancelOrder.tr(), color: Colors.white).headerExtra(),
-            // ),
-            // Spacer(),
-            BlocBuilder<OrderCubit, OrderState>(
-              builder: (context, state) {
-                if (state.finishState == BaseState.loading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                return ElevatedButton(
-                  onPressed: () async {
-                    if (_amountController.text.isEmpty) {
-                      AppSnackbar.show(context: context, message: LocaleKeys.enterAmount.tr());
-                      return;
-                    }
-                    actionFinishOrder(context, id: orderModel.id, amount: _amountController.text);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  ),
-                  child: CustomText(LocaleKeys.finishOrder.tr(), color: Colors.white).headerExtra(),
-                );
-              },
-            ),
-            SizedBox(width: 16),
-          ],
+        FittedBox(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(width: 16),
+              // ElevatedButton(
+              //   onPressed: () async {
+              //     actionCancelOrder(context, id: orderModel.id);
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: Colors.red,
+              //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+              //     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              //   ),
+              //   child: CustomText(LocaleKeys.cancelOrder.tr(), color: Colors.white).headerExtra(),
+              // ),
+              // Spacer(),
+              BlocBuilder<OrderCubit, OrderState>(
+                builder: (context, state) {
+                  if (state.finishState == BaseState.loading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  return
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if(orderModel.statusCode!='in_way')
+                        ElevatedButton(
+                          onPressed: () async {
+                            startGoToClient(context,
+                                id: orderModel.id,);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(100)),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                          ),
+                          child: CustomText(LocaleKeys.onWay.tr(),
+                              color: Colors.white)
+                              .headerExtra(),
+                        ),
+                        SizedBox(width: 20.w,),
+                        ElevatedButton(
+                          onPressed: () async {
+                            if (_amountController.text.isEmpty) {
+                              AppSnackbar.show(
+                                  context: context,
+                                  message: LocaleKeys.enterAmount.tr());
+                              return;
+                            }
+                            actionFinishOrder(context,
+                                id: orderModel.id, amount: _amountController.text);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(100)),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                          ),
+                          child: CustomText(LocaleKeys.finishOrder.tr(),
+                              color: Colors.white)
+                              .headerExtra(),
+                        ),
+                      ],
+                    );
+                },
+              ),
+              SizedBox(width: 16),
+            ],
+          ),
         ),
         SizedBox(height: 24),
       ],
@@ -349,6 +464,7 @@ class _OrderDetailsState extends State<OrderDetails> {
               Row(
                 children: [
                   Column(
+                    //اعط giverate
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       CustomText(LocaleKeys.orderStatus.tr(), pv: 0).header(),
@@ -378,6 +494,8 @@ class _OrderDetailsState extends State<OrderDetails> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              CustomText(LocaleKeys.cancelOrderMessage.tr()),
+
               CustomTextFieldArea(
                 onChange: (value) => cancelReason = value,
                 hint: LocaleKeys.cancelReason.tr(),
@@ -460,6 +578,13 @@ class _OrderDetailsState extends State<OrderDetails> {
     if (result) {
       if (context.mounted) Navigator.pop(context);
       if (context.mounted) AppSnackbar.show(context: context, message: LocaleKeys.successfullyFinishOrder.tr());
+    }
+  }
+  void startGoToClient(BuildContext context, {required int id}) async {
+    bool result = await context.read<OrderCubit>().startGotoWay(id: id);
+    if (result) {
+      if (context.mounted) Navigator.pop(context);
+      if (context.mounted) AppSnackbar.show(context: context, message: 'Successfully');
     }
   }
 

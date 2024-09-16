@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:google_maps_flutter_platform_interface/src/types/location.dart';
 import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/core/services/local/storage_keys.dart';
@@ -20,12 +21,14 @@ import 'package:weltweit/features/data/models/location/city_model.dart';
 import 'package:weltweit/features/data/models/location/country_model.dart';
 import 'package:weltweit/features/data/models/location/region_model.dart';
 import 'package:weltweit/features/data/models/notification/notification_model.dart';
+import 'package:weltweit/features/data/models/order/invoice.dart';
 import 'package:weltweit/features/data/models/order/order.dart';
 import 'package:weltweit/features/data/models/portfolio/portfolio_image.dart';
 import 'package:weltweit/features/data/models/provider/provider_rates_model.dart';
 import 'package:weltweit/features/data/models/provider/providers_model.dart';
 import 'package:weltweit/features/data/models/services/service.dart';
 import 'package:weltweit/features/data/models/services/services_response.dart';
+import 'package:weltweit/features/data/models/wallet/wallet_model.dart';
 import 'package:weltweit/features/domain/repositoy/app_repo.dart';
 import 'package:weltweit/features/domain/usecase/banner/banner_usecase.dart';
 import 'package:weltweit/features/domain/usecase/chat_messages/chat_messages_usecase.dart';
@@ -39,10 +42,13 @@ import 'package:weltweit/features/domain/usecase/order/order_cancel_usecase.dart
 import 'package:weltweit/features/domain/usecase/order/order_finish_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/order_rate_usecase.dart';
 import 'package:weltweit/features/domain/usecase/order/orders_usecase.dart';
+import 'package:weltweit/features/domain/usecase/order/start_go_to_client_usecase.dart';
 import 'package:weltweit/features/domain/usecase/profile/change_password_usecase.dart';
 import 'package:weltweit/features/domain/usecase/profile/update_profile_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider/providers_usecase.dart';
 import 'package:weltweit/features/domain/usecase/services/update_services_usecase.dart';
+
+import '../../../core/utils/toast_states/enums.dart';
 
 class AppRepositoryImp implements AppRepository {
   final NetworkClient networkClient;
@@ -160,8 +166,9 @@ class AppRepositoryImp implements AppRepository {
   Future<Either<ErrorModel, List<ServiceModel>>> updateMyServices({required UpdateServicesParams params}) async {
     String url = AppURL.updateMyServices;
     NetworkCallType type = NetworkCallType.post;
-    Map<String, dynamic> data = params.toJson();
-    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+
+    FormData? formData = FormData.fromMap(params.toJson());
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: params.toJson(),formData: formData, type: type);
     return result.fold((l) => Left(l), (r) {
       try {
         List<ServiceModel> services = r.data.map<ServiceModel>((e) => ServiceModel.fromJson(e)).toList();
@@ -281,17 +288,29 @@ class AppRepositoryImp implements AppRepository {
       kEcho("form data files ${files?.length}");
     if (files != null && files.isNotEmpty) {
       formData = FormData.fromMap({
-        for (int i = 0; i < files.length; i++) 'file[$i]': await MultipartFile.fromFile(files[i].path, filename: files[i].path.split('/').last),
+        for (int i = 0; i < files.length; i++) 'files[$i]': await MultipartFile.fromFile(files[i].path, filename: files[i].path.split('/').last),
       });
       kEcho("form data ${formData.files.first.value}");
     }
-
+    print("------> formData ");
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type, formData: formData);
-    return result.fold((l) => Left(l), (r) {
+
+    return result.fold((l){
+      print("------> l ${l.errorMessage}");
+      print("------> l ${l.code}");
+      print("------> l ${l.codeError}");
+      print("------> l ${l.image}");
+      return Left(ErrorModel(errorMessage:l.errorMessage.toString()));
+    }, (r) {
+      OrderModel data = OrderModel.fromJson(r.data);
+
+
       try {
+        print("--Right----> r ${r.data}");
         OrderModel data = OrderModel.fromJson(r.data);
         return Right(data);
       } catch (e) {
+        print("--Left----> e ${e.toString()}");
         return Left(ErrorModel(errorMessage: e.toString()));
       }
     });
@@ -602,5 +621,87 @@ class AppRepositoryImp implements AppRepository {
         return Left(ErrorModel(errorMessage: e.toString()));
       }
     });
+  }
+
+  @override
+  Future<Either<ErrorModel, bool>> updateUserLocation(LatLng latLng)async {
+    String url = AppURL.updateLocationUser;
+    NetworkCallType type = NetworkCallType.post;
+    Map<String, dynamic> data = {'lat':latLng.latitude.toString(),'lng':latLng.longitude.toString()};
+
+    Either<ErrorModel, BaseResponse> result = await networkClient(
+      url: url,
+      data: data,
+      type: type,
+    );
+
+    return result.fold((l) {
+      return Left(l);
+    } , (r) {
+      try {
+        return Right(r.code == 200 || r.code == 201);
+      } catch (e) {
+        return Left(ErrorModel(errorMessage: e.toString()));
+      }
+    });
+  }
+
+  @override
+  Future<Either<ErrorModel, InvoiceModel>> getInvoiceOrder({required int id})async {
+    String url =AppURL.invoiceOrder(id);
+    NetworkCallType type = NetworkCallType.get;
+    Map<String, dynamic> data = {};
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+    return result.fold((l) => Left(l), (r) {
+      try {
+        InvoiceModel data = InvoiceModel.fromJson(r.data);
+        return Right(data);
+      } catch (e) {
+        return Left(ErrorModel(errorMessage: e.toString()));
+      }
+    });
+  }
+
+
+  @override
+  Future<Either<ErrorModel, List<WalletModel>>> getWalletUser() async {
+    String url = AppURL.getWalletUser;
+    NetworkCallType type = NetworkCallType.get;
+    Map<String, dynamic> data = {};
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+    return result.fold((l) => Left(l), (r) {
+      try {
+        List<WalletModel> data = r.data['data'].map<WalletModel>((e) => WalletModel.fromJson(e)).toList();
+        return Right(data);
+      } catch (e) {
+        return Left(ErrorModel(errorMessage: e.toString()));
+      }
+    });
+  }
+
+  @override
+  Future<Either<ErrorModel, BaseResponse>> convertPoints()async {
+    String url = AppURL.convertPoints;
+    NetworkCallType type = NetworkCallType.post;
+    Map<String, dynamic> data = {};
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+    return result.fold((l) => Left(l), (r) {
+      try {
+        showToast(text: r.message??'');
+        return Right(r);
+      } catch (e) {
+        return Left(ErrorModel(errorMessage: e.toString()));
+      }
+    });
+  }
+
+  @override
+  Future<Either<ErrorModel, BaseResponse>> startGoToClient({required StartGoToClientParams params}) async{
+
+    String url =  AppURL.providerStartGoToClient;
+    NetworkCallType type = NetworkCallType.post;
+    Map<String, dynamic> data = params.toJson();
+    Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
+    return result.fold((l) => Left(l), (r) => Right(r));
   }
 }

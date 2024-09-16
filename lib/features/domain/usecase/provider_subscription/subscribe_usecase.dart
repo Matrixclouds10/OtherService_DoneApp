@@ -21,8 +21,8 @@ class SubscribeUseCase extends BaseUseCase<UpdateSubscribtionResponse, Subscribe
 }
 
 class SubscribeParams {
-  int id;
-  String paymentMethod;
+  int? id;
+  String? paymentMethod;
 
   SubscribeParams({
     required this.id,
@@ -32,7 +32,7 @@ class SubscribeParams {
   toJson() {
     return {
       'subscription_id': id,
-      'payment_method': paymentMethod.contains('visa') ? 'credit' : paymentMethod,
+      'payment_method': paymentMethod!.contains('visa') ? 'credit' : paymentMethod,
     };
   }
 }

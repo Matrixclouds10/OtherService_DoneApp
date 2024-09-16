@@ -96,15 +96,17 @@ class SingleDocumentItem extends StatelessWidget {
 
   String convertToProperDocumentType(String? type) {
     if (type == null) return '';
-    if (type == 'work_certificate') return LocaleKeys.workCertificate.tr();
-    if (type == 'passport') return LocaleKeys.passport.tr();
-    if (type == 'national_id') return LocaleKeys.nationalId.tr();
-    if (type == 'corona_certificate') return LocaleKeys.coronaCertificate.tr();
-    if (type == 'national_id_back') return LocaleKeys.nationalIdBack.tr();
-    if (type == 'ciminal_certificate') return LocaleKeys.ciminalCertificate.tr();
-    if (type == 'personal_image') return LocaleKeys.personalImage.tr();
-    if (type == 'tax_card') return LocaleKeys.taxCard.tr();
-    if (type == 'commercial_register') return LocaleKeys.commercialRegister.tr();
+    if (type == 'national_id') return LocaleKeys.personalImage.tr();
+    if (type == 'national_id_back') return LocaleKeys.residenceImage.tr();
+    if (type == 'work_certificate') return LocaleKeys.residenceBackgroundImage.tr();
+    if (type == 'corona_certificate') return LocaleKeys.saudiTechnicianId.tr();
+    if (type == 'ciminal_certificate') return LocaleKeys.saudiIdBackground.tr();
+    if (type == 'passport') return LocaleKeys.workPermitImage.tr();
+
+    if (type == 'personal_image') return LocaleKeys.passportImage.tr();
+    if (type == 'tax_card') return LocaleKeys.institutionRecordImage.tr();
+    if (type == 'commercial_register') return LocaleKeys.institutionOwnerIdImage.tr();
+
     if (type == 'others') return type;
     return 'others';
   }

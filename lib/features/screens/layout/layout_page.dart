@@ -14,6 +14,7 @@ import 'package:weltweit/features/screens/layout/widgets/navigation_tabs.dart';
 import 'package:weltweit/presentation/component/component.dart';
 
 import '../../../core/tabs/tab.dart';
+import '../../logic/chat/chat_cubit.dart';
 
 class LayoutPage extends StatefulWidget {
   // ignore: unused_field
@@ -26,16 +27,19 @@ class LayoutPage extends StatefulWidget {
   @override
   State<LayoutPage> createState() => _LayoutPageState();
 }
-
+//NOT Found
 class _LayoutPageState extends State<LayoutPage> {
+
   @override
   void initState() {
+     context.read<ProfileCubit>().updateUserLocation(context);
     NavigationService.navigationKey.currentContext!.read<ProfileCubit>().getProfile();
     NavigationService.navigationKey.currentContext!.read<ServicesCubit>().getHomeServices();
     NotificationsFCM();
     super.initState();
   }
 
+  //الغاء الطلب
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ProfileCubit, ProfileState>(
@@ -109,6 +113,7 @@ class LayoutView extends StatelessWidget {
                 }
               },
             ),
+            //om.google.android.gm
             bottomNavigationBar: BottomNavigationBar(
               onTap: (value) {
                 viewModel.setCurrentIndex(i: value, context: context);

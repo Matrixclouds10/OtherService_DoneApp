@@ -1,3 +1,4 @@
+import 'package:awesome_extensions/awesome_extensions.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
@@ -6,6 +7,9 @@ import 'package:weltweit/features/core/routing/routes_provider.dart';
 import 'package:weltweit/features/core/widgets/custom_text.dart';
 import 'package:weltweit/features/data/models/order/order.dart';
 import 'package:weltweit/presentation/component/images/custom_image.dart';
+
+import '../../../generated/locale_keys.g.dart';
+import '../../widgets/app_dialogs.dart';
 
 class OrderItemWidgetClient extends StatelessWidget {
   final OrderModel orderModel;
@@ -77,6 +81,36 @@ class OrderItemWidgetClient extends StatelessWidget {
                     if (orderModel.status.toLowerCase() == "accepted") const CustomText("قيد التنفيذ", pv: 0).footer(),
                   ],
                 ),
+              if(orderModel.statusCode?.toLowerCase() == "client_done")
+                if (orderModel.rate == null)
+                  Container(
+                    color: Colors.transparent,
+                    padding: EdgeInsets.all(4),
+                    child: CustomText(LocaleKeys.giverate.tr(), color: Colors.blueAccent, pv: 0).footer(),
+                  ).onTap(() {
+                    AppDialogs().rateOrderDialog(context, orderModel,'provider');
+                  }),
+              if (orderModel.rate != null)
+                Container(
+                  color: Colors.transparent,
+                  padding: EdgeInsets.all(4),
+                  child: Column(
+                    children: [
+                      CustomText(LocaleKeys.youRated.tr(), color: Colors.blueAccent, pv: 0).footer(),
+                      if (orderModel.rate?.rate != null)
+                        Row(
+                          children: [
+                            for (var i = 0; i < orderModel.rate!.rate!; i++) const Icon(Icons.star, size: 12, color: Colors.yellow),
+                            for (var i = 0; i < 5 - orderModel.rate!.rate!; i++) const Icon(Icons.star, size: 12, color: Colors.grey),
+                          ],
+                        )
+                    ],
+                  ),
+                ).onTap(() {
+                  AppDialogs().rateOrderDialog(context, orderModel,'provider');
+                }),
+
+
               const SizedBox(width: 8),
             ],
           )),

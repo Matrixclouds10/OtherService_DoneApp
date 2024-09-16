@@ -40,7 +40,7 @@ class CreateOrderParams {
     return {
       'date': date,
       'service_id': serviceId,
-      'provider_id': providerId,
+      'price': '10',
     };
   }
 }

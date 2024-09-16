@@ -58,5 +58,6 @@ abstract class AppRepositoryProvider {
 
   //* Wallet
   Future<Either<ErrorModel, List<WalletModel>>> getWalletHistory();
+  Future<Either<ErrorModel, BaseResponse>> convertPoints();
   Future<Either<ErrorModel, BaseResponse<List<NotificationModel>>>> getProviderNotifications(int parameters);
 }

@@ -11,6 +11,8 @@ import 'package:weltweit/features/screens/policy/policy_page.dart';
 import 'package:weltweit/features/screens/splash/splash_screen.dart';
 import 'package:weltweit/features/data/models/order/order.dart';
 
+import '../../features/data/models/chat/chat_user.dart';
+import '../../features/screens/wallet/wallet_page.dart';
 import 'platform_page_route.dart';
 import 'undefined_route_screen.dart';
 
@@ -31,9 +33,13 @@ class RouteGenerator {
     } else if (settings.name == Routes.chatScreen) {
       Map? arguments = settings.arguments as Map<String, dynamic>?;
       OrderModel orderModel = arguments!['orderModel'] as OrderModel;
-      return platformPageRoute(Theme(data: servicesTheme, child: ChatScreen(orderModel: orderModel)));
+      ChatUser chatUser = arguments!['chatUser'] as ChatUser;
+      return platformPageRoute(Theme(data: servicesTheme, child:
+      ChatScreen(orderModel: orderModel, isUser: arguments['isUser'], receiverData: chatUser,)));
     } else if (settings.name == Routes.about) {
       return platformPageRoute(const AboutPage());
+    }else if (settings.name == Routes.userWalletPage) {
+      return platformPageRoute(const UserWalletPage());
     } else if (settings.name == Routes.policy) {
       return platformPageRoute( PolicyPage());
     } else if (settings.name == Routes.contactUs) {

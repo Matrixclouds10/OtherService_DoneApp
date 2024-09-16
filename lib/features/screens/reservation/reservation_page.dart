@@ -57,11 +57,8 @@ class _ReservationPageState extends State<ReservationPage> {
         body: BlocConsumer<CreateOrderCubit, CreateOrderState>(
           listener: (context, state) {
             if (state.state == BaseState.loaded) {
-              //back to home
               Navigator.popUntil(context, (route) => route.isFirst);
-
               NavigationService.push(RoutesServices.servicesOrderDetails, arguments: {"orderModel": state.data});
-
               AppSnackbar.show(context: context, message: LocaleKeys.successfullySendOrder.tr());
             }
             if (state.state == BaseState.error) {
@@ -111,28 +108,37 @@ class _ReservationPageState extends State<ReservationPage> {
                                 height: 25,
                                 child: Column(
                                   children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        ElevatedButton.icon(
-                                          onPressed: _actionCamera,
-                                          icon: Icon(Icons.camera_alt),
-                                          label: CustomText(LocaleKeys.camera.tr()),
-                                        ),
-                                        ElevatedButton.icon(
-                                          onPressed: _actionGallery,
-                                          icon: Icon(Icons.image, color: Colors.blue.shade400),
-                                          style: ElevatedButton.styleFrom(backgroundColor: Colors.blue.shade100),
-                                          label: CustomText(LocaleKeys.gallery.tr()),
-                                        ),
-                                        ElevatedButton.icon(
-                                          onPressed: _actionVideo,
-                                          icon: Icon(Icons.video_camera_back_rounded, color: Colors.green.shade400),
-                                          style: ElevatedButton.styleFrom(backgroundColor: Colors.green.shade100),
-                                          label: CustomText(LocaleKeys.video.tr()),
-                                        ),
-                                      ],
-                                    ),
+                                   FittedBox(
+                                     child:  Row(
+                                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                       children: [
+                                         SizedBox(width: 5),
+                                         ElevatedButton.icon(
+                                           onPressed: _actionCamera,
+                                           icon: Icon(Icons.camera_alt),
+                                           label: CustomText(LocaleKeys.camera.tr()),
+                                         ),
+                                         SizedBox(width: 3),
+
+                                         ElevatedButton.icon(
+                                           onPressed: _actionGallery,
+                                           icon: Icon(Icons.image, color: Colors.blue.shade400),
+                                           style: ElevatedButton.styleFrom(backgroundColor: Colors.blue.shade100),
+                                           label: CustomText(LocaleKeys.gallery.tr()),
+                                         ),
+                                         SizedBox(width: 3),
+
+                                         ElevatedButton.icon(
+                                           onPressed: _actionVideo,
+                                           icon: Icon(Icons.video_camera_back_rounded, color: Colors.green.shade400),
+                                           style: ElevatedButton.styleFrom(backgroundColor: Colors.green.shade100),
+                                           label: CustomText(LocaleKeys.video.tr()),
+                                         ),
+                                         SizedBox(width: 5),
+
+                                       ],
+                                     ),
+                                   )
                                   ],
                                 ),
                               ),
@@ -234,48 +240,48 @@ class _ReservationPageState extends State<ReservationPage> {
                         ),
                       ],
                     ),
-                  const SizedBox(height: 12),
-                  GestureDetector(
-                    onTap: () {
-                      if (state.state == BaseState.loading) return;
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return SizedBox(
-                            height: 300,
-                            child: StatefulBuilder(builder: (context, setState2) {
-                              return ListView.builder(
-                                padding: EdgeInsets.symmetric(vertical: 8),
-                                itemCount: widget.providersModel.services?.length ?? 0,
-                                itemBuilder: (context, index) {
-                                  return RadioListTile(
-                                    value: widget.providersModel.services?[index],
-                                    groupValue: selectedService,
-                                    title: CustomText(widget.providersModel.services?[index].title ?? ''),
-                                    onChanged: (value) {
-                                      selectedService = value as ServiceModel;
-                                      setState2(() {});
-                                      setState(() {});
-                                      Navigator.pop(context);
-                                    },
-                                  );
-                                },
-                              );
-                            }),
-                          );
-                        },
-                      );
-                    },
-                    child: CustomTextField(
-                      hint: selectedService == null ? LocaleKeys.selectService.tr() : selectedService!.title,
-                      prefixIcon: Icons.handyman,
-                      enable: false,
-                      radius: 4,
-                      noBorder: true,
-                      prefixIconColor: Colors.grey,
-                      background: Colors.white,
-                    ),
-                  ),
+                  // const SizedBox(height: 12),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     // if (state.state == BaseState.loading) return;
+                  //     // showModalBottomSheet(
+                  //     //   context: context,
+                  //     //   builder: (context) {
+                  //     //     return SizedBox(
+                  //     //       height: 300,
+                  //     //       child: StatefulBuilder(builder: (context, setState2) {
+                  //     //         return ListView.builder(
+                  //     //           padding: EdgeInsets.symmetric(vertical: 8),
+                  //     //           itemCount: widget.providersModel.services?.length ?? 0,
+                  //     //           itemBuilder: (context, index) {
+                  //     //             return RadioListTile(
+                  //     //               value: widget.providersModel.services?[index],
+                  //     //               groupValue: selectedService,
+                  //     //               title: CustomText(widget.providersModel.services?[index].title ?? ''),
+                  //     //               onChanged: (value) {
+                  //     //                 selectedService = value as ServiceModel;
+                  //     //                 setState2(() {});
+                  //     //                 setState(() {});
+                  //     //                 Navigator.pop(context);
+                  //     //               },
+                  //     //             );
+                  //     //           },
+                  //     //         );
+                  //     //       }),
+                  //     //     );
+                  //     //   },
+                  //     // );
+                  //   },
+                  //   child: CustomTextField(
+                  //     hint: selectedService == null ? LocaleKeys.selectService.tr() : widget.providersModel.services?[0].title??'',
+                  //     prefixIcon: Icons.handyman,
+                  //     enable: false,
+                  //     radius: 4,
+                  //     noBorder: true,
+                  //     prefixIconColor: Colors.grey,
+                  //     background: Colors.white,
+                  //   ),
+                  // ),
                   const SizedBox(height: 24),
 
                   if (kDebugMode)
@@ -449,7 +455,7 @@ class _ReservationPageState extends State<ReservationPage> {
     if (video != null) {
       files.add(video!);
     }
-
+    selectedService =widget.providersModel.services?[0];
     // if(files.isEmpty){
     //   AppSnackbar.show(context: context, message: LocaleKeys.pleaseAddImageOrVideo.tr());
     //   return;

@@ -17,7 +17,6 @@ import 'package:weltweit/presentation/component/component.dart';
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({super.key});
-
   @override
   State<NotificationPage> createState() => _NotificationPageState();
 }

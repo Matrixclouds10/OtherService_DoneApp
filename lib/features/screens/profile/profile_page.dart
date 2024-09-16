@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
@@ -14,6 +16,9 @@ import 'package:weltweit/features/screens/my_addresses/logic/address_cubit.dart'
 import 'package:weltweit/features/widgets/app_dialogs.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
+
+import '../../../core/utils/file_helper.dart';
+import '../../../core/utils/toast_states/enums.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -43,8 +48,9 @@ class ProfilePage extends StatelessWidget {
             children: [
               SizedBox(height: 8),
               _userProfileCard(context),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
               CustomText(LocaleKeys.myInformation.tr(), color: Colors.black, align: TextAlign.start, bold: true, pv: 4, ph: 12).header(),
+              const SizedBox(height: 8),
               Container(
                 color: Colors.white,
                 child: Column(
@@ -60,6 +66,14 @@ class ProfilePage extends StatelessWidget {
                             });
                       },
                     ),
+                    Divider(height: 2, color: Colors.grey[300]),
+                    singleCustomListTile(
+                        icon: Icons.arrow_forward_ios,
+                        text: LocaleKeys.wallet.tr(),
+                        trailingText: "",
+                        onTap: () {
+                          Navigator.pushNamed(context, Routes.userWalletPage);
+                        }),
                     Divider(height: 2, color: Colors.grey[300]),
                     BlocBuilder<OrdersCubit, OrdersState>(
                       builder: (context, state) {
@@ -179,37 +193,62 @@ class ProfilePage extends StatelessWidget {
   }
 
   _userProfileCard(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        NavigationService.push(RoutesServices.servicesProfileEdit);
-      },
-      child: BlocBuilder<ProfileCubit, ProfileState>(
+    return BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {
+          bool hasCode=(state.data?.code !=null && state.data!.code!.code!=null) &&isBeforeExpireDate(state.data?.code?.expireDate??'0000-00-00');
           if (state.data == null) {
             return Container();
           }
-
           return Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomImage(
-                  imageUrl: state.data!.image,
-                  width: MediaQuery.of(context).size.width / 6,
-                  height: MediaQuery.of(context).size.width / 6,
-                  fit: BoxFit.fill,
-                  radius: 250,
+                GestureDetector(
+                  onTap: () {
+                    NavigationService.push(RoutesServices.servicesProfileEdit);
+                  },
+                  child : CustomImage(
+                    imageUrl: state.data!.image,
+                      width:
+                      hasCode?
+                      MediaQuery.of(context).size.width / 5:
+                      MediaQuery.of(context).size.width / 6,
+                      height:
+                      hasCode?
+                      MediaQuery.of(context).size.width / 5:
+                      MediaQuery.of(context).size.width / 6,
+                      fit: BoxFit.fill,
+                      radius: 250,
+                    ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 4),
+                       SizedBox(height: hasCode?4:8),
                       textWithIcon(icon: Icons.person, text: state.data!.name ?? ''),
                       const SizedBox(height: 4),
                       textWithIcon(icon: Icons.phone, text: state.data!.mobileNumber ?? ''),
+                      if(hasCode)
+                         InkWell(
+                           onTap: (){
+                             Clipboard.setData( ClipboardData(text: state.data!.code?.code ?? '')).then((_) {
+                               // showToast(text: '${LocaleKeys.copied.tr()} ${state.data!.code?.code ?? ''}', gravity:  ToastGravity.TOP,);
+
+                             });
+                           },
+                           child: Column(
+                             children: [
+                               ...[
+                                 const SizedBox(height: 4),
+                                 textWithIcon(icon: Icons.copy_all_outlined, text: state.data!.code?.code ?? ''),
+                               ]
+                             ],
+                           ),
+                         )
+
                     ],
                   ),
                 ),
@@ -218,7 +257,6 @@ class ProfilePage extends StatelessWidget {
             ),
           );
         },
-      ),
     );
   }
 }

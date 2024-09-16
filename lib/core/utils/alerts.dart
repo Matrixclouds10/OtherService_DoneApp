@@ -17,7 +17,7 @@ class Alerts {
     ScaffoldMessenger.of(NavigationService.navigationKey.currentContext!).showSnackBar(
       SnackBar(
         // margin: EdgeInsets.only(bottom: 100.0),
-        content: Text(message, style: const TextStyle().regularStyle()),
+        content: Text(message, style: const TextStyle().regularStyle().copyWith(color: Colors.white)),
         duration: duration,
         // shape: const StadiumBorder(),
         shape: RoundedRectangleBorder(

@@ -5,12 +5,17 @@ import 'package:weltweit/features/core/base/base_states.dart';
 import 'package:weltweit/features/domain/usecase/order/orders_usecase.dart';
 import 'package:weltweit/features/data/models/order/order.dart';
 
+import '../../data/models/order/invoice.dart';
+import '../../domain/usecase/order/invoice_usecase.dart';
+
 part 'orders_state.dart';
 
 class OrdersCubit extends Cubit<OrdersState> {
   final OrdersUseCase ordersUseCase;
+  final InvoiceUseCase invoiceUseCase;
   OrdersCubit(
     this.ordersUseCase,
+    this.invoiceUseCase,
   ) : super(const OrdersState());
 
   Future<void> getPendingOrders({required bool typeIsProvider,}) async {
@@ -54,6 +59,16 @@ class OrdersCubit extends Cubit<OrdersState> {
       (error) => emit(state.copyWith(completedState: BaseState.error, error: error)),
       (data) {
         emit(state.copyWith(completedState: BaseState.loaded, completedData: data));
+      },
+    );
+  }
+  Future<void> getInvoiceOrders({required int orderId}) async {
+    emit(state.copyWith(invoiceState: BaseState.loading));
+    final result = await invoiceUseCase(orderId);
+    result.fold(
+          (error) => emit(state.copyWith(invoiceState: BaseState.error, error: error)),
+          (data) {
+            emit(state.copyWith(invoiceState: BaseState.loaded, invoiceData: data));
       },
     );
   }

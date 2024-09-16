@@ -128,7 +128,7 @@ class NotificationModel extends Equatable {
     required this.title,
     required this.message,
     required this.serviceOrderId,
-    required this.order,
+     this.order,
     required this.type,
   });
 
@@ -156,7 +156,7 @@ class NotificationModel extends Equatable {
       title: map['title'],
       message: map['message'],
       serviceOrderId: map['service_order_id'],
-      order: OrderModel.fromJson(map['order']),
+      // order: OrderModel.fromJson(map['order']),
       type: map['type'],
     );
   }

@@ -154,49 +154,70 @@ class _ProfilePageState extends State<ProfilePage> with SingleTickerProviderStat
   }
 
   services() {
-    return GestureDetector(
-      onTap: () => NavigationService.push(RoutesProvider.providerServices),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              SizedBox(width: 24),
-              Icon(FontAwesomeIcons.plusCircle, size: 30, color: primaryColor),
-              SizedBox(width: 12),
-              CustomText(LocaleKeys.addNewService.tr(), pv: 0),
-              Spacer(),
-            ],
-          ),
-          SizedBox(height: 8),
-          BlocBuilder<ServicesProviderCubit, ServicesProviderState>(
+    return BlocBuilder<ServicesProviderCubit, ServicesProviderState>(
             buildWhen: (previous, current) => previous.myServices != current.myServices,
             builder: (context, state) {
-              return Column(
-                children: [
-                  for (var i = 0; i < state.myServices.length; i++)
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CustomText(state.myServices[i].title ?? "", pv: 2).header(),
-                          if (state.myServices[i].breif != null) CustomText(state.myServices[i].breif!, align: TextAlign.start, color: Colors.grey[500]!, pv: 2),
-                        ],
-                      ),
-                    ),
-                ],
-              );
+              print("------> state.updateState ${state.updateState}");
+              if (state.state == BaseState.loaded){
+                return
+                  Column(
+                    children: [
+                      if( state.myServices.isEmpty)
+                        InkWell(
+                          onTap: () => NavigationService.push(RoutesProvider.providerServices),
+                          child: Row(
+                            children: [
+                              SizedBox(width: 24),
+                              Icon(FontAwesomeIcons.plusCircle,
+                                  size: 30, color: primaryColor),
+                              SizedBox(width: 12),
+                              CustomText(LocaleKeys.addNewService.tr(), pv: 0),
+                              Spacer(),
+                            ],
+                          ),
+                        )
+                      else
+                        InkWell(
+                          onTap: () => NavigationService.push(RoutesProvider.providerServices),
+                          child: Row(
+                            children: [
+                              SizedBox(width: 24),
+                              Icon(FontAwesomeIcons.upload,
+                                  size: 30, color: primaryColor),
+                              SizedBox(width: 12),
+                              CustomText(LocaleKeys.updateNewService.tr(), pv: 0),
+                              Spacer(),
+                            ],
+                          ),
+                        ),
+                      SizedBox(height: 8),
+                      for (var i = 0; i < state.myServices.length; i++)
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomText(state.myServices[i].title ?? "", pv: 2).header(),
+                              if (state.myServices[i].breif != null) CustomText(state.myServices[i].breif!, align: TextAlign.start, color: Colors.grey[500]!, pv: 2),
+                            ],
+                          ),
+                        ),
+                    ],
+                  );
+              }else{
+                return CustomLoadingSpinner();
+
+              }
+
             },
-          ),
-        ],
-      ),
-    );
+          );
+
   }
 
   gallery() {

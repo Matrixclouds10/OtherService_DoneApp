@@ -19,7 +19,7 @@ import 'package:weltweit/presentation/component/component.dart';
 class ServiceProviderPage extends StatefulWidget {
   final ProvidersModel provider;
   const ServiceProviderPage({required this.provider, super.key});
-
+//حجز موعد
   @override
   State<ServiceProviderPage> createState() => _ServiceProviderPageState();
 }

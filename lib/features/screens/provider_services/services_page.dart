@@ -24,9 +24,11 @@ class _ServicesPageState extends State<ServicesPage> {
   void initState() {
     super.initState();
     //call before build
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      BlocProvider.of<ServicesProviderCubit>(context).getAllServices();
-    });
+    BlocProvider.of<ServicesProviderCubit>(context).getAllServices();
+
+    // WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //   BlocProvider.of<ServicesProviderCubit>(context).getAllServices();
+    // });
   }
 
   @override
@@ -62,14 +64,15 @@ class _ServicesPageState extends State<ServicesPage> {
                         padding: EdgeInsets.only(bottom: 30),
                         child: Column(
                           children: [
-                            for (final service in state.services) singleService(service),
+                            for (final service in state.services)
+                              singleService(service),
                           ],
                         ),
                       ),
                     ),
                     CustomButton(
                       onTap: () {
-                        if (state.services.where((element) => element.myService == true).isEmpty) {
+                        if (BlocProvider.of<ServicesProviderCubit>(context).selectedService == null) {
                           AppSnackbar.show(
                             context: context,
                             type: SnackbarType.warning,
@@ -78,7 +81,9 @@ class _ServicesPageState extends State<ServicesPage> {
                           );
                           return;
                         }
-                        BlocProvider.of<ServicesProviderCubit>(context).updateServices(state.services.where((element) => element.myService == true).toList());
+                        BlocProvider.of<ServicesProviderCubit>(context).updateServices([BlocProvider.of<ServicesProviderCubit>(context).selectedService!]);
+
+                        // BlocProvider.of<ServicesProviderCubit>(context).updateServices(state.services.where((element) => element.myService == true).toList());
                         NavigationService.goBack();
                       },
                       loading: state.updateState == BaseState.loading,
@@ -108,14 +113,21 @@ class _ServicesPageState extends State<ServicesPage> {
         onChanged: (val) {
           BlocProvider.of<ServicesProviderCubit>(context).updateSelectedServices(service, !service.myService!);
         },
-        title: Row(
+        title:
+        Row(
           children: [
             SizedBox(width: 8),
             Expanded(
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomText(service.title ?? "N/A", pv: 0).header().start(),
+                Row(
+                  children: [
+                    Flexible(
+                        child: CustomText(service.title ?? "N/A", pv: 0).header().start()),
+                     if (service.subPercentage != null &&service.subPercentage!='%') CustomText(service.subPercentage??"", pv: 0).footer().start(),
+                  ],
+                ),
                 if (service.breif != null) CustomText(service.breif!, pv: 0).footer().start(),
               ],
             )),
@@ -123,5 +135,38 @@ class _ServicesPageState extends State<ServicesPage> {
         ),
       );
     });
-  }
-}
+  }}
+  // Widget singleService(ServiceModel service, ServiceModel? selectedService) {
+  //   return RadioListTile<ServiceModel>(
+  //     value: service,
+  //     groupValue: selectedService,
+  //     onChanged: (ServiceModel? newValue) {
+  //       if (newValue != null) {
+  //         BlocProvider.of<ServicesProviderCubit>(context).updateSelectedServices(newValue, true);
+  //       }
+  //     },
+  //     title: Row(
+  //       children: [
+  //         SizedBox(width: 8),
+  //         Expanded(
+  //           child: Column(
+  //             crossAxisAlignment: CrossAxisAlignment.start,
+  //             children: [
+  //               Row(
+  //                 children: [
+  //                   Flexible(
+  //                     child: CustomText(service.title ?? "N/A", pv: 0).header().start(),
+  //                   ),
+  //                   if (service.subPercentage != null && service.subPercentage != '%')
+  //                     CustomText(service.subPercentage ?? "", pv: 0).footer().start(),
+  //                 ],
+  //               ),
+  //               if (service.breif != null)
+  //                 CustomText(service.breif!, pv: 0).footer().start(),
+  //             ],
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }}

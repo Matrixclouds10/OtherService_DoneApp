@@ -14,6 +14,7 @@ class HomeServices extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('HomeServices build');
     return BlocBuilder<ServicesCubit, ServicesState>(
       builder: (context, state) {
         return Column(

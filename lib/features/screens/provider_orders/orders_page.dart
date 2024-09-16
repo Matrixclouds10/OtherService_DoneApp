@@ -11,6 +11,10 @@ import 'package:weltweit/generated/assets.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
 
+import '../../../core/routing/navigation_services.dart';
+import '../../core/routing/routes_user.dart';
+import '../../widgets/empty_widget.dart';
+
 class OrdersPage extends StatefulWidget {
   const OrdersPage({super.key});
 
@@ -26,7 +30,7 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
     context.read<OrdersCubit>().reset();
     context.read<OrdersCubit>().getPendingOrders(typeIsProvider: true);
     context.read<OrdersCubit>().getCompletedOrders(typeIsProvider: true);
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -62,6 +66,9 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
                       if (index == 2) {
                         context.read<OrdersCubit>().getCompletedOrders(typeIsProvider: true);
                       }
+                      if (index == 3) {
+                        context.read<OrdersCubit>().getCancelledOrders(typeIsProvider: true);
+                      }
                       setState(() {});
                     },
                     unselectedLabelColor: Colors.grey,
@@ -69,6 +76,7 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
                       singleTab(0, LocaleKeys.newOrders.tr()),
                       singleTab(1, LocaleKeys.current.tr()),
                       singleTab(2, LocaleKeys.theCompleted.tr()),
+                      singleTab(3, LocaleKeys.theCancelled.tr()),
                     ],
                   ),
                 ),
@@ -91,7 +99,9 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
           color: isSelected ? Color(0xffE67E23) : Colors.white,
           borderRadius: BorderRadius.circular(4),
         ),
-        child: CustomText(title, color: isSelected ? Colors.white : Colors.black),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: CustomText(title, color: isSelected ? Colors.white : Colors.black),),
       ),
     );
   }
@@ -104,6 +114,8 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
         return currentOrders();
       case 2:
         return completedOrders();
+        case 3:
+        return cancelledOrders();
       default:
         return Container();
     }
@@ -130,7 +142,7 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
         return Column(
           children: [
             ...state.pendingData
-                .where((element) => element.statusCode!.toLowerCase() == 'provider_accept' || element.statusCode!.toLowerCase() == 'provider_finish')
+                .where((element) => element.statusCode!.toLowerCase() == 'provider_accept' || element.statusCode!.toLowerCase() == 'provider_finish'|| element.statusCode!.toLowerCase() == 'in_way')
                 .map((e) => GestureDetector(
                       onTap: () {},
                       child: OrderItemWidgetClient(orderModel: e),
@@ -167,6 +179,44 @@ class _OrdersPageState extends State<OrdersPage> with SingleTickerProviderStateM
                       child: OrderItemWidgetClient(orderModel: e),
                     ))
                 .toList(),
+          ],
+        );
+      },
+    );
+  }
+  cancelledOrders() {
+    return BlocBuilder<OrdersCubit, OrdersState>(
+      builder: (context, state) {
+        if (state.cancelledState == BaseState.error) {
+          return ErrorView(
+            message: state.error?.errorMessage ?? "حدث خطأ ما",
+            onRetry: () {
+              context.read<OrdersCubit>().getCancelledOrders(typeIsProvider: false);
+            },
+          );
+        }
+        if (state.cancelledState == BaseState.loading) {
+          return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: CircularProgressIndicator(),
+              ));
+        }
+        if (state.cancelledState == BaseState.loaded && state.cancelledData.isEmpty) {
+          return EmptyView(message: LocaleKeys.noOrdersFound.tr());
+        }
+        return Column(
+          children: [
+            for (var i = 0; i < state.cancelledData.length; i++)
+              GestureDetector(
+                onTap: () {
+
+                },
+                child: OrderItemWidgetClient(
+                  orderModel: state.cancelledData[i],
+                ),
+              ),
+            SizedBox(height: 72),
           ],
         );
       },

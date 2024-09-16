@@ -56,10 +56,17 @@ import 'package:weltweit/features/domain/usecase/chat_send_message/chat_send_mes
 import 'package:weltweit/features/domain/usecase/contact_us/contact_us_usecase.dart';
 import 'package:weltweit/features/domain/usecase/policy/policy_usecase.dart';
 
+import 'domain/usecase/order/invoice_usecase.dart';
 import 'domain/usecase/order/order_cancel_usecase.dart';
 import 'package:weltweit/features/domain/usecase/banner/banner_usecase.dart';
 import 'package:weltweit/features/domain/usecase/create_order/create_order_usecase.dart';
 import 'package:weltweit/features/domain/usecase/provider/most_requested_providers_usecase.dart';
+
+import 'domain/usecase/order/start_go_to_client_usecase.dart';
+import 'domain/usecase/profile/update_user_location_usecase.dart';
+import 'domain/usecase/provider_wallet/convert_points_provider_usecase.dart';
+import 'domain/usecase/user_wallet/convert_points_usecase.dart';
+import 'domain/usecase/user_wallet/user_wallet_usecase.dart';
 
 Future<void> init() async {
   getIt.registerLazySingleton(() => NetworkClient());
@@ -89,6 +96,7 @@ Future<void> init() async {
 
   //Profile
   getIt.registerLazySingleton(() => UpdateProfileUseCase(repository: getIt()));
+  getIt.registerLazySingleton(() => UpdateUserLocationUseCase(repository: getIt()));
   getIt.registerLazySingleton(() => ProfileUseCase(repository: getIt()));
   getIt.registerLazySingleton(() => ChangePasswordUseCase(repository: getIt()));
   getIt.registerLazySingleton(() => DeleteProfileUseCase(repository: getIt()));
@@ -116,11 +124,20 @@ Future<void> init() async {
   /// Repository
   getIt.registerLazySingleton<AuthRepository>(() => AuthRepositoryImp(dioClient: getIt()));
 
+
   //Order
   getIt.registerLazySingleton(() => OrderCancelUseCase(getIt()));
   getIt.registerLazySingleton(() => OrderAcceptUseCase(getIt()));
   getIt.registerLazySingleton(() => OrderRateUseCase(getIt()));
   getIt.registerLazySingleton(() => OrderFinishUseCase(getIt()));
+  getIt.registerLazySingleton(() => InvoiceUseCase(getIt()));
+  getIt.registerLazySingleton(() => StartGoToClientUseCase(getIt()));
+
+
+  //Wallet
+  getIt.registerLazySingleton(() => WalletUserUseCase(getIt()));
+  getIt.registerLazySingleton(() => ConvertPointsUseCase(getIt()));
+  getIt.registerLazySingleton(() => ConvertPointsProviderUseCase(getIt()));
 
   //Basic
   getIt.registerLazySingleton(() => AboutUseCase(getIt()));

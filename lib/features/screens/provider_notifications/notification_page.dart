@@ -64,7 +64,7 @@ class _NotificationPageState extends State<NotificationPage> {
                 Expanded(
                   child: ListView.builder(
                     controller: _scrollController,
-                    physics: const NeverScrollableScrollPhysics(),
+                    // physics: const NeverScrollableScrollPhysics(),
                     itemCount: state.notifications.length,
                     itemBuilder: (context, index) {
                       return singleCustomListTile(state.notifications[index]);

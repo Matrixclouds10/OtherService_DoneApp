@@ -59,20 +59,20 @@ class MorePage extends StatelessWidget {
                         onTap: () {
                           Navigator.pushNamed(context, RoutesProvider.providerSubscribe);
                         }),
-                    Divider(height: 2, color: Colors.grey[300]),
-                    BlocBuilder<ServicesProviderCubit, ServicesProviderState>(
-                      buildWhen: (previous, current) => previous.services != current.services,
-                      bloc: BlocProvider.of<ServicesProviderCubit>(context)..getSavedServices(),
-                      builder: (context, state) {
-                        return singleCustomListTile(
-                            image: Assets.imagesCustomerSupport,
-                            text: LocaleKeys.providedServices.tr(),
-                            trailingText: "${state.services.length} ${LocaleKeys.services.tr()}",
-                            onTap: () {
-                              Navigator.pushNamed(context, RoutesProvider.providerServices);
-                            });
-                      },
-                    ),
+                    // Divider(height: 2, color: Colors.grey[300]),
+                    // BlocBuilder<ServicesProviderCubit, ServicesProviderState>(
+                    //   buildWhen: (previous, current) => previous.services != current.services,
+                    //   bloc: BlocProvider.of<ServicesProviderCubit>(context)..getSavedServices(),
+                    //   builder: (context, state) {
+                    //     return singleCustomListTile(
+                    //         image: Assets.imagesCustomerSupport,
+                    //         text: LocaleKeys.providedServices.tr(),
+                    //         trailingText: "${state.services.length} ${LocaleKeys.services.tr()}",
+                    //         onTap: () {
+                    //           Navigator.pushNamed(context, RoutesProvider.providerServices);
+                    //         });
+                    //   },
+                    // ),
                     Divider(height: 2, color: Colors.grey[300]),
                     singleCustomListTile(
                         image: "assets/images/file.png",

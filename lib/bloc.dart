@@ -24,7 +24,6 @@ import 'package:weltweit/features/logic/provider_portfolio/portfolio_cubit.dart'
 import 'package:weltweit/features/logic/provider_profile/profile_cubit.dart';
 import 'package:weltweit/features/logic/provider_service/services_cubit.dart';
 import 'package:weltweit/features/logic/provider_subscription/subscription_cubit.dart';
-import 'package:weltweit/features/logic/provider_wallet/wallet_cubit.dart';
 import 'package:weltweit/features/logic/service/services_cubit.dart';
 import 'package:weltweit/features/screens/auth/login/login_cubit.dart';
 import 'package:weltweit/features/screens/auth/otp/otp_cubit.dart';
@@ -32,6 +31,8 @@ import 'package:weltweit/features/screens/auth/register/register_cubit.dart';
 import 'package:weltweit/features/screens/layout/layout_cubit.dart';
 import 'package:weltweit/features/screens/my_addresses/logic/address_cubit.dart';
 import 'package:weltweit/features/screens/provider_layout/layout_cubit.dart';
+
+import 'features/logic/wallet/wallet_cubit.dart';
 
 class GenerateMultiBloc extends StatelessWidget {
   final Widget child;
@@ -48,10 +49,10 @@ class GenerateMultiBloc extends StatelessWidget {
         BlocProvider<OtpCubit>(create: (_) => getIt<OtpCubit>()),
 
         BlocProvider<HomeCubit>(create: (BuildContext context) => HomeCubit()),
-        BlocProvider<WalletCubit>(create: (BuildContext context) => WalletCubit(getIt())),
+        BlocProvider<WalletCubit>(create: (BuildContext context) => WalletCubit(getIt(),getIt(),getIt(),getIt())),
         BlocProvider<LayoutCubit>(create: (BuildContext context) => LayoutCubit()),
         //*Profile
-        BlocProvider<ProfileCubit>(create: (BuildContext context) => ProfileCubit(getIt(), getIt(), getIt(), getIt(), getIt(), getIt())),
+        BlocProvider<ProfileCubit>(create: (BuildContext context) => ProfileCubit(getIt(), getIt(), getIt(), getIt(), getIt(), getIt(),getIt())),
         //*Address
         BlocProvider<CountryCubit>(create: (BuildContext context) => CountryCubit(getIt(), getIt())),
         BlocProvider<CityCubit>(create: (BuildContext context) => CityCubit(getIt())),
@@ -64,7 +65,7 @@ class GenerateMultiBloc extends StatelessWidget {
         BlocProvider<ProviderCubit>(create: (BuildContext context) => ProviderCubit(getIt(), getIt())),
         BlocProvider<ProviderServicesCubit>(create: (BuildContext context) => ProviderServicesCubit(getIt())),
         BlocProvider<FavoriteCubit>(create: (BuildContext context) => FavoriteCubit(getIt(), getIt())),
-        BlocProvider<OrdersCubit>(create: (BuildContext context) => OrdersCubit(getIt())),
+        BlocProvider<OrdersCubit>(create: (BuildContext context) => OrdersCubit(getIt(),getIt())),
         BlocProvider<OrderCubit>(
             create: (BuildContext context) => OrderCubit(
                   getIt(),
@@ -72,6 +73,7 @@ class GenerateMultiBloc extends StatelessWidget {
                   getIt(),
                   getIt(),
                   getIt(),
+              getIt()
                 )),
         BlocProvider<CreateOrderCubit>(
             create: (BuildContext context) => CreateOrderCubit(getIt())),

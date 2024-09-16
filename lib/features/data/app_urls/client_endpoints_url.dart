@@ -1,7 +1,7 @@
 class AppURL {
   static const String kAPIKey = "";
   // static const String kBaseURL = "https://doneapp.org/api";
-   static const String kBaseURL = "https://doneapp.org/api";
+   static const String kBaseURL = "https://dev05.matrix-clouds.com/Done/public/api";
   // static const String kBaseURL = "$kBaseURL/https://super-app.dev01.matrix-clouds.com/api/";
 
   //Profile
@@ -21,6 +21,7 @@ class AppURL {
   static const String profile = "$kBaseURL/profile";
   static const String changeStatus = "$kBaseURL/profile/change_status";
   static const String updateProfile = "$kBaseURL/profile/update";
+  static const String updateLocationUser = "$kBaseURL/profile/updatelocation";
   static const String deleteProfile = "$kBaseURL/delete-account";
   static const String deleteProfileProvider = "$kBaseURL/service-provider/delete-account";
   static const String changePasswordProfile = "$kBaseURL/profile/change_password";
@@ -64,8 +65,10 @@ class AppURL {
   static const String getCancelledOrders = "$kBaseURL/appointment/get/cancelled";
   static const String orderDone = "$kBaseURL/appointment/done";
   static const String orderRate = "$kBaseURL/appointment/rate";
+  static  String invoiceOrder(int id) => "$kBaseURL/appointment/invoice/$id";
 
   static const String providerOrderFinish = "$kBaseURL/service-provider/appointment/finish";
+  static const String providerStartGoToClient = "$kBaseURL/service-provider/appointment/in_way";
   static const String providerGetPendingOrders = "$kBaseURL/service-provider/appointment/get/pending";
   static const String providerGetCompletedOrders = "$kBaseURL/service-provider/appointment/get/completed";
   static const String providerGetCancelledOrders = "$kBaseURL/service-provider/appointment/get/cancelled";
@@ -75,6 +78,10 @@ class AppURL {
   static const String getOrder = "$kBaseURL/appointment/get-single";
   static const String providerAcceptOrder = "$kBaseURL/service-provider/appointment/accept";
 
+
+  //Wallet
+  static const String getWalletUser = "$kBaseURL/profile/getWallet";
+  static const String convertPoints = "$kBaseURL/profile/changePoints";
   //Chat
   static const String getChatMessagesClient = "$kBaseURL/appointment/chat";
   static const String getChatMessagesProvider = "$kBaseURL/service-provider/appointment/chat";

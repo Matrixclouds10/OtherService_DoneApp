@@ -33,6 +33,7 @@ import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
 import 'package:weltweit/presentation/component/inputs/phone_country/custom_text_filed_phone_country.dart';
 
+import '../../../../core/utils/alerts.dart';
 import 'register_cubit.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -46,6 +47,7 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _promoCodeController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _whatsAppController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -68,6 +70,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         String name = _nameController.text;
         String phone = _phoneController.text;
         String whatsappNumber = _whatsAppController.text;
+        String promoCode = _promoCodeController.text;
         String email = _emailController.text;
         String password = _passwordController.text;
         String confirmPassword = _confirmPasswordController.text;
@@ -91,6 +94,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         RegisterBody registerBody = RegisterBody(
           confirmPassword: confirmPassword,
           email: email,
+          promoCode: promoCode,
           image: image,
           name: name,
           password: password,
@@ -117,12 +121,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
             if (countryId != 0) prefs.save(PrefKeys.countryId, countryId);
             prefs.save(PrefKeys.id, id);
             prefs.save(PrefKeys.isTypeProvider, widget.typeIsProvider);
+
             if (widget.typeIsProvider) {
               Navigator.pushNamedAndRemoveUntil(context, RoutesProvider.providerLayoutScreen, (route) => false);
             } else {
               Navigator.pushNamedAndRemoveUntil(context, RoutesServices.servicesLayoutScreen, (route) => false);
             }
+
           } else {
+            Alerts.showSnackBar(userEntity.otpVerified.toString(), alertsType: AlertsType.success);
             NavigationService.push(RoutesServices.servicesOtpScreen, arguments: {
               'email': _emailController.text,
               'code': selectedCountry?.code ?? '20',
@@ -239,12 +246,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           Expanded(
                               child: Row(
                             children: [
-                              CustomText(tr(LocaleKeys.byClickingRegisterYouAccept)).footer().start(),
+                              CustomText(tr(LocaleKeys.byClickingRegisterYouAccept),size: 13).footer().start(),
                               Text(
                                 tr(LocaleKeys.termsAndConditions),
                                 style: TextStyle(
                                   color: primaryColor,
-                                  fontSize: 12,
+                                  fontSize: 11,
                                   decoration: TextDecoration.underline,
                                 ),
                               ).onTap(() {
@@ -324,6 +331,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const VerticalSpace(kScreenPaddingNormal),
               _cityAndregion(),
             ],
+            const VerticalSpace(kScreenPaddingNormal),
+            CustomTextFieldNormal(
+              validateFunc: (value) {
+                return null;
+              },
+              label: tr(LocaleKeys.promoCode), controller: _promoCodeController, textInputAction: TextInputAction.next,iconData: Icons.qr_code_2_outlined,),
             const VerticalSpace(kScreenPaddingNormal),
             CustomTextFieldEmail(label: tr(LocaleKeys.email), controller: _emailController, textInputAction: TextInputAction.next),
             const VerticalSpace(kScreenPaddingNormal),

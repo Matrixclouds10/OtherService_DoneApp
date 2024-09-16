@@ -24,4 +24,6 @@ class ChatState extends Equatable {
 
   @override
   List<Object?> get props => [state, data, error];
+
 }
+ class IncreaseCountState extends ChatState {}

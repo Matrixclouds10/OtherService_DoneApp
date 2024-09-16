@@ -22,13 +22,17 @@ class OrderRateUseCase extends BaseUseCase<BaseResponse, OrderRateParams> {
 
 class OrderRateParams {
   final int providerId;
+  final int clientId;
   final int rate;
+  final String fromType;
   final String comment;
   final int orderId;
 
   OrderRateParams({
     required this.providerId,
+    required this.clientId,
     required this.rate,
+    required this.fromType,
     required this.comment,
     required this.orderId,
   });
@@ -36,7 +40,9 @@ class OrderRateParams {
   toJson() {
     return {
       'provider_id': providerId,
+      'client_id': clientId,
       'rate': rate,
+      'from_type': fromType,
       'comment': comment,
       'order_id': orderId,
     };

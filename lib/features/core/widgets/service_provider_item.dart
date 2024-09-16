@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:weltweit/core/resources/decoration.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/features/core/routing/routes_user.dart';
@@ -10,6 +12,8 @@ import 'package:weltweit/features/data/models/auth/user_model.dart';
 import 'package:weltweit/features/logic/favorite/favorite_cubit.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/component.dart';
+import 'dart:io';
+import '../../../core/utils/toast_states/enums.dart';
 
 class ServiceProviderItemWidget extends StatelessWidget {
   final ProvidersModel providersModel;
@@ -58,23 +62,23 @@ class ServiceProviderItemWidget extends StatelessWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            if (canMakeAppointment != null && canMakeAppointment!)
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.pushNamed(context, RoutesServices.servicesReservationPage, arguments: {
-                                    "providersModel": providersModel,
-                                  });
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.only(bottom: 6),
-                                  decoration: BoxDecoration(color: servicesTheme.colorScheme.secondary).radius(radius: 4),
-                                  child:  CustomText(
-                                    LocaleKeys.makeAppointment.tr(),
-                                    color: Colors.white,
-                                    pv: 6,
-                                  ),
-                                ),
-                              ),
+                            // if (canMakeAppointment != null && canMakeAppointment!)
+                            //   GestureDetector(
+                            //     onTap: () {
+                            //       Navigator.pushNamed(context, RoutesServices.servicesReservationPage, arguments: {
+                            //         "providersModel": providersModel,
+                            //       });
+                            //     },
+                            //     child: Container(
+                            //       margin: const EdgeInsets.only(bottom: 6),
+                            //       decoration: BoxDecoration(color: servicesTheme.colorScheme.secondary).radius(radius: 4),
+                            //       child:  CustomText(
+                            //         LocaleKeys.makeAppointment.tr(),
+                            //         color: Colors.white,
+                            //         pv: 6,
+                            //       ),
+                            //     ),
+                            //   ),
                             if (providersModel.rateAvg != null && canMakeAppointment == null) ratesAsStars(double.parse(providersModel.rateAvg!), providersModel.rateCount ?? 0),
                             if (showFavoriteButton)
                               IconButton(
@@ -153,6 +157,33 @@ class ServiceProviderItemWidget extends StatelessWidget {
               const SizedBox(width: 8),
             ],
           ),
+          if(userModel?.code != null && userModel?.code?.code != null)
+          InkWell(
+            onTap: (){
+              Clipboard.setData( ClipboardData(text: userModel?.code?.code ?? '')).then((_) {
+              //   if (Platform.isAndroid) {
+              //     // if (androidVersion() < 30) {
+              //     //   ScaffoldMessenger.of(context).showSnackBar(
+              //     //     SnackBar(content: Text('تم نسخ النص بنجاح!')),
+              //     //   );
+              //     // } else {
+              //     //   ScaffoldMessenger.of(context).showSnackBar(
+              //     //     SnackBar(content: Text('تم نسخ النص إلى الحافظة!')),
+              //     //   );
+              //     // }
+              //   }
+              //   showToast(text: '${LocaleKeys.copied.tr()} ${userModel?.code ?? ''}', gravity:  ToastGravity.TOP,);
+              });
+            },
+            child: Column(
+              children: [
+                ...[
+                  const SizedBox(height: 8),
+                  textWithIcon(icon: Icons.copy_all_outlined, text: userModel?.code?.code ?? '', size: 25, fontSize: 18),
+                ]
+              ],
+            ),
+          ),
           if (moreInfoButton != null && moreInfoButton!)
             Container(
               margin: const EdgeInsets.only(top: 6),
@@ -181,14 +212,16 @@ class ServiceProviderItemWidget extends StatelessWidget {
 
   Widget textWithIcon({
     required IconData icon,
+     double? size,
+     double? fontSize,
     required String text,
   }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, size: 16, color: Colors.grey),
+        Icon(icon, size:size?? 16, color: Colors.grey),
         const SizedBox(width: 4),
-        CustomText(text, color: Colors.grey, align: TextAlign.start, pv: 0),
+        CustomText(text, color: Colors.grey, align: TextAlign.start, pv: 0,size: fontSize?? 14),
       ],
     );
   }
