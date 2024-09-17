@@ -28,6 +28,7 @@ class _LayoutPageState extends State<LayoutPage> {
   void initState() {
     super.initState();
     context.read<ProfileProviderCubit>().getProfile();
+    context.read<ProfileProviderCubit>().updateLocation(context);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // String? fcmToken = await getDeviceToken();
       // if (fcmToken != null) {
