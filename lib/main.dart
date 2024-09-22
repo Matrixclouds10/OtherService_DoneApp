@@ -41,6 +41,7 @@ void main() async {
   //     options.tracesSampleRate = 1.0;
   //   },
   //   appRunner: () => runZonedGuarded(() {
+  // 22/09/2024
       return runApp(
         GenerateMultiBloc(
           child: EasyLocalization(

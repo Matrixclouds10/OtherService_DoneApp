@@ -27,8 +27,9 @@ class _ServicesPageState extends State<ServicesPage> {
     super.initState();
     //call before build
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await BlocProvider.of<ServicesCubit>(context).getAllServices();
-      await BlocProvider.of<ServicesCubit>(context).getMoreServices();
+      await BlocProvider.of<ServicesCubit>(context).getAllServices().then((value) {
+         BlocProvider.of<ServicesCubit>(context).getMoreServices();
+      });
     });
 
     _scrollController.addListener(() {
@@ -36,6 +37,11 @@ class _ServicesPageState extends State<ServicesPage> {
         BlocProvider.of<ServicesCubit>(context).getMoreServices();
       }
     });
+  }
+  @override
+  void dispose() {
+    _scrollController.dispose(); // Clean up the controller when the widget is disposed
+    super.dispose();
   }
 
   @override

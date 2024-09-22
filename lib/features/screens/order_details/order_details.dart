@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:full_screen_image/full_screen_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
+import 'package:weltweit/core/extensions/num_extensions.dart';
 import 'package:weltweit/core/resources/theme/theme.dart';
 import 'package:weltweit/core/resources/values_manager.dart';
 import 'package:weltweit/core/routing/navigation_services.dart';
@@ -125,82 +126,88 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                         decoration: const BoxDecoration(color: Colors.white),
                         child: Column(
                           children: [
-                            const SizedBox(height: 10),
-                           InkWell(
-                            onTap: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => OrderStatusScreen(orderModel: widget.orderModel,)));
-
-                            },
-                           child:  Row(
+                            SizedBox(height: 15.h),
+                          Row(
+                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                              children: [
-                               const SizedBox(width: 10),
-                               CustomText(LocaleKeys.orderStatus.tr(), bold: true).headerExtra(),
-                               const Spacer(),
+                               SizedBox(width: 10),
+                               ElevatedButton(
+                                 onPressed: () async {
+                                   Navigator.push(context, MaterialPageRoute(builder: (context) => OrderStatusScreen(orderModel: widget.orderModel,)));
+                                 },
+                                 style: ElevatedButton.styleFrom(
+                                   backgroundColor: Colors.orange[700]!,
+                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                 ),
+                                 child: CustomText(LocaleKeys.orderStatus.tr(), color: Colors.white).headerExtra(),
+                               ),
+                               // CustomText(LocaleKeys.orderStatus.tr(), bold: true).headerExtra(),
                                // CustomText("300 ج", color: Color.fromARGB(255, 230, 35, 35), bold: true).headerExtra(),
                                // Chip(
                                //   label: const CustomText("Pending", color: Colors.white).header(),
                                //   backgroundColor: const Color(0xffE67E23),
                                //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                                // ),
+                               ElevatedButton(
+                                 onPressed: () async {
+                                   String cancelReason = "";
+                                   showDialog(
+                                     context: context,
+                                     builder: (context) {
+                                       return AlertDialog(
+                                         title: CustomText(LocaleKeys.cancelOrder.tr()),
+                                         content: Column(
+                                           mainAxisSize: MainAxisSize.min,
+                                           children: [
+                                             CustomText(LocaleKeys.cancelOrderMessage.tr()),
+                                             CustomTextFieldArea(onChange: (value) => cancelReason = value, hint: LocaleKeys.cancelReason.tr()),
+                                             const SizedBox(height: 10),
+                                             Row(
+                                               children: [
+                                                 TextButton(
+                                                     onPressed: () async {
+                                                       if (cancelReason.isEmpty) {
+                                                         AppSnackbar.show(context: context, message: LocaleKeys.reasonRequired.tr());
+                                                         return;
+                                                       }
+                                                       if (context.mounted) {
+                                                         bool result = await context.read<OrderCubit>().cancelOrder(id: state.data!.id, reason: cancelReason);
+                                                         if (result) {
+                                                           if (context.mounted) Navigator.pop(context);
+                                                           if (context.mounted) Navigator.pop(context);
+                                                           if (context.mounted) AppSnackbar.show(context: context, message: LocaleKeys.successfullyCanceledOrder.tr());
+                                                         }
+                                                       }
+                                                     },
+                                                     child: CustomText(LocaleKeys.cancelOrder.tr(), color: Colors.red).headerExtra()),
+                                                 const Spacer(),
+                                                 TextButton(
+                                                     onPressed: () {
+                                                       Navigator.pop(context);
+                                                     },
+                                                     child: CustomText(LocaleKeys.cancel.tr(), color: Colors.black).headerExtra()),
+                                               ],
+                                             ),
+                                           ],
+                                         ),
+                                       );
+                                     },
+                                   );
+                                 },
+                                 style: ElevatedButton.styleFrom(
+                                   backgroundColor: Colors.red,
+                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                 ),
+                                 child: CustomText(LocaleKeys.cancelOrder.tr(), color: Colors.white).headerExtra(),
+                               ),
                                const SizedBox(width: 10),
                              ],
                            ),
-                           ),
                             // textWithDot(text: "تم إنشاء الطلب بنجاح وبإنتظار موافقة مزود الخدمة.", color: const Color(0xffE67E23)),
                             const SizedBox(height: 16),
-                            ElevatedButton(
-                              onPressed: () async {
-                                String cancelReason = "";
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      title: CustomText(LocaleKeys.cancelOrder.tr()),
-                                      content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          CustomText(LocaleKeys.cancelOrderMessage.tr()),
-                                          CustomTextFieldArea(onChange: (value) => cancelReason = value, hint: LocaleKeys.cancelReason.tr()),
-                                          const SizedBox(height: 10),
-                                          Row(
-                                            children: [
-                                              TextButton(
-                                                  onPressed: () async {
-                                                    if (cancelReason.isEmpty) {
-                                                      AppSnackbar.show(context: context, message: LocaleKeys.reasonRequired.tr());
-                                                      return;
-                                                    }
-                                                    if (context.mounted) {
-                                                      bool result = await context.read<OrderCubit>().cancelOrder(id: state.data!.id, reason: cancelReason);
-                                                      if (result) {
-                                                        if (context.mounted) Navigator.pop(context);
-                                                        if (context.mounted) Navigator.pop(context);
-                                                        if (context.mounted) AppSnackbar.show(context: context, message: LocaleKeys.successfullyCanceledOrder.tr());
-                                                      }
-                                                    }
-                                                  },
-                                                  child: CustomText(LocaleKeys.cancelOrder.tr(), color: Colors.red).headerExtra()),
-                                              const Spacer(),
-                                              TextButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: CustomText(LocaleKeys.cancel.tr(), color: Colors.black).headerExtra()),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                              ),
-                              child: CustomText(LocaleKeys.cancelOrder.tr(), color: Colors.white).headerExtra(),
-                            ),
+
                             const SizedBox(height: 16),
                           ],
                         ),
@@ -382,30 +389,35 @@ class _OrderDetailsState extends State<OrderDetails> with SingleTickerProviderSt
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: 10),
-                            InkWell(
-                              onTap: (){
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => OrderStatusScreen(orderModel: widget.orderModel)));
-                              },
-                              child:
+
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 20),
                                   child:  Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      const SizedBox(width: 10),
-                                      CustomText(LocaleKeys.orderStatus.tr(), bold: true).headerExtra(),
+                                      const SizedBox(height: 15),
                                       CustomText(" موعد الوصول بعد  ${widget.orderModel.estimatedTime.toString()??''} ", color: Colors.black,size: 10,).header(),
                                       CustomText(" المسافة  ${widget.orderModel.distance.toString()??''} ", color: Colors.black,size: 10,).header(),
+                                      const SizedBox(height: 10),
+                                      CustomButton(onTap: (){
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => OrderStatusScreen(orderModel: widget.orderModel)));
+
+                                      },
+                                        title: LocaleKeys.orderStatus.tr(),
+                                        fontSize: 18,
+                                        radius: 10,
+                                        color: Colors.orange[700]!,
+                                        textColor: Colors.white,
+                                      ),
                                       // Chip(
                                       //   label: const CustomText("Pending", color: Colors.white).header(),
                                       //   backgroundColor: const Color(0xffE67E23),
                                       //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                                       // ),
-                                      const SizedBox(width: 10),
+                                      const SizedBox(height: 10),
                                     ],
                                   ),
-                                )
-                             ),
+                                ),
                             // textWithDot(text: "تم إنشاء الطلب بنجاح وبإنتظار موافقة مزود الخدمة.", color: const Color(0xffE67E23)),
                             // textWithDot(text: "وافق مزود الخدمة علي طلبك.", color: servicesTheme.colorScheme.secondary),
                             const SizedBox(height: 16),

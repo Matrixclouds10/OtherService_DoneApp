@@ -79,15 +79,17 @@ class ServiceItemWidget extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 8),
           child: Row(
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(250),
-                child: CustomImage(
-                  imageUrl: serviceModel.image,
-                  width: width,
-                  height: height ?? width,
-                  fit: BoxFit.fill,
-                ),
-              ),
+              const SizedBox(width: 12),
+            Icon(Icons.home_repair_service, color: Colors.grey, size: 30),
+              // ClipRRect(
+              //   borderRadius: BorderRadius.circular(250),
+              //   child: CustomImage(
+              //     imageUrl: serviceModel.image,
+              //     width: width,
+              //     height: height ?? width,
+              //     fit: BoxFit.fill,
+              //   ),
+              // ),
               const SizedBox(width: 12),
               Expanded(
                 flex: 2,

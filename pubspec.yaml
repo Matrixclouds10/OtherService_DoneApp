@@ -69,6 +69,8 @@ dependencies:
   material_dialogs: ^1.1.4
   animated_snack_bar: ^0.3.0
   image_picker: ^0.8.7
+  device_info_plus: ^9.0.2
+
   location: ^4.4.0
   photo_view: ^0.14.0
   video_player: ^2.6.1

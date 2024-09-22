@@ -146,8 +146,8 @@ class _WalletPageState extends State<UserWalletPage> {
                             color: Colors.white,
                             icon: Icon(Icons.arrow_back, color: Colors.white,),
                             onPressed: (){
-                              BlocProvider.of<LayoutCubit>(context).setCurrentIndex(i:0, context: context);
-                            },
+                              Navigator.pop(context);
+                              },
                           ),
                         ),
                         Positioned(
