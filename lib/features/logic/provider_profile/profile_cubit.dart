@@ -96,7 +96,10 @@ class ProfileProviderCubit extends Cubit<ProfileProviderState> {
     final result = await updateProfileAvailabilityUseCase(NoParameters());
     result.fold(
       (error) => emit(state.copyWith(availabilityState: BaseState.error, error: error)),
-      (data) => emit(state.copyWith(availabilityState: BaseState.loaded, data: data)),
+      (data) {
+        userModel = data;
+        emit(state.copyWith(availabilityState: BaseState.loaded, data: data));
+      },
     );
   }
 

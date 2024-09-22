@@ -279,56 +279,8 @@ class _OrderDetailsState extends State<OrderDetails> {
   inProgressView(OrderModel orderModel) {
     return Column(
       children: [
-       InkWell(
-         onTap: (){
-           showDialog(
-             context: context,
-             builder: (context) {
-               return AlertDialog(
-                 backgroundColor: Colors.white,
-                 content: Column(
-                   mainAxisSize: MainAxisSize.min,
-                   children: [
-                     const SizedBox(height: 10),
 
-                     Icon(Icons.info, size: 80, color: Colors.blue),
-                     const SizedBox(height: 10),
-                     CustomText(LocaleKeys.trackingOrder2.tr()),
-                     CustomText('# ${orderModel.id??''} '),
-                     CustomText('Distance: ${orderModel.distance.toString()??'0'} km'),
-                     CustomText('Arrived in ${orderModel.estimatedTime.toString()??'0'} min'),
-                     const SizedBox(height: 30),
-                     Row(
-                       mainAxisAlignment: MainAxisAlignment.spaceAround,
-                       children:  [
-                         SizedBox(width: 10),
-                         InkWell(
-                           onTap: (){
-                             ContactHelper.launchCall(orderModel.client?.mobileNumber??'');
-                           },
-                           child: CircleAvatar(
-                             backgroundColor: Colors.blue,
-                             child: Icon(Icons.call, color: Colors.white),
-                           ),   ),
-                         InkWell(
-                           onTap: (){
-                             ContactHelper.openWhatsApp(context,orderModel.client?.mobileNumber??'');
-                           },
-                           child: CircleAvatar(
-                             backgroundColor: Colors.blue,
-                             child: Icon(Icons.message, color: Colors.white),
-                           ),   ),
-                         SizedBox(width: 10),
-
-                       ],
-                     ),
-                   ],
-                 ),
-               );
-             },
-           );
-           },
-         child:    Container(
+         Container(
              padding: EdgeInsets.all(12),
              decoration: BoxDecoration(color: Colors.white,
                borderRadius: BorderRadius.circular(10),
@@ -344,10 +296,68 @@ class _OrderDetailsState extends State<OrderDetails> {
              child: Row(
                children: [
                  Column(
-                   crossAxisAlignment: CrossAxisAlignment.start,
+                   crossAxisAlignment: CrossAxisAlignment.center,
                    children: [
-                     CustomText(LocaleKeys.orderStatus.tr(), pv: 0).header(),
+                     // CustomText(LocaleKeys.orderStatus.tr(), pv: 0).header(),
                      CustomText(orderModel.statusCode=='in_way'?LocaleKeys.onWay.tr():LocaleKeys.inProgress.tr(), pv: 0, color: AppColorLight().kAccentColor).footer(),
+                     const SizedBox(height: 10),
+                     CustomButton(
+                       width: 250,
+                       height: 35,
+                       radius: 10,
+                       color: Colors.orange[600]!,
+                       textColor: Colors.white,
+                       onTap: (){
+                         showDialog(
+                           context: context,
+                           builder: (context) {
+                             return AlertDialog(
+                               backgroundColor: Colors.white,
+                               content: Column(
+                                 mainAxisSize: MainAxisSize.min,
+                                 children: [
+                                   const SizedBox(height: 10),
+
+                                   Icon(Icons.info, size: 80, color: Colors.blue),
+                                   const SizedBox(height: 10),
+                                   CustomText(LocaleKeys.trackingOrder2.tr()),
+                                   CustomText('# ${orderModel.id??''} '),
+                                   CustomText('Distance: ${orderModel.distance.toString()??'0'} km'),
+                                   CustomText('Arrived in ${orderModel.estimatedTime.toString()??'0'} min'),
+                                   const SizedBox(height: 30),
+                                   Row(
+                                     mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                     children:  [
+                                       SizedBox(width: 10),
+                                       InkWell(
+                                         onTap: (){
+                                           ContactHelper.launchCall(orderModel.client?.mobileNumber??'');
+                                         },
+                                         child: CircleAvatar(
+                                           backgroundColor: Colors.blue,
+                                           child: Icon(Icons.call, color: Colors.white),
+                                         ),   ),
+                                       InkWell(
+                                         onTap: (){
+                                           ContactHelper.openWhatsApp(context,orderModel.client?.mobileNumber??'');
+                                         },
+                                         child: CircleAvatar(
+                                           backgroundColor: Colors.blue,
+                                           child: Icon(Icons.message, color: Colors.white),
+                                         ),   ),
+                                       SizedBox(width: 10),
+
+                                     ],
+                                   ),
+                                 ],
+                               ),
+                             );
+                           },
+                         );
+                     },
+                       title: LocaleKeys.orderStatus.tr(),
+
+                     ),
                    ],
                  ),
                  Spacer(),
@@ -355,7 +365,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                ],
              ),
          ),
-       ),
+
         SizedBox(height: 12),
         Row(
           children: [

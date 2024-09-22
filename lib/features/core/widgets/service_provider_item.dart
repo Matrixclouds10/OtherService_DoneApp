@@ -1,3 +1,4 @@
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -159,20 +160,16 @@ class ServiceProviderItemWidget extends StatelessWidget {
           ),
           if(userModel?.code != null && userModel?.code?.code != null)
           InkWell(
-            onTap: (){
+            onTap: ()async{
+              final res = await _getAndroidVersion();
               Clipboard.setData( ClipboardData(text: userModel?.code?.code ?? '')).then((_) {
-              //   if (Platform.isAndroid) {
-              //     // if (androidVersion() < 30) {
-              //     //   ScaffoldMessenger.of(context).showSnackBar(
-              //     //     SnackBar(content: Text('تم نسخ النص بنجاح!')),
-              //     //   );
-              //     // } else {
-              //     //   ScaffoldMessenger.of(context).showSnackBar(
-              //     //     SnackBar(content: Text('تم نسخ النص إلى الحافظة!')),
-              //     //   );
-              //     // }
-              //   }
-              //   showToast(text: '${LocaleKeys.copied.tr()} ${userModel?.code ?? ''}', gravity:  ToastGravity.TOP,);
+                if(res.isNotEmpty){
+                  final androidVersion = int.parse(res);
+                  print(androidVersion);
+                  if (androidVersion <= 10) {
+                    showToast(text: '${LocaleKeys.copied.tr()} ${userModel?.code?.code ?? ''}', gravity:  ToastGravity.TOP,);
+                  }
+                }
               });
             },
             child: Column(
@@ -209,7 +206,11 @@ class ServiceProviderItemWidget extends StatelessWidget {
       ],
     );
   }
-
+  Future<String> _getAndroidVersion() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+   return androidInfo.version.release;
+  }
   Widget textWithIcon({
     required IconData icon,
      double? size,

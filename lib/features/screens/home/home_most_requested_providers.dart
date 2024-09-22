@@ -9,6 +9,10 @@ import 'package:weltweit/features/logic/provider/providers_cubit.dart';
 import 'package:weltweit/generated/locale_keys.g.dart';
 import 'package:weltweit/presentation/component/images/custom_image.dart';
 
+import '../../data/models/provider/providers_model.dart';
+import '../../data/models/services/service.dart';
+import '../../widgets/app_dialogs.dart';
+
 class MostRequestedProviders extends StatelessWidget {
   const MostRequestedProviders({super.key});
 
@@ -35,10 +39,30 @@ class MostRequestedProviders extends StatelessWidget {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(context, RoutesServices.servicesProvider, arguments: {
-                            "provider": snapshot.data![index],
-                          });
+                        onTap: () async{
+                          bool isOk = await  AppDialogs().question(context, message: '${LocaleKeys.areSureToSubscribe.tr()}\n\n${snapshot.data![index].services?.first.title ?? ''}');
+                          if(isOk) {
+                            ProvidersModel providersModel = ProvidersModel(
+                              name: snapshot.data![index].services?.first
+                                  .title ?? '',
+                              distance: 0,
+                              id: snapshot.data![index].services?.first.id,
+                              image: snapshot.data![index].services?.first
+                                  .image,
+                              services: [
+                                snapshot.data![index].services?.first ??
+                                    ServiceModel()
+                              ],);
+                              Navigator.pushNamed(context, RoutesServices.servicesReservationPage, arguments: {
+                                "providersModel": providersModel,
+                              });
+                            }
+
+
+
+              // Navigator.pushNamed(context, RoutesServices.servicesProvider, arguments: {
+                          //   "provider": snapshot.data![index],
+                          // });
                         },
                         child: Container(
                           width: deviceWidth * 0.6,
@@ -55,7 +79,7 @@ class MostRequestedProviders extends StatelessWidget {
                                   size: 26,
                                   shape: AvatarImageShape.circle,
                                   child: CustomImage(
-                                    imageUrl: snapshot.data![index].image,
+                                    imageUrl: snapshot.data![index].services?.first.image ?? '',
                                     radius: 250,
                                   ),
                                 ),
@@ -65,13 +89,13 @@ class MostRequestedProviders extends StatelessWidget {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       CustomText(
-                                        snapshot.data![index].name ?? '',
+                                        snapshot.data![index].services?.first.title ?? '',
                                         color: Colors.black,
                                         align: TextAlign.start,
                                         pv: 0,
                                       ).footer(),
                                       CustomText(
-                                        servicesAsString,
+                                        snapshot.data![index].services?.first.breif ?? '',
                                         color: Colors.grey,
                                         align: TextAlign.start,
                                         pv: 0,

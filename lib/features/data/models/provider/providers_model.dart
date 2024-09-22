@@ -72,7 +72,7 @@ class ServicesModel {
     if (json['data'] != null) {
       data = <ServicesModelData>[];
       json['data'].forEach((v) {
-        data!.add(new ServicesModelData.fromJson(v));
+        data!.add(ServicesModelData.fromJson(v));
       });
     }
     meta = json['meta'] != null ? new Meta.fromJson(json['meta']) : null;
