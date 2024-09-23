@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -240,9 +242,14 @@ class ProfilePage extends StatelessWidget {
                                if(res.isNotEmpty){
                                  final androidVersion = int.parse(res);
                                  print(androidVersion);
+                                 if(Platform.isAndroid){
                                  if (androidVersion <= 10) {
                                    showToast(text: '${LocaleKeys.copied.tr()} ${state.data?.code?.code ?? ''}', gravity:  ToastGravity.TOP,);
                                  }
+                               }else{
+                                   showToast(text: '${LocaleKeys.copied.tr()} ${state.data?.code?.code ?? ''}', gravity:  ToastGravity.TOP,);
+                                 }
+
                                }
                              });
                            },
