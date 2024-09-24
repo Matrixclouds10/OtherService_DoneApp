@@ -161,15 +161,21 @@ class ServiceProviderItemWidget extends StatelessWidget {
           if(userModel?.code != null && userModel?.code?.code != null)
           InkWell(
             onTap: ()async{
-              final res = await _getAndroidVersion();
-              Clipboard.setData( ClipboardData(text: userModel?.code?.code ?? '')).then((_) {
-                if(res.isNotEmpty){
-                  final androidVersion = int.parse(res);
-                  print(androidVersion);
-                  if (androidVersion <= 10) {
-                    showToast(text: '${LocaleKeys.copied.tr()} ${userModel?.code?.code ?? ''}', gravity:  ToastGravity.TOP,);
-                  }
-                }
+              // final res = await _getAndroidVersion();
+              Clipboard.setData(ClipboardData(text: userModel?.code?.code ?? '')).then((_) {
+                showToast(text: '${LocaleKeys.copied.tr()} ${userModel?.code?.code ?? ''}', gravity:  ToastGravity.TOP,);
+                // if(res.isNotEmpty){
+                //   final androidVersion = int.parse(res);
+                //   if(Platform.isAndroid){
+                //   if (androidVersion <= 10) {
+                //     showToast(text: '${LocaleKeys.copied.tr()} ${userModel?.code?.code ?? ''}', gravity:  ToastGravity.TOP,);
+                //   }
+                // }
+                //   else{
+                //     showToast(text: '${LocaleKeys.copied.tr()} ${userModel?.code?.code ?? ''}', gravity:  ToastGravity.TOP,);
+                //   }
+                // }
+
               });
             },
             child: Column(
