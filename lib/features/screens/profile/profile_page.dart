@@ -237,20 +237,22 @@ class ProfilePage extends StatelessWidget {
                       if(hasCode)
                          InkWell(
                            onTap: ()async{
-                             final res = await _getAndroidVersion();
+                             // final res = await _getAndroidVersion();
                              Clipboard.setData( ClipboardData(text: state.data?.code?.code ?? '')).then((_) {
-                               if(res.isNotEmpty){
-                                 final androidVersion = int.parse(res);
-                                 print(androidVersion);
-                                 if(Platform.isAndroid){
-                                 if (androidVersion <= 10) {
-                                   showToast(text: '${LocaleKeys.copied.tr()} ${state.data?.code?.code ?? ''}', gravity:  ToastGravity.TOP,);
-                                 }
-                               }else{
-                                   showToast(text: '${LocaleKeys.copied.tr()} ${state.data?.code?.code ?? ''}', gravity:  ToastGravity.TOP,);
-                                 }
-
-                               }
+                               showToast(text: '${LocaleKeys.copied.tr()} ${state.data?.code?.code ?? ''}', gravity:  ToastGravity.TOP,);
+                               //
+                               // if(res.isNotEmpty){
+                               // //   final androidVersion = int.parse(res);
+                               // //   print(androidVersion);
+                               // //   if(Platform.isAndroid){
+                               // //   if (androidVersion <= 10) {
+                               // //     showToast(text: '${LocaleKeys.copied.tr()} ${state.data?.code?.code ?? ''}', gravity:  ToastGravity.TOP,);
+                               // //   }
+                               // // }else{
+                               // //     showToast(text: '${LocaleKeys.copied.tr()} ${state.data?.code?.code ?? ''}', gravity:  ToastGravity.TOP,);
+                               // //   }
+                               //
+                               // }
                              });
                            },
                            child: Column(

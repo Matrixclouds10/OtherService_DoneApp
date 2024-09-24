@@ -104,10 +104,11 @@ class _WalletPageState extends State<WalletPage> {
                                      onRetry: () => context.read<WalletCubit>().getWallet(),
                                    ),
                                  if (state.data.isEmpty)
-                                   Center(
+                                   Padding(
+                                     padding: EdgeInsets.only(top: 150),
                                      child: CustomText(LocaleKeys.emptyWallet.tr(), color: Colors.black, align: TextAlign.start, pv: 0, ph: 12).header(),
                                    ),
-                                 if (state.data.isNotEmpty)
+                                 if(state.data.isNotEmpty)
                                    Expanded(
                                      child: SingleChildScrollView(
                                        child: Column(
