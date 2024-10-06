@@ -132,7 +132,7 @@ class MorePage extends StatelessWidget {
                         );
                         if (status) {
                           if (context.mounted) context.read<LayoutProviderCubit>().setCurrentIndex(0);
-                          NavigationService.logout();
+                          NavigationService.logout(context,true);
                         }
                       },
                     ),

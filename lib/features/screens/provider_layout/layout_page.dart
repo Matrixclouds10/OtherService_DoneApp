@@ -44,7 +44,7 @@ class _LayoutPageState extends State<LayoutPage> {
       listener: (context, state) {
         if (state.state == BaseState.error) {
           if (state.error?.code == 401) {
-            NavigationService.logout();
+            NavigationService.logout(context,true);
           }
         }
       },

@@ -162,19 +162,41 @@ class ServiceProviderItemWidget extends StatelessWidget {
           InkWell(
             onTap: ()async{
               // final res = await _getAndroidVersion();
-              Clipboard.setData(ClipboardData(text: userModel?.code?.code ?? '')).then((_) {
-                showToast(text: '${LocaleKeys.copied.tr()} ${userModel?.code?.code ?? ''}', gravity:  ToastGravity.TOP,);
-                // if(res.isNotEmpty){
-                //   final androidVersion = int.parse(res);
-                //   if(Platform.isAndroid){
-                //   if (androidVersion <= 10) {
-                //     showToast(text: '${LocaleKeys.copied.tr()} ${userModel?.code?.code ?? ''}', gravity:  ToastGravity.TOP,);
-                //   }
-                // }
-                //   else{
-                //     showToast(text: '${LocaleKeys.copied.tr()} ${userModel?.code?.code ?? ''}', gravity:  ToastGravity.TOP,);
-                //   }
-                // }
+              Clipboard.setData(ClipboardData(text: userModel?.code?.code ?? '')).then((_)async {
+                if (Platform.isAndroid) {
+                  final res = await _getAndroidVersion();
+                  if (res.isNotEmpty) {
+                    final androidVersion = int.parse(res);
+                    if (Platform.isAndroid) {
+                      if (androidVersion <= 10) {
+                        showToast(
+                          text:
+                          '${LocaleKeys.copied.tr()} ${userModel?.code?.code ?? ''}',
+                          gravity: ToastGravity.TOP,
+                        );
+                      }
+                    } else {
+                      showToast(
+                        text:
+                        '${LocaleKeys.copied.tr()} ${userModel?.code?.code ?? ''}',
+                        gravity: ToastGravity.TOP,
+                      );
+                    }
+                  } else {
+                    showToast(
+                      text:
+                      '${LocaleKeys.copied.tr()} ${userModel?.code?.code ?? ''}',
+                      state: ToastStates.warning,
+                      gravity: ToastGravity.TOP,
+                    );
+                  }
+                } else {
+                  showToast(
+                    text:
+                    '${LocaleKeys.copied.tr()} ${userModel?.code?.code ?? ''}',
+                    gravity: ToastGravity.TOP,
+                  );
+                }
 
               });
             },

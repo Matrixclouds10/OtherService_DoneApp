@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-PushNotificationModel pushNotificationModelFromJson(String str) =>
+PushNotificationModel pusssssshNotificationModelFromJson(String str) =>
     PushNotificationModel.fromJson(json.decode(str));
 
 String pushNotificationModelToJson(PushNotificationModel data) =>

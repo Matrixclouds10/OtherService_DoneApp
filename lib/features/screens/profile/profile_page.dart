@@ -238,8 +238,41 @@ class ProfilePage extends StatelessWidget {
                          InkWell(
                            onTap: ()async{
                              // final res = await _getAndroidVersion();
-                             Clipboard.setData( ClipboardData(text: state.data?.code?.code ?? '')).then((_) {
-                               showToast(text: '${LocaleKeys.copied.tr()} ${state.data?.code?.code ?? ''}', gravity:  ToastGravity.TOP,);
+                             Clipboard.setData( ClipboardData(text: state.data?.code?.code ?? '')).then((_)async {
+                               if (Platform.isAndroid) {
+                                 final res = await _getAndroidVersion();
+                                 if (res.isNotEmpty) {
+                                   final androidVersion = int.parse(res);
+                                   if (Platform.isAndroid) {
+                                     if (androidVersion <= 10) {
+                                       showToast(
+                                         text:
+                                         '${LocaleKeys.copied.tr()} ${state.data?.code?.code ?? ''}',
+                                         gravity: ToastGravity.TOP,
+                                       );
+                                     }
+                                   } else {
+                                     showToast(
+                                       text:
+                                       '${LocaleKeys.copied.tr()} ${state.data?.code?.code ?? ''}',
+                                       gravity: ToastGravity.TOP,
+                                     );
+                                   }
+                                 } else {
+                                   showToast(
+                                     text:
+                                     '${LocaleKeys.copied.tr()} ${state.data?.code?.code ?? ''}',
+                                     state: ToastStates.warning,
+                                     gravity: ToastGravity.TOP,
+                                   );
+                                 }
+                               } else {
+                                 showToast(
+                                   text:
+                                   '${LocaleKeys.copied.tr()} ${state.data?.code?.code ?? ''}',
+                                   gravity: ToastGravity.TOP,
+                                 );
+                               }
                                //
                                // if(res.isNotEmpty){
                                // //   final androidVersion = int.parse(res);

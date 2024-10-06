@@ -1,6 +1,9 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
 import 'package:weltweit/base_injection.dart';
+
+import '../../features/logic/provider_profile/profile_cubit.dart';
 
 class NavigationService {
   static GlobalKey<NavigatorState> navigationKey = GlobalKey<NavigatorState>();
@@ -29,7 +32,10 @@ class NavigationService {
     return Navigator.pop(navigationKey.currentContext!, result);
   }
 
-  static void logout() {
+  static void logout(BuildContext context ,bool? isProvider) {
+    if (isProvider != null || isProvider == true) {
+      context.read<ProfileProviderCubit>().updateAvailability();
+    }
     AppPrefs prefs = getIt();
     prefs.clear();
     prefs.deleteSecuredData();
