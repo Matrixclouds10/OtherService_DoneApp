@@ -52,7 +52,7 @@ abstract class AppRepositoryProvider {
 
   //* Subscription
   Future<Either<ErrorModel, List<SubscriptionModel>>> getSubscription();
-  Future<Either<ErrorModel, List<SubscriptionHistoryModel>>> getSubscriptionHistory();
+  Future<Either<ErrorModel, SubscriptionHistoryAllData>> getSubscriptionHistory();
   Future<Either<ErrorModel, UpdateSubscribtionResponse>> subscribe({required SubscribeParams params});
   Future<Either<ErrorModel, UpdateSubscribtionResponse>> rePaySubscribe({required RePaySubscribeParams params});
 

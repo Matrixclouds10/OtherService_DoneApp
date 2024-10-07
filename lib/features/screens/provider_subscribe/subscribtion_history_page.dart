@@ -88,6 +88,14 @@ class _SubscribtionHistoryPageState extends State<SubscribtionHistoryPage> {
               child: ListAnimator(
                 children: [
                   SizedBox(height: 24),
+                  if (state.subscribeData2!=null && state.subscribeData2 != "") Container(
+                    margin: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    decoration: BoxDecoration(color: Colors.white).radius(radius: 12),
+                    child:
+                    CustomText(state.subscribeData2 ?? "", color: primaryColor).headerExtra().start(),
+
+                  ),
                   ...state.subscribtionHistoryData
                       .map((e) => _buildItem(e))
                       .toList(),

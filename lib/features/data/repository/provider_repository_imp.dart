@@ -324,7 +324,7 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
   }
 
   @override
-  Future<Either<ErrorModel, List<SubscriptionHistoryModel>>> getSubscriptionHistory() async {
+  Future<Either<ErrorModel,SubscriptionHistoryAllData>> getSubscriptionHistory() async {
     String url = AppURLProvider.getSubscriptionHistory;
     NetworkCallType type = NetworkCallType.get;
     AppPrefs prefs = getIt.get<AppPrefs>();
@@ -335,9 +335,13 @@ class ProviderRepositoryImpProvider implements AppRepositoryProvider {
     };
     Either<ErrorModel, BaseResponse> result = await networkClient(url: url, data: data, type: type);
     return result.fold((l) => Left(l), (r) {
+
       try {
-        List<SubscriptionHistoryModel> data = r.data.map<SubscriptionHistoryModel>((e) => SubscriptionHistoryModel.fromJson(e)).toList();
+      SubscriptionHistoryAllData data = SubscriptionHistoryAllData(
+      subscriptionHistoryList: r.data.map<SubscriptionHistoryModel>((e) => SubscriptionHistoryModel.fromJson(e)).toList(),
+      subscriptionData2: r.data2??'');
         return Right(data);
+
       } catch (e) {
         return Left(ErrorModel(errorMessage: e.toString()));
       }

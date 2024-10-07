@@ -4,18 +4,18 @@ import 'package:weltweit/features/core/base/base_usecase.dart';
 import 'package:weltweit/features/data/models/subscription/subscription_history_model.dart';
 import 'package:weltweit/features/domain/repositoy/provider_repo.dart';
 
-class SubscribtionHistoryUseCase extends BaseUseCase<List<SubscriptionHistoryModel>, NoParameters> {
+class SubscribtionHistoryUseCase extends BaseUseCase<SubscriptionHistoryAllData, NoParameters> {
   final AppRepositoryProvider repository;
 
   SubscribtionHistoryUseCase(this.repository);
 
   @override
-  Future<Either<ErrorModel, List<SubscriptionHistoryModel>>> call(NoParameters parameters) async {
+  Future<Either<ErrorModel, SubscriptionHistoryAllData>> call(NoParameters parameters) async {
     return await repository.getSubscriptionHistory();
   }
 
   @override
-  Future<Either<ErrorModel, List<SubscriptionHistoryModel>>> callTest(NoParameters parameters) {
+  Future<Either<ErrorModel, SubscriptionHistoryAllData>> callTest(NoParameters parameters) {
     throw UnimplementedError();
   }
 }

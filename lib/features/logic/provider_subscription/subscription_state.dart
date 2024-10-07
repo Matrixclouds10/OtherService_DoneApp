@@ -5,6 +5,7 @@ class SubscriptionState extends Equatable {
   final BaseState subscribeState;
   final BaseState subscribtionHistoryState;
   final BaseState rePaySubscribeState;
+  final String? subscribeData2;
 
   final List<SubscriptionModel> data;
   final List<SubscriptionHistoryModel> subscribtionHistoryData;
@@ -12,6 +13,7 @@ class SubscriptionState extends Equatable {
   final ErrorModel? error;
   const SubscriptionState({
     this.state = BaseState.initial,
+    this.subscribeData2,
     this.subscribeState = BaseState.initial,
     this.subscribtionHistoryState = BaseState.initial,
     this.rePaySubscribeState = BaseState.initial,
@@ -27,6 +29,7 @@ class SubscriptionState extends Equatable {
     BaseState? subscribtionHistoryState,
     BaseState? rePaySubscribeState,
     List<SubscriptionHistoryModel>? subscribtionHistoryData,
+    String? subscribeData2,
     List<SubscriptionHistoryModel>? reSubscribtionHistoryData,
     List<SubscriptionModel>? data,
     ErrorModel? error,
@@ -39,10 +42,11 @@ class SubscriptionState extends Equatable {
        subscribtionHistoryData: subscribtionHistoryData ?? this.subscribtionHistoryData,
        reSubscribtionHistoryData: reSubscribtionHistoryData ?? this.reSubscribtionHistoryData,
       data: data ?? this.data,
+      subscribeData2: subscribeData2 ?? this.subscribeData2,
       error: error ?? this.error,
     );
   }
 
   @override
-  List<Object?> get props => [state, data, error ,rePaySubscribeState ,subscribeState , subscribtionHistoryState , subscribtionHistoryData, reSubscribtionHistoryData];
+  List<Object?> get props => [state,subscribeData2, data, error ,rePaySubscribeState ,subscribeState , subscribtionHistoryState , subscribtionHistoryData, reSubscribtionHistoryData];
 }

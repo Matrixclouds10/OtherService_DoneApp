@@ -54,7 +54,8 @@ class SubscriptionCubit extends Cubit<SubscriptionState> {
     result.fold(
       (error) => emit(state.copyWith(subscribtionHistoryState: BaseState.error)),
       (data) {
-        emit(state.copyWith(subscribtionHistoryState: BaseState.loaded, subscribtionHistoryData: data));
+        print('dgfdfgdgfdf ${data.toString()}');
+        emit(state.copyWith(subscribtionHistoryState: BaseState.loaded, subscribtionHistoryData: data.subscriptionHistoryList,subscribeData2:data.subscriptionData2));
       },
     );
   }

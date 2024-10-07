@@ -1,5 +1,17 @@
 import 'package:weltweit/features/data/models/subscription/subscription_model.dart';
+class SubscriptionHistoryAllData {
+  List<SubscriptionHistoryModel> subscriptionHistoryList;
+  String? subscriptionData2;
+  SubscriptionHistoryAllData({
+    required this.subscriptionHistoryList,
+    required this.subscriptionData2,
+  });
 
+  factory SubscriptionHistoryAllData.fromJson(Map<String, dynamic> json) => SubscriptionHistoryAllData(
+        subscriptionHistoryList: List<SubscriptionHistoryModel>.from(json["data"].map((x) => SubscriptionHistoryModel.fromJson(x))),
+        subscriptionData2: json["data2"],
+      );
+}
 class SubscriptionHistoryModel {
   SubscriptionHistoryModel({
     required this.id,

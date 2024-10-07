@@ -2,12 +2,14 @@ class BaseResponse<T> {
   int? code;
   String? message;
   T? data;
+  T? data2;
   Meta? meta;
 
   BaseResponse({
     this.code,
     this.message,
     this.data,
+    this.data2,
     this.meta,
   });
 
@@ -16,6 +18,7 @@ class BaseResponse<T> {
       code: json['code'],
       message: json['message'],
       data: json['data'],
+      data2: json['data2'],
       meta: (json['data'] != null && json['data'] is Map && json['data']['meta'] != null) ? Meta.fromJson(json['data']['meta']) : null,
     );
   }
@@ -24,12 +27,14 @@ class BaseResponse<T> {
     int? code,
     String? message,
     T? data,
+    T? data2,
     Meta? meta,
   }) {
     return BaseResponse(
       code: code ?? this.code,
       message: message ?? this.message,
       data: data ?? this.data,
+      data2: data2 ?? this.data2,
       meta: meta ?? this.meta,
     );
   }

@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:weltweit/base_injection.dart';
 import 'package:weltweit/core/services/local/cache_consumer.dart';
@@ -161,23 +162,63 @@ class ProfileProviderCubit extends Cubit<ProfileProviderState> {
   }
 
   void updateLocation(BuildContext context) async {
-    bool permissionStatus = await PermissionHelper.checkLocationPermissionStatus();
+    print('Checking permission...');
+    bool permissionStatus =
+    await PermissionHelper.checkLocationPermissionStatus();
+    print('Permission Status: $permissionStatus');
+
     if (!permissionStatus) {
-      bool dialogStatus = await AppDialogs().question(context, message: LocaleKeys.allowLocationStatusToBeShownForNearbyUsers.tr());
+      // Show dialog to ask the user if they want to enable location permissions
+      bool dialogStatus = await AppDialogs().question(
+        context,
+        message: LocaleKeys.allowLocationStatusToBeShownForNearbyUsers.tr(),
+      );
+
       if (dialogStatus) {
-        bool? permissionStatus = await PermissionHelper.requestLocation();
-        if (permissionStatus == null || !permissionStatus) return;
+        // If user agrees, request location permission
+        bool? permissionGranted = await PermissionHelper.requestLocation();
+
+        // If permission is denied or null, return and stop further execution
+        if (permissionGranted == null || !permissionGranted) {
+          print('Permission denied or null');
+          return;
+        }
+      } else {
+        // User declined to enable permission
+        print('User declined permission request');
+        return;
       }
     }
+    // Fetch user's current location
+
+    // print(
+    //     'Location updated: (${locationData.latitude}, ${locationData.longitude})');
     try {
       Location location = Location();
-      LocationData locationData = await location.getLocation();
-      if (locationData.latitude != null && locationData.longitude != null) {
-        updateProfileLocationUseCase(UpdateProfileLocationParams(lat: locationData.latitude.toString(), lng: locationData.longitude.toString()));
-      }
-      // ignore: empty_catches
-    } catch (e) {}
-  }
 
+      // Check if location services are enabled
+      bool serviceEnabled = await location.serviceEnabled();
+      if (!serviceEnabled) {
+        serviceEnabled = await location.requestService();
+        if (!serviceEnabled) {
+          print('Location services disabled');
+          return; // Stop if user denies enabling location services
+        }
+      }
+      print('LocationDataLocationData');
+
+      // Get the location data (latitude and longitude)
+      Position position = await Geolocator.getCurrentPosition();
+
+      // Update profile with the location data
+      await updateProfileLocationUseCase(UpdateProfileLocationParams(
+        lat: position.latitude.toString(),
+        lng: position.longitude.toString(),
+      ));
+    } catch (e) {
+      // Handle any errors that occur while getting location
+      print('Error fetching location: $e');
+    }
+  }
   void deleteAccount() {}
 }

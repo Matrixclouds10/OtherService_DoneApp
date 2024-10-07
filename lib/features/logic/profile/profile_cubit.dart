@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:weltweit/base_injection.dart';
@@ -161,11 +162,17 @@ class ProfileCubit extends Cubit<ProfileState> {
       }
     }
     try {
-      Location location = Location();
-      LocationData locationData = await location.getLocation();
-      if (locationData.latitude != null && locationData.longitude != null) {
-        updateUserLocationUseCase(LatLng(locationData.latitude??0, locationData.longitude ?? 0));
-      }
+      Position position = await Geolocator.getCurrentPosition();
+
+      await updateUserLocationUseCase(LatLng(
+         position.latitude,
+        position.longitude,
+      ));
+      // Location location = Location();
+      // LocationData locationData = await location.getLocation();
+      // if (locationData.latitude != null && locationData.longitude != null) {
+      //   updateUserLocationUseCase(LatLng(locationData.latitude??0, locationData.longitude ?? 0));
+      // }
     } catch (e) {
       log('Location Error', e.toString());
     }
