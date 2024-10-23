@@ -23,7 +23,7 @@ class RouteProviderGenerator {
     Map? arguments = settings.arguments as Map<String, dynamic>?;
     switch (settings.name) {
       case RoutesProvider.providerLayoutScreen:
-        return platformPageRoute(const LayoutPage(currentPage: 0));
+        return platformPageRoute( LayoutPage(currentPage: arguments?["currentPage"]??0));
       case RoutesProvider.providerOffers:
         return platformPageRoute(const OffersPage());
       case RoutesProvider.providerServices:

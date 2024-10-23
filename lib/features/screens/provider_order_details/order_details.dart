@@ -279,7 +279,6 @@ class _OrderDetailsState extends State<OrderDetails> {
   inProgressView(OrderModel orderModel) {
     return Column(
       children: [
-
          Container(
              padding: EdgeInsets.all(12),
              decoration: BoxDecoration(color: Colors.white,
@@ -299,7 +298,8 @@ class _OrderDetailsState extends State<OrderDetails> {
                    crossAxisAlignment: CrossAxisAlignment.center,
                    children: [
                      // CustomText(LocaleKeys.orderStatus.tr(), pv: 0).header(),
-                     CustomText(orderModel.statusCode=='in_way'?LocaleKeys.onWay.tr():LocaleKeys.inProgress.tr(), pv: 0, color: AppColorLight().kAccentColor).footer(),
+                     CustomText(orderModel.statusCode=='in_way'?
+                     LocaleKeys.onWay.tr():LocaleKeys.inProgress.tr(), pv: 0, color: AppColorLight().kAccentColor).footer(),
                      const SizedBox(height: 10),
                      CustomButton(
                        width: 250,
@@ -367,21 +367,26 @@ class _OrderDetailsState extends State<OrderDetails> {
          ),
 
         SizedBox(height: 12),
-        Row(
-          children: [
-            CustomText(
-              LocaleKeys.totalCost.tr(),
-              pv: 0,
-              bold: true,
-            ).header(),
+        if(orderModel.statusCode=='in_way')
+          ...[
+            Row(
+              children: [
+                CustomText(
+                  LocaleKeys.totalCost.tr(),
+                  pv: 0,
+                  bold: true,
+                ).header(),
+              ],
+            ),
+            SizedBox(height: 5),
+            CustomTextFieldNumber(
+              hint: LocaleKeys.primaryAmount.tr(),
+              radius: 0,
+              controller: _amountController,
+            ),
           ],
-        ),
-        SizedBox(height: 5),
-        CustomTextFieldNumber(
-          hint: LocaleKeys.primaryAmount.tr(),
-          radius: 0,
-          controller: _amountController,
-        ),
+
+
         //all_status
         SizedBox(height: 16),
         FittedBox(

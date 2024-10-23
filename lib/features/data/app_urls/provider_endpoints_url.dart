@@ -1,9 +1,9 @@
 class AppURLProvider {
   static const String kAPIKey = "";
-   static const String kBaseURL = "https://dev05.matrix-clouds.com/Done/public/api/service-provider";
-   static const String kBaseURLApi = "https://dev05.matrix-clouds.com/Done/public/api";
-  // static const String kBaseURL = "https://doneapp.org/api/service-provider";
-  // static const String kBaseURLApi = "https://doneapp.org/api";
+   // static const String kBaseURL = "https://dev05.matrix-clouds.com/Done/public/api/service-provider";
+   // static const String kBaseURLApi = "https://dev05.matrix-clouds.com/Done/public/api";
+  static const String kBaseURL = "https://doneapp.org/api/service-provider";
+  static const String kBaseURLApi = "https://doneapp.org/api";
 
   ///Auth
   static const String loginURI = "$kBaseURL/login";

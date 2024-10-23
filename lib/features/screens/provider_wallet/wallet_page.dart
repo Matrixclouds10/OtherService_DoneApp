@@ -104,10 +104,13 @@ class _WalletPageState extends State<WalletPage> {
                                      onRetry: () => context.read<WalletCubit>().getWallet(),
                                    ),
                                  if (state.data.isEmpty)
-                                   Padding(
+                                 Center(
+                                   child:   Padding(
                                      padding: EdgeInsets.only(top: 150),
                                      child: CustomText(LocaleKeys.emptyWallet.tr(), color: Colors.black, align: TextAlign.start, pv: 0, ph: 12).header(),
                                    ),
+                                 ),
+
                                  if(state.data.isNotEmpty)
                                    Expanded(
                                      child: SingleChildScrollView(
@@ -151,6 +154,7 @@ class _WalletPageState extends State<WalletPage> {
 
                          InkWell(
                            onTap: ()async{
+
                              if(points == 0) {
                                AppSnackbar.show(context: context, message: "you haven't any points",type: SnackbarType.error);
                                return;

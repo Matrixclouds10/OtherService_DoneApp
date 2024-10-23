@@ -1,3 +1,4 @@
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weltweit/core/utils/toast_states/enums.dart';
@@ -7,6 +8,9 @@ import 'package:weltweit/features/core/base/base_usecase.dart';
 import 'package:weltweit/features/data/models/wallet/wallet_model.dart';
 import 'package:weltweit/features/domain/usecase/provider_wallet/wallet_history_usecase.dart';
 
+import '../../../core/routing/navigation_services.dart';
+import '../../core/routing/routes_provider.dart';
+import '../../core/routing/routes_user.dart';
 import '../../domain/usecase/provider_wallet/convert_points_provider_usecase.dart';
 import '../../domain/usecase/user_wallet/convert_points_usecase.dart';
 import '../../domain/usecase/user_wallet/user_wallet_usecase.dart';
@@ -46,6 +50,7 @@ class WalletCubit extends Cubit<WalletState> {
     result.fold(
           (error) => emit(state.copyWith(convertState: BaseState.error, error: error)),
           (data) {
+            NavigationService.pushNamedAndRemoveUntil(RoutesProvider.providerLayoutScreen,arguments: {'currentPage':1});
         emit(state.copyWith(convertState: BaseState.loaded));
       },
     );
@@ -71,8 +76,11 @@ class WalletCubit extends Cubit<WalletState> {
     final result = await convertPointsUseCase(NoParameters());
 
     result.fold(
-      (error) => emit(state.copyWith(convertState: BaseState.error, error: error)),
+      (error) => emit(
+          state.copyWith(convertState: BaseState.error, error: error)),
       (data) {
+        NavigationService.pushNamedAndRemoveUntil(RoutesServices.servicesLayoutScreen,arguments: {'currentPage':1});
+
         emit(state.copyWith(convertState: BaseState.loaded));
       },
     );

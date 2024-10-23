@@ -36,7 +36,7 @@ class RouteServicesGenerator {
     Map? arguments = settings.arguments as Map<String, dynamic>?;
     switch (settings.name) {
       case RoutesServices.servicesLayoutScreen:
-        return platformPageRoute(Theme(data: servicesTheme, child: const LayoutPage(currentPage: 0)));
+        return platformPageRoute(Theme(data: servicesTheme, child:  LayoutPage(currentPage: arguments!['currentPage']??0)));
       case RoutesServices.servicesLayoutScreenGuest:
         return platformPageRoute(Theme(data: servicesTheme, child: const LayoutPageGuest(currentPage: 0)));
       case RoutesServices.servicesOffers:
